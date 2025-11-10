@@ -3,6 +3,7 @@ using System.Linq;
 using Civ2engine.Enums;
 using Civ2engine.MapObjects;
 using Model.Constants;
+using Model.Core.Units;
 
 namespace Civ2engine.Units;
 
@@ -16,7 +17,7 @@ public static class UnitExtensions
         // Bonus for veteran units
         if (attackUnit.Veteran) af *= 1.5;
 
-        // Partisan bonus agains non-combat units
+        // Partisan bonus against non-combat units
         if (attackUnit.TypeDefinition.Effects.TryGetValue(UnitEffect.Partisan, out var effect) && defendingUnit.AttackBase == 0)
         {
             af *= effect;

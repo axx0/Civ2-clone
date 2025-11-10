@@ -4,13 +4,12 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
+using Model.Utils;
 
 namespace Civ2engine
 {
     public class Settings
     {
-        
-        
         private static string SettingsFilePath => Path.Combine(ApplicationDataFolder, SettingsFileName);
         
         private static string ApplicationDataFolder => Path.Combine(GetLocalAppDataFolder(), "AxxCiv");
@@ -58,13 +57,14 @@ namespace Civ2engine
                 var civ2Path = civ2PathElement.GetString();
                 if (IsValidRoot(civ2Path))
                 {
-                    Civ2Path = civ2Path;
+                    Civ2Path = civ2Path!;
                 }
             }
 
             if (root.TryGetProperty(nameof(SearchPaths), out var searchPathsElement))
             {
-                var searchPaths = searchPathsElement.EnumerateArray().Select(e => e.GetString()).Where(IsValidRoot).Concat(new [] {BasePath})
+                var searchPaths = searchPathsElement.EnumerateArray().Select(e => e.GetString()).Where(IsValidRoot).OfType<string>().Concat(
+                        [BasePath])
                     .ToArray();
                 if (!string.IsNullOrWhiteSpace(Civ2Path))
                 {
@@ -78,26 +78,17 @@ namespace Civ2engine
                 
             }else if (!string.IsNullOrWhiteSpace(Civ2Path))
             {
-                SearchPaths = new[] { Civ2Path, BasePath };
+                SearchPaths = [Civ2Path, BasePath];
             }
 
-            if (root.TryGetProperty(nameof(TextureFilter), out var textureFilter))
-            {
-                TextureFilter = textureFilter.GetInt32();
-            }
-            else
-            {
-                TextureFilter = 0;
-            }
+            TextureFilter = root.TryGetProperty(nameof(TextureFilter), out var textureFilter) ? textureFilter.GetInt32() : 0;
         }
 
-        public static bool IsValidRoot(string civ2Path)
+        public static bool IsValidRoot(string? civ2Path)
         {
             try
             {
-                return !string.IsNullOrWhiteSpace(civ2Path) && Directory.Exists(civ2Path) &&
-                       (File.Exists(Path.Combine(civ2Path, RulesFile)) ||
-                        File.Exists(Path.Combine(civ2Path, RulesFile.ToUpper())));
+                return !string.IsNullOrWhiteSpace(civ2Path) && Directory.Exists(civ2Path) && FileUtilities.GetFile(civ2Path, RulesFile) != null;
             }
             catch
             {

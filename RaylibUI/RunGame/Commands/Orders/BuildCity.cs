@@ -113,9 +113,9 @@ public class BuildCity : Order
 
     private void Build(string button, int selectedIndex, IList<bool>? check, IDictionary<string, string>? textBoxes)
     {
-        if (textBoxes != null && button == Labels.Ok && textBoxes.TryGetValue(CityName, out var name))
+        if (textBoxes != null && button == Labels.Ok && textBoxes.TryGetValue(CityName, out var name) && _player.ActiveUnit != null)
         {
-            _city = CityActions.BuildCity(_player.ActiveTile, _player.ActiveUnit, GameScreen.Game, name);
+            _city = CityActions.BuildCity(_player.ActiveUnit, GameScreen.Game, name);
 
             GameScreen.ShowPopup("FOUNDED", handleButtonClick: OpenCityWindow, 
                 dialogImage: new(new[] { _player.Civilization.Epoch < 2 ? _active.PicSources["cityBuiltAncient"][0] : _active.PicSources["cityBuiltModern"][0] }),

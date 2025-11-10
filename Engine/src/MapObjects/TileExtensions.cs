@@ -6,6 +6,7 @@ using Civ2engine.Terrains;
 using Civ2engine.Units;
 using Model.Core;
 using Model.Core.Mapping;
+using Model.Core.Units;
 
 namespace Civ2engine.MapObjects
 {

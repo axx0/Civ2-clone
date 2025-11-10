@@ -10,6 +10,7 @@ using Raylib_CSharp.Textures;
 using Raylib_CSharp.Rendering;
 using Model;
 using Model.Core;
+using Model.Core.Units;
 using Model.ImageSets;
 using Model.Interface;
 using RaylibUI.RunGame.GameControls.Mapping;

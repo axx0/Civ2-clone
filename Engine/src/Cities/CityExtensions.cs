@@ -6,6 +6,7 @@ using Civ2engine.MapObjects;
 using Civ2engine.Units;
 using Model.Constants;
 using Model.Core;
+using Model.Core.Units;
 
 namespace Civ2engine
 {
@@ -161,7 +162,7 @@ namespace Civ2engine
 
             distance =
                 city.Owner.Cities.Where(c => c.ImprovementExists(Effects.Capital))
-                    .Select(c => Utilities.DistanceTo(c, city.Location)).OrderBy(v => v)
+                    .Select(c => Utilities.DistanceTo(c.Location, city.Location)).OrderBy(v => v)
                     .FirstOrDefault(game.MaxDistance);
 
             if (government.Level < 1)

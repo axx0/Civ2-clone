@@ -13,8 +13,10 @@
 --6 Pikemen,      Gun, 0,  1.,0,  1a,2d,  1h,1f,  2,0,  1, Feu, 000010000000000
 --7 Musketeers,   Csc, 0,  1.,0,  3a,3d,  2h,1f,  3,0,  1, Gun, 000000000000000
 --8 Fanatics,     nil, 0,  1.,0,  4a,4d,  2h,1f,  2,0,  1, Fun, 000100000000000
+civ.getUnitType(8).Effects.Add(civ.core.UnitEffects.Fanatics, 1)
+civ.getUnitType(8).Effects.Add(civ.core.UnitEffects.FreeSupport, 4)
 --9 Partisans,    nil, 0,  1.,0,  4a,4d,  2h,1f,  5,0,  1, Gue, 000001000000010
-civ.getUnitType(9).Effects.Add(civ.core.Effects.Partisan, 1)
+civ.getUnitType(9).Effects.Add(civ.core.UnitEffects.Partisan, 1)
 --10 Alpine Troops,nil, 0,  1.,0,  5a,5d,  2h,1f,  5,0,  1, Tac, 000001000000000
 --Riflemen,     nil, 0,  1.,0,  5a,4d,  2h,1f,  4,0,  1, Csc, 000000000000000
 --Marines,      nil, 0,  1.,0,  8a,5d,  2h,1f,  6,0,  0, Amp, 000000000000100
@@ -50,7 +52,7 @@ civ.getUnitType(9).Effects.Add(civ.core.Effects.Partisan, 1)
 --Carrier,      nil, 2,  5.,0,  1a,9d,  4h,2f, 16,0,  2, AFl, 000000010000001
 --Transport,    nil, 2,  5.,0,  0a,3d,  3h,1f,  5,8,  4, Ind, 000000000000000
 --Cruise Msl.,  nil, 1, 12.,1, 18a,0d,  1h,3f,  6,0,  0, Roc, 001000000000000
-civ.getUnitType(44).Effects.Add(civ.core.Effects.SdiVulnerable, 1)
+civ.getUnitType(44).Effects.Add(civ.core.UnitEffects.SdiVulnerable, 1)
 --45 Nuclear Msl., nil, 1, 16.,1, 99a,0d,  1h,1f, 16,0,  0, Roc, 001000000000000
 --Diplomat,     Esp, 0,  2.,0,  0a,0d,  1h,1f,  3,0,  6, Wri, 000000000000010
 --Spy,          nil, 0,  3.,0,  0a,0d,  1h,1f,  3,0,  6, Esp, 000000000000011

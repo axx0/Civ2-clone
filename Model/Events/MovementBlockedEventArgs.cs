@@ -1,15 +1,12 @@
 using Civ2engine.Enums;
 using Civ2engine.Units;
+using Model.Core.Units;
 
 namespace Civ2engine.Events
 {
-    public class MovementBlockedEventArgs : UnitEventArgs
+    public class MovementBlockedEventArgs(IUnit subjectUnit, BlockedReason reason)
+        : UnitEventArgs(UnitEventType.MovementBlocked, [subjectUnit.CurrentLocation])
     {
-        public BlockedReason Reason { get; set; }
-        
-        public MovementBlockedEventArgs(UnitEventType eventType, IUnit subjectUnit, BlockedReason reason) : base(eventType, new []{  subjectUnit.CurrentLocation})
-        {
-            Reason = reason;
-        }
+        public BlockedReason Reason { get; set; } = reason;
     }
 }

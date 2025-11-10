@@ -125,7 +125,7 @@ public class GameScreen : BaseScreen
         var menuHeight = _menu.GetPreferredHeight();
         
         _statusPanel = new StatusPanel(this, game);
-        _minimapPanel = new MinimapPanel(this, game);
+        _minimapPanel = new MinimapPanel(this, game, _player);
 
         _ToTPanelLayout = commands.Any(c => c.Id == CommandIds.MapLayoutToggle && c.Command is not null);   // Command for map layout change only in ToT
         _minimapGlobe = _ToTPanelLayout;
@@ -136,7 +136,7 @@ public class GameScreen : BaseScreen
             mapWidth = width;
             mapRect = new Rectangle(0, menuHeight + MinimapHeight, mapWidth, height - menuHeight - MinimapHeight);
         }
-        _mapControl = new MapControl(this, game, mapRect);
+        _mapControl = new MapControl(this, game, mapRect, _player);
 
         // The order of these is important as MapControl can overdraw so must be drawn first
         Controls.Add(_mapControl);

@@ -389,14 +389,10 @@ namespace Civ2engine.Terrains
 
         private static List<TerrainImprovementAction> GetRoadEffects(Terrain terrain)
         {
-            if (terrain.Type == TerrainType.Desert || terrain.Type == TerrainType.Plains ||
-                terrain.Type == TerrainType.Grassland)
+            if (terrain.Type is TerrainType.Desert or TerrainType.Plains or TerrainType.Grassland)
             {
 
-                return new List<TerrainImprovementAction>
-                {
-                    new() { Target = ImprovementConstants.Trade, Action = ImprovementActions.Add, Value = 1 }
-                };
+                return [new TerrainImprovementAction { Target = ImprovementConstants.Trade, Action = ImprovementActions.Add, Value = 1 }];
             }
 
             return null;

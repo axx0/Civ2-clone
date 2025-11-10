@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text.Json;
 using Civ2engine.MapObjects;
 using Civ2engine.Terrains;
+using Model.Core;
 using Model.Core.Mapping;
 
 namespace Civ2engine.SaveLoad;
 
-public class ImprovementEncoder
+public class ImprovementEncoder : IImprovementEncoder
 {
     private readonly Dictionary<int,ImprovementCode> _mapping;
 
@@ -41,13 +42,25 @@ public class ImprovementEncoder
 
     public IDictionary<string, string> EncoderData => _mapping.ToDictionary(kvp => kvp.Key.ToString(), kvp => string.Join("-", kvp.Value.Offset, kvp.Value.Bits, kvp.Value.Group));
 
+
+    public int[] EncodeKnowledge(PlayerTile?[]? playerKnowledge, int civs)
+    {
+        var result = new int[civs];
+        if (playerKnowledge == null) return result;
+        
+        for (var i = 0; i < playerKnowledge.Length && i< civs; i++)
+        {
+            if (playerKnowledge[i] != null)
+            {
+                result[i] = EncodeInternal(playerKnowledge[i].Improvements);
+            }
+        }
+        return result;
+    }
+    
     public string? Encode(IList<ConstructedImprovement> improvements)
     {
-        byte encoded = 0;
-        foreach (var improvement in improvements)
-        {
-            encoded += (byte)((improvement.Level+1) << _mapping[improvement.Improvement].Offset);
-        }
+        var encoded = EncodeInternal(improvements);
 
         if (encoded != 0)
         {
@@ -55,6 +68,17 @@ public class ImprovementEncoder
             return Convert.ToBase64String(new[] { encoded }).Replace("=","");
         }
         return null;
+    }
+
+    private byte EncodeInternal(IList<ConstructedImprovement> improvements)
+    {
+        byte encoded = 0;
+        foreach (var improvement in improvements)
+        {
+            encoded += (byte)((improvement.Level+1) << _mapping[improvement.Improvement].Offset);
+        }
+
+        return encoded;
     }
 
     public IList<ConstructedImprovement> Decode(string? improvements)

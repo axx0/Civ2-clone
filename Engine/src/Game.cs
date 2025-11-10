@@ -5,10 +5,12 @@ using Civ2engine.Advances;
 using Civ2engine.Enums;
 using Civ2engine.Events;
 using Civ2engine.MapObjects;
+using Civ2engine.SaveLoad;
 using Civ2engine.Scripting;
 using Civ2engine.Units;
 using Model;
 using Model.Core;
+using Model.Core.Units;
 
 namespace Civ2engine
 {
@@ -72,17 +74,7 @@ namespace Civ2engine
         public Civilization GetPlayerCiv => AllCivilizations.FirstOrDefault(c => c.PlayerType == PlayerType.Local);
 
         public IPlayer[] Players { get; }
-
-        public void TriggerUnitEvent(UnitEventType eventType, IUnit movedUnit,
-            BlockedReason blockedReason = BlockedReason.NotBlocked)
-        {
-            OnUnitEvent?.Invoke(this, new MovementBlockedEventArgs(eventType, movedUnit, blockedReason));
-        }
-
-        public void TriggerUnitEvent(UnitEventArgs args)
-        {
-            OnUnitEvent?.Invoke(this, args);
-        }
+        
 
         public void TriggerMapEvent(MapEventType eventType, List<Tile> tilesChanged)
         {
@@ -101,6 +93,7 @@ namespace Civ2engine
         }
 
         private double? _maxDistance;
+        private ImprovementEncoder? _encoder;
 
         public double MaxDistance
         {
@@ -108,6 +101,8 @@ namespace Civ2engine
         }
 
         public IDictionary<int, TerrainImprovement> TerrainImprovements { get; set; }
+
+        public IImprovementEncoder ImprovementEncoder => _encoder ??= new ImprovementEncoder(TerrainImprovements);
 
         private double ComputeMaxDistance()
         {

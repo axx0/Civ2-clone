@@ -1,7 +1,8 @@
 using Civ2engine.Enums;
+using Civ2engine.Units;
 using Model.Constants;
 
-namespace Civ2engine.Units
+namespace Model.Core.Units
 {
     public class UnitDefinition
     {
@@ -18,7 +19,7 @@ namespace Civ2engine.Units
         public int Hold { get; set; }
         public AiRoleType AIrole { get; set; }
         public int Prereq { get; set; }
-        public string Flags { get; set; }
+        public bool[] Flags { get; set; }
         public int Type { get; set; }
         public string AttackSound { get; set; }
         
@@ -36,5 +37,9 @@ namespace Civ2engine.Units
         public bool NonExpireForBarbarian { get; set; }
 
         public Dictionary<UnitEffect, int> Effects { get; } = new();
+        public int AttackPerTurn { get; set; }
+        public bool[] CanBuildMapLink { get; set; }
+        public bool[] CanUseMapLink { get; set; }
+        public bool[] CanMoveWithoutLink { get; set; }
     }
 }

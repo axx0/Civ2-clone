@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using Civ2engine.MapObjects;
 using Civ2engine.Units;
 using Model;
+using Model.Core;
+using Model.Core.Units;
 
 namespace Civ2engine.OriginalSaves;
 

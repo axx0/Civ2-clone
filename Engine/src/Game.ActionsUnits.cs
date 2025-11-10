@@ -6,12 +6,17 @@ using Civ2engine.Enums;
 using Civ2engine.Events;
 using Civ2engine.MapObjects;
 using Civ2engine.Terrains;
+using Model.Core.Units;
 
 namespace Civ2engine
 {
     public partial class Game
     {
         public event EventHandler<MapEventArgs> OnMapEvent;
+        
+        /// <summary>
+        /// This is now only used for lua script integration for other events raise them on the player version
+        /// </summary>
         public event EventHandler<UnitEventArgs> OnUnitEvent;
         internal event EventHandler<CivEventArgs> OnCivEvent;
 
@@ -46,6 +51,8 @@ namespace Civ2engine
             }
             else
             {
+                //TODO: determine the true values of these extra props
+                OnUnitEvent?.Invoke(this, new ActivationEventArgs(unit: nextUnit, userInitiated: true, reactivation: false));
                 player.SetUnitActive(nextUnit, true);
                 // If the player immediately moved the unit it might be already dead or moved so choose again
                 if (nextUnit.Dead || nextUnit.MovePointsLost == nextUnit.MaxMovePoints)

@@ -25,6 +25,8 @@ namespace Civ2engine.Scripting
 
         public EffectsMap Effects { get; } = new();
         
+        public UnitEffectMap UnitEffects { get; } = new();
+        
         public UnitDomainMap UnitDomain { get; } = new();
 
         public ResourceList Resources { get; } = new();
@@ -105,7 +107,14 @@ namespace Civ2engine.Scripting
 
         public Effects Epoch = Effects.EpochTech;
 
+    }
+
+    public class UnitEffectMap
+    {
         public UnitEffect Partisan = UnitEffect.Partisan;
         public UnitEffect SdiVulnerable = UnitEffect.SDIVulnerable;
+        
+        public UnitEffect Fanatics = UnitEffect.Fanatics;
+        public UnitEffect FreeSupport = UnitEffect.FreeSupport;
     }
 }

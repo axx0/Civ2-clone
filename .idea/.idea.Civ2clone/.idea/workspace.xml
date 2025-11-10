@@ -7,6 +7,7 @@
     <projectFile>EtoFormsUI/EtoFormsUI.Gtk/EtoFormsUI.Gtk.csproj</projectFile>
     <projectFile>EtoFormsUI/EtoFormsUI.Mac/EtoFormsUI.Mac.csproj</projectFile>
     <projectFile>EtoFormsUI/EtoFormsUI.WinForms/EtoFormsUI.WinForms.csproj</projectFile>
+    <projectFile>RandomTest/RandomTest.csproj</projectFile>
     <projectFile>RaylibUI/RaylibUI.csproj</projectFile>
     <projectFile>Scratch/Scratch.csproj</projectFile>
     <projectFile>WinFormsUI/WinFormsUI.csproj</projectFile>
@@ -15,26 +16,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="56446136-8c41-46ec-83c1-858b387d944b" name="Changes" comment="Move Zoom to GameScreen">
+    <list default="true" id="38862fe7-8760-4eef-9f9f-5fdba728b888" name="Changes" comment="Barbarians working a little better">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Civ2/Civ2Interface.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Civ2Interface.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/LoadOk.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/LoadOk.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/NewGame/EnterName.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/NewGame/EnterName.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/NewGame/Init.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/NewGame/Init.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Civ2/Rules/Initialization.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Rules/Initialization.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Civ2clone.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2clone.sln.DotSettings.user" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/GameExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/GameExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/MapObjects/TileExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/MapObjects/TileExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/OriginalSaves/Read.ClassicSav.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/OriginalSaves/Read.ClassicSav.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/SaveLoad/GameSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/GameSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/SaveLoad/LoadGame.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/LoadGame.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/SaveLoad/Objects/v1/JsonMapData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/Objects/v1/JsonMapData.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/IUserInterface.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/IUserInterface.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/InterfaceActions/StartGame.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/InterfaceActions/StartGame.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Initialization/MainMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Initialization/MainMenu.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Main.LoadGame.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Main.LoadGame.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/SaveGame.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/SaveGame.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameScreen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameScreen.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,9 +28,20 @@
   <component name="DpaMonitoringSettings">
     <option name="firstShow" value="false" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="NewLua" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="lua-csharp" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-    <option name="SET_USER_NAME_GLOBALLY" value="false" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -57,81 +52,67 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/reubene/Civ2-clone.git&quot;,
-    &quot;accountId&quot;: &quot;40072fe1-db66-4de5-8921-dcbd19e0585c&quot;
+    &quot;accountId&quot;: &quot;1baa7eee-0ba4-4195-a953-0234ac6c4afe&quot;
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/30d7ac0f7a7a48b7a3c557c4413de4c090c00/3a/a6cb82a7/ThrowHelper.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/30d7ac0f7a7a48b7a3c557c4413de4c090c00/cd/03329e0a/ThrowHelper.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/5b3bca7808b94536956c535008df3fc6479000/22/99b5dc65/UpdateDelegates.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/774a1c59431948cbbbfabd8853de8e434e600/d8/ca12d366/LuaResult.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/774a1c59431948cbbbfabd8853de8e434e600/f7/f3680171/LuaTable.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/94125f469e4d403caa9218894df9d5f0191800/1e/0b90832d/ThrowHelper.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/94125f469e4d403caa9218894df9d5f0191800/23/9a30c93f/JsonConverter`1.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/94125f469e4d403caa9218894df9d5f0191800/2a/97a42c5f/Utf8JsonWriter.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/94125f469e4d403caa9218894df9d5f0191800/77/fcfefd15/JsonEncodedText.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/94125f469e4d403caa9218894df9d5f0191800/79/202d9a9b/ThrowHelper.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a0741529c8554d199992ef9e50684668d82800/0d/e6bdac62/Array.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a0741529c8554d199992ef9e50684668d82800/18/54310bb8/BitConverter.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a0741529c8554d199992ef9e50684668d82800/34/9a88beed/List`1.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a0741529c8554d199992ef9e50684668d82800/65/d35d8e0e/Type.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a0741529c8554d199992ef9e50684668d82800/7d/20e2dcf4/SafeFileHandle.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a0741529c8554d199992ef9e50684668d82800/8c/217db297/StreamReader.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a0741529c8554d199992ef9e50684668d82800/90/c873e958/Nullable`1.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a0741529c8554d199992ef9e50684668d82800/ae/fae3ea1e/Convert.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a0741529c8554d199992ef9e50684668d82800/b0/c4e925fd/ThrowHelper.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a0741529c8554d199992ef9e50684668d82800/bb/fb5eabec/File.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a0741529c8554d199992ef9e50684668d82800/cd/ded6e3af/FileMode.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a0741529c8554d199992ef9e50684668d82800/fb/1ad0a4b4/ThrowHelper.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3ad82f9910d5c82d76b445db10584a60305639dcad2533e08e6c47f85e3b6d83/MethodBaseInvoker.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/6780d13016c376c4491c5618b257d84da7eacf747ed2719783e775546b79b/ThrowHelper.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/7f8bab2ddd1a86312228e89db53ca668c6a6584aaf9c02761dcd3d728f5fc3e/Number.Parsing.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/e747192abb38e2df82cbdb37e721567726f559914a7b81f8b26ba537de632f4/List.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/.vscode/launch.json" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Civ2/Civ2Interface.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Civ2/Menu/MenuLoader.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Civ2Gold/Civ2GoldInterface.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/285675a6903d43ca89ed13e37e2bfe3c2d4d0/e7/1f5647d0/Assert.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/35679f8d5c7a44edbd723c1017c1db6850800/d4/b00e204a/LuaTable.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/1c3f7d5c03bf77051eb8a758fb3549c4e2d4cb3dc6f6d567a94a315044961e/List.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/42d5e9d0d54843a23887036cb9c33c9ce48bbc6f7c35ed3759154a95456c796/RuntimeHandles.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/435e33f714ea13f9b99b88b164c6d0b91fd8b28f78435bddc31db2cb2981e2de/ToCollection.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/4743f513c7ddc8411223a46f0ca426ed929391acebcff993721dff2f0c6b34/ThrowHelper.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/5094e71058416d72278f32a6913f67a9c664bd46c296c5cce3ee63993dde3f/Type.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/59e69cdfed13efa8a6d7821335c5f5d1dd7e4dc2d09a23eec71b142e6f9967/Dictionary.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/652a134cecabdc4e69e36fe213a0866499e1fff09f3821bfb173e6f588b0574e/AnyAll.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/7e333a9f3297ba553cccfd3b7c3f1f96125b23d09f883e4d6e66d531559a4c/Type.CoreCLR.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/8874fa6fbc50b05ba8332188d36141eb4bba81fb1f92189ba9d7a25f545/ThrowHelper.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/9ee76fb4aded5e9da6e66cc2dcb127fac08d3ec5ac84fc6db9d4ee1d2e38/Monitor.CoreCLR.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/af2458e7257b5b828a3a5f22d9533d9ed4c80a93bc0c707a319d91b5a4ba76/Contains.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/baf2eef7c7bbea3742b74ee71fe7168c3a8c2269a1ce22d51333175656840/RuntimeType.CoreCLR.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/bfff78ecaa39c818519fc918bb2d4bbdca6ad93d7170f5cf325f67ccd0b97d43/BooleanAsserts.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/d1f2e4f6ccefb370a4a4a3c83e7934fabe9dd3e179625b382fbe5368e13dc8/LambdaExpression.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/d87f2bfadfb6fc1a7b25db06f4f86aa8ad19c1ad89551d92a1e46761215c/CallSiteBinder.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/d89a846232fe82cda12166589bc1d39e48ca8819a15feac340c16b13e545c7d8/UpdateDelegates.Generated.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/db4201f9bc9b51d63752f4912cefbd3a7c01d1a49431b6f406e2eb59ad97b96/DynamicILGenerator.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/appsettings.json" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Engine/src/AiPlayer.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Engine/src/Cities/CityExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Engine/src/Game.Actions.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/Game.ActionsUnits.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Engine/src/Game.LoadGame.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/Game.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/OriginalSaves/ClassicSaveObjects.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/OriginalSaves/ClassicSaveObjects.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/OriginalSaves/ClassicSaveObjects.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/OriginalSaves/ClassicSaveObjects.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/OriginalSaves/ClassicSaveObjects.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/OriginalSaves/ClassicSaveObjects.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/SaveLoad/GameSerializer.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/SaveLoad/ILoadedGameObjects.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/SaveLoad/LoadGame.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Engine/src/MapGeneration/MapGenerator.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Engine/src/Scripting/AxxExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Engine/src/Scripting/ScenarioHooks.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/Scripting/ScriptEngine.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Engine/src/Settings.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/AiInterface.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/TileApi.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/UnitApi.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/UnitType.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Engine/src/Scripting/UnitActions/AttackAction.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Engine/src/Scripting/UnitActions/BuildCityAction.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Engine/src/Scripting/UnitActions/CaptureAction.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Engine/src/Scripting/UnitActions/FortifyAction.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Engine/src/Scripting/UnitActions/GotoAction.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Engine/src/Scripting/UnitActions/InvasionAction.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Engine/src/Scripting/UnitActions/MoveAction.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Engine/src/Scripting/UnitActions/TileAction.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Engine/src/Scripting/UnitActions/UnitAction.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Engine/src/Scripting/UnitActions/UnloadAction.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Engine/src/Scripting/UnitActions/WaitAction.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/UnitActions/MovementFunctions.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Animations/WaitingAnimation.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Bitmaps/Draw.Terrain.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Bitmaps/GetAnimationFrames.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/GameModes/MovingPieces.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Initialization/Helpers.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Initialization/UserInterfaceCommands.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.ShowMainMenu.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.ShowPopupBox.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/MapPanel.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/StatusPanel.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Model/Constants/AIroleType.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Model/Constants/AIroleType.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Model/InterfaceActions/StartGame.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/Main.LoadGame.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/Commands/SaveGame.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/Mapping/Views/AttackAnimation.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameScreen.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Engine/src/Units/Path.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Templates/Civ2dialog.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Tests/Engine.Tests/Units/MovementFunctionsTests.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="false" />
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
-  &quot;customColor&quot;: &quot;&quot;,
-  &quot;associatedIndex&quot;: 8
+  &quot;associatedIndex&quot;: 1
 }</component>
-  <component name="ProjectId" id="2od9oCIo2OJ1oWmZVtfNrFciGJK" />
+  <component name="ProjectId" id="2sTrH6QGSljUuYrqFV5j1dzDYny" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
@@ -139,31 +120,39 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Project.RaylibUI.executor": "Debug",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "XThreadsFramesViewSplitterKey": "0.3890625",
-    "git-widget-placeholder": "master",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Project.RaylibUI.executor&quot;: &quot;Debug&quot;,
+    &quot;490432ee-e9fc-4580-a25d-f8a101659179.executor&quot;: &quot;Debug&quot;,
+    &quot;Lua Application.Test_test.lua.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode.C#&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
-  <component name="RunManager">
+}</component>
+  <component name="RunManager" selected=".NET Project.RaylibUI">
     <configuration name="RaylibUI" type="DotNetProject" factoryName=".NET Project" temporary="true">
-      <option name="EXE_PATH" value="$PROJECT_DIR$/RaylibUI/bin/Debug/net8.0/RaylibUI" />
+      <option name="EXE_PATH" value="$PROJECT_DIR$/RaylibUI/bin/Debug/net8.0/RaylibUI.exe" />
       <option name="PROGRAM_PARAMETERS" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/RaylibUI/bin/Debug/net8.0" />
       <option name="PASS_PARENT_ENVS" value="1" />
       <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="ENV_FILE_PATHS" value="" />
+      <option name="REDIRECT_INPUT_PATH" value="" />
+      <option name="PTY_MODE" value="Auto" />
+      <option name="MIXED_MODE_DEBUG" value="0" />
       <option name="USE_MONO" value="0" />
       <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="AUTO_ATTACH_CHILDREN" value="0" />
       <option name="PROJECT_PATH" value="$PROJECT_DIR$/RaylibUI/RaylibUI.csproj" />
       <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
       <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
@@ -174,8 +163,34 @@
         <option name="Build" />
       </method>
     </configuration>
+    <configuration name="Test_test.lua" type="lua.app" factoryName="Lua Application" temporary="true">
+      <option name="program" value="C:\Program Files (x86)\Lua\5.1\lua.exe" />
+      <option name="file" value="$PROJECT_DIR$/Engine/Scripts/Test/Test_test.lua" />
+      <option name="workingDir" value="C:\Users\R-105\source\repos\Civ2-clone\Engine\Scripts\Test" />
+      <option name="debuggerType" value="2" />
+      <option name="params" value="" />
+      <option name="charset" value="UTF-8" />
+      <option name="showConsole" value="true" />
+      <method v="2" />
+    </configuration>
+    <configuration name="barbarian.ai.lua" type="lua.app" factoryName="Lua Application" temporary="true">
+      <option name="program" value="lua.exe" />
+      <option name="file" value="$PROJECT_DIR$/Engine/Scripts/barbarian.ai.lua" />
+      <option name="workingDir" value="" />
+      <option name="debuggerType" value="2" />
+      <option name="params" value="" />
+      <option name="charset" value="UTF-8" />
+      <option name="showConsole" value="true" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue=".NET Project.RaylibUI" />
+      <item itemvalue="Lua Application.Test_test.lua" />
+      <item itemvalue="Lua Application.barbarian.ai.lua" />
+    </list>
     <recent_temporary>
       <list>
+        <item itemvalue=".NET Project.RaylibUI" />
         <item itemvalue=".NET Project.RaylibUI" />
       </list>
     </recent_temporary>
@@ -183,109 +198,75 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="56446136-8c41-46ec-83c1-858b387d944b" name="Changes" comment="" />
-      <created>1731188758917</created>
+      <changelist id="38862fe7-8760-4eef-9f9f-5fdba728b888" name="Changes" comment="" />
+      <created>1738490315594</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1731188758917</updated>
-      <workItem from="1731188760753" duration="10629000" />
-      <workItem from="1731330482680" duration="4322000" />
-      <workItem from="1731654766974" duration="64787000" />
-      <workItem from="1731971963441" duration="9393000" />
-      <workItem from="1732095488027" duration="3682000" />
-      <workItem from="1732326417691" duration="13862000" />
-      <workItem from="1732621385512" duration="5630000" />
-      <workItem from="1732661046150" duration="2557000" />
-      <workItem from="1732684140712" duration="7430000" />
-      <workItem from="1732842046127" duration="5833000" />
-      <workItem from="1732851296112" duration="8447000" />
-      <workItem from="1734266495214" duration="8759000" />
-      <workItem from="1734316881021" duration="7595000" />
-      <workItem from="1734483367715" duration="6882000" />
-      <workItem from="1734901871624" duration="6081000" />
-      <workItem from="1734943897509" duration="78974000" />
+      <updated>1738490315594</updated>
+      <workItem from="1738490318551" duration="10008000" />
+      <workItem from="1739600307023" duration="50723000" />
+      <workItem from="1742083626198" duration="51573000" />
+      <workItem from="1744240335569" duration="21677000" />
+      <workItem from="1746677407824" duration="393000" />
+      <workItem from="1753002995123" duration="191000" />
+      <workItem from="1753003207672" duration="107000" />
+      <workItem from="1753003349706" duration="6972000" />
+      <workItem from="1755481484746" duration="6654000" />
+      <workItem from="1756143833816" duration="2050000" />
+      <workItem from="1757239619996" duration="1182000" />
+      <workItem from="1757243291951" duration="3281000" />
+      <workItem from="1757300589840" duration="12490000" />
+      <workItem from="1760424212029" duration="27714000" />
+      <workItem from="1761302626992" duration="66000" />
+      <workItem from="1761303210335" duration="88000" />
+      <workItem from="1761303764223" duration="636000" />
+      <workItem from="1761360338634" duration="7770000" />
+      <workItem from="1761462186424" duration="48554000" />
+      <workItem from="1762247966603" duration="14805000" />
+      <workItem from="1762677235409" duration="319000" />
+      <workItem from="1762766612414" duration="374000" />
     </task>
-    <task id="LOCAL-00001" summary="Basic Save and Load">
+    <task id="LOCAL-00001" summary="Reveal map working">
       <option name="closed" value="true" />
-      <created>1731998985916</created>
+      <created>1738810703250</created>
       <option name="number" value="00001" />
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
-      <updated>1731998985916</updated>
+      <updated>1738810703250</updated>
     </task>
-    <task id="LOCAL-00002" summary="Added terrain improvements">
+    <task id="LOCAL-00002" summary="Barbarians work">
       <option name="closed" value="true" />
-      <created>1732103727872</created>
+      <created>1745194799584</created>
       <option name="number" value="00002" />
       <option name="presentableId" value="LOCAL-00002" />
       <option name="project" value="LOCAL" />
-      <updated>1732103727872</updated>
+      <updated>1745194799584</updated>
     </task>
-    <task id="LOCAL-00003" summary="Player knowledge fixed">
+    <task id="LOCAL-00003" summary="Merge axx/master into master">
       <option name="closed" value="true" />
-      <created>1732362952460</created>
+      <created>1745195191948</created>
       <option name="number" value="00003" />
       <option name="presentableId" value="LOCAL-00003" />
       <option name="project" value="LOCAL" />
-      <updated>1732362952460</updated>
+      <updated>1745195191948</updated>
     </task>
-    <task id="LOCAL-00004" summary="Rivers">
+    <task id="LOCAL-00004" summary="Barbarians working (not well but working)">
       <option name="closed" value="true" />
-      <created>1732412321773</created>
+      <created>1761971500897</created>
       <option name="number" value="00004" />
       <option name="presentableId" value="LOCAL-00004" />
       <option name="project" value="LOCAL" />
-      <updated>1732412321773</updated>
+      <updated>1761971500897</updated>
     </task>
-    <task id="LOCAL-00005" summary="Improve encoding of terrain improvements and player information">
+    <task id="LOCAL-00005" summary="Barbarians working a little better">
       <option name="closed" value="true" />
-      <created>1732937196520</created>
+      <created>1762766985125</created>
       <option name="number" value="00005" />
       <option name="presentableId" value="LOCAL-00005" />
       <option name="project" value="LOCAL" />
-      <updated>1732937196520</updated>
+      <updated>1762766985125</updated>
     </task>
-    <task id="LOCAL-00006" summary="Restore start premade world">
-      <option name="closed" value="true" />
-      <created>1734274874300</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1734274874300</updated>
-    </task>
-    <task id="LOCAL-00007" summary="Fix some edge cases around premade world">
-      <option name="closed" value="true" />
-      <created>1734318014253</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1734318014253</updated>
-    </task>
-    <task id="LOCAL-00008" summary="Start of AI rework&#10;Now runs from lua script still doesn't do much useful">
-      <option name="closed" value="true" />
-      <created>1737969714360</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1737969714360</updated>
-    </task>
-    <task id="LOCAL-00009" summary="Merge latest axx master into ai branch">
-      <option name="closed" value="true" />
-      <created>1737971475601</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1737971475601</updated>
-    </task>
-    <task id="LOCAL-00010" summary="Move Zoom to GameScreen">
-      <option name="closed" value="true" />
-      <created>1738197456633</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1738197456633</updated>
-    </task>
-    <option name="localTasksCounter" value="11" />
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -295,25 +276,9 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
   <component name="Vcs.Log.Tabs.Properties">
-    <option name="OPEN_GENERIC_TABS">
-      <map>
-        <entry key="c4e29be5-793f-44da-a797-5ac788841745" value="TOOL_WINDOW" />
-        <entry key="f1dbb356-8c33-45bf-a5de-d98d57d237dc" value="TOOL_WINDOW" />
-      </map>
-    </option>
     <option name="TAB_STATES">
       <map>
         <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-        <entry key="c4e29be5-793f-44da-a797-5ac788841745">
-          <value>
-            <State />
-          </value>
-        </entry>
-        <entry key="f1dbb356-8c33-45bf-a5de-d98d57d237dc">
           <value>
             <State />
           </value>
@@ -322,60 +287,112 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Basic Save and Load" />
-    <MESSAGE value="Added terrain improvements" />
-    <MESSAGE value="Player knowledge fixed" />
-    <MESSAGE value="Rivers" />
-    <MESSAGE value="Improve encoding of terrain improvements and player information" />
-    <MESSAGE value="Restore start premade world" />
-    <MESSAGE value="Fix some edge cases around premade world" />
-    <MESSAGE value="Start of AI rework&#10;Now runs from lua script still doesn't do much useful" />
-    <MESSAGE value="Merge latest axx master into ai branch" />
-    <MESSAGE value="Move Zoom to GameScreen" />
-    <option name="LAST_COMMIT_MESSAGE" value="Move Zoom to GameScreen" />
+    <MESSAGE value="Reveal map working" />
+    <MESSAGE value="Barbarians work" />
+    <MESSAGE value="Merge axx/master into master" />
+    <MESSAGE value="Barbarians working (not well but working)" />
+    <MESSAGE value="Barbarians working a little better" />
+    <option name="LAST_COMMIT_MESSAGE" value="Barbarians working a little better" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Civ2/Dialogs/FileDialogs/LoadMap.cs</url>
-          <line>35</line>
-          <properties documentPath="$PROJECT_DIR$/Civ2/Dialogs/FileDialogs/LoadMap.cs" containingFunctionPresentation="Method 'HandleFileSelection'">
-            <startOffsets>
-              <option value="1110" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1149" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Civ2/Dialogs/NewGame/PremadeWorld/RandomiseResourceSeed.cs</url>
-          <line>15</line>
-          <properties documentPath="$PROJECT_DIR$/Civ2/Dialogs/NewGame/PremadeWorld/RandomiseResourceSeed.cs" containingFunctionPresentation="Method 'SetConfigValue'">
-            <startOffsets>
-              <option value="368" />
-            </startOffsets>
-            <endOffsets>
-              <option value="398" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Engine/src/Scripting/ScriptEngine.cs</url>
-          <line>78</line>
-          <properties documentPath="$PROJECT_DIR$/Engine/src/Scripting/ScriptEngine.cs" containingFunctionPresentation="Method 'RunScript'">
+          <line>85</line>
+          <properties documentPath="C:\Users\R-105\source\repos\Civ2-clone\Engine\src\Scripting\ScriptEngine.cs" containingFunctionPresentation="Method 'RunScript'">
             <startOffsets>
-              <option value="2313" />
+              <option value="2538" />
             </startOffsets>
             <endOffsets>
-              <option value="2375" />
+              <option value="2539" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="12" />
+          <option name="timeStamp" value="10" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Engine/src/Scripting/CivScripts.cs</url>
+          <line>139</line>
+          <properties documentPath="C:\Users\R-105\source\repos\Civ2-clone\Engine\src\Scripting\CivScripts.cs" containingFunctionPresentation="Method 'createUnit'">
+            <startOffsets>
+              <option value="5138" />
+            </startOffsets>
+            <endOffsets>
+              <option value="5574" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="33" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Engine/src/Scripting/CivScripts.cs</url>
+          <line>152</line>
+          <properties documentPath="C:\Users\R-105\source\repos\Civ2-clone\Engine\src\Scripting\CivScripts.cs" containingFunctionPresentation="Method 'createUnit'">
+            <startOffsets>
+              <option value="5587" />
+            </startOffsets>
+            <endOffsets>
+              <option value="5607" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="34" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Tests/Engine.Tests/Units/MovementFunctionsTests.cs</url>
+          <line>81</line>
+          <properties documentPath="$PROJECT_DIR$/Tests/Engine.Tests/Units/MovementFunctionsTests.cs" containingFunctionPresentation="Method 'ActiveUnitCannotMove_HasMovePoints_ReturnsFalse'">
+            <startOffsets>
+              <option value="2020" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2061" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="52" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Tests/Engine.Tests/Units/MovementFunctionsTests.cs</url>
+          <line>291</line>
+          <properties documentPath="$PROJECT_DIR$/Tests/Engine.Tests/Units/MovementFunctionsTests.cs" containingFunctionPresentation="Method 'IsNextToEnemy_EnemyOnAdjacentTile_ReturnsTrue'">
+            <startOffsets>
+              <option value="7371" />
+            </startOffsets>
+            <endOffsets>
+              <option value="7444" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="54" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Tests/Engine.Tests/Units/MovementFunctionsTests.cs</url>
+          <line>328</line>
+          <properties documentPath="$PROJECT_DIR$/Tests/Engine.Tests/Units/MovementFunctionsTests.cs" containingFunctionPresentation="Method 'GetPossibleMoves_SeaUnit_OnlyReturnsOceanTiles'">
+            <startOffsets>
+              <option value="8371" />
+            </startOffsets>
+            <endOffsets>
+              <option value="8447" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="59" />
+        </line-breakpoint>
+        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
+          <properties exception="System.OperationCanceledException" breakIfHandledByOtherCode="false" displayValue="System.OperationCanceledException" />
+          <option name="timeStamp" value="13" />
+        </breakpoint>
+        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
+          <properties exception="System.Threading.Tasks.TaskCanceledException" breakIfHandledByOtherCode="false" displayValue="System.Threading.Tasks.TaskCanceledException" />
+          <option name="timeStamp" value="14" />
+        </breakpoint>
+        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
+          <properties exception="System.Threading.ThreadAbortException" breakIfHandledByOtherCode="false" displayValue="System.Threading.ThreadAbortException" />
+          <option name="timeStamp" value="15" />
+        </breakpoint>
+        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
+          <properties exception="Xunit.Sdk.TrueException" breakIfHandledByUserCode="true" breakIfHandledByOtherCode="false" isInternal="false" displayValue="TrueException" namespaceName="Xunit.Sdk">
+            <option name="internal" value="false" />
+          </properties>
+          <option name="timeStamp" value="56" />
+        </breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>

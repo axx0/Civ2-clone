@@ -2,13 +2,17 @@ using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.Advances;
 using Civ2engine.Enums;
+using Civ2engine.Events;
 using Civ2engine.MapObjects;
 using Civ2engine.Production;
+using Civ2engine.Scripting;
 using Civ2engine.Scripting.ScriptObjects;
+using Civ2engine.Scripting.UnitActions;
 using Civ2engine.UnitActions;
 using Civ2engine.Units;
 using Model.Core;
 using Model.Core.Advances;
+using Model.Core.Units;
 using Neo.IronLua;
 
 namespace Civ2engine
@@ -38,7 +42,7 @@ namespace Civ2engine
         public Tile ActiveTile { get; set; }
         public Unit? ActiveUnit { get; set; }
 
-        public List<Unit> WaitingList { get; }
+        public List<Unit> WaitingList { get; } = [];
 
         public void CivilDisorder(City city)
         {
@@ -116,36 +120,99 @@ namespace Civ2engine
 
         public void TurnStart(int turnNumber)
         {
+            WaitingList.Clear();
             AI.Call(AiEvent.TurnStart, new LuaTable { { "Turn", turnNumber } });
         }
 
         public void SetUnitActive(Unit? unit, bool move)
         {
             ActiveUnit = unit;
-            if (unit != null)
+            if (unit == null) return;
+            
+            if (unit.CurrentLocation != null) ActiveTile = unit.CurrentLocation;
+            if (!move) return;
+            
+            UnitAction? action = null;
+            while (unit.MovePoints > 0)
             {
-                if (unit.CurrentLocation != null) ActiveTile = unit.CurrentLocation;
-                if (move)
+                var result = AI.Call(AiEvent.UnitOrdersNeeded, new LuaTable { { "Unit", new UnitApi(unit, _game) } });
+                if (result is LuaResult { Count: > 0 } luaResult)
                 {
-                    UnitAction? action = null;
-                    var result = AI.Call(AiEvent.UnitOrdersNeeded, new LuaTable { { "Unit", unit } });
-                    if (result is LuaResult { Count: > 0 } luaResult)
+                    action = luaResult[0] switch
                     {
-                        action = luaResult[0] switch
-                        {
-                            UnitAction luaAction => luaAction,
-                            "B" => new BuildCityAction(unit, _game),
-                            "F" => new FortifyAction(unit),
-                            _ => action
-                        };
-                    }
-                        
-                    // Handle other things AI script could return? perhaps a tile indicating a GOTO order or a letter for a string order? (e.g. F for fortify)   
-                    
-                    action ??= new NothingAction(unit);
-                    action.Execute();
+                        UnitAction luaAction => luaAction,
+                        TileApi tile => TileToAction(tile.BaseTile, unit),
+                        "B" or "b" => new BuildCityAction(unit, _game),
+                        "F" or "f" => new FortifyAction(unit, _game),
+                        "W" or "w" => new WaitAction(unit, _game, this),
+                        _ => action
+                    };
                 }
+
+                action ??= new NothingAction(unit, _game);
+                action.Execute();
             }
+        }
+
+        private void CallUnitsLost(LuaTable units, Unit? by)
+        {
+            var args = new LuaTable { { "Units", units } };
+            if (by != null)
+            {
+                args.Add("By", new UnitApi(by, _game));
+            }
+
+            AI.Call(AiEvent.UnitsLost, args);
+        }
+
+        public void UnitLost(Unit unit, Unit? killedBy)
+        {
+            var units = new LuaTable { new UnitApi(unit, _game) };
+            CallUnitsLost(units, killedBy);
+        }
+
+        public void UnitsLost(List<Unit> deadUnits, Unit? killedBy)
+        {
+            var units = new LuaTable();
+            foreach (var u in deadUnits)
+            {
+                units.Add(new UnitApi(u, _game));
+            }
+            CallUnitsLost(units, killedBy);
+        }
+
+        public void UnitMoved(Unit unit, Tile tileTo, Tile tileFrom)
+        {
+            AI.Call(AiEvent.UnitMoved, new LuaTable { { "Unit", new UnitApi(unit, _game) }, { "TileTo", new TileApi(tileTo, _game)}, { "TileFrom", new TileApi(tileFrom, _game)} });
+        }
+
+        public void CombatHappened(CombatEventArgs combatEventArgs)
+        {
+            //TODO: Does the AI care?
+        }
+
+        public void MoveBlocked(Unit unit, BlockedReason blockedReason)
+        {
+            //TODO: Does the AI care? Can this even happen?
+        }
+
+        private UnitAction? TileToAction(Tile tile, Unit unit)
+        {
+            if (tile == unit.CurrentLocation)
+            {
+                return new NothingAction(unit, _game);
+            }
+
+            if (!unit.CurrentLocation.Neighbours().Contains(tile))
+            {
+                return new GotoAction(unit, tile, _game);
+            }
+            
+            if (tile.UnitsHere.Count > 0 && tile.UnitsHere[0].Owner.Id != unit.Owner.Id)
+            {
+                return new AttackAction(unit, tile, _game);
+            }
+            return new MoveAction(unit, tile, _game);
         }
     }
 }

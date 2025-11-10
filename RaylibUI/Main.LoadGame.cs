@@ -4,6 +4,7 @@ using Civ2engine;
 using Civ2engine.Units;
 using Model;
 using Model.Core;
+using Model.Core.Units;
 using RaylibUI.RunGame;
 
 namespace RaylibUI

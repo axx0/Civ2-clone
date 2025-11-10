@@ -129,5 +129,19 @@ namespace Civ2engine.Scripting
                 _advance.Effects[effect] += value;
             }
         }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is Tech tech)
+            {
+                return tech.id == id;
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return id;
+        }
     }
 }

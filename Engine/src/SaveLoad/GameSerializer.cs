@@ -12,6 +12,7 @@ using Civ2engine.SaveLoad.SerializationUtils;
 using Civ2engine.Units;
 using Model.Core;
 using Model.Core.Cities;
+using Model.Core.Units;
 
 namespace Civ2engine.SaveLoad;
 
@@ -43,7 +44,7 @@ public class GameSerializer
         writer.WriteStartObject("game");
         writer.WriteNonDefaultFields("opts", game.Options);
         writer.WriteNonDefaultFields("data", new JsonGameData(game));
-        var encoder = new ImprovementEncoder(game.TerrainImprovements);
+        var encoder = game.ImprovementEncoder;
         writer.WriteStartObject("encoder");
         foreach (var pair in encoder.EncoderData)
         {
@@ -168,6 +169,13 @@ public class GameSerializer
             CaravanCommodity = unitData.Commodity,
             Counter = unitData.Counter
         };
+        if (unitData.ExtendedData != null)
+        {
+            foreach (var keyValuePair in unitData.ExtendedData)
+            {
+                unit.ExtendedData[keyValuePair.Key] = keyValuePair.Value;
+            }
+        }
         
         civilization.Units.Add(unit);
         return unit;

@@ -7,4 +7,6 @@ public static class AiEvent
     public const string UnitOrdersNeeded = "Unit_Orders_Needed";
     
     public const string ResearchComplete = "Research_Complete";
+    public const string UnitsLost = "Units_Lost";
+    public const string UnitMoved = "Unit_Moved";
 }

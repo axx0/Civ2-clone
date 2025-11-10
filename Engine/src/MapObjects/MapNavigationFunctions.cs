@@ -54,6 +54,19 @@ public static class MapNavigationFunctions
         };
         return TilesAround(map, candidate, offsets, nullForInvalid);
     }
+    private static readonly int[] Right = [1, 0];
+    private static readonly int[] Down = [0, 2];
+    private static readonly int[] Left = [-1, 0];
+    private static readonly int[] Up = [0, -2];
+
+    public static IEnumerable<Tile> DiagonalNeighbours(this Map map, Tile candidate, bool nullForInvalid = false)
+    {
+        int[][] offsets =
+        [
+            Right, Down,Left, Up
+        ];
+        return TilesAround(map, candidate, offsets, nullForInvalid);
+    }
 
     public static IEnumerable<Tile> Neighbours(this Map map, Tile candidate, bool twoSpaces = false,
         bool nullForInvalid = false)

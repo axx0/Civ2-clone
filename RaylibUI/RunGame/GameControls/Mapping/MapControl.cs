@@ -35,7 +35,7 @@ public class MapControl : BaseControl
     private readonly Queue<IGameView> _animationQueue = new();
     private IGameView _currentView;
     
-    public MapControl(GameScreen gameScreen, IGame game, Rectangle initialBounds) : base(gameScreen)
+    public MapControl(GameScreen gameScreen, IGame game, Rectangle initialBounds, LocalPlayer player) : base(gameScreen)
     {
         Bounds = initialBounds;
         _currentBounds = initialBounds;
@@ -67,7 +67,7 @@ public class MapControl : BaseControl
             _gameScreen.ActiveMode.GetDefaultView(gameScreen, null, _viewHeight, _viewWidth, ForceRedraw);
 
         gameScreen.OnMapEvent += MapEventTriggered;
-        _game.OnUnitEvent += UnitEventTriggered;
+        player.OnUnitEvent += UnitEventTriggered;
         Click += OnClick;
         MouseDown += OnMouseDown;
 

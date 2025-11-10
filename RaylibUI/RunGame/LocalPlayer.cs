@@ -1,10 +1,13 @@
 using Civ2engine;
 using Civ2engine.Advances;
+using Civ2engine.Enums;
+using Civ2engine.Events;
 using Civ2engine.MapObjects;
 using Civ2engine.Production;
 using Civ2engine.Units;
 using Model.Core;
 using Model.Core.Advances;
+using Model.Core.Units;
 using Model.Interface;
 
 namespace RaylibUI.RunGame;
@@ -160,4 +163,33 @@ public class LocalPlayer : IPlayer
             _gameScreen.ActiveMode = _gameScreen.Moving;
         }
     }
+
+    public void UnitLost(Unit unit, Unit? killedBy)
+    {
+        //TODO: How do we use this
+    }
+
+    public void UnitsLost(List<Unit> deadUnits, Unit? killedBy)
+    {
+        //TODO: How do we use this
+    }
+
+    public void UnitMoved(Unit unit, Tile tileTo, Tile tileFrom)
+    {
+        OnUnitEvent?.Invoke(this, new MovementEventArgs(unit, tileFrom, tileTo));
+    }
+
+    public void CombatHappened(CombatEventArgs combatEventArgs)
+    {
+        OnUnitEvent?.Invoke(this, combatEventArgs);
+    }
+
+    public void MoveBlocked(Unit unit, BlockedReason blockedReason)
+    {
+        OnUnitEvent?.Invoke(this, new MovementBlockedEventArgs(unit, blockedReason));
+    }
+
+
+    public event EventHandler<UnitEventArgs> OnUnitEvent;
+    
 }

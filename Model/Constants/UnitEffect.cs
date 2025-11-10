@@ -11,4 +11,14 @@ public enum UnitEffect
     /// Vulnerable to SDI defence
     /// </summary>
     SDIVulnerable = 2,
+    
+    /// <summary>
+    /// Unit behaves as fanatics
+    /// </summary>
+    Fanatics = 4,
+    
+    /// <summary>
+    /// Unit is free for specified government (since 
+    /// </summary>
+    FreeSupport = 8
 }

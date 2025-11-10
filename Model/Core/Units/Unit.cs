@@ -1,13 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.MapObjects;
-using Civ2engine.Production;
-using Civ2engine.Terrains;
+using Civ2engine.Units;
 using Model.Constants;
-using Model.Core.Cities;
 
-namespace Civ2engine.Units
+namespace Model.Core.Units
 {
     public class Unit: IUnit
     {
@@ -44,21 +41,21 @@ namespace Civ2engine.Units
         public int Cost => TypeDefinition.Cost;
         public int ShipHold => TypeDefinition.Hold;
         public AiRoleType AiRole => TypeDefinition.AIrole;
-        public bool TwoSpaceVisibility => TypeDefinition.Flags[14] == '1';
-        public bool IgnoreZonesOfControl => TypeDefinition.Flags[13] == '1' || Domain == UnitGas.Air || Domain == UnitGas.Sea;
-        public bool CanMakeAmphibiousAssaults => TypeDefinition.Flags[12] == '1';
-        public bool SubmarineAdvantagesDisadvantages => TypeDefinition.Flags[11] == '1';
-        public bool CanAttackAirUnits => TypeDefinition.Flags[10] == '1';    // fighter
-        public bool ShipMustStayNearLand => TypeDefinition.Flags[9] == '1';  // trireme
-        public bool NegatesCityWalls => TypeDefinition.Flags[8] == '1';  // howitzer
-        public bool CanCarryAirUnits => TypeDefinition.Flags[7] == '1';  // carrier
-        public bool CanMakeParadrops => TypeDefinition.Flags[6] == '1';
-        public bool Alpine => TypeDefinition.Flags[5] == '1';    // treats all squares as road
-        public bool X2OnDefenseVersusHorse => TypeDefinition.Flags[4] == '1';    // pikemen
-        public bool FreeSupportForFundamentalism => TypeDefinition.Flags[3] == '1';    // fanatics
-        public bool DestroyedAfterAttacking => TypeDefinition.Flags[2] == '1';    // missiles
-        public bool X2OnDefenseVersusAir => TypeDefinition.Flags[1] == '1';    // AEGIS
-        public bool UnitCanSpotSubmarines => TypeDefinition.Flags[0] == '1';
+        public bool TwoSpaceVisibility => TypeDefinition.Flags[0] ;
+        public bool IgnoreZonesOfControl => TypeDefinition.Flags[1]  || Domain == UnitGas.Air || Domain == UnitGas.Sea;
+        public bool CanMakeAmphibiousAssaults => TypeDefinition.Flags[2] ;
+        public bool SubmarineAdvantagesDisadvantages => TypeDefinition.Flags[3] ;
+        public bool CanAttackAirUnits => TypeDefinition.Flags[4] ;    // fighter
+        public bool ShipMustStayNearLand => TypeDefinition.Flags[5] ;  // trireme
+        public bool NegatesCityWalls => TypeDefinition.Flags[6] ;  // howitzer
+        public bool CanCarryAirUnits => TypeDefinition.Flags[7] ;  // carrier
+        public bool CanMakeParadrops => TypeDefinition.Flags[8];
+        public bool Alpine => TypeDefinition.Flags[9] ;    // treats all squares as road
+        public bool X2OnDefenseVersusHorse => TypeDefinition.Flags[10] ;    // pikemen
+        public bool FreeSupportForFundamentalism => TypeDefinition.Flags[11] ;    // fanatics
+        public bool DestroyedAfterAttacking => TypeDefinition.Flags[12] ;    // missiles
+        public bool X2OnDefenseVersusAir => TypeDefinition.Flags[13] ;    // AEGIS
+        public bool UnitCanSpotSubmarines => TypeDefinition.Flags[4] ;
 
 
         public int Id { get; set; }
@@ -154,5 +151,8 @@ namespace Civ2engine.Units
         }
 
         public int Building { get; set; }
+        public int AttacksSpent { get; set; }
+
+        public Dictionary<string, string> ExtendedData { get;} = new();
     }
 }

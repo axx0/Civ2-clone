@@ -7,11 +7,11 @@ end)
 ai.RegisterEvent(AiEvent.Unit_Orders_Needed, function(ai, data)
     local unit = data.Unit;
 
-    print("Looking for orders for " .. unit.Name)
-    local currentTile = unit.CurrentLocation;
+    print("Looking for orders for " .. unit.type.name)
+    local currentTile = unit.location;
 
-    if unit.AiRole == AiRoleType.Defend then
-        if (currentTile.CityHere) then
+    if unit.type.role == AiRoleType.Defend then
+        if currentTile.city then
     
             --if (currentTile.UnitsHere.Count(u => u != unit && u.AiRole == AiRoleType.Defend) <
         -- 2 + currentTile.CityHere.Size / 3)
@@ -21,13 +21,13 @@ ai.RegisterEvent(AiEvent.Unit_Orders_Needed, function(ai, data)
     
     print(unit.AiRole)
 
-    if unit.AiRole == AiRoleType.Settle then
+    if unit.type.role == AiRoleType.Settle then
         local isCityRadius = ai.GetNearestCity(currentTile, true)
     
         if isCityRadius then
             --TODO terrain improvements
         else
-            if currentTile.Fertility == -2 then
+            if currentTile.fertility == -2 then
                 return "B"
             end
             local fertile = ai.CheckFertility(currentTile, unit)
@@ -38,12 +38,11 @@ ai.RegisterEvent(AiEvent.Unit_Orders_Needed, function(ai, data)
     end
     
     local moves = ai.GetPossibleMoves(unit)
-    local best = moves[1]
     for move in moves do
         move.Priority = ai.Random.Next(50)
         
         -- Here evaluate the move and weigh it up or down
-        if move.Priority > best.Priority then
+        if not best or move.Priority > best.Priority then
             best = move
         end
     end

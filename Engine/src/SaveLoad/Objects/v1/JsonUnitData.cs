@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Civ2engine.Units;
+using Model.Core.Units;
 
 namespace Civ2engine.SaveLoad;
 
@@ -35,7 +36,13 @@ public class JsonUnitData
         GoToX = unit.GoToX;
         Commodity = unit.CaravanCommodity;
         Counter = unit.Counter;
+        if (unit.ExtendedData.Count > 0)
+        {
+            ExtendedData = unit.ExtendedData;
+        }
     }
+
+    public Dictionary<string, string>? ExtendedData { get; set; }
 
     public int X { get; set; }
     public int Y { get; set; }
