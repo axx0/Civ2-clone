@@ -69,6 +69,8 @@ namespace Civ2engine
             this.SetupTech();
             
             Power.CalculatePowerRatings(this);
+
+            History = HistoryUtils.ReconstructHistory(this);
         }
 
         private Game(Rules rules, IGameData gameData, ILoadedGameObjects objects, string[] rulesetPaths, Options options) 
@@ -101,7 +103,25 @@ namespace Civ2engine
 
             _activeCiv = playerCiv;
             AllCities.AddRange(objects.Cities);
-            
+            if (gameData.CitiesBuiltSoFar == null)
+            {
+                foreach (Civilization civ in AllCivilizations)
+                {
+                    CitiesBuiltSoFar[civ] = 0;
+                }
+            } else {
+                for (int tribeN = 0; tribeN < gameData.CitiesBuiltSoFar.Length; tribeN++)
+                {
+                    byte citiesBuilt = gameData.CitiesBuiltSoFar[tribeN];
+                    Civilization? civ = AllCivilizations.Find(
+                        civ => civ.TribeId == tribeN && civ.PlayerType != PlayerType.Barbarians);
+                    if (civ != null)
+                    {
+                        CitiesBuiltSoFar[civ] = citiesBuilt;
+                    }
+                }
+            }
+
             for (var index = 0; index < _maps.Length; index++)
             {
                 var map = _maps[index];
@@ -144,6 +164,8 @@ namespace Civ2engine
                 city.SetUnitSupport(government);
                 city.CalculateOutput(city.Owner.Government, this);
             }
+
+            History = HistoryUtils.ReconstructHistory(this);
         }
     }
 }

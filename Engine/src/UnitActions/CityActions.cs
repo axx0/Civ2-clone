@@ -15,7 +15,7 @@ namespace Civ2engine.UnitActions
     {
         public static string GetCityName(Civilization civ , IGame game)
         {
-            var cityCount = game.History.TotalCitiesBuilt(civ);
+            var cityCount = game.CitiesBuiltSoFar.GetValueOrDefault(civ, (byte) 0);
             var names = game.CityNames;
             var tribe = civ.TribeName.ToUpperInvariant();
             var civCityList = names[names.ContainsKey(tribe) ? tribe : "EXTRA"];
@@ -63,6 +63,8 @@ namespace Civ2engine.UnitActions
                 }
             }
             game.History.CityBuilt(tile.CityHere);
+            byte currentCityCount = game.CitiesBuiltSoFar.GetValueOrDefault(city.Owner, (byte) 0);
+            game.CitiesBuiltSoFar[city.Owner] = (byte) (currentCityCount + 1);
 
             city.AutoAddDistributionWorkers(game.Rules);
             city.CalculateOutput(city.Owner.Government, game);

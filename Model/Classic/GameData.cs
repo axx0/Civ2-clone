@@ -226,7 +226,7 @@ namespace Civ2engine
         public byte[] CityUnhappyCitizens { get; set; }
         
         // Tribe cities data
-        public byte[] CitiesBuiltSofar { get; set; }
+        public byte[] CitiesBuiltSoFar { get; set; }
 
         // Other data        
         public short[] ActiveCursorXy { get; set; }

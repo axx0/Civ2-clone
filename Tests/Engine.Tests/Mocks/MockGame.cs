@@ -23,6 +23,7 @@ internal class MockGame : IGame
 
     public IHistory History => throw new NotImplementedException();
     public Dictionary<string, List<string>?> CityNames => throw new NotImplementedException();
+    public Dictionary<Civilization, byte> CitiesBuiltSoFar { get; }
 
     public void ConnectPlayer(IPlayer player) => throw new NotImplementedException();
     public string Order2String(int unitOrder) => throw new NotImplementedException();

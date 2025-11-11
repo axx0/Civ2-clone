@@ -29,6 +29,10 @@ public class CityActionsTest
             history.CityBuilt(c);
         }
         game.Setup(g => g.History).Returns(history);
+        // and N cities built by this civilization in the game data
+        Dictionary<Civilization, byte> citiesBuiltCount = new Dictionary<Civilization, byte>();
+        citiesBuiltCount[civ] = (byte) citiesToCreate;
+        game.Setup(g => g.CitiesBuiltSoFar).Returns(citiesBuiltCount);
         return game;
     }
 
