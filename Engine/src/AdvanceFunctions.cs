@@ -100,7 +100,7 @@ namespace Civ2engine.Advances
             if (!research.Discovered)
             {
                 research.DiscoveredBy = targetCiv;
-                game.History.AdvanceDiscovered(advanceIndex, targetCiv);
+                game.History.AdvanceDiscovered(advanceIndex, civilization);
             }
 
             if (civilization.ReseachingAdvance == advanceIndex)

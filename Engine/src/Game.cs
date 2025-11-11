@@ -24,10 +24,7 @@ namespace Civ2engine
         public FastRandom Random { get; set; } = new();
         public List<City> AllCities { get; } = new();
 
-        public IHistory History
-        {
-            get { return _history ??= HistoryUtils.ReconstructHistory(this); }
-        }
+        public IHistory History { get; }
 
         public List<Civilization> AllCivilizations { get; } = new();
 
@@ -63,14 +60,13 @@ namespace Civ2engine
         private readonly Map[] _maps;
 
         public IList<Map> Maps => _maps;
-
-        private History? _history;
         public IScriptEngine Script { get; }
 
         public int NoMaps => _maps.Length;
 
         public int TotalMapArea => _maps.Select(m => m.Tile.GetLength(0) * m.Tile.GetLength(1)).Sum();
         public Dictionary<string, List<string>?> CityNames { get; set; }
+        public Dictionary<Civilization, byte> CitiesBuiltSoFar { get; } = new Dictionary<Civilization, byte>();
         public Civilization GetPlayerCiv => AllCivilizations.FirstOrDefault(c => c.PlayerType == PlayerType.Local);
 
         public IPlayer[] Players { get; }

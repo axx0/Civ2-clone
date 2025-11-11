@@ -1015,12 +1015,12 @@ public class Read
         //DATA FOR FINDING NEXT CITY NAME
         //=========================
         int ofsetTc = ofsetC + multipl * numberOfCities;
-        foreach (Civilization civ in objects.Civilizations)
+        byte[] citiesBuiltSoFar = new byte[21];
+        for (int tribeN = 0; tribeN < 21; tribeN++)
         {
-            if (civ.PlayerType != PlayerType.Barbarians)
-            {
-                int ofsetTcThisCiv = ofsetTc + 3 * civ.TribeId + 1;
-            }
+            int ofsetTcThisCiv = ofsetTc + 3 * tribeN + 1;
+            byte citiesBuilt = bytes[ofsetTcThisCiv];
+            citiesBuiltSoFar[tribeN] = citiesBuilt;
         }
         #endregion
         #region Other info
@@ -1297,6 +1297,7 @@ public class Read
             NoPollutionSkulls = noPollutionSkulls,
             GlobalTempRiseOccured = globalTempRiseOccured,
             NoOfTurnsOfPeace = noOfTurnsOfPeace,
+            CitiesBuiltSoFar = citiesBuiltSoFar,
         };
 
         return Game.Create(rules, data, objects, activeRuleSet, options);
