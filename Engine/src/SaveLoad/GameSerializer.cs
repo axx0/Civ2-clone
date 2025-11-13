@@ -97,8 +97,6 @@ public class GameSerializer
 
     public static IGame Read(JsonElement gameElement, Ruleset activeRuleSet, Rules rules)
     {
-        var options = JsonSerializer.Deserialize<Options>(gameElement.GetProperty("opts").GetRawText());
-        var gameData = JsonSerializer.Deserialize<JsonGameData>(gameElement.GetProperty("data").GetRawText());
         ImprovementEncoder? improvementEncoder = null;
         if (gameElement.TryGetProperty("encoder", out var encoderElement))
         {
@@ -110,7 +108,9 @@ public class GameSerializer
             Maps = MapSerializer.Read(gameElement.GetProperty("maps"), rules, improvementEncoder),
             Civilizations = new [] {Barbarians.Civilization}
                 .Concat(gameElement.GetProperty("civs").Deserialize<JsonCivData[]>()
-                    .Select((cd,index) => HydrateCiv(cd,index +1, rules))).ToList()
+                    .Select((cd,index) => HydrateCiv(cd,index +1, rules))).ToList(),
+            Options = JsonSerializer.Deserialize<Options>(gameElement.GetProperty("opts").GetRawText()),
+            GameData = JsonSerializer.Deserialize<JsonGameData>(gameElement.GetProperty("data").GetRawText())
         };
         
         // Hydrate Cities
@@ -136,7 +136,7 @@ public class GameSerializer
             }
         }
 
-        return Game.Create(rules, gameData, gameObjects, activeRuleSet, options);
+        return new Game(rules, gameObjects, activeRuleSet.Paths);
     }
 
     private static Unit HydrateUnit(JsonUnitData unitData, Rules rules, List<Map> maps, List<Civilization> civilizations, List<City> cities)

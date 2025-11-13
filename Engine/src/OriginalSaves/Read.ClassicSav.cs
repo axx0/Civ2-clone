@@ -407,7 +407,8 @@ public class Read
                 ScienceRate = scienceRate * 10,
                 TaxRate = taxRate * 10,
                 Government = governmentId,
-                AllowedAdvanceGroups = tribe.AdvanceGroups ?? new[] { AdvanceGroupAccess.CanResearch }
+                AllowedAdvanceGroups = tribe.AdvanceGroups ?? [AdvanceGroupAccess.CanResearch],
+                PowerRating = new List<int> (new int[turnNumber / 2])
             });
         }
 
@@ -1032,14 +1033,18 @@ public class Read
         var activeCursorXy = new short[] { BitConverter.ToInt16(bytes, ofsetO + 0), 
                                             BitConverter.ToInt16(bytes, ofsetO + 2) };
 
-        int noHumanPlayers = 0;
-        for (int i = 0; i < 8; i++) 
-        { 
-            var stat = humanPlayers[i] ? 1 : 0;
-            noHumanPlayers += stat;
-        }
-        int blockOo = gameVersion <= 44 ? 60 * noHumanPlayers + 1302 : 60 * noHumanPlayers + 1314;
+        int noHumanPlayers = humanPlayers.Count(p => p);
+        var block1Mult = gameVersion <= 44 ? 48 : 60;
 
+        // PowerRating history for PowerGraph (for each civ including barbs, recorded every 4 turns), max score=255
+        var powergraphBytes = 1200;
+        var records = powergraphBytes / 8;
+        for (int rec = 0; rec < Math.Min(records, turnNumber / 4); rec++)
+            for (int civId = 0; civId < 8; civId++)
+                objects.Civilizations[civId].PowerRating[2 * rec] = bytes[ofsetO + 4 + block1Mult * noHumanPlayers + rec * 8 + civId];
+
+        int blockOo = block1Mult * noHumanPlayers + 1314;
+        
         // Clicked tile with your mouse XY position (does not count if you clicked on a city)
         var clickedXy = new int[] { BitConverter.ToInt16(bytes, ofsetO + blockOo + 0), 
                                      BitConverter.ToInt16(bytes, ofsetO + blockOo + 2) };
@@ -1287,7 +1292,7 @@ public class Read
         }
         #endregion
 
-        GameData data = new()
+        objects.GameData = new GameData
         {
             TurnNumber = turnNumber,
             StartingYear = startingYear,
@@ -1300,7 +1305,9 @@ public class Read
             CitiesBuiltSoFar = citiesBuiltSoFar,
         };
 
-        return Game.Create(rules, data, objects, activeRuleSet, options);
+        objects.Options = options;
+
+        return new Game(rules, objects, activeRuleSet.Paths);
     }
 
     // Get bit value in byte

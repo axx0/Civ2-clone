@@ -17,4 +17,6 @@ public class JsonSaveObjects : ILoadedGameObjects
     public List<Transporter> Transporters { get; set; }
     public List<Civilization> Civilizations { get; set; }
     public List<Map> Maps { get; set; }
+    public IGameData GameData { get; set; }
+    public Options Options { get; set; }
 }

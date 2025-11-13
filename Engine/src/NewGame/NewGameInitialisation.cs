@@ -43,7 +43,7 @@ namespace Civ2engine.NewGame
 
             maps[0].WhichCivsMapShown = config.PlayerCiv.Id;
 
-            return Game.StartNew(maps, config, civilizations, paths);
+            return new Game(maps, config.Rules, civilizations, new Options(config), paths, config.DifficultyLevel, config.BarbarianActivity);
         }
 
         private static Tile GetDefaultStart(GameInitializationConfig config, Civilization civilization, Map map)

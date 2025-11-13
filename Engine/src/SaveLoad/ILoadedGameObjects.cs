@@ -15,4 +15,6 @@ public interface ILoadedGameObjects
     List<Transporter> Transporters { get; set; }
     List<Civilization> Civilizations { get; set; }
     List<Map> Maps { get; set; }
+    IGameData GameData { get; set; }
+    Options Options { get; set; }
 }

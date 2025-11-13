@@ -43,7 +43,11 @@ namespace Civ2engine
         public List<City> Cities { get; } = new();
 
         public PlayerType PlayerType { get; set; }
-        public int PowerRating { get; set; }
+
+        /// <summary>
+        /// Recorded every 2 turns
+        /// </summary>
+        public List<int> PowerRating { get; set; } = new();
         public int PowerRank { get; set; }
         public int NormalColour { get; set; }
         
