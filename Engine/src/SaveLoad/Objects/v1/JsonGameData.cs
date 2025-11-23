@@ -30,11 +30,11 @@ public class JsonGameData : IGameData
         GlobalTempRiseOccured = game.GlobalTempRiseOccured;
         NoOfTurnsOfPeace = game.NoOfTurnsOfPeace;
 
-        CitiesBuiltSoFar = new byte[21];
+        CitiesBuiltSoFar = new int[21];
         foreach (var civAndCityCount in game.CitiesBuiltSoFar)
         {
             int tribeId = civAndCityCount.Key.TribeId;
-            byte cityCount = civAndCityCount.Value;
+            int cityCount = civAndCityCount.Value;
             CitiesBuiltSoFar[tribeId] = cityCount;
         }
     }
@@ -46,5 +46,5 @@ public class JsonGameData : IGameData
     public int NoPollutionSkulls { set; get; }
     public int GlobalTempRiseOccured { set; get; }
     public int NoOfTurnsOfPeace { set; get; }
-    public byte[] CitiesBuiltSoFar { get; }
+    public int[] CitiesBuiltSoFar { get; }
 }

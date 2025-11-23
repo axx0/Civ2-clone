@@ -63,8 +63,8 @@ namespace Civ2engine.UnitActions
                 }
             }
             game.History.CityBuilt(tile.CityHere);
-            byte currentCityCount = game.CitiesBuiltSoFar.GetValueOrDefault(city.Owner, (byte) 0);
-            game.CitiesBuiltSoFar[city.Owner] = (byte) (currentCityCount + 1);
+            int currentCityCount = game.CitiesBuiltSoFar.GetValueOrDefault(city.Owner, 0);
+            game.CitiesBuiltSoFar[city.Owner] = currentCityCount + 1;
 
             city.AutoAddDistributionWorkers(game.Rules);
             city.CalculateOutput(city.Owner.Government, game);
