@@ -462,7 +462,7 @@ public class TestOfTimeInterface : Civ2Interface
                 new MenuElement("Destro&Y All Units At Cursor|Ctrl+Shift+D",
                     new Shortcut(KeyboardKey.D, ctrl: true, shift: true), KeyboardKey.Y),
                 new MenuElement("Change Money|Shift+F9", new Shortcut(KeyboardKey.F9, shift: true),
-                    KeyboardKey.Null),
+                    KeyboardKey.Null, CheatChangeMoneyCommand),
                 new MenuElement("-", Shortcut.None, KeyboardKey.Null),
                 new MenuElement("Edit Unit|Ctrl+Shift+U", new Shortcut(KeyboardKey.U, ctrl: true, shift: true),
                     KeyboardKey.Null),
