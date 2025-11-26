@@ -102,7 +102,7 @@ namespace Civ2engine
             } else {
                 for (int tribeN = 0; tribeN < gameData.CitiesBuiltSoFar.Length; tribeN++)
                 {
-                    byte citiesBuilt = gameData.CitiesBuiltSoFar[tribeN];
+                    int citiesBuilt = gameData.CitiesBuiltSoFar[tribeN];
                     Civilization? civ = AllCivilizations.Find(
                         civ => civ.TribeId == tribeN && civ.PlayerType != PlayerType.Barbarians);
                     if (civ != null)

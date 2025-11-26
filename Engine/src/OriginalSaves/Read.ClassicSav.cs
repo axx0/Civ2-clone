@@ -1016,11 +1016,11 @@ public class Read
         //DATA FOR FINDING NEXT CITY NAME
         //=========================
         int ofsetTc = ofsetC + multipl * numberOfCities;
-        byte[] citiesBuiltSoFar = new byte[21];
+        int[] citiesBuiltSoFar = new int[21];
         for (int tribeN = 0; tribeN < 21; tribeN++)
         {
             int ofsetTcThisCiv = ofsetTc + 3 * tribeN + 1;
-            byte citiesBuilt = bytes[ofsetTcThisCiv];
+            int citiesBuilt = bytes[ofsetTcThisCiv];
             citiesBuiltSoFar[tribeN] = citiesBuilt;
         }
         #endregion
