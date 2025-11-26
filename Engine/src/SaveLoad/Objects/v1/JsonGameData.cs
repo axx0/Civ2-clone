@@ -46,5 +46,5 @@ public class JsonGameData : IGameData
     public int NoPollutionSkulls { set; get; }
     public int GlobalTempRiseOccured { set; get; }
     public int NoOfTurnsOfPeace { set; get; }
-    public int[] CitiesBuiltSoFar { get; }
+    public int[] CitiesBuiltSoFar { set; get; }
 }
