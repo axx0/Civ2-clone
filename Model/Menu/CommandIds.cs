@@ -45,4 +45,5 @@ public static class CommandIds
     public const string LoadMap = "LOAD_MAP";
     
     public const string CheatRevealMapCommand = "CHEAT_REVEAL_MAP";
+    public const string CheatChangeMoneyCommand = "CHEAT_CHANGE_MONEY";
 }
