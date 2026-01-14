@@ -190,7 +190,7 @@ public class CityTileMap : BaseControl
 
     public override void Draw(bool pulse)
     {
-        var adjustedLocation = Location + _offset;
+        var adjustedLocation = new Vector2(Parent.Bounds.X, Parent.Bounds.Y) + Location + _offset;
         Graphics.DrawTextureEx(_texture.Value, adjustedLocation, 0, _scaleFactor, Color.White);
 
         foreach (var element in _viewElements)
@@ -199,13 +199,16 @@ public class CityTileMap : BaseControl
         }
 
         Graphics.DrawTextEx(_active.Look.CityWindowFont, _text,
-            new Vector2(Location.X + Width / 2f - _textDim.X / 2, Location.Y + Height - _textDim.Y), 
+            new Vector2(Parent.Bounds.X + Location.X + Width / 2f - _textDim.X / 2, Parent.Bounds.Y + Location.Y + Height - _textDim.Y), 
             _active.Look.CityWindowFontSize, 1, Color.Gold);
     }
 
     public override void OnResize()
     {
-        AbsolutePosition = _cityWindow.CityWindowProps.TileMap.ScaleAll(_cityWindow.Scale);
+        var pos = _cityWindow.CityWindowProps.TileMap.ScaleAll(_cityWindow.Scale);
+        Location = new(pos.X, pos.Y);
+        Width = (int)pos.Width;
+        Height = (int)pos.Height;
         base.OnResize();
         Redraw();
     }

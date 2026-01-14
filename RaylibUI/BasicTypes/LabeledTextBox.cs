@@ -14,9 +14,12 @@ internal class LabeledTextBox : ControlGroup
     {
         Name = textBoxDef.Name;
         var label = new LabelControl(controller, textBoxLabel, eventTransparent: true, minWidth: labelSize);
-        Children.Add(label);
-        _textBox = new TextBox(controller, textBoxDef.InitialValue, textBoxDef.Width);
-        Children.Add(_textBox);
+        Controls.Add(label);
+        _textBox = new TextBox(controller, textBoxDef.InitialValue, textBoxDef.Width)
+        {
+            Location = new(label.Width, 0)
+        };
+        Controls.Add(_textBox);
         Click += OnClick;
     }
 

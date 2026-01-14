@@ -2,13 +2,14 @@ using Civ2engine;
 using Model;
 using Model.Core;
 using Model.InterfaceActions;
-using RaylibUI.Forms;
 using RaylibUtils;
 using Civ2;
 using Model.Dialog;
 using Raylib_CSharp.Windowing;
 using Raylib_CSharp.Rendering;
 using Raylib_CSharp.Colors;
+using RaylibUI.BasicTypes.Controls;
+using RaylibUI.Controls;
 
 namespace RaylibUI.Initialization;
 
@@ -49,17 +50,10 @@ public class MainMenu : BaseScreen
             {
                 var menu = menuAction.DialogElement;
                 UpdateDecorations(menu);
-                    
-                ShowDialog(new CivDialog(MainWindow, menu.Dialog, menu.DialogPos, HandleButtonClick,
-                    optionsCols: menu.OptionsCols,
-                    replaceStrings: menu.ReplaceStrings,
-                    replaceNumbers: menu.ReplaceNumbers, 
-                    checkboxStates: menu.CheckboxStates,
-                    textBoxDefs: menu.TextBoxes, 
-                    initSelectedOption: menu.SelectedOption,
-                    optionsIcons: menu.OptionsIcons,
-                    image: menu.Image));
-                break;
+
+
+                    ShowDialog(new CivDialog(MainWindow, menu, HandleButtonClick));
+                    break;
             }
             case FileAction fileAction:
                 _imagePanels.Clear();

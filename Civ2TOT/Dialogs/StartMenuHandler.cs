@@ -17,7 +17,7 @@ public class StartMenuHandler : BaseDialogHandler
 
     public override IInterfaceAction HandleDialogResult(DialogResult result, Dictionary<string, ICivDialogHandler> civDialogHandlers, Civ2Interface civ2Interface)
     {   
-        if (result.SelectedButton == Dialog.Dialog.Button[1])
+        if (result.SelectedButton == Dialog.Button[1])
         {
             return ExitAction.Exit;
         }

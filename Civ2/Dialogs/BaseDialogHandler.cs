@@ -20,9 +20,8 @@ public abstract class BaseDialogHandler : ICivDialogHandler
     {
         if (popups.TryGetValue(Name, out var popup))
         {
-            Dialog = new DialogElements
+            Dialog = new DialogElements(popups[Name])
             {
-                Dialog = popup,
                 DialogPos = DialogPos
             };
         }

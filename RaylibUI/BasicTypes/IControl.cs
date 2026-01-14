@@ -7,17 +7,21 @@ using RaylibUI.BasicTypes;
 
 namespace RaylibUI;
 
-public interface IControl
+public interface IControl : IComponent
 {
-    Vector2 Location { get; set; }
-
     int Width { get; set; }
+    
+    int Height { get; set; }
 
-    int Height { get; }
-    Rectangle Bounds { get; set; }
+    /// <summary>
+    /// Bounds of control relative to game window.
+    /// </summary>
+    Rectangle Bounds { get; }
 
     bool CanFocus { get; }
-    IList<IControl>? Children { get; }
+    IList<IControl>? Controls { get; }
+
+    IComponent Parent { get; }
 
     bool OnKeyPressed(KeyboardKey key);
     void OnMouseMove(Vector2 moveAmount);
@@ -35,4 +39,5 @@ public interface IControl
     void OnResize();
     
     bool EventTransparent { get; }
+    bool Visible { get; set; }
 }

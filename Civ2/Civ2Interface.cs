@@ -23,6 +23,7 @@ using Model.Constants;
 using Model.Core;
 using Model.Core.Advances;
 using Model.Dialog;
+using Model.Interface;
 
 namespace Civ2;
 
@@ -222,6 +223,8 @@ public abstract class Civ2Interface : IUserInterface
         return menus;
     }
 
+    public abstract ListboxLooks GetListboxLooks(ListboxType? type);
+
     public CityWindowLayout GetCityWindowDefinition()
     {
         if (_cityWindowLayout != null) return _cityWindowLayout;
@@ -367,7 +370,7 @@ public abstract class Civ2Interface : IUserInterface
     public abstract UnitShield UnitShield(int unitType);
     public abstract void DrawBorderWallpaper(Wallpaper wallpaper, ref Image destination, int height, int width, Padding padding, bool statusPanel);
     public abstract void DrawBorderLines(ref Image destination, int height, int width, Padding padding, bool statusPanel);
-    public abstract void DrawButton(Texture2D texture, int x, int y, int w, int h);
+    public abstract void DrawButton(Texture2D texture, Rectangle bounds);
     public IList<Ruleset> FindRuleSets(string[] searchPaths)
     {
         var sets = new List<Ruleset>();

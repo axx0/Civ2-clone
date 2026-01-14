@@ -1,10 +1,11 @@
-using System.Diagnostics;
-using System.Numerics;
 using Model;
 using Raylib_CSharp;
 using Raylib_CSharp.Collision;
 using Raylib_CSharp.Interact;
 using Raylib_CSharp.Windowing;
+using RaylibUI.Controls;
+using System.Diagnostics;
+using System.Numerics;
 
 namespace RaylibUI;
 
@@ -73,9 +74,9 @@ public abstract class BaseScreen : BaseLayoutController, IScreen
         if (control != null)
         {
             control.OnMouseMove(Input.GetMouseDelta());
-            if (control.Children != null)
+            if (control.Controls != null)
             {
-                var hoverChild = FindControl(control.Children,
+                var hoverChild = FindControl(control.Controls,
                     child => ShapeHelper.CheckCollisionPointRec(mousePos, child.Bounds));
                 if (hoverChild != null)
                 {

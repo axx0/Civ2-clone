@@ -1,6 +1,4 @@
-﻿using System.Numerics;
-using System.Runtime.Intrinsics.X86;
-using Civ2;
+﻿using Civ2;
 using Civ2.Dialogs;
 using Civ2engine;
 using Civ2engine.Enums;
@@ -12,14 +10,16 @@ using Model.ImageSets;
 using Model.Interface;
 using Model.Menu;
 using Model.Utils;
-using Raylib_CSharp.Transformations;
-using Raylib_CSharp.Images;
 using Raylib_CSharp.Colors;
+using Raylib_CSharp.Images;
 using Raylib_CSharp.Interact;
-using Raylib_CSharp.Textures;
-using RaylibUtils;
-using static Model.Menu.CommandIds;
 using Raylib_CSharp.Rendering;
+using Raylib_CSharp.Textures;
+using Raylib_CSharp.Transformations;
+using RaylibUtils;
+using System.Numerics;
+using System.Runtime.Intrinsics.X86;
+using static Model.Menu.CommandIds;
 
 namespace TOT;
 
@@ -167,8 +167,8 @@ public class TestOfTimeInterface : Civ2Interface
 
         if (Dialogs.TryGetValue(MainMenu.Title + "2", out var menu2))
         {
-            var existingDialog = DialogHandlers[MainMenu.Title].Dialog.Dialog;
-            existingDialog.Options = menu2.Options.Concat(existingDialog.Options.Skip(5)).ToList();
+            var existingDialog = DialogHandlers[MainMenu.Title].Dialog;
+            existingDialog.Options.Texts = menu2.Options.Concat(existingDialog.Options.Texts.Skip(5)).ToList();
         }
 
         PicSources = new()
@@ -522,6 +522,21 @@ public class TestOfTimeInterface : Civ2Interface
 
     public override Dictionary<string, IImageSource[]> PicSources { get; set; }
 
+    public override ListboxLooks GetListboxLooks(ListboxType? type)
+    {
+        return type switch
+        {
+            ListboxType.Default => new ListboxLooks
+            {
+                Font = Fonts.Tnr,
+                FontSize = 12,
+                TextColorFront = Color.Black,
+                BoxBackgroundColor = new Color(67, 67, 67, 255)
+            },
+            _ => new ListboxLooks(),
+        };
+    }
+
     public override void LoadPlayerColours()
     {
         var playerColours = new PlayerColour[9];
@@ -629,9 +644,9 @@ public class TestOfTimeInterface : Civ2Interface
 
     public override void DrawBorderLines(ref Image destination, int height, int width, Padding padding, bool statusPanel) { }
 
-    public override void DrawButton(Texture2D texture, int x, int y, int w, int h)
+    public override void DrawButton(Texture2D texture, Rectangle bounds)
     {
-        Graphics.DrawTexture(texture, x, y, Color.White);
+        Graphics.DrawTexture(texture, (int)bounds.X, (int)bounds.Y, Color.White);
     }
 
     public TestOfTimeInterface(IMain main) : base(main)

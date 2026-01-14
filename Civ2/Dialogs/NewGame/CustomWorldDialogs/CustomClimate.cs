@@ -12,10 +12,10 @@ public class CustomClimate: SimpleSettingsDialog
     {
     }
 
-    protected override string SetConfigValue(DialogResult result, PopupBox? popupBox)
+    protected override string SetConfigValue(DialogResult result, DialogElements? dialog)
     {
-        Initialization.ConfigObject.Climate = result.SelectedButton == popupBox.Button[0]
-            ? Initialization.ConfigObject.Random.Next(popupBox.Options.Count)
+        Initialization.ConfigObject.Climate = result.SelectedButton == dialog.Button[0]
+            ? Initialization.ConfigObject.Random.Next(dialog.Options.Texts.Count)
             : result.SelectedIndex;
         return CustomTemp.Title;
     }

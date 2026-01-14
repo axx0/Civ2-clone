@@ -51,56 +51,77 @@ public class CityWindow : BaseDialog
         var infoArea = new CityInfoArea(this);
         Controls.Add(infoArea);
 
+        var bounds = _cityWindowProps.Buttons["Info"];
         _infoButton = new CityButton(this, Labels.For(LabelIndex.Info), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize)
         {
-            AbsolutePosition = _cityWindowProps.Buttons["Info"]
+            Location = new(bounds.X + LayoutPadding.Left, bounds.Y + LayoutPadding.Top),
+            Width = (int)bounds.Width,
+            Height = (int)bounds.Height,
         };
         _infoButton.Click += (_, _) => infoArea.SetActiveMode(CityDisplayMode.Info);
         Controls.Add(_infoButton);
 
         // Map button
+        bounds = _cityWindowProps.Buttons["Map"];
         _mapButton = new CityButton(this, Labels.For(LabelIndex.Map), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize)
         {
-            AbsolutePosition = _cityWindowProps.Buttons["Map"]
+            Location = new(bounds.X + LayoutPadding.Left, bounds.Y + LayoutPadding.Top),
+            Width = (int)bounds.Width,
+            Height = (int)bounds.Height,
         };
         _mapButton.Click += (_, _) => infoArea.SetActiveMode(CityDisplayMode.SupportMap);
         Controls.Add(_mapButton);
 
         // Rename button
+        bounds = _cityWindowProps.Buttons["Rename"];
         _renameButton = new CityButton(this, Labels.For(LabelIndex.Rename), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize)
         {
-            AbsolutePosition = _cityWindowProps.Buttons["Rename"]
+            Location = new(bounds.X + LayoutPadding.Left, bounds.Y + LayoutPadding.Top),
+            Width = (int)bounds.Width,
+            Height = (int)bounds.Height,
         };
         Controls.Add(_renameButton);
 
         // Happy button
+        bounds = _cityWindowProps.Buttons["Happy"];
         _happyButton = new CityButton(this, Labels.For(LabelIndex.Happy), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize)
         {
-            AbsolutePosition = _cityWindowProps.Buttons["Happy"]
+            Location = new(bounds.X + LayoutPadding.Left, bounds.Y + LayoutPadding.Top),
+            Width = (int)bounds.Width,
+            Height = (int)bounds.Height,
         };
         _happyButton.Click += (_, _) => infoArea.SetActiveMode(CityDisplayMode.Happiness);
         Controls.Add(_happyButton);
 
         // View button
+        bounds = _cityWindowProps.Buttons["View"];
         _viewButton = new CityButton(this, Labels.For(LabelIndex.View), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize)
         {
-            AbsolutePosition = _cityWindowProps.Buttons["View"]
+            Location = new(bounds.X + LayoutPadding.Left, bounds.Y + LayoutPadding.Top),
+            Width = (int)bounds.Width,
+            Height = (int)bounds.Height,
         };
         Controls.Add(_viewButton);
 
         // Exit button
+        bounds = _cityWindowProps.Buttons["Exit"];
         _exitButton = new CityButton(this, Labels.For(LabelIndex.Close), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize)
         {
-            AbsolutePosition = _cityWindowProps.Buttons["Exit"]
+            Location = new(bounds.X + LayoutPadding.Left, bounds.Y + LayoutPadding.Top),
+            Width = (int)bounds.Width,
+            Height = (int)bounds.Height,
         };
         _exitButton.Click += CloseButtonOnClick;
         Controls.Add(_exitButton);
 
         var resourceTitle = Labels.For(LabelIndex.CityResources);
+        bounds = _cityWindowProps.Resources.TitlePosition;
         Controls.Add(new CityLabel(this, Labels.For(LabelIndex.CityResources), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize,
             new Color(223, 187, 63, 255), new Color(67, 67, 67, 255))
         {
-            AbsolutePosition = _cityWindowProps.Resources.TitlePosition
+            Location = new(bounds.X, bounds.Y),
+            Width = (int)bounds.Width,
+            Height = (int)bounds.Height,
         });
         foreach (var resource in _cityWindowProps.Resources.Resources)
         {
@@ -115,15 +136,21 @@ public class CityWindow : BaseDialog
         var imageH = Images.GetImageHeight(_active.PicSources["zoomIn"][0], _active);
         _exitIcon = new CityButton(this, String.Empty, backgroundImage: _active.PicSources["close"][0])
         {
-            AbsolutePositionNoPadding = new Rectangle(11, 7, imageW, imageH)
+            Location = new(11, 7),
+            Width = imageW,
+            Height = imageH,
         };
         _shrinkIcon = new CityButton(this, String.Empty, backgroundImage: _active.PicSources["zoomIn"][0])
         {
-            AbsolutePositionNoPadding = new Rectangle(11 + imageW + 2, 7, imageW, imageH)
+            Location = new(11 + imageW + 2, 7),
+            Width = imageW,
+            Height = imageH,
         };
         _expandIcon = new CityButton(this, String.Empty, backgroundImage: _active.PicSources["zoomOut"][0])
         {
-            AbsolutePositionNoPadding = new Rectangle(11 + 2 * imageW + 2 * 2, 7, imageW, imageH)
+            Location = new(11 + 2 * imageW + 2 * 2, 7),
+            Width = imageW,
+            Height = imageH,
         };
         _exitIcon.Click += CloseButtonOnClick;
         _shrinkIcon.Click += (_, _) =>
@@ -146,19 +173,9 @@ public class CityWindow : BaseDialog
         CurrentGameScreen.CloseDialog(this);
     }
 
+    public override int Width => (int)(_cityWindowProps.Width * _scale) + PaddingSide;
+    public override int Height => (int)(_cityWindowProps.Height * _scale) + LayoutPadding.Top + LayoutPadding.Bottom;
     public float Scale => _scale;
-
-    public int DialogWidth
-    {
-        get => (int)(_cityWindowProps.Width * _scale) + PaddingSide;
-        init { }
-    }
-
-    public int DialogHeight
-    {
-        get => (int)(_cityWindowProps.Height * _scale) + LayoutPadding.Top + LayoutPadding.Bottom;
-        init { }
-    }
 
     public City City { get; }
 
@@ -168,11 +185,13 @@ public class CityWindow : BaseDialog
 
         LayoutPadding = _active.GetPadding(_headerLabel?.TextSize.Y ?? 0, false);
 
-        BackgroundImage = ImageUtils.PaintDialogBase(_active, DialogWidth, DialogHeight, LayoutPadding,
+        BackgroundImage = ImageUtils.PaintDialogBase(_active, Width, Height, LayoutPadding,
             Images.ExtractBitmap(_cityWindowProps.Image, _active));
         
-        SetLocation(width, DialogWidth, height, DialogHeight);
-        _headerLabel.Bounds = new Rectangle(Location.X + 70, Location.Y, DialogWidth - 2 * 70, LayoutPadding.Top);
+        SetLocation(width, Width, height, Height);
+        _headerLabel.Location = new(70, 0);
+        _headerLabel.Width = Width - 2 * 70;
+        _headerLabel.Height = LayoutPadding.Top;
         
         foreach (var control in Controls)
         {

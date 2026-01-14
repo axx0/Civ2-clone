@@ -16,13 +16,12 @@ public class ScenCustomIntro : ICivDialogHandler
     public string Name { get; } = Title;
     public ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox?> popups)
     {
-        Dialog = new DialogElements
+        Dialog = new DialogElements(popups[Name])
         {
-            Dialog = popups[Name],
             DialogPos = new Point(0, 0),
         };
-        Dialog.Dialog.Name = Title;
-        Dialog.Dialog.Button = new List<string> { Labels.Ok, Labels.Cancel };
+        Dialog.Name = Title;
+        Dialog.Button = new List<string> { Labels.Ok, Labels.Cancel };
         return this;
     }
 

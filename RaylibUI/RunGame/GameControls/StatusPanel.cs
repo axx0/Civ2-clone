@@ -20,7 +20,7 @@ public class StatusPanel : BaseControl
     private readonly IUserInterface _active;
     private readonly HeaderLabel _headerLabel;
     private Texture2D? _backgroundImage;
-    private Rectangle _infoPanelBounds, _unitPanelBounds;
+    private Rectangle _infoPanelRect, _unitPanelRect;
     private Padding _padding;
 
     public StatusPanel(GameScreen gameScreen, IGame game) : base(gameScreen)
@@ -44,29 +44,37 @@ public class StatusPanel : BaseControl
         
         var populLabel = new StatusLabel(_gameScreen, populText, alignment: TextAlignment.Right);
         populLabel.Padding = new(0, 8, 0, 0);
-        populLabel.Bounds = _infoPanelBounds with { Y = _infoPanelBounds.Y + yOffset, Height = populLabel.GetPreferredHeight() };
+        populLabel.Location = new(_infoPanelRect.X, _infoPanelRect.Y + yOffset);
+        populLabel.Width = (int)_infoPanelRect.Width;
+        populLabel.Height = populLabel.GetPreferredHeight();
 
         var labelHeight = 18;
 
         var yearLabel = new StatusLabel(_gameScreen, _game.Date.GameYearString(_game.TurnNumber));
         yearLabel.Padding = new(0, 8, 0, 0);
-        yearLabel.Bounds = _infoPanelBounds with { Y = _infoPanelBounds.Y + yOffset + labelHeight, Height = yearLabel.GetPreferredHeight() };
+        yearLabel.Location = new(_infoPanelRect.X, _infoPanelRect.Y + yOffset + labelHeight);
+        yearLabel.Width = (int)_infoPanelRect.Width;
+        yearLabel.Height = yearLabel.GetPreferredHeight();
 
         var goldLabel = new StatusLabel(_gameScreen, $"{_game.GetPlayerCiv.Money} {Labels.For(LabelIndex.Gold)}  {_game.GetPlayerCiv.TaxRate / 10}.{_game.GetPlayerCiv.LuxRate / 10}.{_game.GetPlayerCiv.ScienceRate / 10}");
         goldLabel.Padding = new (0, 8, 0, 0);
-        goldLabel.Bounds = _infoPanelBounds with { Y = _infoPanelBounds.Y + yOffset + 2 * labelHeight, Height = goldLabel.GetPreferredHeight() };
+        goldLabel.Location = new(_infoPanelRect.X, _infoPanelRect.Y + yOffset + 2 * labelHeight);
+        goldLabel.Width = (int)_infoPanelRect.Width;
+        goldLabel.Height = goldLabel.GetPreferredHeight();
 
         var turnsLabel = new StatusLabel(_gameScreen, $"{Labels.For(LabelIndex.Turn)} {_game.TurnNumber}", TextAlignment.Right);
         turnsLabel.Padding = new (0, 8, 0, 0);
-        turnsLabel.Bounds = _infoPanelBounds with { Y = _infoPanelBounds.Y + yOffset + 2 * labelHeight, Height = turnsLabel.GetPreferredHeight() };
+        turnsLabel.Location = new(_infoPanelRect.X, _infoPanelRect.Y + yOffset + 2 * labelHeight);
+        turnsLabel.Width = (int)_infoPanelRect.Width;
+        turnsLabel.Height = turnsLabel.GetPreferredHeight();
 
         var iconNo = 0; // TODO: determine one of 4 icons based on current research progress (0...25%, 25...50%, 50...75%, 75...100%)
-        var researchIconLoc = new Vector2(_infoPanelBounds.X + 119, _infoPanelBounds.Y + 20);
+        var researchIconLoc = new Vector2(_infoPanelRect.X + 119, _infoPanelRect.Y + 20);
         if (_gameScreen.ToTPanelLayout)
-            researchIconLoc = new Vector2(_infoPanelBounds.X + 7, _infoPanelBounds.Y + 72);
+            researchIconLoc = new Vector2(_infoPanelRect.X + 7, _infoPanelRect.Y + 72);
         var researchIcon = new TextureDisplay(_gameScreen, TextureCache.GetImage(_active.PicSources["researchProgress"][iconNo]), researchIconLoc, scale: 1.5f);
 
-        Children = new List<IControl>() { _headerLabel, populLabel, yearLabel, goldLabel, turnsLabel, researchIcon };
+        Controls = [_headerLabel, populLabel, yearLabel, goldLabel, turnsLabel, researchIcon];
 
         // TODO: find out when global warming icon is shown (it's based on no of skull icons on map)
         if (true)
@@ -74,14 +82,14 @@ public class StatusPanel : BaseControl
             iconNo = 0;
             var warmingIconLoc = new Vector2(researchIconLoc.X + 31, researchIconLoc.Y);
             var warmingIcon = new TextureDisplay(_gameScreen, TextureCache.GetImage(_active.PicSources["globalWarming"][iconNo]), warmingIconLoc, scale: 1.5f);
-            Children.Add(warmingIcon);
+            Controls.Add(warmingIcon);
         }
 
         if (_game.GetPlayerCiv == _game.GetActiveCiv)
         {
-            foreach (var c in _gameScreen.ActiveMode.GetSidePanelContents(_unitPanelBounds))
+            foreach (var c in _gameScreen.ActiveMode.GetSidePanelContents(_unitPanelRect))
             {
-                Children.Add(c);
+                Controls.Add(c);
             }
         }
     }
@@ -103,21 +111,22 @@ public class StatusPanel : BaseControl
         else
         {
             _padding = _active.GetPadding(_headerLabel.TextSize.Y, false);
-            _headerLabel.Bounds = new Rectangle((int)Location.X, (int)Location.Y, Width, _padding.Top);
-            _headerLabel.OnResize();
+            _headerLabel.Location = new(0, 0);
+            _headerLabel.Width = Width;
+            _headerLabel.Height = _padding.Top;
         }
 
         _backgroundImage = ImageUtils.PaintDialogBase(_active, Width, Height, _padding, statusPanel: true, ToTStatusPanelLayout: _gameScreen.ToTPanelLayout);
 
         if (_gameScreen.ToTPanelLayout)
         {
-            _infoPanelBounds = new Rectangle(Location.X + _padding.Left, Location.Y + _padding.Top, 0.25f * Width - 1 - _padding.Left - _padding.Right, Height - _padding.Top - _padding.Bottom);
-            _unitPanelBounds = new Rectangle(Location.X + _padding.Left + 0.25f * Width - 15, Location.Y + _padding.Top, 0.75f * Width + 14 - _padding.Left - _padding.Right, Height - _padding.Top - _padding.Bottom);
+            _infoPanelRect = new Rectangle(_padding.Left, _padding.Top, 0.25f * Width - 1 - _padding.Left - _padding.Right, Height - _padding.Top - _padding.Bottom);
+            _unitPanelRect = new Rectangle(_padding.Left + 0.25f * Width - 15, _padding.Top, 0.75f * Width + 14 - _padding.Left - _padding.Right, Height - _padding.Top - _padding.Bottom);
         }
         else
         {
-            _infoPanelBounds = new Rectangle(Location.X + _padding.Left, Location.Y + _padding.Top, Width - _padding.Left - _padding.Right, 60);
-            _unitPanelBounds = new Rectangle(Location.X + _padding.Left, Location.Y + _padding.Top + 68, Width - _padding.Left - _padding.Right, Height - 68 - _padding.Top - _padding.Bottom);
+            _infoPanelRect = new Rectangle(_padding.Left, _padding.Top, Width - _padding.Left - _padding.Right, 60);
+            _unitPanelRect = new Rectangle(_padding.Left, _padding.Top + 68, Width - _padding.Left - _padding.Right, Height - 68 - _padding.Top - _padding.Bottom);
         }
 
         base.OnResize();
@@ -133,6 +142,6 @@ public class StatusPanel : BaseControl
 
         // AI turn civ indicator
         if (_game.GetPlayerCiv != _game.GetActiveCiv)
-            Graphics.DrawRectangleRec(new Rectangle(_unitPanelBounds.X + _unitPanelBounds.Width - 8, _unitPanelBounds.Y + _unitPanelBounds.Height - 6, 8, 6), _active.PlayerColours[_game.GetActiveCiv.Id].LightColour);
+            Graphics.DrawRectangleRec(new Rectangle(_unitPanelRect.X + _unitPanelRect.Width - 8, _unitPanelRect.Y + _unitPanelRect.Height - 6, 8, 6), _active.PlayerColours[_game.GetActiveCiv.Id].LightColour);
     }
 }

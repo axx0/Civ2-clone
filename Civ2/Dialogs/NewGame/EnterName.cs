@@ -30,10 +30,10 @@ public class EnterName : BaseDialogHandler
                         config.LeaderNames[config.ScenPlayerCivId] :
                         config.PlayerCiv.LeaderName,
                     Width = 400,
-                    Description = Dialog.Dialog.Options?[0] ?? string.Empty
+                    Description = Dialog.Options?.Texts[0] ?? string.Empty
                 },
             };
-            Dialog.Dialog.Options = null;
+            Dialog.Options = null;
         }
         else
         {

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.Enums;
 using Civ2engine.Statistics;
@@ -76,9 +77,17 @@ namespace Civ2engine.Production
             return _unitDefinition.Name;
         }
 
-        public override ListBoxEntry GetBuildListEntry(IUserInterface active)
+        public override ListboxGroup GetBuildListEntry(IUserInterface active, City city)
         {
-            return new ListBoxEntry { Icon = GetIcon(active), LeftText = _unitDefinition.Name };
+            return new ListboxGroup
+            {
+                Elements = [ new() { Icon = GetIcon(active), Width = 2 * 36 + 2, ScaleIcon = 0.75f },
+                             new() { Text = _unitDefinition.Name, Width = 200 },
+                             new() { Text = $"({(10 * _unitDefinition.Cost - city.ShieldsProgress) / city.Production} Turns, ADM: " +
+                             $"{_unitDefinition.Attack}/{_unitDefinition.Defense}/{_unitDefinition.Move / 3} " +
+                             $"HP: {_unitDefinition.Hitp / 10}/{_unitDefinition.Firepwr})", RightAligned = true } ],
+                Height = 24,
+            };
         }
     }
 }

@@ -63,17 +63,17 @@ public class MenuLabel : LabelControl
 
     public override bool OnKeyPressed(KeyboardKey key)
     {
-        if (_gameMenu.Children != null)
+        if (_gameMenu.Controls != null)
         {
             switch (key)
             {
                 case KeyboardKey.Left:
-                    Controller.Focused = this.Index > 0 ? _gameMenu.Children[Index - 1] : _gameMenu.Children[^1];
+                    Controller.Focused = this.Index > 0 ? _gameMenu.Controls[Index - 1] : _gameMenu.Controls[^1];
                     return true;
                 case KeyboardKey.Right:
-                    Controller.Focused = Index < _gameMenu.Children.Count - 1
-                        ? _gameMenu.Children[Index + 1]
-                        : _gameMenu.Children[0];
+                    Controller.Focused = Index < _gameMenu.Controls.Count - 1
+                        ? _gameMenu.Controls[Index + 1]
+                        : _gameMenu.Controls[0];
                     return true;
                 case KeyboardKey.Escape:
                     _gameMenu.Dropdown.Hide();
@@ -90,13 +90,13 @@ public class MenuLabel : LabelControl
 
             for (int i = Index + 1; i != Index; i++)
             {
-                if (i >= _gameMenu.Children.Count)
+                if (i >= _gameMenu.Controls.Count)
                 {
                     i = -1;
                     continue;
                 }
 
-                if (_gameMenu.Children[i] is MenuLabel label && label.Hotkey == key)
+                if (_gameMenu.Controls[i] is MenuLabel label && label.Hotkey == key)
                 {
                     Controller.Focused = label;
                     return true;

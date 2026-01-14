@@ -2,10 +2,10 @@
 
 public struct Padding
 {
-    public int Left { get; }
-    public  int Right { get; }
+    public int Left { get; set; }
+    public  int Right { get; set; }
     public int Top { get; set; }
-    public int Bottom { get; }
+    public int Bottom { get; set; }
 
     public Padding(int top, int left = int.MaxValue, int bottom = int.MaxValue, int right = int.MaxValue)
     {

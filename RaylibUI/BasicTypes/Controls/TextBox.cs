@@ -57,20 +57,22 @@ public class TextBox : BaseControl
 
     public override void Draw(bool pulse)
     {
-        Graphics.DrawRectangle((int)Location.X, (int)Location.Y+1, Width, Height -3, Color.White);
-        Graphics.DrawRectangleLines((int)Location.X, (int)Location.Y+1, Width, Height -3, Color.Black);
-        Graphics.DrawTextEx(_active?.Look.DefaultFont ?? Fonts.Tnr, _text, Location + _textOffsetV, Styles.BaseFontSize,1.0f, Color.Black);
+        Graphics.DrawRectangleRec(Bounds, Color.White);
+        Graphics.DrawRectangleLinesEx(Bounds, 1f, Color.Black);
+        Graphics.DrawTextEx(_active?.Look.DefaultFont ?? Fonts.Tnr, _text, new Vector2(Bounds.X, Bounds.Y) + _textOffsetV, Styles.BaseFontSize,1.0f, Color.Black);
         
         if (_editMode)
         {
             if (pulse)
             {
-                Graphics.DrawRectangleRec(new Rectangle(Location.X + 5 + _editWidth + 1, Location.Y + 5, 1, 20), Color.Black);
+                Graphics.DrawRectangleRec(new Rectangle(Bounds.X + 5 + _editWidth + 1, Bounds.Y + 5, 1, 20), Color.Black);
             }
         }
 
         base.Draw(pulse);
     }
+
+    public override int Width => GetPreferredWidth();
 
     public void OnClick(object? sender, MouseEventArgs mouseEventArgs)
     {

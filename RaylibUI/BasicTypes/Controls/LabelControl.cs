@@ -19,15 +19,10 @@ public class LabelControl : BaseControl
     private readonly int _defaultHeight;
     private readonly float _spacing;
     private List<string>? _wrappedText;
-    private readonly Font _labelFont;
-    private readonly Color _colorFront;
-    private readonly Color _colorShadow;
-    private readonly Vector2 _shadowOffset;
     private readonly IUserInterface _active;
     private readonly Timer _timer;
     private bool _switch;
     private readonly Color[]? _switchColors;
-    private readonly Color? _colorBack;
 
     public LabelControl(IControlLayout controller,
         string text,
@@ -56,24 +51,57 @@ public class LabelControl : BaseControl
         _defaultHeight = defaultHeight;
         FontSize = fontSize;
         _spacing = spacing;
-        _labelFont = font ?? controller.MainWindow.ActiveInterface?.Look.LabelFont ?? Fonts.Tnr;
-        _colorFront = colorFront ?? Color.Black;
-        _colorShadow = colorShadow ?? Color.Black;
-        _shadowOffset = shadowOffset ?? Vector2.Zero;
+        Font = font ?? controller.MainWindow.ActiveInterface?.Look.LabelFont ?? Fonts.Tnr;
+        ColorFront = colorFront ?? Color.Black;
+        ColorShadow = colorShadow ?? Color.Black;
+        ShadowOffset = shadowOffset ?? Vector2.Zero;
 
         _active = controller.MainWindow.ActiveInterface;
         _timer = new Timer(_ => _switch = !_switch, null, 0, switchTime);
         _switchColors = switchColors;
-        _colorBack = colorBack;
+        BackgroundColor = colorBack;
     }
 
-    public Vector2 TextSize => TextManager.MeasureTextEx(_labelFont, Text, FontSize, _spacing);
+    public Vector2 TextSize => TextManager.MeasureTextEx(Font, Text, FontSize, _spacing);
 
+    public Font Font { get; set; }
     public int FontSize { get; set; }
+    public Color? BackgroundColor { get; set; }
+    public Color ColorFront { get; set; }
+    public Color ColorShadow { get; set; }
+    public Vector2 ShadowOffset { get; set; }
 
     public Padding Padding { get; set; }
 
+    private int _width;
+    public override int Width
+    {
+        get 
+        { 
+            if (_width == 0)
+            {
+                _width = GetPreferredWidth();
+            }
 
+            return _width; 
+        }
+        set { _width = value; }
+    }
+
+    private int _height;
+    public override int Height
+    {
+        get
+        {
+            if (_height == 0)
+            {
+                _height = GetPreferredHeight();
+            }
+
+            return _height;
+        }
+        set { _height = value; }
+    }
 
 
     public override int GetPreferredWidth()
@@ -90,7 +118,7 @@ public class LabelControl : BaseControl
     {
         if (!WrapText) return _defaultHeight + Padding.Top + Padding.Bottom;
         
-        _wrappedText = DialogUtils.GetWrappedTexts(_active, Text, Width, _labelFont, FontSize);
+        _wrappedText = DialogUtils.GetWrappedTexts(_active, Text, Width, Font, FontSize);
         return (int)(_wrappedText.Count * TextSize.Y + Padding.Top + Padding.Bottom) ;
     }
 
@@ -98,25 +126,25 @@ public class LabelControl : BaseControl
     {
         if (!Visible) return;
 
-        if (_colorBack != null)
+        if (BackgroundColor != null)
         {
-            Graphics.DrawRectangle((int)Location.X, (int)Location.Y, Width, Height, _colorBack.Value);
+            Graphics.DrawRectangleRec(Bounds, BackgroundColor.Value);
         }
         if (WrapText && _wrappedText?.Count > 1)
         {
             var unitHeight = (Height - Padding.Top - Padding.Bottom) / _wrappedText.Count;
-            var y = Location.Y + Padding.Top + unitHeight / 2f - TextSize.Y / 2f;
+            var y = Bounds.Y + Padding.Top + unitHeight / 2f - TextSize.Y / 2f;
             for (var i = 0; i < _wrappedText.Count; i++)
             {
-                var textPosition = new Vector2(Location.X + Padding.Left, y);
-                Graphics.DrawTextEx(_labelFont, _wrappedText[i], textPosition + _shadowOffset, FontSize, _spacing, _colorShadow);
-                Graphics.DrawTextEx(_labelFont, _wrappedText[i], textPosition, FontSize, _spacing, _colorFront);
+                var textPosition = new Vector2(Bounds.X + Padding.Left, y);
+                Graphics.DrawTextEx(Font, _wrappedText[i], textPosition + ShadowOffset, FontSize, _spacing, ColorShadow);
+                Graphics.DrawTextEx(Font, _wrappedText[i], textPosition, FontSize, _spacing, ColorFront);
                 y += unitHeight;
             }
         }
         else
         {
-            var textPosition = new Vector2(Location.X + Padding.Left, Location.Y + Padding.Top + (Height - Padding.Top - Padding.Bottom) / 2f - TextSize.Y / 2f);
+            var textPosition = new Vector2(Bounds.X + Padding.Left, Bounds.Y + Padding.Top + (Height - Padding.Top - Padding.Bottom) / 2f - TextSize.Y / 2f);
 
             if (Alignment == TextAlignment.Center)
             {
@@ -135,14 +163,15 @@ public class LabelControl : BaseControl
             }
             else
             {
-                colorFront = _colorFront;
-                colorShadow = _colorShadow;
+                colorFront = ColorFront;
+                colorShadow = ColorShadow;
             }
-            Graphics.DrawTextEx(_labelFont, Text, textPosition + _shadowOffset, FontSize, _spacing, colorShadow);
-            Graphics.DrawTextEx(_labelFont, Text, textPosition, FontSize, _spacing, colorFront);
+            Graphics.DrawTextEx(Font, Text, textPosition + ShadowOffset, FontSize, _spacing, colorShadow);
+            Graphics.DrawTextEx(Font, Text, textPosition, FontSize, _spacing, colorFront);
         }
 
-        //Graphics.DrawRectangleLines((int)Bounds.X, (int)Bounds.Y, (int)Bounds.Width, (int)Bounds.Height, Color.Red);
+        // Draw control's bounds
+        //Graphics.DrawRectangleLinesEx(Bounds, 1f, Color.Magenta);
 
         base.Draw(pulse);
     }

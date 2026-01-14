@@ -11,7 +11,6 @@ using Model.Menu;
 using Raylib_CSharp.Interact;
 using Raylib_CSharp.Transformations;
 using RaylibUI.BasicTypes.Controls;
-using RaylibUI.Forms;
 using RaylibUI.RunGame.GameControls;
 using RaylibUI.RunGame.GameControls.Mapping.Views;
 
@@ -168,16 +167,19 @@ public class ViewPiece : IGameMode
         var unitZoom = _gameScreen.ToTPanelLayout ? -1 : 1;
         var labelHeight = _title.TextSize.Y;
 
-        _title.Bounds = bounds with { Height = labelHeight };
+        _title.Location = new(bounds.X, bounds.Y);
+        _title.Width = (int)bounds.Width;
+        _title.Height = (int)labelHeight;
 
         var currentX = bounds.X;
-        var currentY = bounds.Y + _title.Bounds.Height;
+        var currentY = bounds.Y + _title.Height;
 
         // Draw location & tile type on active square
         var activeTile = _gameScreen.Player.ActiveTile;
         var label1 = new StatusLabel(_gameScreen, $"{Labels.For(LabelIndex.Loc)}: ({activeTile.X}, {activeTile.Y}) {activeTile.Island}", fontSize: fontSize);
-        var label1W = label1.TextSize.X;
-        label1.Bounds = new Rectangle(currentX, currentY, label1W, labelHeight);
+        label1.Location = new(currentX, currentY);
+        label1.Width = (int)label1.TextSize.X;
+        label1.Height = (int)labelHeight;
         controls.Add(label1);
         currentY += labelHeight;
 
@@ -189,7 +191,9 @@ public class ViewPiece : IGameMode
         }
         var tileLabel = new StatusLabel(_gameScreen, $"({terrainName})", fontSize: fontSize);
         var tileLabelWidth = tileLabel.TextSize.X;
-        tileLabel.Bounds = new Rectangle(currentX, currentY, tileLabelWidth, labelHeight);
+        tileLabel.Location = new(currentX, currentY);
+        tileLabel.Width = (int)tileLabel.TextSize.X;
+        tileLabel.Height = (int)labelHeight;
         controls.Add(tileLabel);
         currentY += labelHeight;
 
@@ -198,8 +202,9 @@ public class ViewPiece : IGameMode
         if (_gameScreen.Player.ActiveTile.SpecialsName is not null)
         {
             var specialsLabel = new StatusLabel(_gameScreen, $"({_gameScreen.Player.ActiveTile.SpecialsName})", fontSize: fontSize);
-            specialsLabelWidth = specialsLabel.TextSize.X;
-            specialsLabel.Bounds = new Rectangle(currentX, currentY, specialsLabelWidth, labelHeight);
+            specialsLabel.Location = new(currentX, currentY);
+            specialsLabel.Width = (int)specialsLabel.TextSize.X;
+            specialsLabel.Height = (int)labelHeight;
             controls.Add(specialsLabel);
             currentY += labelHeight;
         }
@@ -214,8 +219,9 @@ public class ViewPiece : IGameMode
         if (!string.IsNullOrWhiteSpace(improvementText) && activeTile.CityHere == null)
         {
             var improvLabel = new StatusLabel(_gameScreen, $"({improvementText})", fontSize: fontSize);
-            improvLabelWidth = improvLabel.TextSize.X;
-            improvLabel.Bounds = new Rectangle(currentX, currentY, improvLabelWidth, labelHeight);
+            improvLabel.Location = new(currentX, currentY);
+            improvLabel.Width = (int)improvLabel.TextSize.X;
+            improvLabel.Height = (int)labelHeight;
             controls.Add(improvLabel);
             currentY += labelHeight;
         }
@@ -228,8 +234,9 @@ public class ViewPiece : IGameMode
                 improvements.Where(i => i.Imp.ExclusiveGroup == ImprovementTypes.DefenceGroup)
                     .Select(i => i.Imp.Levels[i.Const.Level].Name));
             var airbaseLabel = new StatusLabel(_gameScreen, $"({airbaseText})", fontSize: fontSize);
-            airbaseLabelWidth = airbaseLabel.TextSize.X;
-            airbaseLabel.Bounds = new Rectangle(currentX, currentY, airbaseLabelWidth, labelHeight);
+            airbaseLabel.Location = new(currentX, currentY);
+            airbaseLabel.Width = (int)airbaseLabel.TextSize.X;
+            airbaseLabel.Height = (int)labelHeight;
             controls.Add(airbaseLabel);
             currentY += labelHeight;
         }
@@ -242,8 +249,9 @@ public class ViewPiece : IGameMode
         if (!string.IsNullOrWhiteSpace(pollutionText))
         {
             var pollutionLabel = new StatusLabel(_gameScreen, $"({pollutionText})", fontSize: fontSize);
-            pollutionLabelWidth = pollutionLabel.TextSize.X;
-            pollutionLabel.Bounds = new Rectangle(currentX, currentY, pollutionLabelWidth, labelHeight);
+            pollutionLabel.Location = new(currentX, currentY);
+            pollutionLabel.Width = (int)pollutionLabel.TextSize.X;
+            pollutionLabel.Height = (int)labelHeight;
             controls.Add(pollutionLabel);
             currentY += labelHeight;
             currentY += labelHeight;
@@ -251,7 +259,7 @@ public class ViewPiece : IGameMode
 
         if (_gameScreen.ToTPanelLayout)
         {
-            var maximum = new[] { label1W, tileLabelWidth, specialsLabelWidth,
+            var maximum = new[] { label1.Width, tileLabelWidth, specialsLabelWidth,
                 improvLabelWidth, airbaseLabelWidth, pollutionLabelWidth }.Max();
             currentX += maximum;
             currentY = bounds.Y + labelHeight;
@@ -269,27 +277,31 @@ public class ViewPiece : IGameMode
 
             var cityNameLabel = new StatusLabel(_gameScreen, (unit.HomeCity == null) ? Labels.For(LabelIndex.NONE) :
                 unit.HomeCity.Name, fontSize: fontSize);
-            var cityNameLabelWidth = cityNameLabel.TextSize.X;
+            cityNameLabel.Width = (int)cityNameLabel.TextSize.X;
+            cityNameLabel.Height = (int)labelHeight;
 
             var orderLabel = new StatusLabel(_gameScreen, _gameScreen.Game.Order2String(unit.Order), fontSize: fontSize);
-            var orderLabelWidth = orderLabel.TextSize.X;
+            orderLabel.Width = (int)orderLabel.TextSize.X;
+            orderLabel.Height = (int)labelHeight;
 
             var nameLabel = new StatusLabel(_gameScreen, unit.Veteran ? $"{unit.Name} ({Labels.For(LabelIndex.Veteran)})" :
                 unit.Name, fontSize: fontSize);
-            var nameLabelWidth = nameLabel.TextSize.X;
+            nameLabel.Width = (int)nameLabel.TextSize.X;
+            nameLabel.Height = (int)labelHeight;
 
             var unitDisplay = new UnitDisplay(_gameScreen, unit, _gameScreen.Game, new Vector2(currentX, currentY),
                 _gameScreen.Main.ActiveInterface, ImageUtils.ZoomScale(unitZoom));
 
             var moveText = unitsOnTile.Count - i == 1 ? Labels.For(LabelIndex.Unit) : Labels.For(LabelIndex.Units);
             var unitsLeftLabel = new StatusLabel(_gameScreen, $"({unitsOnTile.Count - i} {Labels.For(LabelIndex.More)} {moveText})", fontSize: fontSize);
-            var unitsLeftLabelWidth = unitsLeftLabel.TextSize.X;
+            unitsLeftLabel.Width = (int)unitsLeftLabel.TextSize.X;
+            unitsLeftLabel.Height = (int)labelHeight;
 
             if (_gameScreen.ToTPanelLayout)
             {
-                var maximum = new[] { currentX + unitDisplay.Width + cityNameLabelWidth,
-                               currentX + unitDisplay.Width + orderLabelWidth,
-                               currentX + unitDisplay.Width + nameLabelWidth }.Max();
+                var maximum = new[] { currentX + unitDisplay.Width + cityNameLabel.Width,
+                               currentX + unitDisplay.Width + orderLabel.Width,
+                               currentX + unitDisplay.Width + nameLabel.Width }.Max();
 
                 // max for next unit
                 float maximum_nu = 0;
@@ -316,13 +328,13 @@ public class ViewPiece : IGameMode
                     i < unitsOnTile.Count - 1 &&
                     (maximum_nu < bounds.X + bounds.Width ||
                     maximum_nu >= bounds.X + bounds.Width &&
-                    maximum + unitsLeftLabelWidth < bounds.X + bounds.Width))
+                    maximum + unitsLeftLabel.Width < bounds.X + bounds.Width))
                 {
                     unitDisplay.Location = new Vector2(unitDisplay.Location.X, unitDisplay.Location.Y);
                     controls.Add(unitDisplay);
-                    cityNameLabel.Bounds = new Rectangle(currentX + unitDisplay.Width, currentY, cityNameLabelWidth, labelHeight);
-                    orderLabel.Bounds = new Rectangle(currentX + unitDisplay.Width, currentY + labelHeight, orderLabelWidth, labelHeight);
-                    nameLabel.Bounds = new Rectangle(currentX + unitDisplay.Width, currentY + 2 * labelHeight, nameLabelWidth, labelHeight);
+                    cityNameLabel.Location = new(currentX + unitDisplay.Width, currentY);
+                    orderLabel.Location = new(currentX + unitDisplay.Width, currentY + labelHeight);
+                    nameLabel.Location = new(currentX + unitDisplay.Width, currentY + 2 * labelHeight);
                     controls.Add(cityNameLabel);
                     controls.Add(orderLabel);
                     controls.Add(nameLabel);
@@ -331,12 +343,12 @@ public class ViewPiece : IGameMode
                 }
                 // Units left text
                 else if (i == unitsOnTile.Count - 1 &&
-                    currentX + unitsLeftLabelWidth < bounds.X + bounds.Width ||
+                    currentX + unitsLeftLabel.Width < bounds.X + bounds.Width ||
                     i < unitsOnTile.Count - 1 &&
                     maximum_nu >= bounds.X + bounds.Width &&
-                    currentX + unitsLeftLabelWidth < bounds.X + bounds.Width)
+                    currentX + unitsLeftLabel.Width < bounds.X + bounds.Width)
                 {
-                    unitsLeftLabel.Bounds = new Rectangle(currentX, currentY, unitsLeftLabelWidth, labelHeight);
+                    unitsLeftLabel.Location = new(currentX, currentY);
                     controls.Add(unitsLeftLabel);
                     break;
                 }
@@ -353,9 +365,9 @@ public class ViewPiece : IGameMode
                 {
                     unitDisplay.Location = new Vector2(unitDisplay.Location.X, unitDisplay.Location.Y + (3 * labelHeight - unitDisplay.Height) / 2);
                     controls.Add(unitDisplay);
-                    cityNameLabel.Bounds = new Rectangle(currentX + unitDisplay.Width, currentY, cityNameLabelWidth, labelHeight);
-                    orderLabel.Bounds = new Rectangle(currentX + unitDisplay.Width, currentY + labelHeight, orderLabelWidth, labelHeight);
-                    nameLabel.Bounds = new Rectangle(currentX + unitDisplay.Width, currentY + 2 * labelHeight, nameLabelWidth, labelHeight);
+                    cityNameLabel.Location = new(currentX + unitDisplay.Width, currentY);
+                    orderLabel.Location = new(currentX + unitDisplay.Width, currentY + labelHeight);
+                    nameLabel.Location = new(currentX + unitDisplay.Width, currentY + 2 * labelHeight);
                     controls.Add(cityNameLabel);
                     controls.Add(orderLabel);
                     controls.Add(nameLabel);
@@ -369,7 +381,7 @@ public class ViewPiece : IGameMode
                     currentY + 6 * labelHeight >= bounds.Y + bounds.Height &&
                     currentY + labelHeight < bounds.Y + bounds.Height)
                 {
-                    unitsLeftLabel.Bounds = new Rectangle(currentX, currentY, unitsLeftLabelWidth, labelHeight);
+                    unitsLeftLabel.Location = new(currentX, currentY);
                     controls.Add(unitsLeftLabel);
                     break;
                 }

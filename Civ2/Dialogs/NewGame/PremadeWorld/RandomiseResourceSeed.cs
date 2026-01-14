@@ -11,7 +11,7 @@ public class RandomiseResourceSeed : SimpleSettingsDialog
     {
     }
 
-    protected override string SetConfigValue(DialogResult result, PopupBox? popupBox)
+    protected override string SetConfigValue(DialogResult result, DialogElements? dialog)
     {
         if (result.SelectedIndex == 0)
         {

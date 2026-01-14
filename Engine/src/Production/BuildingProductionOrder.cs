@@ -1,8 +1,10 @@
-using System.Linq;
 using Model;
 using Model.Constants;
+using Model.Core.Units;
 using Model.Images;
 using Model.Interface;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Civ2engine.Production
 {
@@ -60,9 +62,15 @@ namespace Civ2engine.Production
             return Improvement.Name;
         }
 
-        public override ListBoxEntry GetBuildListEntry(IUserInterface active)
+        public override ListboxGroup GetBuildListEntry(IUserInterface active, City city)
         {
-            return new ListBoxEntry { LeftText = Improvement.Name, Icon = GetIcon(active) };
+            return new ListboxGroup
+            {
+                Elements = [ new() { Icon = GetIcon(active), Width = 2 * 36 + 2 },
+                             new() { Text = Improvement.Name, Width = 250 },
+                             new() { Text = $"({(10 * Improvement.Cost - city.ShieldsProgress) / city.Production} Turns)", RightAligned = true } ],
+                Height = 24,
+            };
         }
     }
 }

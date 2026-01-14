@@ -13,13 +13,10 @@ public class ScenIntro : ICivDialogHandler
     public string Name { get; } = Title;
     public ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox?> popups)
     {
-        Dialog = new DialogElements
+        Dialog = new DialogElements(popups[Name])
         {
-            Dialog = new PopupBox()
-            {
-                Name = Title,
-                Title = "",
-            },
+            Name = Title,
+            Title = "",
             DialogPos = new Point(0, 0)
         };
         return this;

@@ -13,9 +13,8 @@ public class LoadOk : ICivDialogHandler
     public string Name { get; } = Title;
     public ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox?> popups)
     {   
-        Dialog = new DialogElements
+        Dialog = new DialogElements(popups[Name])
         {
-            Dialog = popups[Name],
             DialogPos = new Point(0,0)
         };
         return this;

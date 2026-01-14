@@ -15,14 +15,11 @@ public class ScenChoseCiv : ICivDialogHandler
     public string Name { get; } = Title;
     public ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox?> popups)
     {
-        Dialog = new DialogElements
+        Dialog = new DialogElements(popups[Name])
         {
-            Dialog = new PopupBox()
-            {
-                Button = new List<string> { Labels.Ok, Labels.Cancel },
-                Title = " ",
-                Name = Title,
-            },
+            Button = new List<string> { Labels.Ok, Labels.Cancel },
+            Title = " ",
+            Name = Title,
             DialogPos = new Point(0, 0),
         };
         return this;
@@ -51,8 +48,8 @@ public class ScenChoseCiv : ICivDialogHandler
         Initialization.ConfigObject.ScenPlayerCivId = boolPos[result.SelectedIndex + 1];
 
         var difficultyDialog = civDialogHandlers[DifficultyHandler.Title];
-        var popupContent = difficultyDialog.Dialog.Dialog;
-        popupContent!.Options = new List<string> { 
+        var popupContent = difficultyDialog.Dialog;
+        popupContent!.Options.Texts = new List<string> { 
             Labels.For(LabelIndex.Chieftan) + " (easiest)", Labels.For(LabelIndex.Warlord),
             Labels.For(LabelIndex.Prince), Labels.For(LabelIndex.King), 
             Labels.For(LabelIndex.Emperor), Labels.For(LabelIndex.Deity) + " (toughest)"};
@@ -68,7 +65,10 @@ public class ScenChoseCiv : ICivDialogHandler
     {
         //activeInterface.ScenTitleImage = 
 
-        Dialog.Dialog.Options = Enumerable.Range(0, 7).Where(i => Initialization.ConfigObject.CivsInPlay[i + 1]).Select(i => $"{Initialization.ConfigObject.CivNames[i + 1]} ({Initialization.ConfigObject.LeaderNames[i + 1]})").ToList();
+        Dialog.Options = new()
+        {
+            Texts = Enumerable.Range(0, 7).Where(i => Initialization.ConfigObject.CivsInPlay[i + 1]).Select(i => $"{Initialization.ConfigObject.CivNames[i + 1]} ({Initialization.ConfigObject.LeaderNames[i + 1]})").ToList()
+        };
         return new MenuAction(Dialog);
     }
 }

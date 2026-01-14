@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Model;
 using Model.Images;
@@ -49,7 +50,7 @@ namespace Civ2engine.Production
         public abstract bool IsValidBuild(City city);
 
         public abstract string GetDescription();
-        public abstract ListBoxEntry GetBuildListEntry(IUserInterface active);
+        public abstract ListboxGroup GetBuildListEntry(IUserInterface active, City city);
 
         public static IProductionOrder[] GetAll(Rules rules)
         {

@@ -20,12 +20,5 @@ public class CityLabel : LabelControl
     public override void OnResize()
     {
         FontSize = _baseFontSize + (int)(16 * (_cityWindow.Scale - 1));
-
-        if (AbsolutePosition.HasValue)
-        {
-            var absolutePosition = AbsolutePosition.Value.ScaleAll(_cityWindow.Scale);
-            Bounds = new Rectangle(Controller.Location.X + Controller.LayoutPadding.Left + absolutePosition.X,
-                Controller.Location.Y + Controller.LayoutPadding.Top + absolutePosition.Y, absolutePosition.Width, absolutePosition.Height);
-        }
     }
 }

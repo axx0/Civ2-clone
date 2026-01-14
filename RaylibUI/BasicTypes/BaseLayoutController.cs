@@ -1,11 +1,15 @@
 using System.Numerics;
+using Civ2engine;
 using Model;
 using Raylib_CSharp.Interact;
+using Raylib_CSharp.Transformations;
 
 namespace RaylibUI;
 
 public abstract class BaseLayoutController : IControlLayout
 {
+    private Vector2 _location;
+
     public Main MainWindow { get; }
 
     protected BaseLayoutController(Main main, Padding layoutPadding)
@@ -17,7 +21,9 @@ public abstract class BaseLayoutController : IControlLayout
     
     private IControl? _focused;
     
-    public IList<IControl> Controls { get; } = new List<IControl>();
+    public IList<IControl> Controls { get; } = [];
+
+    public Rectangle Bounds => new(Location.X, Location.Y, Width, Height);
 
     public IControl? Focused
     {
@@ -46,7 +52,7 @@ public abstract class BaseLayoutController : IControlLayout
             }
             else
             {
-                var allControls = Controls.SelectMany(c => c.Children ?? new[] { c }).ToArray();
+                var allControls = Controls.SelectMany(c => c.Controls ?? new[] { c }).ToArray();
                 var pos = Array.IndexOf(allControls, Focused);
                 do
                 {
@@ -63,8 +69,19 @@ public abstract class BaseLayoutController : IControlLayout
     }
 
     public Padding LayoutPadding { get; set; }
-    public Vector2 Location { get; protected set; }
+    public Vector2 Location 
+    {
+        get => _location;
+        set 
+        {
+            _location = value;
+        }
+    }
     
+    public virtual int Width { get; }
+    public virtual int Height { get; }
+    public bool Visible => true;
+
     public virtual void MouseOutsideControls(Vector2 mousePos)
     {
         
@@ -78,7 +95,7 @@ public abstract class BaseLayoutController : IControlLayout
         {
             var candidate = elements.FirstOrDefault(matching);
 
-            elements = candidate?.Children;
+            elements = candidate?.Controls;
             
             if (candidate is { EventTransparent: false })
             {

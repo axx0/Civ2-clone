@@ -31,7 +31,7 @@ public class GameOptions : IGameCommand
     {
         // ReSharper disable once StringLiteralTypo
         _gameScreen.ShowPopup("GAMEOPTIONS", DialogClick, 
-            checkboxStates: new List<bool> { _options.SoundEffects, _options.Music, _options.AlwaysWaitAtEndOfTurn, _options.AutosaveEachTurn, _options.ShowEnemyMoves, _options.NoPauseAfterEnemyMoves, _options.FastPieceSlide, _options.InstantAdvice, _options.TutorialHelp, _options.MoveUnitsWithoutMouse, _options.EnterClosestCityScreen });
+            checkboxStates: [_options.SoundEffects, _options.Music, _options.AlwaysWaitAtEndOfTurn, _options.AutosaveEachTurn, _options.ShowEnemyMoves, _options.NoPauseAfterEnemyMoves, _options.FastPieceSlide, _options.InstantAdvice, _options.TutorialHelp, _options.MoveUnitsWithoutMouse, _options.EnterClosestCityScreen]);
     }
 
     private void DialogClick(string button, int _, IList<bool>? checkboxes, IDictionary<string, string>? _2)

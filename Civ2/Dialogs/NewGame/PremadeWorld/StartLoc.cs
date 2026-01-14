@@ -12,7 +12,7 @@ public class StartLoc : SimpleSettingsDialog
     {
     }
     
-    protected override string SetConfigValue(DialogResult result, PopupBox? popupBox)
+    protected override string SetConfigValue(DialogResult result, DialogElements? dialog)
     {
         if (result.SelectedIndex == 0)
         {

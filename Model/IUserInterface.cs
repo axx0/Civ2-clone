@@ -11,6 +11,7 @@ using System.Numerics;
 using Model.Core;
 using Model.Core.Advances;
 using Model.Dialog;
+using Raylib_CSharp.Transformations;
 
 namespace Model;
 
@@ -46,6 +47,7 @@ public interface IUserInterface
     IList<DropdownMenuContents> ConfigureGameCommands(IList<IGameCommand> commands);
     
     CityWindowLayout GetCityWindowDefinition();
+    ListboxLooks GetListboxLooks(ListboxType? type);
 
     Dictionary<string, IImageSource[]> PicSources { get; }
     IList<ResourceImage> ResourceImages { get; }
@@ -54,7 +56,7 @@ public interface IUserInterface
     UnitShield UnitShield(int unitType);
     void DrawBorderWallpaper(Wallpaper wallpaper, ref Image destination, int height, int width, Padding padding, bool statusPanel);
     void DrawBorderLines(ref Image destination, int height, int width, Padding padding, bool statusPanel);
-    void DrawButton(Texture2D texture, int x, int y, int w, int h);
+    void DrawButton(Texture2D texture, Rectangle bounds);
 
     IList<Ruleset> FindRuleSets(string[] searchPaths);
     

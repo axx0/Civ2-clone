@@ -19,28 +19,27 @@ public class CityButton : Button
         _baseFontSize = fontSize;
     }
 
-    /// <summary>
-    /// Absolute position without padding
-    /// </summary>
-    public Rectangle? AbsolutePositionNoPadding { get; set; }
-
     public override void OnResize()
     {
         Scale = _cityWindow.Scale;
 
         FontSize = _baseFontSize + (int)(16 * (Scale - 1));
 
-        if (AbsolutePosition.HasValue)
-        {
-            var absolutePosition = AbsolutePosition.Value.ScaleAll(Scale);
-            Bounds = new Rectangle(Controller.Location.X + Controller.LayoutPadding.Left + absolutePosition.X,
-                Controller.Location.Y + Controller.LayoutPadding.Top + absolutePosition.Y, absolutePosition.Width, absolutePosition.Height);
-        }
-        else if (AbsolutePositionNoPadding.HasValue)
-        {
-            var absolutePosition = AbsolutePositionNoPadding.Value.ScaleAll(Scale);
-            Bounds = new Rectangle(Controller.Location.X + absolutePosition.X,
-                Controller.Location.Y + absolutePosition.Y, absolutePosition.Width, absolutePosition.Height);
-        }
+        Location = new Vector2(Location.X * Scale, Location.Y * Scale);
+        Width = (int)(Width * Scale);
+        Height = (int)(Height * Scale);
+
+        //if (AbsolutePosition.HasValue)
+        //{
+        //    var absolutePosition = AbsolutePosition.Value.ScaleAll(Scale);
+            //Bounds = new Rectangle(Controller.Location.X + Controller.LayoutPadding.Left + absolutePosition.X,
+            //    Controller.Location.Y + Controller.LayoutPadding.Top + absolutePosition.Y, absolutePosition.Width, absolutePosition.Height);
+        //}
+        //else if (AbsolutePositionNoPadding.HasValue)
+        //{
+        //    var absolutePosition = AbsolutePositionNoPadding.Value.ScaleAll(Scale);
+            //Bounds = new Rectangle(Controller.Location.X + absolutePosition.X,
+            //    Controller.Location.Y + absolutePosition.Y, absolutePosition.Width, absolutePosition.Height);
+        //}
     }
 }

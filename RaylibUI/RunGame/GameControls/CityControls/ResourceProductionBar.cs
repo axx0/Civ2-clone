@@ -27,12 +27,20 @@ public class ResourceProductionBar : BaseControl
         _resource = resource;
         _active = cityWindow.MainWindow.ActiveInterface;
         _cityWindow.ResourceProductionChanged += (_, _) => CalculateContents();
-        Children = [];
+        Controls = [];
     }
 
     public override void OnResize()
     {
-        AbsolutePosition = _resource.Bounds.ScaleAll(_cityWindow.Scale);
+        Location = new(_cityWindow.LayoutPadding.Left + _resource.Bounds.X * _cityWindow.Scale,
+            _cityWindow.LayoutPadding.Top + _resource.Bounds.Y * _cityWindow.Scale);
+        Width = (int)(_resource.Bounds.Width * _cityWindow.Scale);
+        Height = (int)(_resource.Bounds.Height * _cityWindow.Scale);
+
+        //var pos = _resource.Bounds.ScaleAll(_cityWindow.Scale);
+        //Location = new(pos.X, pos.Y);
+        //Width = (int)pos.Width;
+        //Height = (int)pos.Height;
         base.OnResize();
         CalculateContents();
     }
@@ -109,10 +117,10 @@ public class ResourceProductionBar : BaseControl
         base.Draw(pulse);
         
         var textDim = TextManager.MeasureTextEx(Fonts.Arial, _sections[0].Label, 14, 1);
-        var labely = Location.Y + (_resource.LabelBelow ? Bounds.Height : 1-textDim.Y);
+        var labely = Bounds.Y + (_resource.LabelBelow ? Bounds.Height : 1-textDim.Y);
             
-        Graphics.DrawTextEx(Fonts.Arial, _sections[0].Label, new Vector2(Location.X + 1, labely),14,1,Color.White);
-        var pos = Location + Vector2.One;
+        Graphics.DrawTextEx(Fonts.Arial, _sections[0].Label, new Vector2(Bounds.X + 1, labely),14,1,Color.White);
+        var pos = new Vector2(Bounds.X, Bounds.Y) + Vector2.One;
         for (int i = 0; i < _sections[0].Value; i++)
         {
             Graphics.DrawTextureEx(_sections[0].Icon, pos,0,1,Color.White);
@@ -122,7 +130,7 @@ public class ResourceProductionBar : BaseControl
         var final = 1;
         if (_mid != -1)
         {
-            pos = Location + Vector2.One;
+            pos = new Vector2(Bounds.X, Bounds.Y) + Vector2.One;
             pos.X += _mid;
             for (int i = 0; i < _sections[1].Value; i++)
             {
@@ -131,11 +139,11 @@ public class ResourceProductionBar : BaseControl
             }
             var midText = _sections[1].Label;
             var midSize = TextManager.MeasureTextEx(Fonts.Arial, midText, 14, 1);
-            Graphics.DrawTextEx(Fonts.Arial, midText, new Vector2(Location.X + Width/2f - midSize.X/2, labely),14,1,Color.White);
+            Graphics.DrawTextEx(Fonts.Arial, midText, new Vector2(Bounds.X + Width/2f - midSize.X/2, labely),14,1,Color.White);
 
             final = 2;
         }
-        pos = Location + Vector2.One;
+        pos = new Vector2(Bounds.X, Bounds.Y) + Vector2.One;
         pos.X += Width - _iconWidth -2;
         for (int i = 0; i < _sections[final].Value; i++)
         {
@@ -145,7 +153,7 @@ public class ResourceProductionBar : BaseControl
 
         var finalText = _sections[final].Label;
         var finalSize = TextManager.MeasureTextEx(Fonts.Arial, finalText, 14, 1);
-        Graphics.DrawTextEx(Fonts.Arial, finalText, new Vector2(Location.X + Width - finalSize.X -1, labely),14,1,Color.White);
+        Graphics.DrawTextEx(Fonts.Arial, finalText, new Vector2(Bounds.X + Width - finalSize.X -1, labely),14,1,Color.White);
 
     }
 }

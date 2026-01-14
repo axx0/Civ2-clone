@@ -20,6 +20,7 @@ public class DropdownMenu :  BaseDialog
     private bool _clickInMenu;
     private bool _clickOutSide;
     private List<int> _separatorOffsets = [];
+    private int _width, _height;
 
     public DropdownMenu(GameScreen gameScreen) : base(gameScreen.Main)
     {
@@ -60,25 +61,27 @@ public class DropdownMenu :  BaseDialog
         }
 
         var dropdownWidth = childWidths.Sum() + DropDownItem.DropdownSpacing;
-        var currentY = location.Y + 3;
+        var currentY = 3;
         int itemNo = 0;
         foreach (var menuItem in Controls.OfType<DropDownItem>())
         {
             var height = menuItem.GetPreferredHeight() + 8;
             menuItem.SetChildWidths(childWidths);
-            menuItem.Bounds = new Rectangle(location.X, currentY, dropdownWidth, height);
+            menuItem.Location = new(0, currentY);
+            menuItem.Width = dropdownWidth;
+            menuItem.Height = height;
             menuItem.OnResize();
             currentY += height;
             if (separatorRows != null && separatorRows.Contains(itemNo))
             {
                 currentY += 7;
-                _separatorOffsets.Add((int)currentY - 3);
+                _separatorOffsets.Add(currentY - 8);
             }
             itemNo++;
         }
 
-        Width = dropdownWidth;
-        Height = currentY - location.Y + 3;
+        _width = dropdownWidth;
+        _height = (int)(currentY - location.Y + 10);
         _gameScreen.ShowDialog(this,true);
         _shown = true;
         _clickInMenu = false;
@@ -107,7 +110,7 @@ public class DropdownMenu :  BaseDialog
             // Hide the active menu if it's clicked
             if (_clickInMenu)
             {
-                foreach (var control in MenuBar.Children!.OfType<MenuLabel>())
+                foreach (var control in MenuBar.Controls!.OfType<MenuLabel>())
                 {
                     if (ShapeHelper.CheckCollisionPointRec(mousePos, control!.Bounds))
                     {
@@ -128,7 +131,7 @@ public class DropdownMenu :  BaseDialog
             }
             
             // Activate another menu if the mouse hovers over it
-            foreach (var control in MenuBar.Children!.OfType<MenuLabel>())
+            foreach (var control in MenuBar.Controls!.OfType<MenuLabel>())
             {
                 if (ShapeHelper.CheckCollisionPointRec(mousePos, control.Bounds))
                 {
@@ -142,9 +145,9 @@ public class DropdownMenu :  BaseDialog
         }
     }
 
-    public float Height { get; set; }
+    public override int Height => _height;
+    public override int Width => _width;
 
-    public int Width { get; set; }
     public GameMenu MenuBar { get; }
 
     public override void OnKeyPress(KeyboardKey key)
@@ -243,21 +246,21 @@ public class DropdownMenu :  BaseDialog
     {
         if (!_shown || Controls.Count == 0) return;
 
-        Graphics.DrawRectangleV(Location, new Vector2(Width, Height), new Color(242, 242, 242, 255));
-        Graphics.DrawRectangleLines((int)Location.X, (int)Location.Y, Width, (int)Height, new Color(204, 204, 204, 255));
-        
+        Graphics.DrawRectangleRec(Bounds, new Color(242, 242, 242, 255));
+        Graphics.DrawRectangleLinesEx(Bounds, 1f, new Color(204, 204, 204, 255));
+
         foreach (var control in Controls)
         {
             if (Focused == control)
             {
-                Graphics.DrawRectangleRec(new Rectangle(control.Location.X, control.Location.Y, control.Width, control.Height), new Color(145, 201, 247, 255));
+                Graphics.DrawRectangleRec(control.Bounds, new Color(145, 201, 247, 255));
             }
             control.Draw(pulse);
         }
 
         foreach(var offset in _separatorOffsets)
         {
-            Graphics.DrawLine((int)Location.X, offset, (int)Location.X + Width, offset, new Color(215, 215, 215, 255));
+            Graphics.DrawLine((int)Bounds.X, (int)Bounds.Y + offset, (int)Bounds.X + Width, (int)Bounds.Y + offset, new Color(215, 215, 215, 255));
         }
     }
 

@@ -32,13 +32,17 @@ public class Civ2GoldInterface : Civ2Interface
     public override InterfaceStyle Look { get; } = new()
     {
         Outer = new BitmapStorage("ICONS", new Rectangle(199, 322, 64, 32)),
-        Inner = new[] { new BitmapStorage("ICONS", new Rectangle(298, 190, 32, 32)) },
+        Inner = [new BitmapStorage("ICONS", new Rectangle(298, 190, 32, 32))],
 
         RadioButtons = new IImageSource[]
         { new BitmapStorage("buttons.png", 0, 0, 32), new BitmapStorage("buttons.png", 32, 0, 32) },
         CheckBoxes = new IImageSource[]
         { new BitmapStorage("buttons.png", 0, 32, 32), new BitmapStorage("buttons.png", 32, 32, 32) },
-        
+        DiskIcons = new IImageSource[]
+        { new BitmapStorage("explorer_icons.png", 0, 0, 32), new BitmapStorage("explorer_icons.png", 32, 0, 32),
+          new BitmapStorage("explorer_icons.png", 64, 0, 32), new BitmapStorage("explorer_icons.png", 0, 32, 32),
+          new BitmapStorage("explorer_icons.png", 32, 32, 32), new BitmapStorage("explorer_icons.png", 64, 32, 32)},
+
         DefaultFont = Fonts.Tnr,
         ButtonFont = Fonts.Tnr,
         ButtonFontSize = 20,
@@ -205,7 +209,7 @@ public class Civ2GoldInterface : Civ2Interface
         DialogHandlers["CUSTOMCITY"].Dialog.Decorations.Add(new Decoration(PicSources["templePic"][0], new Point(0.08, 0.09)));
     }
 
-    protected override List<MenuDetails> MenuMap { get; } = new List<MenuDetails>
+    protected override List<MenuDetails> MenuMap { get; } = new()
     {
         new MenuDetails
         {
@@ -445,6 +449,27 @@ public class Civ2GoldInterface : Civ2Interface
     public override int UnitsPxHeight => 48;
     public override Dictionary<string, IImageSource[]> PicSources { get; set; }
 
+    public override ListboxLooks GetListboxLooks(ListboxType? type)
+    {
+        return type switch
+        {
+            ListboxType.Default => new ListboxLooks
+            {
+                BoxBackgroundColor = new Color(207, 207, 207, 255),
+                BoxLineColor = new Color(67, 67, 67, 255),
+                Font = Fonts.Tnr,
+                FontSize = 21,
+                TextColorFront = Color.Black,
+                TextColorShadow = Color.Blank,
+                SelectedTextFont = Fonts.TnRbold,
+                SelectedTextBackgroundColor = new Color(107, 107, 107, 255),
+                SelectedTextColorFront = Color.White,
+                SelectedTextColorShadow = Color.Black
+            },
+            _ => new ListboxLooks(),
+        };
+    }
+
     public override void GetShieldImages()
     {
         Color shadowColour = new(51, 51, 51, 255);
@@ -624,9 +649,14 @@ public class Civ2GoldInterface : Civ2Interface
         }
     }
 
-    public override void DrawButton(Texture2D texture, int x, int y, int w, int h)
+    public override void DrawButton(Texture2D texture, Rectangle bounds)
     {
-        Graphics.DrawRectangleLinesEx(new Rectangle(x, y, w, h), 1.0f, new Color(100, 100, 100, 255));
+        var x = (int)bounds.X;
+        var y = (int)bounds.Y;
+        var w = (int)bounds.Width;
+        var h = (int)bounds.Height;
+
+        Graphics.DrawRectangleLinesEx(bounds, 1.0f, new Color(100, 100, 100, 255));
         Graphics.DrawRectangleRec(new Rectangle(x + 1, y + 1, w - 2, h - 2), Color.White);
         Graphics.DrawRectangleRec(new Rectangle(x + 3, y + 3, w - 6, h - 6), new Color(192, 192, 192, 255));
         Graphics.DrawLine(x + 2, y + h - 2, x + w - 2, y + h - 2, new Color(128, 128, 128, 255));

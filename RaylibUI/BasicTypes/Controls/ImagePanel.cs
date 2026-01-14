@@ -1,11 +1,11 @@
-using Model;
+﻿using Model;
 using Model.Images;
 using Raylib_CSharp.Colors;
 using Raylib_CSharp.Rendering;
 using Raylib_CSharp.Textures;
 using Raylib_CSharp.Windowing;
 
-namespace RaylibUI.Forms;
+namespace RaylibUI.Controls;
 
 public class ImagePanel
 {

@@ -35,13 +35,18 @@ public class CityInfoArea : BaseControl
         _label = new CityLabel(controller, Labels.For(LabelIndex.UnitsPresent), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize,
             _pen1, _pen2)
         {
-            AbsolutePosition = new Rectangle(_props.InfoPanel.X, _props.InfoPanel.Y, _props.InfoPanel.Width, 15)
+            Location = new(_props.InfoPanel.X, _props.InfoPanel.Y),
+            Width = (int)_props.InfoPanel.Width,
+            Height = 15
         };
     }
 
     public override void OnResize()
     {
-        AbsolutePosition = _props.InfoPanel.ScaleAll(_cityWindow.Scale);
+        var pos = _props.InfoPanel.ScaleAll(_cityWindow.Scale);
+        Location = new(pos.X, pos.Y);
+        Width = (int)pos.Width;
+        Height = (int)pos.Height;
         base.OnResize();
 
         _label.Text = _mode switch
@@ -51,16 +56,16 @@ public class CityInfoArea : BaseControl
             _ => Labels.For(LabelIndex.UnitsPresent),
         };
 
-        var activPos = new Vector2(Bounds.X, Bounds.Y + _label.TextSize.Y);
-        var children = new List<IControl>();
+        var activPos = new Vector2(Location.X, Location.Y + _label.TextSize.Y);
+        var Controls = new List<IControl>();
         
         if (!(_mode == CityDisplayMode.Info && _city.UnitsInCity.Count > 5))
         {
-            children.Add(_label);
+            Controls.Add(_label);
         }
         else
         {
-            activPos = new Vector2(Bounds.X, Bounds.Y);
+            activPos = new Vector2(Location.X, Location.Y);
         }
 
         if (_mode == CityDisplayMode.Info)
@@ -75,25 +80,27 @@ public class CityInfoArea : BaseControl
                     alignment: TextAlignment.Center, colorShadow: new Color(135, 135, 135, 255), shadowOffset: new Vector2(1, 1),
                     fontSize: (int)_fontSize);
                 var textDim = TextManager.MeasureTextEx(_active.Look.CityWindowFont, unitLabel.Text, _fontSize, 1);
-                unitLabel.Bounds = new Rectangle(activPos.X, activPos.Y + unitDisplay.Height, unitDisplay.Width, textDim.Y);
-                children.Add(unitDisplay);
-                children.Add(unitLabel);
+                unitLabel.Location = new(activPos.X, activPos.Y + unitDisplay.Height);
+                Width = unitDisplay.Width;
+                Height = (int)textDim.Y;
+                Controls.Add(unitDisplay);
+                Controls.Add(unitLabel);
 
                 activPos = activPos with { X = activPos.X + unitDisplay.Width };
-                if (activPos.X + unitDisplay.Width > Bounds.X + Bounds.Width)
+                if (activPos.X + unitDisplay.Width > Location.X + Width)
                 {
                     row++;
                     if (row == 1)
                     {
-                        activPos = new Vector2(Bounds.X, activPos.Y + unitDisplay.Height + 3 * _cityWindow.Scale);
+                        activPos = new Vector2(Location.X, activPos.Y + unitDisplay.Height + 3 * _cityWindow.Scale);
                     }
                     else if (row == 2)
                     {
-                        activPos = new Vector2(Bounds.X + unitDisplay.Width / 2, Bounds.Y + unitDisplay.Height / 2);
+                        activPos = new Vector2(Location.X + unitDisplay.Width / 2, Location.Y + unitDisplay.Height / 2);
                     }
                     else if (row == 3)
                     {
-                        activPos = new Vector2(Bounds.X + unitDisplay.Width / 2, Bounds.Y + 1.5f * unitDisplay.Height + 3 * _cityWindow.Scale);
+                        activPos = new Vector2(Location.X + unitDisplay.Width / 2, Location.Y + 1.5f * unitDisplay.Height + 3 * _cityWindow.Scale);
                     }
                     else
                     {
@@ -102,19 +109,27 @@ public class CityInfoArea : BaseControl
                 }
             }
 
-            children.Add(
+            Controls.Add(
                 new CityLabel(_cityWindow, $"{Labels.For(LabelIndex.Supplies)}: {string.Join(", ", _city.CommoditySupplied?.Select(c => _game.Rules.CaravanCommoditie[c.Id].Name) ?? Array.Empty<string>())}", _active.Look.CityWindowFont, _active.Look.CityWindowFontSize,
                 new Color(227, 83, 15, 255), new Color(67, 67, 67, 255), TextAlignment.Left)
-                    { AbsolutePosition = new Rectangle(_props.InfoPanel.X + 5, _props.InfoPanel.Y + 170, 0, 0) });
-            children.Add(
+                {
+                    Location = new(_props.InfoPanel.X + 5, _props.InfoPanel.Y + 170),
+                    Width = 0,
+                    Height = 0
+                });
+            Controls.Add(
                 new CityLabel(_cityWindow, $"{Labels.For(LabelIndex.Demands)}: {string.Join(", ", _city.CommodityDemanded?.Select(c => _game.Rules.CaravanCommoditie[c.Id].Name) ?? Array.Empty<string>())}", _active.Look.CityWindowFont, _active.Look.CityWindowFontSize,
                 new Color(227, 83, 15, 255), new Color(67, 67, 67, 255), TextAlignment.Left)
-                { AbsolutePosition = new Rectangle(_props.InfoPanel.X + 5, _props.InfoPanel.Y + 183, 0, 0) });
+                {
+                    Location = new(_props.InfoPanel.X + 5, _props.InfoPanel.Y + 183),
+                    Width = 0,
+                    Height = 0
+                });
         }
 
-        Children = children;
+        Controls = Controls;
 
-        foreach (var child in Children)
+        foreach (var child in Controls)
         {
             child.OnResize();
         }
@@ -124,7 +139,7 @@ public class CityInfoArea : BaseControl
     {
         base.Draw(pulse);
 
-        //Graphics.DrawRectangleLines((int)Bounds.X, (int)Bounds.Y, Width,Height, Color.Magenta);
+        //Graphics.DrawRectangleLinesEx(Bounds, 1f, Color.Magenta);
 
         if (_mode == CityDisplayMode.SupportMap)
         {

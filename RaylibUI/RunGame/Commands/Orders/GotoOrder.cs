@@ -73,8 +73,9 @@ public class GotoOrder : Order
                                     islands.Contains(c.Location.Island) ||
                                     c.Location.Neighbours().Any(l => islands.Contains(l.Island))).OrderBy(c=>c.Name)
             .ToList();
+        var listbox = new ListboxDefinition();
+        listbox.Update(_cities.Select(c => c.Name).ToList());
         GameScreen.ShowPopup("GOTO", handleButtonClick: HandleButtonClick,
-            listBox: new ListBoxDefinition
-                { Vertical = true, Entries = _cities.Select(c => new ListBoxEntry { LeftText = c.Name }).ToList() });
+            listBox: listbox);
     }
 }
