@@ -69,10 +69,10 @@ public class Civ2GoldInterface : Civ2Interface
     
     public override Padding GetPadding(float headerLabelHeight, bool footer)
     {
-        int paddingTop = headerLabelHeight != 0 ? 7 + Math.Max((int)(-3 + 2 / 9 * headerLabelHeight + headerLabelHeight), (int)headerLabelHeight) : 11;
-        int paddtingBtm = footer ? 46 : 10;
+        var paddingTop = headerLabelHeight != 0 ? 7 + Math.Max((int)(-3 + 2 / 9f * headerLabelHeight + headerLabelHeight), (int)headerLabelHeight) : 11;
+        var paddingBtm = footer ? 46 : 10;
 
-        return new Padding(paddingTop, bottom:paddtingBtm, left:11, right:11);
+        return new Padding(paddingTop, bottom:paddingBtm, left:11, right:11);
     }
 
     public override Padding DialogPadding => new(11);
@@ -558,10 +558,10 @@ public class Civ2GoldInterface : Civ2Interface
     /// <param name="statusPanel">is this status panel?</param>
     public override void DrawBorderWallpaper(Wallpaper wallpaper, ref Image destination, int height, int width, Padding padding, bool statusPanel)
     {
-        int rows = height / wallpaper.Outer.Height + 1;
+        var rows = height / wallpaper.Outer.Height + 1;
         var columns = width / wallpaper.Outer.Width + 1;
         var headerSourceRec = new Rectangle { Height = padding.Top, Width = wallpaper.Outer.Width };
-        for (int col = 0; col < columns; col++)
+        for (var col = 0; col < columns; col++)
         {
             destination.Draw(wallpaper.Outer, headerSourceRec,
                 new Rectangle(col * wallpaper.Outer.Width, 0, wallpaper.Outer.Width, padding.Top), Color.White);
@@ -572,7 +572,7 @@ public class Civ2GoldInterface : Civ2Interface
         var rightOffset = width % wallpaper.Outer.Width;
         var rightSide = new Rectangle { X = rightOffset, Height = wallpaper.Outer.Height, Width = DialogPadding.Right };
 
-        for (int row = 0; row < rows; row++)
+        for (var row = 0; row < rows; row++)
         {
             destination.Draw(wallpaper.Outer, leftSide,
                 new Rectangle(0, row * wallpaper.Outer.Height, DialogPadding.Left, wallpaper.Outer.Height), Color.White);
@@ -583,7 +583,7 @@ public class Civ2GoldInterface : Civ2Interface
         var bottomEdge = height - padding.Bottom;
         var bottomOffset = height % wallpaper.Outer.Height;
         var bottomSource = new Rectangle { Y = bottomOffset, Height = padding.Bottom, Width = wallpaper.Outer.Width };
-        for (int col = 0; col < columns; col++)
+        for (var col = 0; col < columns; col++)
         {
             destination.Draw(wallpaper.Outer, bottomSource,
                 new Rectangle(col * wallpaper.Outer.Width, bottomEdge, wallpaper.Outer.Width, padding.Bottom), Color.White);
@@ -593,7 +593,7 @@ public class Civ2GoldInterface : Civ2Interface
         {
             columns = (width - padding.Left - padding.Right) / wallpaper.Outer.Width + 1;
             var sourceRec = new Rectangle { Height = 4, Width = wallpaper.Outer.Width };
-            for (int col = 0; col < columns; col++)
+            for (var col = 0; col < columns; col++)
             {
                 destination.Draw(wallpaper.Outer, sourceRec,
                     new Rectangle(col * wallpaper.Outer.Width, padding.Top + 62, wallpaper.Outer.Width, 4), Color.White);
@@ -634,9 +634,10 @@ public class Civ2GoldInterface : Civ2Interface
         destination.DrawLine(4, height - 5, width - 5, height - 5, pen7);
 
         // Inner panel
+        destination.DrawLine(9, padding.Top - 1, 9 + (width - 18 - 1), padding.Top - 1, pen7); // 1st layer of border
         if (!statusPanel)
         {
-            destination.DrawLine(9, padding.Top - 1, 9 + (width - 18 - 1), padding.Top - 1, pen7); // 1st layer of border
+            // 1st layer of border
             destination.DrawLine(10, padding.Top - 1, 10, height - padding.Bottom - 1, pen7);
             destination.DrawLine(width - 11, padding.Top - 1, width - 11, height - padding.Bottom - 1, pen6);
             destination.DrawLine(9, height - padding.Bottom, width - 9 - 1, height - padding.Bottom, pen6);
@@ -647,7 +648,7 @@ public class Civ2GoldInterface : Civ2Interface
         }
         else
         {
-            destination.DrawLine(9, padding.Top - 1, 9 + (width - 18 - 1), padding.Top - 1, pen7); // 1st layer of border
+            // 1st layer of border
             destination.DrawLine(9, padding.Top + 67, 9 + (width - 18 - 1), padding.Top + 67, pen7);
             destination.DrawLine(10, padding.Top - 1, 10, padding.Top + 59, pen7);
             destination.DrawLine(10, padding.Top + 66, 10, height - padding.Bottom - 1, pen7);
