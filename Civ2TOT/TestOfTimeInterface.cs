@@ -171,101 +171,117 @@ public class TestOfTimeInterface : Civ2Interface
             existingDialog.Options = menu2.Options.Concat(existingDialog.Options.Skip(5)).ToList();
         }
 
-        PicSources = new()
-        {
-            { "unit", Enumerable.Range(0, 9 * UnitsRows).Select(i => new BitmapStorage("UNITS", new Rectangle(1 + 65 * (i % 9), 1 + (UnitsPxHeight + 1) * (i / 9), 64, UnitsPxHeight), true, true)).ToArray() },
-            { "HPshield", new[] { new BitmapStorage("UNITS", new Rectangle(586, 1, 32, 10), true) } },
-            { "textColours", Enumerable.Range(0, 9).Select(col =>
-                    new BitmapStorage("CITIES", new Rectangle(1 + 15 * col, 421, 14, 3), true)).ToArray() },
-            { "flags", Enumerable.Range(0, 2 * 9).Select(i =>
-                    new BitmapStorage("CITIES", new Rectangle(1 + 15 * (i % 9), 425 + 23 * (i / 9), 14, 22), true)).ToArray() },
-            { "fortify", new[] { new BitmapStorage("CITIES", new Rectangle(143, 423, 64, 48), true) } },
-            { "fortress", new[] { new BitmapStorage("CITIES", new Rectangle(208, 423, 64, 48), true) } },
-            { "airbase,empty", new[] { new BitmapStorage("CITIES", new Rectangle(273, 423, 64, 48), true) } },
-            { "airbase,full", new[] { new BitmapStorage("CITIES", new Rectangle(338, 423, 64, 48), true) } },
-            { "base1", Enumerable.Range(0, 11).Select(row =>
-                        new BitmapStorage("TERRAIN1", new Rectangle(1, 1 + 33 * row, 64, 32), true)).ToArray() },
-            { "base2", Enumerable.Range(0, 11).Select(row =>
-                        new BitmapStorage("TERRAIN1", new Rectangle(66, 1 + 33 * row, 64, 32), true)).ToArray() },
-            { "special1", Enumerable.Range(0, 11).Select(row =>
-                        new BitmapStorage("TERRAIN1", new Rectangle(131, 1 + 33 * row, 64, 32), true)).ToArray() },
-            { "special2", Enumerable.Range(0, 11).Select(row =>
-                        new BitmapStorage("TERRAIN1", new Rectangle(196, 1 + 33 * row, 64, 32), true)).ToArray() },
-            { "road", Enumerable.Range(0, 9).Select(col =>
-                        new BitmapStorage("TERRAIN1", new Rectangle(1 + 65 * col, 364, 64, 32), true)).ToArray() },
-            { "railroad", Enumerable.Range(0, 9).Select(col =>
-                        new BitmapStorage("TERRAIN1", new Rectangle(1 + 65 * col, 397, 64, 32), true)).ToArray() },
-            { "irrigation", new[] { new BitmapStorage("TERRAIN1", new Rectangle(456, 100, 64, 32), true) } },
-            { "farmland", new[] { new BitmapStorage("TERRAIN1", new Rectangle(456, 133, 64, 32), true) } },
-            { "mine", new[] { new BitmapStorage("TERRAIN1", new Rectangle(456, 166, 64, 32), true) } },
-            { "pollution", new[] { new BitmapStorage("TERRAIN1", new Rectangle(456, 199, 64, 32), true) } },
-            { "shield", new[] { new BitmapStorage("TERRAIN1", new Rectangle(456, 232, 64, 32), true) } },
-            { "hut", new[] { new BitmapStorage("TERRAIN1", new Rectangle(456, 265, 64, 32), true) } },
-            { "dither", new[] { new BitmapStorage("TERRAIN1", new Rectangle(1, 447, 64, 32), true) } },
-            { "blank", new[] { new BitmapStorage("TERRAIN1", new Rectangle(131, 447, 64, 32), true) } },
-            { "connection", Enumerable.Range(0, 2 * 8).Select(i =>
-                    new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 1 + 33 * (i / 8), 64, 32), true)).ToArray() },
-            { "river", Enumerable.Range(0, 2 * 8).Select(i =>
-                    new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 67 + 33 * (i / 8), 64, 32), true)).ToArray() },
-            { "forest", Enumerable.Range(0, 2 * 8).Select(i =>
-                    new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 133 + 33 * (i / 8), 64, 32), true)).ToArray() },
-            { "mountain", Enumerable.Range(0, 2 * 8).Select(i =>
-                    new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 199 + 33 * (i / 8), 64, 32), true)).ToArray() },
-            { "hill", Enumerable.Range(0, 2 * 8).Select(i =>
-                    new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 265 + 33 * (i / 8), 64, 32), true)).ToArray() },
-            { "riverMouth", Enumerable.Range(0, 4).Select(col =>
-                    new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * col, 331, 64, 32), true)).ToArray() },
-            { "viewPiece", new[] { new BitmapStorage("ICONS", new Rectangle(199, 256, 64, 32), true) } },
-            { "gridlines", new[] { new BitmapStorage("ICONS", new Rectangle(183, 430, 64, 32), true) } },
-            { "gridlines,visible", new[] { new BitmapStorage("ICONS", new Rectangle(248, 430, 64, 32), true) } },
-            { "battleAnim", Enumerable.Range(0, 8).Select(col =>
-                    new BitmapStorage("ICONS", new Rectangle(1 + 33 * col, 356, 32, 32), true)).ToArray() },
-            { "researchProgress", Enumerable.Range(0, 4).Select(col =>
-                    new BitmapStorage("ICONS", new Rectangle(49 + 15 * col, 290, 14, 14), true)).ToArray() },
-            { "globalWarming", Enumerable.Range(0, 4).Select(col =>
-                    new BitmapStorage("ICONS", new Rectangle(49 + 15 * col, 305, 14, 14), true)).ToArray() },
-            { "close", new[] { new BitmapStorage("ICONS", new Rectangle(1, 389, 16, 16)) } },
-            { "zoomIn", new[] { new BitmapStorage("ICONS", new Rectangle(18, 389, 16, 16)) } },
-            { "zoomOut", new[] { new BitmapStorage("ICONS", new Rectangle(35, 389, 16, 16)) } },
-            { "backgroundImage", new[]{ new BinaryStorage("Tiles.dll", 0x100740, 0x12702) } },
-            { "backgroundImageSmall1", new[]{ new BinaryStorage("Tiles.dll", 0xF5C44, 0xAAFC, new Rectangle(332, 134, 64, 64)) } },
-            { "backgroundImageSmall2", new[]{ new BinaryStorage("Tiles.dll", 0xF5C44, 0xAAFC, new Rectangle(398, 134, 64, 64)) } },
-            { "cityBuiltAncient", new[]{ new BinaryStorage("Tiles.dll", 0xE3D1C, 0x5A34) } },
-            { "cityBuiltModern", new[]{ new BinaryStorage("Tiles.dll", 0xE9750, 0x5C2D) } },
-            { "observatoryPic", new[]{ new BinaryStorage("Intro.dll", 0x1E630, 0xACDC) } },
-            { "horzionPic", new[]{ new BinaryStorage("Intro.dll", 0x1E630, 0xACDC) } },
-            { "creaturePic", new[]{ new BinaryStorage("Intro.dll", 0x2EBB4, 0x14600) } },
-            { "duelPic", new[]{ new BinaryStorage("Intro.dll", 0x431B4, 0x177AF) } },
-            { "knightsPic", new[]{ new BinaryStorage("Intro.dll", 0x5A964, 0xEB67) } },
-            { "labPic", new[]{ new BinaryStorage("Intro.dll", 0x694CC, 0xFC4B) } },
-            { "templePic", new[]{ new BinaryStorage("Intro.dll", 0x79118, 0x10EBB) } },
-            { "manorPic", new[]{ new BinaryStorage("Intro.dll", 0x89FD4, 0x13AA8) } },
-            { "bookPic", new[]{ new BinaryStorage("Intro.dll", 0x9DA7C, 0x162AE) } },
-            { "alienplanetPic", new[]{ new BinaryStorage("Intro.dll", 0xB3D2C, 0x988D) } },
-            { "rocksPic", new[]{ new BinaryStorage("Intro.dll", 0xBD5BC, 0xBF78) } },
-            { "shipPic", new[]{ new BinaryStorage("Intro.dll", 0xC9534, 0x5A03) } },
-            { "hotplanetPic", new[]{ new BinaryStorage("Intro.dll", 0xCEF38, 0x9130) } },
-        };
 
-        var src = new BitmapStorage[6 * 8];
-        for (int row = 0; row < 6; row++)
+        PicSources.Add("unit",
+            Enumerable.Range(0, 9 * UnitsRows).Select(i => new BitmapStorage("UNITS",
+                    new Rectangle(1 + 65 * (i % 9), 1 + (UnitsPxHeight + 1) * (i / 9f), 64, UnitsPxHeight), true, true))
+                .ToArray<IImageSource>());
+        PicSources.Add("HPshield", [new BitmapStorage("UNITS", new Rectangle(586, 1, 32, 10), true)]);
+        PicSources.Add("textColours", Enumerable.Range(0, 9).Select(col =>
+            new BitmapStorage("CITIES", new Rectangle(1 + 15 * col, 421, 14, 3), true)).ToArray<IImageSource>());
+        PicSources.Add("flags", Enumerable.Range(0, 2 * 9).Select(i =>
+                new BitmapStorage("CITIES", new Rectangle(1 + 15 * (i % 9), 425 + 23 * (i / 9f), 14, 22), true))
+            .ToArray<IImageSource>());
+        PicSources.Add("fortify", [new BitmapStorage("CITIES", new Rectangle(143, 423, 64, 48), true)]);
+        PicSources.Add("fortress", [new BitmapStorage("CITIES", new Rectangle(208, 423, 64, 48), true)]);
+        PicSources.Add("airbase,empty", [new BitmapStorage("CITIES", new Rectangle(273, 423, 64, 48), true)]);
+        PicSources.Add("airbase,full", [new BitmapStorage("CITIES", new Rectangle(338, 423, 64, 48), true)]);
+        PicSources.Add("base1", Enumerable.Range(0, 11).Select(row =>
+            new BitmapStorage("TERRAIN1", new Rectangle(1, 1 + 33 * row, 64, 32), true)).ToArray<IImageSource>());
+        PicSources.Add("base2", Enumerable.Range(0, 11).Select(row =>
+            new BitmapStorage("TERRAIN1", new Rectangle(66, 1 + 33 * row, 64, 32), true)).ToArray<IImageSource>());
+        PicSources.Add("special1", Enumerable.Range(0, 11).Select(row =>
+            new BitmapStorage("TERRAIN1", new Rectangle(131, 1 + 33 * row, 64, 32), true)).ToArray<IImageSource>());
+        PicSources.Add("special2", Enumerable.Range(0, 11).Select(row =>
+            new BitmapStorage("TERRAIN1", new Rectangle(196, 1 + 33 * row, 64, 32), true)).ToArray<IImageSource>());
+        PicSources.Add("road", Enumerable.Range(0, 9).Select(col =>
+            new BitmapStorage("TERRAIN1", new Rectangle(1 + 65 * col, 364, 64, 32), true)).ToArray<IImageSource>());
+        PicSources.Add("railroad", Enumerable.Range(0, 9).Select(col =>
+            new BitmapStorage("TERRAIN1", new Rectangle(1 + 65 * col, 397, 64, 32), true)).ToArray<IImageSource>());
+        PicSources.Add("irrigation", [new BitmapStorage("TERRAIN1", new Rectangle(456, 100, 64, 32), true)]);
+        PicSources.Add("farmland", [new BitmapStorage("TERRAIN1", new Rectangle(456, 133, 64, 32), true)]);
+        PicSources.Add("mine", [new BitmapStorage("TERRAIN1", new Rectangle(456, 166, 64, 32), true)]);
+        PicSources.Add("pollution", [new BitmapStorage("TERRAIN1", new Rectangle(456, 199, 64, 32), true)]);
+        PicSources.Add("shield", [new BitmapStorage("TERRAIN1", new Rectangle(456, 232, 64, 32), true)]);
+        PicSources.Add("hut", [new BitmapStorage("TERRAIN1", new Rectangle(456, 265, 64, 32), true)]);
+        PicSources.Add("dither", [new BitmapStorage("TERRAIN1", new Rectangle(1, 447, 64, 32), true)]);
+        PicSources.Add("blank", [new BitmapStorage("TERRAIN1", new Rectangle(131, 447, 64, 32), true)]);
+        PicSources.Add("connection", Enumerable.Range(0, 2 * 8).Select(i =>
+                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 1 + 33 * (i / 8f), 64, 32), true))
+            .ToArray<IImageSource>());
+        PicSources.Add("river", Enumerable.Range(0, 2 * 8).Select(i =>
+                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 67 + 33 * (i / 8f), 64, 32), true))
+            .ToArray<IImageSource>());
+        PicSources.Add("forest", Enumerable.Range(0, 2 * 8).Select(i =>
+                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 133 + 33 * (i / 8f), 64, 32), true))
+            .ToArray<IImageSource>());
+        PicSources.Add("mountain", Enumerable.Range(0, 2 * 8).Select(i =>
+                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 199 + 33 * (i / 8f), 64, 32), true))
+            .ToArray<IImageSource>());
+        PicSources.Add("hill", Enumerable.Range(0, 2 * 8).Select(i =>
+                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 265 + 33 * (i / 8f), 64, 32), true))
+            .ToArray<IImageSource>());
+        PicSources.Add("riverMouth", Enumerable.Range(0, 4).Select(col =>
+            new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * col, 331, 64, 32), true)).ToArray<IImageSource>());
+        PicSources.Add("viewPiece", [new BitmapStorage("ICONS", new Rectangle(199, 256, 64, 32), true)]);
+        PicSources.Add("gridlines", [new BitmapStorage("ICONS", new Rectangle(183, 430, 64, 32), true)]);
+        PicSources.Add("gridlines,visible", [new BitmapStorage("ICONS", new Rectangle(248, 430, 64, 32), true)]);
+        PicSources.Add("battleAnim", Enumerable.Range(0, 8).Select(col =>
+            new BitmapStorage("ICONS", new Rectangle(1 + 33 * col, 356, 32, 32), true)).ToArray<IImageSource>());
+        PicSources.Add("researchProgress", Enumerable.Range(0, 4).Select(col =>
+            new BitmapStorage("ICONS", new Rectangle(49 + 15 * col, 290, 14, 14), true)).ToArray<IImageSource>());
+        PicSources.Add("globalWarming", Enumerable.Range(0, 4).Select(col =>
+            new BitmapStorage("ICONS", new Rectangle(49 + 15 * col, 305, 14, 14), true)).ToArray<IImageSource>());
+        PicSources.Add("close", [new BitmapStorage("ICONS", new Rectangle(1, 389, 16, 16))]);
+        PicSources.Add("zoomIn", [new BitmapStorage("ICONS", new Rectangle(18, 389, 16, 16))]);
+        PicSources.Add("zoomOut", [new BitmapStorage("ICONS", new Rectangle(35, 389, 16, 16))]);
+        PicSources.Add("backgroundImage", [new BinaryStorage("Tiles.dll", 0x100740, 0x12702)]);
+        PicSources.Add("backgroundImageSmall1", [
+            new BinaryStorage("Tiles.dll", 0xF5C44, 0xAAFC, new Rectangle(332, 134, 64, 64))
+        ]);
+        PicSources.Add("backgroundImageSmall2", [
+            new BinaryStorage("Tiles.dll", 0xF5C44, 0xAAFC, new Rectangle(398, 134, 64, 64))
+        ]);
+        PicSources.Add("cityBuiltAncient", [new BinaryStorage("Tiles.dll", 0xE3D1C, 0x5A34)]);
+        PicSources.Add("cityBuiltModern", [new BinaryStorage("Tiles.dll", 0xE9750, 0x5C2D)]);
+        PicSources.Add("observatoryPic", [new BinaryStorage("Intro.dll", 0x1E630, 0xACDC)]);
+        PicSources.Add("horzionPic", [new BinaryStorage("Intro.dll", 0x1E630, 0xACDC)]);
+        PicSources.Add("creaturePic", [new BinaryStorage("Intro.dll", 0x2EBB4, 0x14600)]);
+        PicSources.Add("duelPic", [new BinaryStorage("Intro.dll", 0x431B4, 0x177AF)]);
+        PicSources.Add("knightsPic", [new BinaryStorage("Intro.dll", 0x5A964, 0xEB67)]);
+        PicSources.Add("labPic", [new BinaryStorage("Intro.dll", 0x694CC, 0xFC4B)]);
+        PicSources.Add("templePic", [new BinaryStorage("Intro.dll", 0x79118, 0x10EBB)]);
+        PicSources.Add("manorPic", [new BinaryStorage("Intro.dll", 0x89FD4, 0x13AA8)]);
+        PicSources.Add("bookPic", [new BinaryStorage("Intro.dll", 0x9DA7C, 0x162AE)]);
+        PicSources.Add("alienplanetPic", [new BinaryStorage("Intro.dll", 0xB3D2C, 0x988D)]);
+        PicSources.Add("rocksPic", [new BinaryStorage("Intro.dll", 0xBD5BC, 0xBF78)]);
+        PicSources.Add("shipPic", [new BinaryStorage("Intro.dll", 0xC9534, 0x5A03)]);
+        PicSources.Add("hotplanetPic", [new BinaryStorage("Intro.dll", 0xCEF38, 0x9130)]);
+
+
+        var src = new IImageSource[6 * 8];
+        for (var row = 0; row < 6; row++)
         {
-            for (int col = 0; col < 4; col++)
+            for (var col = 0; col < 4; col++)
             {
-                src[8 * row + col] = new BitmapStorage("CITIES", new Rectangle(1 + 65 * col, 39 + 49 * row, 64, 48), true, true);    // Open cities
-                src[8 * row + 4 + col] = new BitmapStorage("CITIES", new Rectangle(334 + 65 * col, 39 + 49 * row, 64, 48), true, true);    // Walled cities
+                src[8 * row + col] = new BitmapStorage("CITIES", new Rectangle(1 + 65 * col, 39 + 49 * row, 64, 48),
+                    true, true); // Open cities
+                src[8 * row + 4 + col] = new BitmapStorage("CITIES",
+                    new Rectangle(334 + 65 * col, 39 + 49 * row, 64, 48), true, true); // Walled cities
             }
         }
+
         PicSources.Add("city", src);
 
-        src = new BitmapStorage[4 * 8];
-        for (int i = 0; i < 8; i++)
+        src = new IImageSource[4 * 8];
+        for (var i = 0; i < 8; i++)
         {
             src[4 * i + 0] = new BitmapStorage("TERRAIN2", new Rectangle(1 + 66 * i, 429, 32, 16), true);
             src[4 * i + 1] = new BitmapStorage("TERRAIN2", new Rectangle(1 + 66 * i, 446, 32, 16), true);
             src[4 * i + 2] = new BitmapStorage("TERRAIN2", new Rectangle(1 + 66 * i, 463, 32, 16), true);
             src[4 * i + 3] = new BitmapStorage("TERRAIN2", new Rectangle(34 + 66 * i, 463, 32, 16), true);
         }
+
         PicSources.Add("coastline", src);
 
 
@@ -520,7 +536,7 @@ public class TestOfTimeInterface : Civ2Interface
     public override int UnitsRows => 9;
     public override int UnitsPxHeight => 64;
 
-    public override Dictionary<string, IImageSource[]> PicSources { get; set; }
+    public override Dictionary<string, IImageSource[]> PicSources { get; } = new();
 
     public override void LoadPlayerColours()
     {

@@ -83,17 +83,6 @@ public class Civ2GoldInterface : Civ2Interface
     {
         base.Initialize();
 
-        PicSources = new()
-        {
-            { "unit", Enumerable.Range(0, 9 * UnitsRows).Select(i => new BitmapStorage("UNITS", new Rectangle(1 + 65 * (i % 9), 1 + (UnitsPxHeight + 1) * (i / 9), 64, UnitsPxHeight), searchFlagLoc: true)).ToArray() },
-            { "HPshield", new[] { new BitmapStorage("UNITS", new Rectangle(597, 30, 12, 20)) } },
-            { "backShield1", new[] { new BitmapStorage("UNITS", new Rectangle(586, 1, 12, 20)) } },
-            { "backShield2", new[] { new BitmapStorage("UNITS", new Rectangle(599, 1, 12, 20)) } },
-            { "textColours", Enumerable.Range(0, 9).Select(col =>
-                    new BitmapStorage("CITIES", new Rectangle(1 + 15 * col, 423, 14, 1))).ToArray() },
-            { "flags", Enumerable.Range(0, 2 * 9).Select(i =>
-                    new BitmapStorage("CITIES", new Rectangle(1 + 15 * (i % 9), 425 + 23 * (i / 9), 14, 22))).ToArray() },
-            { "fortify", new[] { new BitmapStorage("CITIES", new Rectangle(143, 423, 64, 48)) } },
             { "fortress", new[] { new BitmapStorage("CITIES", new Rectangle(208, 423, 64, 48)) } },
             { "airbase,empty", new[] { new BitmapStorage("CITIES", new Rectangle(273, 423, 64, 48)) } },
             { "airbase,full", new[] { new BitmapStorage("CITIES", new Rectangle(338, 423, 64, 48)) } },
@@ -106,103 +95,163 @@ public class Civ2GoldInterface : Civ2Interface
             { "special2", Enumerable.Range(0, 11).Select(row =>
                         new BitmapStorage("TERRAIN1", new Rectangle(196, 1 + 33 * row, 64, 32))).ToArray() },
             { "road", Enumerable.Range(0, 9).Select(col =>
-                        new BitmapStorage("TERRAIN1", new Rectangle(1 + 65 * col, 363, 64, 32))).ToArray() },
-            { "railroad", Enumerable.Range(0, 9).Select(col =>
-                        new BitmapStorage("TERRAIN1", new Rectangle(1 + 65 * col, 397, 64, 32))).ToArray() },
-            { "irrigation", new[] { new BitmapStorage("TERRAIN1", new Rectangle(456, 100, 64, 32)) } },
-            { "farmland", new[] { new BitmapStorage("TERRAIN1", new Rectangle(456, 133, 64, 32)) } },
-            { "mine", new[] { new BitmapStorage("TERRAIN1", new Rectangle(456, 166, 64, 32)) } },
-            { "pollution", new[] { new BitmapStorage("TERRAIN1", new Rectangle(456, 199, 64, 32)) } },
-            { "shield", new[] { new BitmapStorage("TERRAIN1", new Rectangle(456, 232, 64, 32)) } },
-            { "hut", new[] { new BitmapStorage("TERRAIN1", new Rectangle(456, 265, 64, 32)) } },
-            { "dither", new[] { new BitmapStorage("TERRAIN1", new Rectangle(1, 447, 64, 32)) } },
-            { "blank", new[] { new BitmapStorage("TERRAIN1", new Rectangle(131, 447, 64, 32)) } },
-            { "connection", Enumerable.Range(0, 2 * 8).Select(i =>
-                    new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 1 + 33 * (i / 8), 64, 32))).ToArray() },
-            { "river", Enumerable.Range(0, 2 * 8).Select(i =>
-                    new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 67 + 33 * (i / 8), 64, 32))).ToArray() },
-            { "forest", Enumerable.Range(0, 2 * 8).Select(i =>
-                    new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 133 + 33 * (i / 8), 64, 32))).ToArray() },
-            { "mountain", Enumerable.Range(0, 2 * 8).Select(i =>
-                    new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 199 + 33 * (i / 8), 64, 32))).ToArray() },
-            { "hill", Enumerable.Range(0, 2 * 8).Select(i =>
-                    new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 265 + 33 * (i / 8), 64, 32))).ToArray() },
-            { "riverMouth", Enumerable.Range(0, 4).Select(col =>
-                    new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * col, 331, 64, 32))).ToArray() },
-            { "viewPiece", new[] { new BitmapStorage("ICONS", new Rectangle(199, 256, 64, 32)) } },
-            { "gridlines", new[] { new BitmapStorage("ICONS", new Rectangle(183, 430, 64, 32)) } },
-            { "gridlines,visible", new[] { new BitmapStorage("ICONS", new Rectangle(248, 430, 64, 32)) } },
-            { "battleAnim", Enumerable.Range(0, 8).Select(col =>
-                    new BitmapStorage("ICONS", new Rectangle(1 + 33 * col, 356, 32, 32))).ToArray() },
-            { "researchProgress", Enumerable.Range(0, 4).Select(col =>
-                    new BitmapStorage("ICONS", new Rectangle(49 + 15 * col, 290, 14, 14))).ToArray() },
-            { "globalWarming", Enumerable.Range(0, 4).Select(col =>
-                    new BitmapStorage("ICONS", new Rectangle(49 + 15 * col, 305, 14, 14))).ToArray() },
-            { "close", new[] { new BitmapStorage("ICONS", new Rectangle(1, 389, 16, 16)) } },
-            { "zoomIn", new[] { new BitmapStorage("ICONS", new Rectangle(18, 389, 16, 16)) } },
-            { "zoomOut", new[] { new BitmapStorage("ICONS", new Rectangle(35, 389, 16, 16)) } },
-            { "backgroundImage", new[]{ new BinaryStorage("Tiles.dll", 0xF7454, 0x1389D) } },
-            { "backgroundImageSmall1", new[]{ new BinaryStorage("Tiles.dll", 0xED354, 0xA0FD, new Rectangle(332, 134, 64, 64)) } },
-            { "backgroundImageSmall2", new[]{ new BinaryStorage("Tiles.dll", 0xED354, 0xA0FD, new Rectangle(398, 134, 64, 64)) } },
-            { "cityBuiltAncient", new[]{ new BinaryStorage("Tiles.dll", 0xDEDA4, 0x46FF) } },
-            { "cityBuiltModern", new[]{ new BinaryStorage("Tiles.dll", 0xE34A4, 0x4A42) } },
-            { "sinaiPic", new[]{ new BinaryStorage("Intro.dll", 0x1E630, 0x9F78) } },
-            { "stPeterburgPic", new[]{ new BinaryStorage("Intro.dll", 0x285A8, 0x15D04) } },
-            { "desertPic", new[]{ new BinaryStorage("Intro.dll", 0xD0140, 0xA35A) } },
-            { "snowPic", new[]{ new BinaryStorage("Intro.dll", 0xE2E1C, 0xA925) } },
-            { "canyonPic", new[]{ new BinaryStorage("Intro.dll", 0xC51B8, 0xAF88) } },
-            { "mingGeneralPic", new[]{ new BinaryStorage("Intro.dll", 0x3E2AC, 0x1D183) } },
-            { "islandPic", new[]{ new BinaryStorage("Intro.dll", 0xDA49C, 0x8980) } },
-            { "ancientPersonsPic", new[]{ new BinaryStorage("Intro.dll", 0x5B430, 0x15D04) } },
-            { "barbariansPic", new[]{ new BinaryStorage("Intro.dll", 0x71134, 0x13D5B) } },
-            { "galleyPic", new[]{ new BinaryStorage("Intro.dll", 0xB6A3C, 0xE77A) } },
-            { "peoplePic1", new[]{ new BinaryStorage("Intro.dll", 0x84E90, 0x129CE) } },
-            { "peoplePic2", new[]{ new BinaryStorage("Intro.dll", 0x97860, 0x139A0) } },
-            { "templePic", new[]{ new BinaryStorage("Intro.dll", 0xAB200, 0xB839) } },
-        };
+        PicSources.Add("unit",
+            Enumerable.Range(0, 9 * UnitsRows).Select(i => new BitmapStorage("UNITS",
+                new Rectangle(1 + 65 * (i % 9), 1 + (UnitsPxHeight + 1) * (i / 9f), 64, UnitsPxHeight),
+                searchFlagLoc: true)).ToArray<IImageSource>());
+        PicSources.Add("HPshield", [new BitmapStorage("UNITS", new Rectangle(597, 30, 12, 20))]);
+        PicSources.Add("backShield1", [new BitmapStorage("UNITS", new Rectangle(586, 1, 12, 20))]);
+        PicSources.Add("backShield2", [new BitmapStorage("UNITS", new Rectangle(599, 1, 12, 20))]);
+        PicSources.Add("textColours", Enumerable.Range(0, 9).Select(col =>
+            new BitmapStorage("CITIES", new Rectangle(1 + 15 * col, 423, 14, 1))).ToArray<IImageSource>());
+        PicSources.Add("flags", Enumerable.Range(0, 2 * 9).Select(i =>
+                new BitmapStorage("CITIES", new Rectangle(1 + 15 * (i % 9f), 425 + 23 * (i / 9f), 14, 22)))
+            .ToArray<IImageSource>());
+        PicSources.Add("fortify", [new BitmapStorage("CITIES", new Rectangle(143, 423, 64, 48))]);
+        PicSources.Add("fortress", [new BitmapStorage("CITIES", new Rectangle(208, 423, 64, 48))]);
+        PicSources.Add("airbase,empty", [new BitmapStorage("CITIES", new Rectangle(273, 423, 64, 48))]);
+        PicSources.Add("airbase,full", [new BitmapStorage("CITIES", new Rectangle(338, 423, 64, 48))]);
+        PicSources.Add("base1", Enumerable.Range(0, 11).Select(row =>
+            new BitmapStorage("TERRAIN1", new Rectangle(1, 1 + 33 * row, 64, 32))).ToArray<IImageSource>());
+        PicSources.Add("base2", Enumerable.Range(0, 11).Select(row =>
+            new BitmapStorage("TERRAIN1", new Rectangle(66, 1 + 33 * row, 64, 32))).ToArray<IImageSource>());
+        PicSources.Add("special1", Enumerable.Range(0, 11).Select(row =>
+            new BitmapStorage("TERRAIN1", new Rectangle(131, 1 + 33 * row, 64, 32))).ToArray<IImageSource>());
+        PicSources.Add("special2", Enumerable.Range(0, 11).Select(row =>
+            new BitmapStorage("TERRAIN1", new Rectangle(196, 1 + 33 * row, 64, 32))).ToArray<IImageSource>());
+        PicSources.Add("road", Enumerable.Range(0, 9).Select(col =>
+            new BitmapStorage("TERRAIN1", new Rectangle(1 + 65 * col, 363, 64, 32))).ToArray<IImageSource>());
+        PicSources.Add("railroad", Enumerable.Range(0, 9).Select(col =>
+            new BitmapStorage("TERRAIN1", new Rectangle(1 + 65 * col, 397, 64, 32))).ToArray<IImageSource>());
+        PicSources.Add("irrigation", [new BitmapStorage("TERRAIN1", new Rectangle(456, 100, 64, 32))]);
+        PicSources.Add("farmland", [new BitmapStorage("TERRAIN1", new Rectangle(456, 133, 64, 32))]);
+        PicSources.Add("mine", [new BitmapStorage("TERRAIN1", new Rectangle(456, 166, 64, 32))]);
+        PicSources.Add("pollution", [new BitmapStorage("TERRAIN1", new Rectangle(456, 199, 64, 32))]);
+        PicSources.Add("shield", [new BitmapStorage("TERRAIN1", new Rectangle(456, 232, 64, 32))]);
+        PicSources.Add("hut", [new BitmapStorage("TERRAIN1", new Rectangle(456, 265, 64, 32))]);
+        PicSources.Add("dither", [new BitmapStorage("TERRAIN1", new Rectangle(1, 447, 64, 32))]);
+        PicSources.Add("blank", [new BitmapStorage("TERRAIN1", new Rectangle(131, 447, 64, 32))]);
+        PicSources.Add("connection", Enumerable.Range(0, 2 * 8).Select(i =>
+                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 1 + 33 * (i / 8f), 64, 32)))
+            .ToArray<IImageSource>());
+        PicSources.Add("river", Enumerable.Range(0, 2 * 8).Select(i =>
+                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 67 + 33 * (i / 8f), 64, 32)))
+            .ToArray<IImageSource>());
+        PicSources.Add("forest", Enumerable.Range(0, 2 * 8).Select(i =>
+                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 133 + 33 * (i / 8f), 64, 32)))
+            .ToArray<IImageSource>());
+        PicSources.Add("mountain", Enumerable.Range(0, 2 * 8).Select(i =>
+                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 199 + 33 * (i / 8f), 64, 32)))
+            .ToArray<IImageSource>());
+        PicSources.Add("hill", Enumerable.Range(0, 2 * 8).Select(i =>
+                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 265 + 33 * (i / 8f), 64, 32)))
+            .ToArray<IImageSource>());
+        PicSources.Add("riverMouth", Enumerable.Range(0, 4).Select(col =>
+            new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * col, 331, 64, 32))).ToArray<IImageSource>());
+        PicSources.Add("viewPiece", [new BitmapStorage("ICONS", new Rectangle(199, 256, 64, 32))]);
+        PicSources.Add("gridlines", [new BitmapStorage("ICONS", new Rectangle(183, 430, 64, 32))]);
+        PicSources.Add("gridlines,visible", [new BitmapStorage("ICONS", new Rectangle(248, 430, 64, 32))]);
+        PicSources.Add("battleAnim", Enumerable.Range(0, 8).Select(col =>
+            new BitmapStorage("ICONS", new Rectangle(1 + 33 * col, 356, 32, 32))).ToArray<IImageSource>());
+        PicSources.Add("researchProgress", Enumerable.Range(0, 4).Select(col =>
+            new BitmapStorage("ICONS", new Rectangle(49 + 15 * col, 290, 14, 14))).ToArray<IImageSource>());
+        PicSources.Add("globalWarming", Enumerable.Range(0, 4).Select(col =>
+            new BitmapStorage("ICONS", new Rectangle(49 + 15 * col, 305, 14, 14))).ToArray<IImageSource>());
+        PicSources.Add("close", [new BitmapStorage("ICONS", new Rectangle(1, 389, 16, 16))]);
+        PicSources.Add("zoomIn", [new BitmapStorage("ICONS", new Rectangle(18, 389, 16, 16))]);
+        PicSources.Add("zoomOut", [new BitmapStorage("ICONS", new Rectangle(35, 389, 16, 16))]);
+        PicSources.Add("backgroundImage", [new BinaryStorage("Tiles.dll", 0xF7454, 0x1389D)]);
+        PicSources.Add("backgroundImageSmall1", [
+                new BinaryStorage("Tiles.dll", 0xED354, 0xA0FD, new Rectangle(332, 134, 64, 64))
+            ]
+        );
+        PicSources.Add("backgroundImageSmall2", [
+                new BinaryStorage("Tiles.dll", 0xED354, 0xA0FD, new Rectangle(398, 134, 64, 64))
+            ]
+        );
+        PicSources.Add("cityBuiltAncient", [new BinaryStorage("Tiles.dll", 0xDEDA4, 0x46FF)]);
+        PicSources.Add("cityBuiltModern", [new BinaryStorage("Tiles.dll", 0xE34A4, 0x4A42)]);
+        PicSources.Add("sinaiPic", [new BinaryStorage("Intro.dll", 0x1E630, 0x9F78)]);
+        PicSources.Add("stPeterburgPic", [new BinaryStorage("Intro.dll", 0x285A8, 0x15D04)]);
+        PicSources.Add("desertPic", [new BinaryStorage("Intro.dll", 0xD0140, 0xA35A)]);
+        PicSources.Add("snowPic", [new BinaryStorage("Intro.dll", 0xE2E1C, 0xA925)]);
+        PicSources.Add("canyonPic", [new BinaryStorage("Intro.dll", 0xC51B8, 0xAF88)]);
+        PicSources.Add("mingGeneralPic", [new BinaryStorage("Intro.dll", 0x3E2AC, 0x1D183)]);
+        PicSources.Add("islandPic", [new BinaryStorage("Intro.dll", 0xDA49C, 0x8980)]);
+        PicSources.Add("ancientPersonsPic", [new BinaryStorage("Intro.dll", 0x5B430, 0x15D04)]);
+        PicSources.Add("barbariansPic", [new BinaryStorage("Intro.dll", 0x71134, 0x13D5B)]);
+        PicSources.Add("galleyPic", [new BinaryStorage("Intro.dll", 0xB6A3C, 0xE77A)]);
+        PicSources.Add("peoplePic1", [new BinaryStorage("Intro.dll", 0x84E90, 0x129CE)]);
+        PicSources.Add("peoplePic2", [new BinaryStorage("Intro.dll", 0x97860, 0x139A0)]);
+        PicSources.Add("templePic", [new BinaryStorage("Intro.dll", 0xAB200, 0xB839)]);
 
-        var src = new BitmapStorage[6 * 8];
-        for (int row = 0; row < 6; row++)
+
+        var src = new IImageSource[6 * 8];
+        for (var row = 0; row < 6; row++)
         {
-            for (int col = 0; col < 4; col++)
+            for (var col = 0; col < 4; col++)
             {
-                src[8 * row + col] = new BitmapStorage("CITIES", new Rectangle(1 + 65 * col, 39 + 49 * row, 64, 48), searchFlagLoc: true);    // Open cities
-                src[8 * row + 4 + col] = new BitmapStorage("CITIES", new Rectangle(334 + 65 * col, 39 + 49 * row, 64, 48), searchFlagLoc: true);    // Walled cities
+                src[8 * row + col] = new BitmapStorage("CITIES", new Rectangle(1 + 65 * col, 39 + 49 * row, 64, 48),
+                    searchFlagLoc: true); // Open cities
+                src[8 * row + 4 + col] = new BitmapStorage("CITIES",
+                    new Rectangle(334 + 65 * col, 39 + 49 * row, 64, 48), searchFlagLoc: true); // Walled cities
             }
         }
+
         PicSources.Add("city", src);
 
-        src = new BitmapStorage[4 * 8];
-        for (int i = 0; i < 8; i++)
+        src = new IImageSource[4 * 8];
+        for (var i = 0; i < 8; i++)
         {
             src[4 * i + 0] = new BitmapStorage("TERRAIN2", new Rectangle(1 + 66 * i, 429, 32, 16));
             src[4 * i + 1] = new BitmapStorage("TERRAIN2", new Rectangle(1 + 66 * i, 446, 32, 16));
             src[4 * i + 2] = new BitmapStorage("TERRAIN2", new Rectangle(1 + 66 * i, 463, 32, 16));
             src[4 * i + 3] = new BitmapStorage("TERRAIN2", new Rectangle(34 + 66 * i, 463, 32, 16));
         }
+
         PicSources.Add("coastline", src);
 
 
-        DialogHandlers["MAINMENU"].Dialog.Decorations.Add(new Decoration(PicSources["sinaiPic"][0], new Point(0.08, 0.09)));
-        DialogHandlers["SIZEOFMAP"].Dialog.Decorations.Add(new Decoration(PicSources["stPeterburgPic"][0], new Point(0, 0.09)));
-        DialogHandlers["CUSTOMSIZE"].Dialog.Decorations.Add(new Decoration(PicSources["stPeterburgPic"][0], new Point(0, 0.09)));
-        DialogHandlers["CUSTOMLAND"].Dialog.Decorations.Add(new Decoration(PicSources["stPeterburgPic"][0], new Point(0, 0.09)));
-        DialogHandlers["CUSTOMFORM"].Dialog.Decorations.Add(new Decoration(PicSources["islandPic"][0], new Point(0, 0.09)));
-        DialogHandlers["CUSTOMCLIMATE"].Dialog.Decorations.Add(new Decoration(PicSources["desertPic"][0], new Point(0, 0.09)));
-        DialogHandlers["CUSTOMTEMP"].Dialog.Decorations.Add(new Decoration(PicSources["snowPic"][0], new Point(0, 0.09)));
-        DialogHandlers["CUSTOMAGE"].Dialog.Decorations.Add(new Decoration(PicSources["canyonPic"][0], new Point(0, 0.09)));
-        DialogHandlers["DIFFICULTY"].Dialog.Decorations.Add(new Decoration(PicSources["mingGeneralPic"][0], new Point(-0.08, 0.09)));
-        DialogHandlers["ENEMIES"].Dialog.Decorations.Add(new Decoration(PicSources["ancientPersonsPic"][0], new Point(0.08, 0.09)));
-        DialogHandlers["BARBARITY"].Dialog.Decorations.Add(new Decoration(PicSources["barbariansPic"][0], new Point(-0.08, 0.09)));
-        DialogHandlers["RULES"].Dialog.Decorations.Add(new Decoration(PicSources["galleyPic"][0], new Point(0.08, 0.09)));
-        DialogHandlers["ADVANCED"].Dialog.Decorations.Add(new Decoration(PicSources["galleyPic"][0], new Point(-0.08, 0.09)));
-        DialogHandlers["ACCELERATED"].Dialog.Decorations.Add(new Decoration(PicSources["galleyPic"][0], new Point(0.08, 0.09)));
-        DialogHandlers["GENDER"].Dialog.Decorations.Add(new Decoration(PicSources["peoplePic1"][0], new Point(0.0, 0.09)));
-        DialogHandlers["TRIBE"].Dialog.Decorations.Add(new Decoration(PicSources["peoplePic2"][0], new Point(0.0, 0.09)));
-        DialogHandlers["CUSTOMTRIBE"].Dialog.Decorations.Add(new Decoration(PicSources["peoplePic2"][0], new Point(0.0, 0.09)));
-        DialogHandlers["CUSTOMTRIBE2"].Dialog.Decorations.Add(new Decoration(PicSources["peoplePic2"][0], new Point(0.0, 0.09)));
-        DialogHandlers["NAME"].Dialog.Decorations.Add(new Decoration(PicSources["peoplePic2"][0], new Point(0.0, 0.09)));
-        DialogHandlers["CUSTOMCITY"].Dialog.Decorations.Add(new Decoration(PicSources["templePic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["MAINMENU"].Dialog.Decorations
+            .Add(new Decoration(PicSources["sinaiPic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["SIZEOFMAP"].Dialog.Decorations
+            .Add(new Decoration(PicSources["stPeterburgPic"][0], new Point(0, 0.09)));
+        DialogHandlers["CUSTOMSIZE"].Dialog.Decorations
+            .Add(new Decoration(PicSources["stPeterburgPic"][0], new Point(0, 0.09)));
+        DialogHandlers["CUSTOMLAND"].Dialog.Decorations
+            .Add(new Decoration(PicSources["stPeterburgPic"][0], new Point(0, 0.09)));
+        DialogHandlers["CUSTOMFORM"].Dialog.Decorations
+            .Add(new Decoration(PicSources["islandPic"][0], new Point(0, 0.09)));
+        DialogHandlers["CUSTOMCLIMATE"].Dialog.Decorations
+            .Add(new Decoration(PicSources["desertPic"][0], new Point(0, 0.09)));
+        DialogHandlers["CUSTOMTEMP"].Dialog.Decorations
+            .Add(new Decoration(PicSources["snowPic"][0], new Point(0, 0.09)));
+        DialogHandlers["CUSTOMAGE"].Dialog.Decorations
+            .Add(new Decoration(PicSources["canyonPic"][0], new Point(0, 0.09)));
+        DialogHandlers["DIFFICULTY"].Dialog.Decorations
+            .Add(new Decoration(PicSources["mingGeneralPic"][0], new Point(-0.08, 0.09)));
+        DialogHandlers["ENEMIES"].Dialog.Decorations
+            .Add(new Decoration(PicSources["ancientPersonsPic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["BARBARITY"].Dialog.Decorations
+            .Add(new Decoration(PicSources["barbariansPic"][0], new Point(-0.08, 0.09)));
+        DialogHandlers["RULES"].Dialog.Decorations
+            .Add(new Decoration(PicSources["galleyPic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["ADVANCED"].Dialog.Decorations
+            .Add(new Decoration(PicSources["galleyPic"][0], new Point(-0.08, 0.09)));
+        DialogHandlers["ACCELERATED"].Dialog.Decorations
+            .Add(new Decoration(PicSources["galleyPic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["GENDER"].Dialog.Decorations
+            .Add(new Decoration(PicSources["peoplePic1"][0], new Point(0.0, 0.09)));
+        DialogHandlers["TRIBE"].Dialog.Decorations
+            .Add(new Decoration(PicSources["peoplePic2"][0], new Point(0.0, 0.09)));
+        DialogHandlers["CUSTOMTRIBE"].Dialog.Decorations
+            .Add(new Decoration(PicSources["peoplePic2"][0], new Point(0.0, 0.09)));
+        DialogHandlers["CUSTOMTRIBE2"].Dialog.Decorations
+            .Add(new Decoration(PicSources["peoplePic2"][0], new Point(0.0, 0.09)));
+        DialogHandlers["NAME"].Dialog.Decorations
+            .Add(new Decoration(PicSources["peoplePic2"][0], new Point(0.0, 0.09)));
+        DialogHandlers["CUSTOMCITY"].Dialog.Decorations
+            .Add(new Decoration(PicSources["templePic"][0], new Point(0.08, 0.09)));
     }
 
     protected override List<MenuDetails> MenuMap { get; } = new List<MenuDetails>
@@ -443,7 +492,7 @@ public class Civ2GoldInterface : Civ2Interface
 
     public override int UnitsRows => 7;
     public override int UnitsPxHeight => 48;
-    public override Dictionary<string, IImageSource[]> PicSources { get; set; }
+    public override Dictionary<string, IImageSource[]> PicSources { get; } = new();
 
     public override void GetShieldImages()
     {
@@ -464,28 +513,18 @@ public class Civ2GoldInterface : Civ2Interface
     public override void LoadPlayerColours()
     {
         var playerColours = new PlayerColour[9];
-        for (int col = 0; col < 9; col++)
+        for (var col = 0; col < 9; col++)
         {
-            unsafe
-            {
-                var imageColours = Images.ExtractBitmap(PicSources["textColours"][col], this).LoadColors();
-                var textColour = imageColours[0];
+            var imageColours = Images.ExtractBitmap(PicSources["textColours"][col], this).LoadColors();
+            var textColour = imageColours[0];
 
-                imageColours = Images.ExtractBitmap(PicSources["flags"][col], this).LoadColors();
-                var lightColour = imageColours[3 * Images.ExtractBitmap(PicSources["flags"][col], this).Width + 8];
+            imageColours = Images.ExtractBitmap(PicSources["flags"][col], this).LoadColors();
+            var lightColour = imageColours[3 * Images.ExtractBitmap(PicSources["flags"][col], this).Width + 8];
 
-                imageColours = Images.ExtractBitmap(PicSources["flags"][9 + col], this).LoadColors();
-                var darkColour = imageColours[3 * Images.ExtractBitmap(PicSources["flags"][9 + col], this).Width + 5];
-                Image.UnloadColors(imageColours);
+            imageColours = Images.ExtractBitmap(PicSources["flags"][9 + col], this).LoadColors();
+            var darkColour = imageColours[3 * Images.ExtractBitmap(PicSources["flags"][9 + col], this).Width + 5];
+            Image.UnloadColors(imageColours);
 
-                playerColours[col] = new PlayerColour
-                {
-                    Image = PicSources["flags"][col],
-                    TextColour = textColour,
-                    LightColour = lightColour,
-                    DarkColour = darkColour
-                };
-            }
         }
         PlayerColours = playerColours;
     }
