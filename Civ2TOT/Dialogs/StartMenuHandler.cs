@@ -7,17 +7,13 @@ using Model.InterfaceActions;
 
 namespace TOT.Dialogs;
 
-public class StartMenuHandler : BaseDialogHandler
+public class StartMenuHandler() : BaseDialogHandler(Title)
 {
-    
-    internal const string Title = "STARTMENU";
-    public StartMenuHandler() : base(Title)
-    {
-    }
+    private const string Title = "STARTMENU";
 
     public override IInterfaceAction HandleDialogResult(DialogResult result, Dictionary<string, ICivDialogHandler> civDialogHandlers, Civ2Interface civ2Interface)
     {   
-        if (result.SelectedButton == Dialog.Dialog.Button[1])
+        if (result.SelectedButton == Dialog.Dialog?.Button?[1])
         {
             return ExitAction.Exit;
         }

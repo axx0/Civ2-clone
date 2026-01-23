@@ -52,9 +52,10 @@ public class BuildCity : Order
         {
             return SetCommandState(errorPopupKeyword: "CITYATSEA");
         }
-        if (activeTile.CityHere != null || activeTile.Neighbours().Any(t => t.IsCityPresent))
+        
+        var city = activeTile.CityHere ?? activeTile.Neighbours().FirstOrDefault(t => t.IsCityPresent)?.CityHere;
+        if (city != null)
         {
-            var city = activeTile.CityHere ?? activeTile.Neighbours().First(t => t.IsCityPresent).CityHere;
 
             var cityStyleIndex = _screen.Game.Players[city.OwnerId].Civilization.CityStyle;
             if (city.Owner.Epoch == (int)EpochType.Industrial)
