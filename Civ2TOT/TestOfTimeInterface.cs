@@ -1,9 +1,5 @@
-﻿using System.Numerics;
-using System.Runtime.Intrinsics.X86;
-using Civ2;
+﻿using Civ2;
 using Civ2.Dialogs;
-using Civ2engine;
-using Civ2engine.Enums;
 using Civ2engine.IO;
 using JetBrains.Annotations;
 using Model;
@@ -12,14 +8,14 @@ using Model.ImageSets;
 using Model.Interface;
 using Model.Menu;
 using Model.Utils;
-using Raylib_CSharp.Transformations;
-using Raylib_CSharp.Images;
 using Raylib_CSharp.Colors;
+using Raylib_CSharp.Images;
 using Raylib_CSharp.Interact;
+using Raylib_CSharp.Rendering;
 using Raylib_CSharp.Textures;
+using Raylib_CSharp.Transformations;
 using RaylibUtils;
 using static Model.Menu.CommandIds;
-using Raylib_CSharp.Rendering;
 
 namespace TOT;
 
@@ -27,7 +23,7 @@ namespace TOT;
 /// This class is dynamically instantiated when ToT files are detected
 /// </summary>
 [UsedImplicitly]
-public class TestOfTimeInterface : Civ2Interface
+public class TestOfTimeInterface(IMain main) : Civ2Interface(main)
 {
     public override string Title => "Test of Time";
 
@@ -97,7 +93,7 @@ public class TestOfTimeInterface : Civ2Interface
         var original = "Original";
 
         // TODO: This method looks really scrambled... why do we no longer look in the root or at these extra folders??? something is wrong here!!
-        var other_default_game_modes = new[] { "SciFi", "Fantasy" };
+        // var other_default_game_modes = new[] { "SciFi", "Fantasy" };
 
         var originalPath = Path.Combine(path, original);
 
@@ -135,7 +131,7 @@ public class TestOfTimeInterface : Civ2Interface
 
                     if (originalERxists && subdirectory.Equals(originalPath))
                     {
-                        //yield return new Ruleset(name, new Dictionary<string, string>
+                        //yield return new Ruleset (name, new Dictionary<string, string>
                         //{
 
                         //    //{ "TOT-Scenario", subdirectory }
@@ -158,7 +154,7 @@ public class TestOfTimeInterface : Civ2Interface
 
     public override Padding GetPadding(float headerLabelHeight, bool footer)
     {
-        int paddingTop = headerLabelHeight != 0 ? 28 : 12;
+        var paddingTop = headerLabelHeight != 0 ? 28 : 12;
 
         return new Padding(paddingTop, bottom: 11, left: 11, right: 12);
     }
@@ -172,7 +168,8 @@ public class TestOfTimeInterface : Civ2Interface
         if (Dialogs.TryGetValue(MainMenu.Title + "2", out var menu2))
         {
             var existingDialog = DialogHandlers[MainMenu.Title].Dialog.Dialog;
-            existingDialog.Options = menu2.Options.Concat(existingDialog.Options.Skip(5)).ToList();
+            if (existingDialog?.Options != null && menu2?.Options != null)
+                existingDialog.Options = menu2.Options.Concat(existingDialog.Options.Skip(5)).ToList();
         }
 
 
@@ -289,25 +286,41 @@ public class TestOfTimeInterface : Civ2Interface
         PicSources.Add("coastline", src);
 
 
-        DialogHandlers["STARTMENU"].Dialog.Decorations.Add(new Decoration(PicSources["observatoryPic"][0], new Point(0.08, 0.09)));
-        DialogHandlers["MAINMENU"].Dialog.Decorations.Add(new Decoration(PicSources["observatoryPic"][0], new Point(0.08, 0.09)));
-        DialogHandlers["SIZEOFMAP"].Dialog.Decorations.Add(new Decoration(PicSources["horzionPic"][0], new Point(0.08, 0.09)));
-        DialogHandlers["DIFFICULTY"].Dialog.Decorations.Add(new Decoration(PicSources["creaturePic"][0], new Point(0.08, 0.09)));
-        DialogHandlers["ENEMIES"].Dialog.Decorations.Add(new Decoration(PicSources["duelPic"][0], new Point(0.08, 0.09)));
-        DialogHandlers["BARBARITY"].Dialog.Decorations.Add(new Decoration(PicSources["knightsPic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["STARTMENU"].Dialog.Decorations
+            .Add(new Decoration(PicSources["observatoryPic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["MAINMENU"].Dialog.Decorations
+            .Add(new Decoration(PicSources["observatoryPic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["SIZEOFMAP"].Dialog.Decorations
+            .Add(new Decoration(PicSources["horzionPic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["DIFFICULTY"].Dialog.Decorations
+            .Add(new Decoration(PicSources["creaturePic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["ENEMIES"].Dialog.Decorations
+            .Add(new Decoration(PicSources["duelPic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["BARBARITY"].Dialog.Decorations
+            .Add(new Decoration(PicSources["knightsPic"][0], new Point(0.08, 0.09)));
         DialogHandlers["RULES"].Dialog.Decorations.Add(new Decoration(PicSources["bookPic"][0], new Point(0.08, 0.09)));
-        DialogHandlers["ADVANCED"].Dialog.Decorations.Add(new Decoration(PicSources["bookPic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["ADVANCED"].Dialog.Decorations
+            .Add(new Decoration(PicSources["bookPic"][0], new Point(0.08, 0.09)));
         //DialogHandlers["OPPONENT"].Dialog.Decorations.Add(new Decoration(PicSources["bookPic"][0], new Point(0.08, 0.09)));
-        DialogHandlers["ACCELERATED"].Dialog.Decorations.Add(new Decoration(PicSources["bookPic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["ACCELERATED"].Dialog.Decorations
+            .Add(new Decoration(PicSources["bookPic"][0], new Point(0.08, 0.09)));
         DialogHandlers["GENDER"].Dialog.Decorations.Add(new Decoration(PicSources["labPic"][0], new Point(0.08, 0.09)));
-        DialogHandlers["TRIBE"].Dialog.Decorations.Add(new Decoration(PicSources["templePic"][0], new Point(0.08, 0.09)));
-        DialogHandlers["CUSTOMTRIBE"].Dialog.Decorations.Add(new Decoration(PicSources["templePic"][0], new Point(0.08, 0.09)));
-        DialogHandlers["CUSTOMTRIBE2"].Dialog.Decorations.Add(new Decoration(PicSources["templePic"][0], new Point(0.08, 0.09)));
-        DialogHandlers["CUSTOMCITY"].Dialog.Decorations.Add(new Decoration(PicSources["manorPic"][0], new Point(0.08, 0.09)));
-        DialogHandlers["CUSTOMFORM"].Dialog.Decorations.Add(new Decoration(PicSources["shipPic"][0], new Point(0.08, 0.09)));
-        DialogHandlers["CUSTOMCLIMATE"].Dialog.Decorations.Add(new Decoration(PicSources["rocksPic"][0], new Point(0.08, 0.09)));
-        DialogHandlers["CUSTOMTEMP"].Dialog.Decorations.Add(new Decoration(PicSources["hotplanetPic"][0], new Point(0.08, 0.09)));
-        DialogHandlers["CUSTOMAGE"].Dialog.Decorations.Add(new Decoration(PicSources["alienplanetPic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["TRIBE"].Dialog.Decorations
+            .Add(new Decoration(PicSources["templePic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["CUSTOMTRIBE"].Dialog.Decorations
+            .Add(new Decoration(PicSources["templePic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["CUSTOMTRIBE2"].Dialog.Decorations
+            .Add(new Decoration(PicSources["templePic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["CUSTOMCITY"].Dialog.Decorations
+            .Add(new Decoration(PicSources["manorPic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["CUSTOMFORM"].Dialog.Decorations
+            .Add(new Decoration(PicSources["shipPic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["CUSTOMCLIMATE"].Dialog.Decorations
+            .Add(new Decoration(PicSources["rocksPic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["CUSTOMTEMP"].Dialog.Decorations
+            .Add(new Decoration(PicSources["hotplanetPic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["CUSTOMAGE"].Dialog.Decorations
+            .Add(new Decoration(PicSources["alienplanetPic"][0], new Point(0.08, 0.09)));
     }
 
     protected override List<MenuDetails> MenuMap { get; } =
@@ -560,30 +573,27 @@ public class TestOfTimeInterface : Civ2Interface
     public override void LoadPlayerColours()
     {
         var playerColours = new PlayerColour[9];
-        for (int col = 0; col < 9; col++)
+        for (var col = 0; col < 9; col++)
         {
-            unsafe
+            var imageColours = Images.ExtractBitmap(PicSources["textColours"][col], this).LoadColors();
+            var textColour = imageColours[2 * Images.ExtractBitmap(PicSources["textColours"][col], this).Width + 0];
+            var shieldColour = imageColours[2 * Images.ExtractBitmap(PicSources["textColours"][col], this).Width + 0];
+            textColour.A = 255; // to avoid any upper-left-pixel transparency issues
+            shieldColour.A = 255;
+            Image.UnloadColors(imageColours);
+
+            // This is not exact, but a good approximation of what TOT does with shield colours
+            var lightColour = new Color((byte)(shieldColour.R / 2), (byte)(shieldColour.G / 2), (byte)(shieldColour.B / 2), 255);
+            var darkColour = new Color((byte)(shieldColour.R / 4), (byte)(shieldColour.G / 4), (byte)(shieldColour.B / 4), 255);
+
+            playerColours[col] = new PlayerColour
             {
-                var imageColours = Images.ExtractBitmap(PicSources["textColours"][col], this).LoadColors();
-                var textColour = imageColours[2 * Images.ExtractBitmap(PicSources["textColours"][col], this).Width + 0];
-                var shieldColour = imageColours[2 * Images.ExtractBitmap(PicSources["textColours"][col], this).Width + 0];
-                textColour.A = 255; // to avoid any upper-left-pixel transparency issues
-                shieldColour.A = 255;
-                Image.UnloadColors(imageColours);
-
-                // This is not exact, but a good aproximation what TOT does with shield colours
-                var lightColour = new Color((byte)(shieldColour.R / 2), (byte)(shieldColour.G / 2), (byte)(shieldColour.B / 2), 255);
-                var darkColour = new Color((byte)(shieldColour.R / 4), (byte)(shieldColour.G / 4), (byte)(shieldColour.B / 4), 255);
-
-                playerColours[col] = new PlayerColour
-                {
-                    Image = PicSources["flags"][col],
-                    TextColour = textColour,
-                    LightColour = lightColour,
-                    DarkColour = darkColour
-                };
-                Images.ExtractBitmap(PicSources["flags"][col], this);
-            }
+                Image = PicSources["flags"][col],
+                TextColour = textColour,
+                LightColour = lightColour,
+                DarkColour = darkColour
+            };
+            Images.ExtractBitmap(PicSources["flags"][col], this);
         }
         PlayerColours = playerColours;
     }
@@ -625,7 +635,7 @@ public class TestOfTimeInterface : Civ2Interface
         // Top border
         destination.Draw(topLeft, new Rectangle(0, 0, topLeft.Width, topLeft.Height), new Rectangle(0, 0, topLeft.Width, topLeft.Height), Color.White);
         var topCols = (width - topLeft.Width - topRight.Width) / top[0].Width + 1;
-        for (int col = 0; col < topCols; col++)
+        for (var col = 0; col < topCols; col++)
         {
             destination.Draw(top[rnd.Next(len)], new Rectangle(0, 0, top[0].Width, top[0].Height), new Rectangle(topLeft.Width + top[0].Width * col, 0, top[0].Width, top[0].Height), Color.White);
         }
@@ -633,7 +643,7 @@ public class TestOfTimeInterface : Civ2Interface
 
         // Left-right border
         var sideRows = (height - topLeft.Height - wp.OuterBottomLeft.Height) / wp.OuterLeft[0].Height + 1;
-        for (int row = 0; row < sideRows; row++)
+        for (var row = 0; row < sideRows; row++)
         {
             destination.Draw(wp.OuterLeft[rnd.Next(len)], new Rectangle(0, 0, wp.OuterLeft[0].Width, wp.OuterLeft[0].Height), new Rectangle(0, topLeft.Height + wp.OuterLeft[0].Height * row, wp.OuterLeft[0].Width, wp.OuterLeft[0].Height), Color.White);
             destination.Draw(wp.OuterRight[rnd.Next(len)], new Rectangle(0, 0, wp.OuterRight[0].Width, wp.OuterRight[0].Height), new Rectangle(width - wp.OuterRight[0].Width, topRight.Height + wp.OuterRight[0].Height * row, wp.OuterRight[0].Width, wp.OuterRight[0].Height), Color.White);
@@ -642,7 +652,7 @@ public class TestOfTimeInterface : Civ2Interface
         // Bottom border
         destination.Draw(wp.OuterBottomLeft, new Rectangle(0, 0, wp.OuterBottomLeft.Width, wp.OuterBottomLeft.Height), new Rectangle(0, height - wp.OuterBottomLeft.Height, wp.OuterBottomLeft.Width, wp.OuterBottomLeft.Height), Color.White);
         var btmCols = (width - wp.OuterBottomLeft.Width - wp.OuterBottomRight.Width) / wp.OuterBottom[0].Width + 1;
-        for (int col = 0; col < btmCols; col++)
+        for (var col = 0; col < btmCols; col++)
         {
             destination.Draw(wp.OuterBottom[rnd.Next(len)], new Rectangle(0, 0, wp.OuterBottom[0].Width, wp.OuterBottom[0].Height), new Rectangle(wp.OuterBottomLeft.Width + wp.OuterBottom[0].Width * col, height - wp.OuterBottom[0].Height, wp.OuterBottom[0].Width, wp.OuterBottom[0].Height), Color.White);
         }
@@ -652,7 +662,7 @@ public class TestOfTimeInterface : Civ2Interface
         {
             destination.Draw(wp.OuterMiddleLeft, new Rectangle(0, 0, wp.OuterMiddleLeft.Width, wp.OuterMiddleLeft.Height), new Rectangle(0, 85, wp.OuterMiddleLeft.Width, wp.OuterMiddleLeft.Height), Color.White);
             var mdlCols = (width - wp.OuterMiddleLeft.Width - wp.OuterMiddleRight.Width) / wp.OuterMiddle[0].Width;
-            for (int col = 0; col < mdlCols; col++)
+            for (var col = 0; col < mdlCols; col++)
             {
                 destination.Draw(wp.OuterMiddle[rnd.Next(len)], new Rectangle(0, 0, wp.OuterMiddle[0].Width, wp.OuterMiddle[0].Height), new Rectangle(wp.OuterMiddleLeft.Width + wp.OuterMiddle[0].Width * col, 88, wp.OuterMiddle[0].Width, wp.OuterMiddle[0].Height), Color.White);
             }
@@ -667,9 +677,5 @@ public class TestOfTimeInterface : Civ2Interface
     public override void DrawButton(Texture2D texture, int x, int y, int w, int h)
     {
         Graphics.DrawTexture(texture, x, y, Color.White);
-    }
-
-    public TestOfTimeInterface(IMain main) : base(main)
-    {
     }
 }

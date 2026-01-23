@@ -1,6 +1,4 @@
-﻿using System;
-using System.Numerics;
-using Civ2;
+﻿using Civ2;
 using Civ2engine;
 using Civ2engine.IO;
 using JetBrains.Annotations;
@@ -9,21 +7,20 @@ using Model.Images;
 using Model.ImageSets;
 using Model.Interface;
 using Model.Menu;
+using Model.Utils;
+using Raylib_CSharp.Colors;
+using Raylib_CSharp.Images;
+using Raylib_CSharp.Interact;
+using Raylib_CSharp.Rendering;
 using Raylib_CSharp.Textures;
 using Raylib_CSharp.Transformations;
-using Raylib_CSharp.Colors;
-using Raylib_CSharp.Interact;
-using Raylib_CSharp.Images;
-using Raylib_CSharp.Rendering;
 using RaylibUtils;
 using static Model.Menu.CommandIds;
-using System.ComponentModel.Design;
-using Model.Utils;
 
 namespace Civ2Gold;
 
 [UsedImplicitly]
-public class Civ2GoldInterface : Civ2Interface
+public class Civ2GoldInterface(IMain main) : Civ2Interface(main)
 {
     public override string Title => "Civilization II Multiplayer Gold";
 
@@ -528,6 +525,13 @@ public class Civ2GoldInterface : Civ2Interface
             var darkColour = imageColours[3 * Images.ExtractBitmap(PicSources["flags"][9 + col], this).Width + 5];
             Image.UnloadColors(imageColours);
 
+            playerColours[col] = new PlayerColour
+            {
+                Image = PicSources["flags"][col],
+                TextColour = textColour,
+                LightColour = lightColour,
+                DarkColour = darkColour
+            };
         }
         PlayerColours = playerColours;
     }
@@ -719,9 +723,5 @@ public class Civ2GoldInterface : Civ2Interface
                 }
             }
         }
-    }
-
-    public Civ2GoldInterface(IMain main) : base(main)
-    {
     }
 }
