@@ -1,10 +1,11 @@
+using Model.Input;
 using Civ2engine;
 using Model.Menu;
 using Raylib_CSharp.Interact;
 
 namespace RaylibUI.RunGame.Commands;
 
-public class LoadGame(GameScreen gameScreen) : AlwaysOnCommand(gameScreen, CommandIds.LoadGame, [new Shortcut(KeyboardKey.L, ctrl: true)])
+public class LoadGame(GameScreen gameScreen) : AlwaysOnCommand(gameScreen, CommandIds.LoadGame, [new Shortcut(Key.L, ctrl: true)])
 {
     private FileDialog _loadDialog;
 

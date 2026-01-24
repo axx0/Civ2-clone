@@ -1,3 +1,4 @@
+using Model.Input;
 using System.Diagnostics;
 using Civ2engine;
 using Microsoft.VisualBasic.CompilerServices;
@@ -9,7 +10,7 @@ using Point = Model.Point;
 
 namespace RaylibUI.RunGame.Commands.Cheat;
 
-public class ChangeMoney(GameScreen gameScreen) : AlwaysOnCommand(gameScreen, CommandIds.CheatChangeMoneyCommand, [new Shortcut(KeyboardKey.F9, shift: true)])
+public class ChangeMoney(GameScreen gameScreen) : AlwaysOnCommand(gameScreen, CommandIds.CheatChangeMoneyCommand, [new Shortcut(Key.F9, shift: true)])
 {
     private CivDialog? _selectTribeDialog;
     private CivDialog? _enterNewMoneyDialog;

@@ -1,15 +1,14 @@
-using Model.Menu;
-using Raylib_CSharp.Interact;
+using Model.Input;
 
-namespace Model;
+namespace Model.Menu;
 
 public class DropdownMenuContents
 {
     public string Title { get; set; }
     
-    public KeyboardKey HotKey { get; set; }
+    public Key HotKey { get; set; }
     
-    public IList<MenuCommand> Commands { get; set; }
+    public required IList<MenuCommand> Commands { get; init; }
 
-    public int[] SeparatorRows { get; set; }
+    public required int[] SeparatorRows { get; init; }
 }

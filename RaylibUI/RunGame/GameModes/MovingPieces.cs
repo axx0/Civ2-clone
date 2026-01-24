@@ -1,14 +1,10 @@
-using System.Data.Common;
+using Model.Input;
 using System.Numerics;
-using System.Reflection.Metadata.Ecma335;
-using System.Xml.Linq;
 using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.MapObjects;
 using Civ2engine.Terrains;
 using Civ2engine.UnitActions;
-using Civ2engine.Units;
-using Model;
 using Model.Core;
 using Model.Menu;
 using Raylib_CSharp.Interact;
@@ -24,16 +20,15 @@ public class MovingPieces : IGameMode
 {
     private readonly GameScreen _gameScreen;
     private readonly LabelControl _title;
-    private readonly InterfaceStyle _look;
     private DateTime? _downTime;
     private readonly TimeSpan _holdTime = TimeSpan.FromMilliseconds(15);
 
     public MovingPieces(GameScreen gameScreen)
     {
         _gameScreen = gameScreen;
-        _look = gameScreen.MainWindow.ActiveInterface.Look;
+        var look = gameScreen.MainWindow.ActiveInterface.Look;
 
-        _title = new LabelControl(gameScreen, Labels.For(LabelIndex.MovingUnits), true, alignment: TextAlignment.Center, font: _look.StatusPanelLabelFont, fontSize: 18, spacing: 0, colorFront: _look.MovingUnitsViewingPiecesLabelColor, colorShadow: _look.MovingUnitsViewingPiecesLabelColorShadow, shadowOffset: new Vector2(1, 0));
+        _title = new LabelControl(gameScreen, Labels.For(LabelIndex.MovingUnits), true, alignment: TextAlignment.Center, font: look.StatusPanelLabelFont, fontSize: 18, spacing: 0, colorFront: look.MovingUnitsViewingPiecesLabelColor, colorShadow: look.MovingUnitsViewingPiecesLabelColorShadow, shadowOffset: new Vector2(1, 0));
 
         Actions = new Dictionary<Shortcut, Action<IGame>>
         {
@@ -44,18 +39,18 @@ public class MovingPieces : IGameMode
                 }
             },*/
 
-            {new Shortcut(KeyboardKey.Kp7), MovementFunctions.TryMoveNorthWest}, {new Shortcut(KeyboardKey.Kp8), MovementFunctions.TryMoveNorth},
-            {new Shortcut(KeyboardKey.Kp9), MovementFunctions.TryMoveNorthEast},
-            {new Shortcut(KeyboardKey.Kp1), MovementFunctions.TryMoveSouthWest}, {new Shortcut(KeyboardKey.Kp2), MovementFunctions.TryMoveSouth},
-            {new Shortcut(KeyboardKey.Kp3), MovementFunctions.TryMoveSouthEast},
-            {new Shortcut(KeyboardKey.Kp4), MovementFunctions.TryMoveWest}, {new Shortcut(KeyboardKey.Kp6), MovementFunctions.TryMoveEast},
+            {new Shortcut(Key.D7), MovementFunctions.TryMoveNorthWest}, {new Shortcut(Key.D8), MovementFunctions.TryMoveNorth},
+            {new Shortcut(Key.D9), MovementFunctions.TryMoveNorthEast},
+            {new Shortcut(Key.D1), MovementFunctions.TryMoveSouthWest}, {new Shortcut(Key.D2), MovementFunctions.TryMoveSouth},
+            {new Shortcut(Key.D3), MovementFunctions.TryMoveSouthEast},
+            {new Shortcut(Key.D4), MovementFunctions.TryMoveWest}, {new Shortcut(Key.D6), MovementFunctions.TryMoveEast},
 
-            {new Shortcut(KeyboardKey.Up), MovementFunctions.TryMoveNorth}, {new Shortcut(KeyboardKey.Down), MovementFunctions.TryMoveSouth},
-            {new Shortcut(KeyboardKey.Left), MovementFunctions.TryMoveWest}, {new Shortcut(KeyboardKey.Right), MovementFunctions.TryMoveEast},
+            {new Shortcut(Key.Up), MovementFunctions.TryMoveNorth}, {new Shortcut(Key.Down), MovementFunctions.TryMoveSouth},
+            {new Shortcut(Key.Left), MovementFunctions.TryMoveWest}, {new Shortcut(Key.Right), MovementFunctions.TryMoveEast},
         };
     }
 
-    public Dictionary<Shortcut, Action<IGame>> Actions { get; set; }
+    private Dictionary<Shortcut, Action<IGame>> Actions { get; }
 
     public IGameView GetDefaultView(GameScreen gameScreen, IGameView? currentView, int viewHeight, int viewWidth,
         bool forceRedraw)
@@ -71,7 +66,7 @@ public class MovingPieces : IGameMode
         }
 
         _gameScreen.StatusPanel.Update();
-        return new UnitReadyView(gameScreen, currentView, viewHeight, viewWidth, gameScreen.Player.ActiveUnit, forceRedraw);
+        return new UnitReadyView(gameScreen, currentView, viewHeight, viewWidth, gameScreen.Player.ActiveUnit!, forceRedraw);
     }
 
     public bool MapClicked(Tile tile, MouseButton mouseButton)
@@ -81,7 +76,7 @@ public class MovingPieces : IGameMode
             // GOTO support
             if (_downTime.HasValue && DateTime.Now - _downTime.Value > _holdTime && !(Input.IsKeyDown(KeyboardKey.LeftControl) || Input.IsKeyDown(KeyboardKey.RightControl)))
             {
-                var unit = _gameScreen.Player.ActiveUnit;
+                var unit = _gameScreen.Player.ActiveUnit!;
                 var path = Path.CalculatePathBetween(_gameScreen.Game, _gameScreen.Player.ActiveTile, tile, unit.Domain, unit.MaxMovePoints,
                     unit.Owner, unit.Alpine, unit.IgnoreZonesOfControl);
                 if (path != null)
@@ -159,7 +154,7 @@ public class MovingPieces : IGameMode
         var currentY = bounds.Y + _title.Bounds.Height;
 
         // Active unit
-        var activeUnit = _gameScreen.Player.ActiveUnit;
+        var activeUnit = _gameScreen.Player.ActiveUnit!;
         var unitDisplay = new UnitDisplay(_gameScreen, activeUnit, _gameScreen.Game,
             new Vector2(currentX, currentY), _gameScreen.Main.ActiveInterface, ImageUtils.ZoomScale(unitZoom));
         controls.Add(unitDisplay);
@@ -192,11 +187,12 @@ public class MovingPieces : IGameMode
         cityNameLabel.Bounds = new Rectangle(unitDisplay.Bounds.X + unitDisplay.Width, currentY, cityNameLabelWidth, labelHeight);
         controls.Add(cityNameLabel);
         currentY += labelHeight;
+        
         var ownerLabel = new StatusLabel(_gameScreen, _gameScreen.Player.Civilization.Adjective, fontSize: fontSize);
         var ownerLabelWidth = ownerLabel.TextSize.X;
         ownerLabel.Bounds = new Rectangle(unitDisplay.Bounds.X + unitDisplay.Width, currentY, ownerLabelWidth, labelHeight);
         controls.Add(ownerLabel);
-        currentY += labelHeight;
+        
         var nameLabel = new StatusLabel(_gameScreen, activeUnit.Veteran ? $"{activeUnit.Name} ({Labels.For(LabelIndex.Veteran)})" : 
             activeUnit.Name, fontSize: fontSize);
         var nameLabelWidth = nameLabel.TextSize.X;
@@ -312,30 +308,30 @@ public class MovingPieces : IGameMode
                                currentX + unitDisplay.Width + nameLabelWidth }.Max();
 
                 // max for next unit
-                float maximum_nu = 0;
+                float maximumNu = 0;
                 if (i < unitsLeftOnTile.Count - 1)
                 {
-                    var next_unit = unitsLeftOnTile[i + 1];
-                    var cityNameLabel_nu = new StatusLabel(_gameScreen, (next_unit.HomeCity == null) ? Labels.For(LabelIndex.NONE) :
-                                    next_unit.HomeCity.Name, fontSize: fontSize);
-                    var cityNameLabelWidth_nu = cityNameLabel_nu.TextSize.X;
-                    var orderLabel_nu = new StatusLabel(_gameScreen, _gameScreen.Game.Order2String(next_unit.Order), fontSize: fontSize);
-                    var orderLabelWidth_nu = orderLabel_nu.TextSize.X;
-                    var nameLabel_nu = new StatusLabel(_gameScreen, next_unit.Veteran ? $"{next_unit.Name} ({Labels.For(LabelIndex.Veteran)})" :
-                            next_unit.Name, fontSize: fontSize);
-                    var nameLabelWidth_nu = nameLabel_nu.TextSize.X;
+                    var nextUnit = unitsLeftOnTile[i + 1];
+                    var cityNameLabelNu = new StatusLabel(_gameScreen, (nextUnit.HomeCity == null) ? Labels.For(LabelIndex.NONE) :
+                                    nextUnit.HomeCity.Name, fontSize: fontSize);
+                    var cityNameLabelWidthNu = cityNameLabelNu.TextSize.X;
+                    var orderLabelNu = new StatusLabel(_gameScreen, _gameScreen.Game.Order2String(nextUnit.Order), fontSize: fontSize);
+                    var orderLabelWidthNu = orderLabelNu.TextSize.X;
+                    var nameLabelNu = new StatusLabel(_gameScreen, nextUnit.Veteran ? $"{nextUnit.Name} ({Labels.For(LabelIndex.Veteran)})" :
+                            nextUnit.Name, fontSize: fontSize);
+                    var nameLabelWidthNu = nameLabelNu.TextSize.X;
 
-                    maximum_nu = new[] { maximum + unitDisplay.Width + cityNameLabelWidth_nu,
-                               maximum + unitDisplay.Width + orderLabelWidth_nu,
-                               maximum + unitDisplay.Width + nameLabelWidth_nu }.Max();
+                    maximumNu = new[] { maximum + unitDisplay.Width + cityNameLabelWidthNu,
+                               maximum + unitDisplay.Width + orderLabelWidthNu,
+                               maximum + unitDisplay.Width + nameLabelWidthNu }.Max();
                 }
 
                 // Draw unit
                 if (i == unitsLeftOnTile.Count - 1 &&
                     maximum < bounds.X + bounds.Width ||
                     i < unitsLeftOnTile.Count - 1 &&
-                    (maximum_nu < bounds.X + bounds.Width ||
-                    maximum_nu >= bounds.X + bounds.Width &&
+                    (maximumNu < bounds.X + bounds.Width ||
+                    maximumNu >= bounds.X + bounds.Width &&
                     maximum + unitsLeftLabelWidth < bounds.X + bounds.Width))
                 {
                     unitDisplay.Location = new Vector2(unitDisplay.Location.X, unitDisplay.Location.Y);
@@ -353,7 +349,7 @@ public class MovingPieces : IGameMode
                 else if (i == unitsLeftOnTile.Count - 1 &&
                     currentX + unitsLeftLabelWidth < bounds.X + bounds.Width ||
                     i < unitsLeftOnTile.Count - 1 &&
-                    maximum_nu >= bounds.X + bounds.Width &&
+                    maximumNu >= bounds.X + bounds.Width &&
                     currentX + unitsLeftLabelWidth < bounds.X + bounds.Width)
                 {
                     unitsLeftLabel.Bounds = new Rectangle(currentX, currentY, unitsLeftLabelWidth, labelHeight);

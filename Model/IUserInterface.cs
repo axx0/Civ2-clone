@@ -3,14 +3,12 @@ using Civ2engine.IO;
 using Model.Images;
 using Model.ImageSets;
 using Model.InterfaceActions;
-using Model.Interface;
-using RaylibUI;
 using Raylib_CSharp.Images;
 using Raylib_CSharp.Textures;
-using System.Numerics;
 using Model.Core;
 using Model.Core.Advances;
 using Model.Dialog;
+using Model.Menu;
 
 namespace Model;
 

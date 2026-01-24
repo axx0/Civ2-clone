@@ -1,19 +1,13 @@
-using Civ2engine;
-using Civ2engine.MapObjects;
-using Civ2engine.Units;
+using JetBrains.Annotations;
 using Model;
+using Model.Input;
 using Model.Menu;
-using Raylib_CSharp.Interact;
 
-namespace RaylibUI.RunGame.GameModes.Orders;
+namespace RaylibUI.RunGame.Commands.Orders;
  
-public class SleepOrder : Order
+[UsedImplicitly]
+public class SleepOrder(GameScreen gameScreen) : Order(gameScreen, new Shortcut(Key.S), CommandIds.SleepOrder)
 {
-    public SleepOrder(GameScreen gameScreen) : 
-        base(gameScreen, new Shortcut(KeyboardKey.S), CommandIds.SleepOrder)
-    {
-    }
-
     public override bool Update()
     {
         return SetCommandState(GameScreen.Player.ActiveUnit != null ? CommandStatus.Normal : CommandStatus.Invalid);

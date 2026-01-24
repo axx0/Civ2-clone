@@ -1,19 +1,14 @@
-using System.Data;
-using System.Diagnostics;
-using System.IO.Compression;
-using System.Net;
-using System.Text.Json;
+using Model.Input;
 using Civ2engine;
 using Civ2engine.SaveLoad;
-using Model;
-using Model.Dialog;
+using JetBrains.Annotations;
 using Model.Menu;
-using Raylib_CSharp.Interact;
 
 namespace RaylibUI.RunGame.Commands;
 
+[UsedImplicitly]
 public class SaveGame(GameScreen gameScreen) : AlwaysOnCommand(gameScreen, CommandIds.SaveGame,
-    [new Shortcut(KeyboardKey.S, ctrl: true)])
+    [new Shortcut(Key.S, ctrl: true)])
 {
     private FileDialog? _saveDialog;
 
@@ -23,7 +18,7 @@ public class SaveGame(GameScreen gameScreen) : AlwaysOnCommand(gameScreen, Comma
             $"{GameScreen.Game.ActivePlayer.Civilization.LeaderName.Substring(0, 2)}_{GameScreen.Game.Date.GameYearString(GameScreen.Game.TurnNumber, "").Replace(".", "")}.sav"
                 .ToLowerInvariant();
         _saveDialog = new FileDialog(GameScreen.Main, Labels.For(LabelIndex.SaveFiles),
-            GameScreen.Main.ActiveRuleSet.FolderPath, IsValidSelectionCallback, OnSelectionCallback, suggestedFileName,
+            GameScreen.Main.ActiveRuleSet!.FolderPath, IsValidSelectionCallback, OnSelectionCallback, suggestedFileName,
             false);
         GameScreen.ShowDialog(_saveDialog, true);
     }
@@ -47,12 +42,12 @@ public class SaveGame(GameScreen gameScreen) : AlwaysOnCommand(gameScreen, Comma
             //TODO: prompt for overwrite?
 
             using var saveFile = File.Open(filePath, FileMode.Truncate);
-            serializer.Write(saveFile, game, GameScreen.Main.ActiveRuleSet, viewData);
+            serializer.Write(saveFile, game, GameScreen.Main.ActiveRuleSet!, viewData);
         }
         else
         {
             using var saveFile = File.Open(filePath, FileMode.CreateNew);
-            serializer.Write(saveFile, game, GameScreen.Main.ActiveRuleSet, viewData);
+            serializer.Write(saveFile, game, GameScreen.Main.ActiveRuleSet!, viewData);
         }
 
         GameScreen.ShowPopup("SAVEOK", replaceStrings: new List<string>{ game.ActivePlayer.Civilization.LeaderTitle, game.ActivePlayer.Civilization.LeaderName, game.ActivePlayer.Civilization.TribeName,Path.GetFileName(filePath)}, handleButtonClick: CloseConfirm);

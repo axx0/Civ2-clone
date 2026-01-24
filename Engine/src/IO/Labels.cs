@@ -32,12 +32,12 @@ namespace Civ2engine
             return label.Split("|")[0];
         }
 
-        private static string _currentPath;
+        private static string _currentPath = "";
         
-        public static void UpdateLabels(Ruleset rules)
+        public static void UpdateLabels(Ruleset? rules)
         {
             var labelPath = rules != null ? Utils.GetFilePath("labels.txt", rules.Paths) : Utils.GetFilePath("labels.txt");
-            if (labelPath == _currentPath) return;
+            if (labelPath == _currentPath || string.IsNullOrWhiteSpace(labelPath)) return;
             
             _currentPath = labelPath;
             TextFileParser.ParseFile(labelPath, new LabelLoader());

@@ -1,6 +1,9 @@
 using System.Numerics;
 using Model;
+using Model.Menu;
 using Raylib_CSharp.Interact;
+using Model.Input;
+using RaylibUI.Initialization;
 using RaylibUI.BasicTypes.Controls;
 
 namespace RaylibUI.RunGame.GameControls.Menu;
@@ -23,7 +26,7 @@ public class MenuLabel : LabelControl
         Click += (_, _) => Activate();
     }
 
-    public KeyboardKey Hotkey { get; set; }
+    public Key Hotkey { get; set; }
 
     public override void OnFocus()
     {
@@ -96,7 +99,7 @@ public class MenuLabel : LabelControl
                     continue;
                 }
 
-                if (_gameMenu.Children[i] is MenuLabel label && label.Hotkey == key)
+                if (_gameMenu.Children[i] is MenuLabel label && label.Hotkey == key.ToModelKey())
                 {
                     Controller.Focused = label;
                     return true;

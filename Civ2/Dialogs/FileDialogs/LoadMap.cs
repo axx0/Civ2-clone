@@ -16,7 +16,7 @@ public class LoadMap : FileDialogHandler
     {
     }
 
-    public override ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox?> popup)
+    public override ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox> popup)
     {
         this.Title = Labels.For(LabelIndex.SelectMapToLoad);
         return this;

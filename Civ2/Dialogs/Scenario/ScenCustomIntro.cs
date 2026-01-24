@@ -14,7 +14,7 @@ public class ScenCustomIntro : ICivDialogHandler
     public const string Title = "SCENCUSTOMINTRO";
 
     public string Name { get; } = Title;
-    public ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox?> popups)
+    public ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox> popups)
     {
         Dialog = new DialogElements
         {
