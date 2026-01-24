@@ -1,11 +1,10 @@
-using System.Numerics;
 using Model;
 using Model.Menu;
+using Model.Input;
 using Raylib_CSharp.Colors;
 using Raylib_CSharp.Fonts;
 using Raylib_CSharp.Interact;
 using Raylib_CSharp.Rendering;
-using Raylib_CSharp.Transformations;
 using RaylibUI.BasicTypes.Controls;
 
 namespace RaylibUI.RunGame.GameControls.Menu;
@@ -20,7 +19,7 @@ internal class DropDownItem : ControlGroup
     private readonly int _index;
     public override bool CanFocus => true;
 
-    public KeyboardKey HotKey => _command.HotKey;
+    public Key HotKey => _command.HotKey;
 
     public DropDownItem(DropdownMenu dropdownMenu, InterfaceStyle look, MenuCommand command, int index) : base(dropdownMenu,
         DropdownSpacing, NoFlex, eventTransparent: false)

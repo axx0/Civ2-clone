@@ -14,7 +14,7 @@ public class CustomWorldSize : BaseDialogHandler
     {
     }
 
-    public override ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox?> popups)
+    public override ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox> popups)
     {
         var res = base.UpdatePopupData(popups);
         if(!res.Dialog.Dialog.Button.Contains(Labels.Cancel))

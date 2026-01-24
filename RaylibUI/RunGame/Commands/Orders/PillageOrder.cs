@@ -1,23 +1,21 @@
-using System.Collections.Generic;
-using System.Linq;
-using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.MapObjects;
 using Civ2engine.Terrains;
-using Civ2engine.Units;
+using JetBrains.Annotations;
 using Model;
 using Model.Core;
+using Model.Input;
 using Model.Menu;
-using Raylib_CSharp.Interact;
 
-namespace RaylibUI.RunGame.GameModes.Orders;
+namespace RaylibUI.RunGame.Commands.Orders;
 
+[UsedImplicitly]
 public class PillageOrder : Order
 {
     private readonly IGame _game;
 
     public PillageOrder(GameScreen gameScreen) : 
-        base(gameScreen,  new Shortcut(KeyboardKey.P, shift:true), CommandIds.PillageOrder)
+        base(gameScreen,  new Shortcut(Key.P, shift:true), CommandIds.PillageOrder)
     {
         _game = GameScreen.Game;
     }
@@ -26,12 +24,7 @@ public class PillageOrder : Order
     {
         var activeTile = GameScreen.Player.ActiveTile;
         var activeUnit = GameScreen.Player.ActiveUnit;
-        if (activeTile.IsCityPresent)
-        {
-            return SetCommandState(CommandStatus.Invalid);
-        }
-
-        if (activeUnit == null || activeUnit.AttackBase == 0)
+        if (activeTile.IsCityPresent || activeUnit == null || activeUnit.AttackBase == 0)
         {
             return SetCommandState(CommandStatus.Invalid);
         }
@@ -50,7 +43,6 @@ public class PillageOrder : Order
         var improvements = GameScreen.Player.ActiveTile.Improvements.Where(i =>
             _game.TerrainImprovements.ContainsKey(i.Improvement) &&
             !_game.TerrainImprovements[i.Improvement].Negative).ToList();
-        ConstructedImprovement improvementToPillage = null;
         if (improvements.Count > 1)
         {
             // TODO: implement listbox _gameScreen.ShowPopup("PILLAGEWHAT", listbox: new ListboxDefinition
@@ -68,12 +60,13 @@ public class PillageOrder : Order
         }
         else
         {
-            improvementToPillage = improvements.FirstOrDefault();
+            var improvementToPillage = improvements.FirstOrDefault();
+            if (improvementToPillage == null) return;
             Pillage(improvementToPillage);
         }
     }
 
-    private void Pillage(ConstructedImprovement? improvementToPillage)
+    private void Pillage(ConstructedImprovement improvementToPillage)
     {
         var player = GameScreen.Player;
         

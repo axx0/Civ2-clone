@@ -1,26 +1,21 @@
-using Raylib_CSharp.Interact;
+using Model.Input;
 
 namespace Model.Menu;
 
-public class MenuElement
+public class MenuElement(
+    string menuText,
+    Shortcut shortcut,
+    Key hotkey,
+    string commandId = "",
+    bool omitIfNoCommand = false,
+    bool repeat = false)
 {
-    public MenuElement(string menuText, Shortcut shortcut, KeyboardKey hotkey, string commandId = "",
-        bool omitIfNoCommand = false, bool repeat = false)
-    {
-        this.MenuText = menuText;
-        this.Shortcut = shortcut;
-        Hotkey = hotkey;
-        CommandId = commandId;
-        OmitIfNoCommand = omitIfNoCommand;
-        Repeat = repeat;
-    }
+    public bool Repeat { get; } = repeat;
 
-    public bool Repeat { get; }
-    
-    public bool OmitIfNoCommand { get;  }
+    public bool OmitIfNoCommand { get; } = omitIfNoCommand;
 
-    public string MenuText { get; }
-    public Shortcut Shortcut { get; }
-    public KeyboardKey Hotkey { get; }
-    public string CommandId { get; }
+    public string MenuText { get; } = menuText;
+    public Shortcut Shortcut { get; } = shortcut;
+    public Key Hotkey { get; } = hotkey;
+    public string CommandId { get; } = commandId;
 }

@@ -1,23 +1,15 @@
 using System.Diagnostics;
-using System.Linq;
-using Civ2engine;
 using Civ2engine.Enums;
-using Civ2engine.MapObjects;
-using Civ2engine.Units;
+using JetBrains.Annotations;
 using Model;
+using Model.Input;
 using Model.Menu;
-using Raylib_CSharp.Interact;
 
-namespace RaylibUI.RunGame.GameModes.Orders;
+namespace RaylibUI.RunGame.Commands.Orders;
 
-public class UnloadOrder : Order
+[UsedImplicitly]
+public class UnloadOrder(GameScreen gameScreen) : Order(gameScreen, new Shortcut(Key.U), CommandIds.UnloadOrder)
 {
-
-    public UnloadOrder(GameScreen gameScreen) : 
-        base(gameScreen, new Shortcut(KeyboardKey.U), CommandIds.UnloadOrder)
-    {
-    }
-
     public override bool Update()
     {
         var activeUnit = GameScreen.Player.ActiveUnit;
@@ -35,7 +27,7 @@ public class UnloadOrder : Order
     public override void Action()
     {
         var player = GameScreen.Player;
-        Debug.Assert(player.ActiveUnit != null, "player.ActiveUnit != null");
+        Debug.Assert(player.ActiveUnit != null);
         player.ActiveUnit.CarriedUnits.ForEach(u =>
         {
             u.Order = (int)OrderType.NoOrders;

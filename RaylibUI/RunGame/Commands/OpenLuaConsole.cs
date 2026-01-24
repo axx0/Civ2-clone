@@ -1,16 +1,16 @@
+using JetBrains.Annotations;
+using Model.Input;
 using Model;
 using Model.Dialog;
-using Model.Images;
 using Model.Menu;
-using Raylib_CSharp.Interact;
 
 namespace RaylibUI.RunGame.Commands;
 
-public class OpenLuaConsole : IGameCommand
+[UsedImplicitly]
+public class OpenLuaConsole(GameScreen gameScreen) : IGameCommand
 {
-    private readonly GameScreen _gameScreen;
     public string Id => CommandIds.OpenLuaConsole;
-    public Shortcut[] ActivationKeys { get; set; } = { new Shortcut(KeyboardKey.Nine, true, true) };
+    public Shortcut[] ActivationKeys { get; set; } = { new Shortcut(Key.D9, true, true) };
     public CommandStatus Status => CommandStatus.Normal;
     public bool Update()
     {
@@ -19,17 +19,12 @@ public class OpenLuaConsole : IGameCommand
 
     public void Action()
     {
-        _gameScreen.ShowDialog(new LuaConsole(_gameScreen), true);
-    }
-
-    public OpenLuaConsole(GameScreen gameScreen)
-    {
-        _gameScreen = gameScreen;
+        gameScreen.ShowDialog(new LuaConsole(gameScreen), true);
     }
 
     public bool Checked => false;
     public MenuCommand? Command { get; set; }
-    public string ErrorDialog { get; }
-    public DialogImageElements? ErrorImage { get; } = null;
-    public string? Name { get; }
+    public string ErrorDialog => "";
+    public DialogImageElements? ErrorImage => null;
+    public string? Name => "Open Lua Console";
 }

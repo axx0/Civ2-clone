@@ -2,38 +2,29 @@ using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.MapObjects;
 using Civ2engine.UnitActions;
-using Civ2engine.Units;
+using JetBrains.Annotations;
 using Model;
 using Model.Constants;
 using Model.Core;
-using Model.Interface;
+using Model.Input;
 using Model.Menu;
-using Raylib_CSharp.Interact;
-using RaylibUI.Controls;
 using RaylibUtils;
 
-namespace RaylibUI.RunGame.GameModes.Orders;
+namespace RaylibUI.RunGame.Commands.Orders;
 
-public class BuildCity : Order
+
+[UsedImplicitly]
+public class BuildCity(GameScreen gameScreen) : Order(gameScreen, new Shortcut(Key.B), CommandIds.BuildCityOrder)
 {
-    private readonly LocalPlayer _player;
+    private readonly LocalPlayer _player = gameScreen.Player;
     private const string CityName = "CityName";
-    private IUserInterface _active;
-    private GameScreen _screen;
-    private City _city;
-
-    public BuildCity(GameScreen gameScreen) : 
-        base(gameScreen, new Shortcut(KeyboardKey.B), CommandIds.BuildCityOrder)
-    {
-        _screen = gameScreen;
-        _player = gameScreen.Player;
-        _active = gameScreen.Main.ActiveInterface;
-    }
+    private readonly IUserInterface _active = gameScreen.Main.ActiveInterface;
+    private readonly GameScreen _screen = gameScreen;
 
     public override bool Update()
     {
         var activeUnit = _player.ActiveUnit;
-        
+
         if (activeUnit == null)
         {
             return SetCommandState(CommandStatus.Invalid);
@@ -42,17 +33,20 @@ public class BuildCity : Order
         var activeTile = activeUnit.CurrentLocation;
         if (activeUnit.AiRole != AiRoleType.Settle)
         {
-            return SetCommandState(errorPopupKeyword: "ONLYSETTLERS", errorPopupImage: new(_active.PicSources["unit"][0], 2));
+            return SetCommandState(errorPopupKeyword: "ONLYSETTLERS",
+                errorPopupImage: new(_active.PicSources["unit"][0], 2));
         }
+
         if (activeTile.Terrain.Impassable)
         {
             return SetCommandState();
         }
+
         if (activeTile.Type == TerrainType.Ocean)
         {
             return SetCommandState(errorPopupKeyword: "CITYATSEA");
         }
-        
+
         var city = activeTile.CityHere ?? activeTile.Neighbours().FirstOrDefault(t => t.IsCityPresent)?.CityHere;
         if (city != null)
         {
@@ -74,12 +68,31 @@ public class BuildCity : Order
 
             if (activeTile.CityHere != null)
             {
-                return SetCommandState(activeTile.CityHere.Size < GameScreen.Game.Rules.Cosmic.ToExceedCitySizeAqueductNeeded ? CommandStatus.Normal : CommandStatus.Disabled, Labels.For(LabelIndex.JoinCity), errorPopupKeyword: "ONLY10", errorPopupImage: new(new[] { cityImage.Image, flagImage.Image }, 2, coords: new int[,] { { 0, 0 }, { (int)cityImage.FlagLoc.X, (int)cityImage.FlagLoc.Y - Images.GetImageHeight(flagImage.Image, _active) - 5 } }));
+                return SetCommandState(
+                    activeTile.CityHere.Size < GameScreen.Game.Rules.Cosmic.ToExceedCitySizeAqueductNeeded
+                        ? CommandStatus.Normal
+                        : CommandStatus.Disabled, Labels.For(LabelIndex.JoinCity), errorPopupKeyword: "ONLY10",
+                    errorPopupImage: new([cityImage.Image, flagImage.Image], 2,
+                        coords: new[,]
+                        {
+                            { 0, 0 },
+                            {
+                                (int)cityImage.FlagLoc.X,
+                                (int)cityImage.FlagLoc.Y - Images.GetImageHeight(flagImage.Image, _active) - 5
+                            }
+                        }));
             }
-            else
-            {
-                return SetCommandState(errorPopupKeyword: "ADJACENTCITY", errorPopupImage: new(new[] { cityImage.Image, flagImage.Image }, 2, coords: new int[,] { { 0, 0 }, { (int)cityImage.FlagLoc.X, (int)cityImage.FlagLoc.Y - Images.GetImageHeight(flagImage.Image, _active) - 5 } }));
-            }
+
+            return SetCommandState(errorPopupKeyword: "ADJACENTCITY",
+                errorPopupImage: new([cityImage.Image, flagImage.Image], 2,
+                    coords: new[,]
+                    {
+                        { 0, 0 },
+                        {
+                            (int)cityImage.FlagLoc.X,
+                            (int)cityImage.FlagLoc.Y - Images.GetImageHeight(flagImage.Image, _active) - 5
+                        }
+                    }));
         }
 
         return SetCommandState(CommandStatus.Normal);
@@ -87,49 +100,61 @@ public class BuildCity : Order
 
     public override void Action()
     {
-        if (_player.ActiveUnit.CurrentLocation.IsCityPresent)
+        var activeUnit = _player.ActiveUnit;
+        if (activeUnit == null)
         {
-            _player.ActiveTile.CityHere.GrowCity(GameScreen.Game);
-            var unit = _player.ActiveUnit;
-            unit.Dead = true;
-            unit.MovePointsLost = unit.MovePoints;
+#if DEBUG
+     throw new InvalidOperationException("Tried to build city when no unit was active");       
+#endif
+            return;
+        }
+        var city = activeUnit.CurrentLocation.CityHere;
+        if (city != null)
+        {
+            city.GrowCity(GameScreen.Game);
+            activeUnit.Dead = true;
+            activeUnit.MovePointsLost = activeUnit.MovePoints;
             GameScreen.Game.ChooseNextUnit();
         }
         else
         {
             var name = CityActions.GetCityName(_player.Civilization, GameScreen.Game);
             GameScreen.ShowPopup("NAMECITY", handleButtonClick: Build,
-            textBoxes: new List<TextBoxDefinition>
-            {
-                new()
-                {
-                    Index = 0,
-                    InitialValue = name,
-                    Name = CityName,
-                    Width = 225
-                }
-            });
+                textBoxes:
+                [
+                    new()
+                    {
+                        Index = 0,
+                        InitialValue = name,
+                        Name = CityName,
+                        Width = 225
+                    }
+                ]);
         }
     }
 
     private void Build(string button, int selectedIndex, IList<bool>? check, IDictionary<string, string>? textBoxes)
     {
-        if (textBoxes != null && button == Labels.Ok && textBoxes.TryGetValue(CityName, out var name) && _player.ActiveUnit != null)
+        if (textBoxes != null && button == Labels.Ok && textBoxes.TryGetValue(CityName, out var name) &&
+            _player.ActiveUnit != null)
         {
-            _city = CityActions.BuildCity(_player.ActiveUnit, GameScreen.Game, name);
+            var city = CityActions.BuildCity(_player.ActiveUnit, GameScreen.Game, name);
 
-            GameScreen.ShowPopup("FOUNDED", handleButtonClick: OpenCityWindow, 
-                dialogImage: new(new[] { _player.Civilization.Epoch < 2 ? _active.PicSources["cityBuiltAncient"][0] : _active.PicSources["cityBuiltModern"][0] }),
-                replaceStrings: new List<string> { name, GameScreen.Game.Date.GameYearString(GameScreen.Game.TurnNumber) });
-        }
-    }
-
-    private void OpenCityWindow(string button, int selectedIndex, IList<bool>? check, IDictionary<string, string>? textBoxes)
-    {
-        if (button == Labels.Ok)
-        {
-            GameScreen.ShowCityWindow(_city);   // TODO: chose next unit after handling button click
-            GameScreen.Game.ChooseNextUnit();
+            GameScreen.ShowPopup("FOUNDED", handleButtonClick: (dialogButton, _, _, _) =>
+                {
+                    if (dialogButton == Labels.Ok)
+                    {
+                        GameScreen.ShowCityWindow(city); // TODO: chose next unit after handling button click
+                        GameScreen.Game.ChooseNextUnit();
+                    }
+                },
+                dialogImage: new([
+                    _player.Civilization.Epoch < 2
+                        ? _active.PicSources["cityBuiltAncient"][0]
+                        : _active.PicSources["cityBuiltModern"][0]
+                ]),
+                replaceStrings: new List<string>
+                    { name, GameScreen.Game.Date.GameYearString(GameScreen.Game.TurnNumber) });
         }
     }
 }

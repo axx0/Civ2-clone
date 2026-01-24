@@ -1,44 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
-using Civ2engine.IO;
 
-namespace Civ2engine
+namespace Civ2engine.IO
 {
-    public class PopupBoxReader : IFileHandler
+    public class PopupBoxReader(Dictionary<string, PopupBox> boxes) : IFileHandler
     {
-        // Read popupbox data from txt file
-        public static Dictionary<string, PopupBox?> LoadPopupBoxes(string[] paths, string fileName)
+        // Read popupbox data from the txt file
+        public static Dictionary<string, PopupBox> LoadPopupBoxes(string[] paths, string fileName)
         {
-            var boxes = new Dictionary<string, PopupBox?>();
+            var boxes = new Dictionary<string, PopupBox>();
             var filePath = Utils.GetFilePath(fileName, paths);
-            TextFileParser.ParseFile(filePath, new PopupBoxReader { Boxes = boxes }, true);
+            if (filePath != null)
+            {
+                TextFileParser.ParseFile(filePath, new PopupBoxReader(boxes: boxes), true);
+            }
             return boxes;
         }
 
-        public Dictionary<string, PopupBox?> Boxes { get; set; }
+        public Dictionary<string, PopupBox> Boxes { get; init; } = boxes;
 
         public void ProcessSection(string section, List<string>? contents)
         {
+            if (contents == null) return;
+            
             var popupBox = new PopupBox {Name = section, Checkbox = false};
-            Action<string> contentHandler;
-            var addOkay = true;
 
-            void TextHandler(string line)
-            {
-                if (string.IsNullOrWhiteSpace(line) && popupBox.Text?.Count > 0 && popupBox.Options == null && section != "SCENARIO")   // No options in scenario intro text
-                {
-                    contentHandler = (line) =>
-                    {
-                        if (string.IsNullOrWhiteSpace(line)) return;
-                        (popupBox.Options ??= new List<string>()).Add(line);
-                    };
-                    return;
-                }
-
-                popupBox.AddText(line);
-            }
-
-            contentHandler = TextHandler;
+            var contentHandler = TextHandler;
 
             var optionsHandler = new Action<string>((line) =>
             {
@@ -51,12 +38,12 @@ namespace Civ2engine
                     (popupBox.Options ??= new List<string>()).Add(line);
                 }
             });
-            var optionsStart = false;
+
             foreach (var line in contents)
             {
-                if (line.StartsWith("@"))
+                if (line.StartsWith('@'))
                 {
-                    var parts = line.Split(new[] { '@', '=' }, 2,
+                    var parts = line.Split(['@', '='], 2,
                         StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 0)
                     {
@@ -112,7 +99,22 @@ namespace Civ2engine
 
 
             Boxes[popupBox.Name] = popupBox;
+            return;
 
+            void TextHandler(string line)
+            {
+                if (string.IsNullOrWhiteSpace(line) && popupBox.Text?.Count > 0 && popupBox.Options == null && section != "SCENARIO")   // No options in scenario intro text
+                {
+                    contentHandler = (item) =>
+                    {
+                        if (string.IsNullOrWhiteSpace(item)) return;
+                        (popupBox.Options ??= new List<string>()).Add(item);
+                    };
+                    return;
+                }
+
+                popupBox.AddText(line);
+            }
         }
     }
 }
