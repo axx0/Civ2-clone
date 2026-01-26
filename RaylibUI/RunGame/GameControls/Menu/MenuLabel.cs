@@ -3,7 +3,6 @@ using Model;
 using Model.Menu;
 using Raylib_CSharp.Interact;
 using Model.Input;
-using RaylibUI.Initialization;
 using RaylibUI.BasicTypes.Controls;
 
 namespace RaylibUI.RunGame.GameControls.Menu;

@@ -37,7 +37,7 @@ public abstract class BaseLayoutController : IControlLayout
     public abstract void Move(Vector2 moveAmount);
 
     public virtual void OnKeyPress(KeyboardKey key)
-    {
+    { 
         if (key == KeyboardKey.Tab)
         {
             if (_focused is null)
