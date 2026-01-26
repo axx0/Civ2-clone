@@ -1,0 +1,83 @@
+using Model.Input;
+using Raylib_CSharp.Interact;
+
+namespace RaylibUI.RunGame;
+
+public static class KeyboardKeyExtensions
+{
+    public static Key ToModelKey(this KeyboardKey key)
+    {
+        return key switch
+        {
+            KeyboardKey.Enter or KeyboardKey.KpEnter => Key.Enter,
+            KeyboardKey.Escape => Key.Escape,
+            KeyboardKey.Space => Key.Space,
+            KeyboardKey.Tab => Key.Tab,
+            KeyboardKey.Backspace => Key.Backspace,
+            KeyboardKey.Delete => Key.Delete,
+            KeyboardKey.Home => Key.Home,
+            KeyboardKey.End => Key.End,
+            KeyboardKey.PageUp => Key.PageUp,
+            KeyboardKey.PageDown => Key.PageDown,
+            KeyboardKey.LeftShift => Key.LeftShift,
+            KeyboardKey.RightShift => Key.RightShift,
+            KeyboardKey.LeftControl => Key.LeftControl,
+            KeyboardKey.RightControl => Key.RightControl,
+            KeyboardKey.LeftAlt => Key.LeftAlt,
+            KeyboardKey.RightAlt => Key.RightAlt,
+            KeyboardKey.Up => Key.Up,
+            KeyboardKey.Down => Key.Down,
+            KeyboardKey.Left => Key.Left,
+            KeyboardKey.Right => Key.Right,
+            KeyboardKey.A => Key.A,
+            KeyboardKey.B => Key.B,
+            KeyboardKey.C => Key.C,
+            KeyboardKey.D => Key.D,
+            KeyboardKey.E => Key.E,
+            KeyboardKey.F => Key.F,
+            KeyboardKey.G => Key.G,
+            KeyboardKey.H => Key.H,
+            KeyboardKey.I => Key.I,
+            KeyboardKey.J => Key.J,
+            KeyboardKey.K => Key.K,
+            KeyboardKey.L => Key.L,
+            KeyboardKey.M => Key.M,
+            KeyboardKey.N => Key.N,
+            KeyboardKey.O => Key.O,
+            KeyboardKey.P => Key.P,
+            KeyboardKey.Q => Key.Q,
+            KeyboardKey.R => Key.R,
+            KeyboardKey.S => Key.S,
+            KeyboardKey.T => Key.T,
+            KeyboardKey.U => Key.U,
+            KeyboardKey.V => Key.V,
+            KeyboardKey.W => Key.W,
+            KeyboardKey.X => Key.X,
+            KeyboardKey.Y => Key.Y,
+            KeyboardKey.Z => Key.Z,
+            KeyboardKey.Zero or KeyboardKey.Kp0 => Key.D0,
+            KeyboardKey.One or KeyboardKey.Kp1 => Key.D1,
+            KeyboardKey.Two or KeyboardKey.Kp2 => Key.D2,
+            KeyboardKey.Three or KeyboardKey.Kp3 => Key.D3,
+            KeyboardKey.Four or KeyboardKey.Kp4 => Key.D4,
+            KeyboardKey.Five or KeyboardKey.Kp5 => Key.D5,
+            KeyboardKey.Six or KeyboardKey.Kp6 => Key.D6,
+            KeyboardKey.Seven or KeyboardKey.Kp7 => Key.D7,
+            KeyboardKey.Eight or KeyboardKey.Kp8 => Key.D8,
+            KeyboardKey.Nine or KeyboardKey.Kp9 => Key.D9,
+            KeyboardKey.F1 => Key.F1,
+            KeyboardKey.F2 => Key.F2,
+            KeyboardKey.F3 => Key.F3,
+            KeyboardKey.F4 => Key.F4,
+            KeyboardKey.F5 => Key.F5,
+            KeyboardKey.F6 => Key.F6,
+            KeyboardKey.F7 => Key.F7,
+            KeyboardKey.F8 => Key.F8,
+            KeyboardKey.F9 => Key.F9,
+            KeyboardKey.F10 => Key.F10,
+            KeyboardKey.F11 => Key.F11,
+            KeyboardKey.F12 => Key.F12,
+            _ => Key.None
+        };
+    }
+}
