@@ -19,33 +19,75 @@ ai.RegisterEvent(AiEvent.Unit_Orders_Needed, function(ai, data)
         end
     end
     
-    print(unit.AiRole)
+    print(unit.type.role)
+    print(AiRoleType.Settle)
 
     if unit.type.role == AiRoleType.Settle then
+        print("Check for city near")
         local isCityRadius = ai.GetNearestCity(currentTile, true)
     
         if isCityRadius then
             --TODO terrain improvements
         else
-            if currentTile.fertility == -2 then
-                return "B"
-            end
-            local fertile = ai.CheckFertility(currentTile, unit)
-            if fertile then
-                return fertile
-            end
+            print("Checking current tile for suitability")
+            return ai.CheckFertility(currentTile, unit)
         end
     end
     
     local moves = ai.GetPossibleMoves(unit)
-    for move in moves do
-        move.Priority = ai.Random.Next(50)
-        
-        -- Here evaluate the move and weigh it up or down
-        if not best or move.Priority > best.Priority then
-            best = move
+    if not moves or #moves == 0 then
+        return nil
+    end
+
+    local target = ai.NearestEnemy({ tile = currentTile, distance = 12, same_landmass = true })
+    local current_dist
+    if target then
+        if ai.Distance then
+            current_dist = ai.Distance(currentTile, target)
+        else
+            current_dist = math.abs(currentTile.x - target.x) + math.abs(currentTile.y - target.y)
         end
     end
-    
-    return best
+
+    local best_move
+    for _, move in ipairs(moves) do
+        local action = move.actionType or move.type or move.ActionType
+        local priority = ai.Random.Next(20)
+
+        if action == "Attack" then
+            priority = priority + 1000
+        elseif action == "Move" then
+            priority = priority + 200
+        elseif action == "Unload" then
+            priority = priority + 150
+        elseif action == "Fortify" then
+            if unit.type.role == AiRoleType.Defend then
+                priority = priority + 300
+            else
+                priority = priority + 50
+            end
+        end
+
+        if move.tile and target and current_dist then
+            local move_dist
+            if ai.Distance then
+                move_dist = ai.Distance(move.tile, target)
+            else
+                move_dist = math.abs(move.tile.x - target.x) + math.abs(move.tile.y - target.y)
+            end
+
+            if move_dist < current_dist then
+                priority = priority + 150
+            elseif move_dist > current_dist then
+                priority = priority - 50
+            end
+        end
+
+        move.priority = priority
+        if not best_move or move.priority > best_move.priority then
+            best_move = move
+        end
+    end
+
+    return best_move
 end)

@@ -299,7 +299,7 @@ ai.RegisterEvent(AiEvent.Unit_Orders_Needed, function(ai, data)
             horde = get_free_horde()
             hordes[horde] = {
                 location = unit.location,
-                target = a.NearestEnemy({ tile = unit.location, distance = 50, same_landmass = true }),
+                target = ai.NearestEnemy({ tile = unit.location, distance = 50, same_landmass = true }),
                 speed = unit.type.move,
                 count = 0
             }

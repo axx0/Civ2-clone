@@ -191,8 +191,6 @@ public static class MapNavigationFunctions
         {
             radiusTile.SetVisible(ownerId);
         }
-
-        map.AdjustFertilityForCity(tile);
     }
 
     public static bool IsCurrentlyVisible(this Map map, Tile tile, int toWho)
