@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Civ2engine.Enums;
 using Civ2engine.MapObjects;
 using Model.Core;
+using Model.Core.Mapping;
 
 namespace Civ2engine
 {
@@ -76,7 +77,7 @@ namespace Civ2engine
                     
                     mainMap.NormalizeIslands();
                     
-                    mainMap.CalculateFertility(terrains[0], land);
+                    mainMap.CalculateFertility(terrains[0]);
 
                     maps[0] = mainMap;
                 }
@@ -149,7 +150,7 @@ namespace Civ2engine
 
             while (landUsed < landRequired && remainingTiles.Count > 0)
             {
-                var candidate = config.Random.ChooseFrom<Tile>(remainingTiles);
+                var candidate = config.Random.ChooseFrom(remainingTiles);
                 remainingTiles.Remove(candidate);
                 land.Add(candidate);
 
@@ -218,7 +219,7 @@ namespace Civ2engine
             mainMap.RenumberIslands();
             mainMap.RenumberOceans(oceans);
                     
-            mainMap.CalculateFertility(terrains[0], land);
+            mainMap.CalculateFertility(terrains[0]);
 
             return mainMap;
         }

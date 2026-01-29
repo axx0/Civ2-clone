@@ -1,6 +1,6 @@
-using System.Collections.Generic;
+using Civ2engine.MapObjects;
 
-namespace Civ2engine.MapObjects;
+namespace Model.Core.Mapping;
 
 public class IslandDetails
 {
@@ -16,4 +16,6 @@ public class IslandDetails
             _id = value;
         }
     }
+
+    public int TotalFertile { get; set; }
 }
