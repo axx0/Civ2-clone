@@ -1,4 +1,6 @@
+using Model.Input;
 using Civ2engine;
+using JetBrains.Annotations;
 using Model;
 using Model.Controls;
 using Model.Images;
@@ -7,17 +9,11 @@ using Raylib_CSharp.Interact;
 
 namespace RaylibUI.RunGame.Commands;
 
-public class ShowMapGrid : IGameCommand
+[UsedImplicitly]
+public class ShowMapGrid(GameScreen gameScreen) : IGameCommand
 {
-    private readonly GameScreen _gameScreen;
-
-    public ShowMapGrid(GameScreen gameScreen)
-    {
-        _gameScreen = gameScreen;
-    }
-    
     public string Id => CommandIds.ShowMapGrid;
-    public Shortcut[] ActivationKeys { get; set; } = { new(KeyboardKey.G, ctrl: true) };
+    public Shortcut[] ActivationKeys { get; set; } = { new(Key.G, ctrl: true) };
     public CommandStatus Status => CommandStatus.Normal;
 
     public bool Update()
@@ -27,12 +23,12 @@ public class ShowMapGrid : IGameCommand
 
     public void Action()
     {
-        _gameScreen.ShowMapGrid();
+        gameScreen.ShowMapGrid();
     }
 
-    public bool Checked => _gameScreen.ShowGrid;
+    public bool Checked => gameScreen.ShowGrid;
     public MenuCommand? Command { get; set; }
-    public string ErrorDialog { get; } = string.Empty;
-    public DialogImageElements? ErrorImage { get; } = null;
-    public string? Name { get; }
+    public string ErrorDialog => string.Empty;
+    public DialogImageElements? ErrorImage => null;
+    public string? Name => "Show Map Grid";
 }

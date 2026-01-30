@@ -61,6 +61,15 @@ public abstract class BaseScreen : BaseLayoutController, IScreen
 
     private void ControlEvents(IControlLayout layoutController)
     {
+        // Handle up to 16 characters per frame
+        for (int i = 0; i < 16; i++)
+        {
+            var charPressed = Convert.ToChar(Input.GetCharPressed());
+            if (charPressed > char.MinValue)
+            {
+                layoutController.Focused?.OnCharPressed(charPressed);
+            }
+        }
         foreach (var key in _keys)
         {
             if (!Input.IsKeyPressed(key)) continue;

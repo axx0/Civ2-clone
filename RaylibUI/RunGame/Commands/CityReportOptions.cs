@@ -1,3 +1,4 @@
+using Model.Input;
 using Civ2engine;
 using Model;
 using Model.Controls;
@@ -7,7 +8,7 @@ using Raylib_CSharp.Interact;
 namespace RaylibUI.RunGame.Commands;
 
 public class CityReportOptions(GameScreen gameScreen)
-    : AlwaysOnCommand(gameScreen, CommandIds.CityReportOptions, [new Shortcut(KeyboardKey.E, ctrl: true)])
+    : AlwaysOnCommand(gameScreen, CommandIds.CityReportOptions, [new Shortcut(Key.E, ctrl: true)])
 {
     public override void Action()
     {

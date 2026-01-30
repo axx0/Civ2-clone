@@ -57,7 +57,7 @@ public class GameMenu : ControlGroup
                 continue;
             }
 
-            if (_labels[i].Hotkey != hotkey)
+            if (_labels[i].Hotkey != hotkey.ToModelKey())
             {
                 continue;
             }

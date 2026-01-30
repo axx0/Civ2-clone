@@ -46,22 +46,26 @@ namespace Civ2engine.NewGame
             return new Game(maps, config.Rules, civilizations, new Options(config), paths, config.DifficultyLevel, config.BarbarianActivity);
         }
 
-        private static Tile GetDefaultStart(GameInitializationConfig config, Civilization civilization, Map map)
+        private static Tile? GetDefaultStart(GameInitializationConfig config, Civilization civilization, Map map)
         {
             var index = Array.FindIndex(config.Rules.Leaders, l => l.Adjective == civilization.Adjective);
-            if (index > -1 && index < config.StartPositions.Length)
+            if (index <= -1 || index >= config.StartPositions!.Length) return null;
+            
+            var pos = config.StartPositions[index];
+            if (pos[0] == -1 || pos[1] == -1) return null;
+            
+            var tile = map.TileC2(pos[0], pos[1]);
+            if (config.StartTiles.Contains(tile) || tile.IsUnitPresent ||
+                tile.Neighbours().Any(n => config.StartTiles.Contains(n) || n.IsUnitPresent))
             {
-                var pos = config.StartPositions[index];
-                if (pos[0] != -1 && pos[1] != -1)
-                {
-                    var tile = map.TileC2(pos[0], pos[1]);
-                    if (tile.Fertility > -1)
-                    {
-                        map.SetAsStartingLocation(tile, civilization.Id);
-                        config.StartTiles.Add(tile);
-                        return tile;
-                    }
-                }
+                return null;
+            }
+
+            if (tile.Fertility > -1)
+            {
+                map.SetAsStartingLocation(tile, civilization.Id);
+                config.StartTiles.Add(tile);
+                return tile;
             }
 
             return null;
@@ -70,26 +74,56 @@ namespace Civ2engine.NewGame
 
         private static Tile GetStartLoc(Civilization civilization, GameInitializationConfig config, Map map)
         {
+            var startTiles = config.StartTiles;
             var maxFertility = 0m;
-            var tiles = new HashSet<Tile>();
-            for (int y = 0; y < map.Tile.GetLength(1); y++)
+            var tiles = new List<Tile>();
+            foreach (var island in map.Islands)
             {
-                for (int x = 0; x < map.Tile.GetLength(0); x++)
+                var existing = startTiles.Count(t => t.Island == island.Id);
+                decimal islandFertility = island.TotalFertile;
+                if (existing > 0)
                 {
-                    var tile = map.Tile[x, y];
-                    if(tile.Fertility < maxFertility) continue;
-                    if (tile.Fertility > maxFertility)
+                    islandFertility /= 4m * existing;
+                }
+                foreach (var tile in island.Tiles)
+                {
+                    var fertility = islandFertility + tile.Fertility;
+                    if (fertility < maxFertility) continue;
+                    if (startTiles.Contains(tile) || tile.IsUnitPresent)
                     {
+                        if (maxFertility > 0)
+                        {
+                            continue;
+                        }
+                    }
+                    else if (fertility > maxFertility)
+                    {
+                        // This code may let adjacent tiles with exactly equal fertility pass, but they will be filtered out by the distance to start checks at the end this just ensures that we will have good spacing in our options
+                        if (tile.CityRadius().Any(t => startTiles.Contains(t) || t.IsUnitPresent))
+                        {
+                            var adjustedFertility = fertility /4m;
+                            if (adjustedFertility < maxFertility)
+                            {
+                                continue;
+                            }
+
+                            maxFertility = adjustedFertility;
+                        }
+                        else
+                        {
+                            maxFertility = fertility;
+                        }
                         tiles.Clear();
-                        maxFertility = tile.Fertility;
                     }
 
                     tiles.Add(tile);
                 }
             }
 
-            var selectedTile = tiles.OrderByDescending(t=> DistanceToNearestStart(config, t)).First();
-            
+            var selectedTile = tiles.Count == 1 || config.StartTiles.Count == 0
+                ? tiles.First()
+                : tiles.OrderByDescending(t => DistanceToNearestStart(config, t)).First();
+
             config.StartTiles.Add(selectedTile);
             map.SetAsStartingLocation(selectedTile, civilization.Id);
             return selectedTile;
@@ -97,14 +131,8 @@ namespace Civ2engine.NewGame
 
         private static double DistanceToNearestStart(GameInitializationConfig config, Tile tile)
         {
-            if (config.StartTiles.Count == 0)
-            {
-                return config.Random.Next();
-            }
-
-            
             var minDist = Utilities.DistanceTo(config.StartTiles[0], tile);
-            for (int i = 1; i < config.StartTiles.Count; i++)
+            for (var i = 1; i < config.StartTiles.Count; i++)
             {
                 var dist = Utilities.DistanceTo(config.StartTiles[i], tile);
                 if (dist < minDist)

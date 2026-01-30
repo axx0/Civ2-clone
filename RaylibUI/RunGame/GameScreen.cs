@@ -1,14 +1,10 @@
-using System.Runtime.CompilerServices;
 using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.Events;
-using Civ2engine.IO;
 using Civ2engine.MapObjects;
-using Civ2engine.Units;
 using Model;
 using Model.Core;
 using Model.Controls;
-using Model.Images;
 using Raylib_CSharp.Windowing;
 using Raylib_CSharp.Transformations;
 using RaylibUI.RunGame.Commands.Orders;
@@ -17,9 +13,8 @@ using RaylibUI.RunGame.GameControls.CityControls;
 using RaylibUI.RunGame.GameControls.Mapping;
 using RaylibUI.RunGame.GameControls.Menu;
 using RaylibUI.RunGame.GameModes;
-using RaylibUI.RunGame.GameModes.Orders;
+using RaylibUI.Initialization;
 using Raylib_CSharp.Interact;
-using JetBrains.Annotations;
 
 namespace RaylibUI.RunGame;
 
@@ -206,7 +201,7 @@ public class GameScreen : BaseScreen
             Focused = MenuBar.Controls!.First();
             return;
         }
-        var command = new Shortcut(key, Input.IsKeyDown(KeyboardKey.RightShift) ||
+        var command = new Shortcut(key.ToModelKey(), Input.IsKeyDown(KeyboardKey.RightShift) ||
                                         Input.IsKeyDown(KeyboardKey.LeftShift)
             , Input.IsKeyDown(KeyboardKey.LeftControl) ||
               Input.IsKeyDown(KeyboardKey.RightControl)

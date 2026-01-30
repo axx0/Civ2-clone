@@ -1,27 +1,21 @@
+using JetBrains.Annotations;
+using Model.Input;
 using Model;
 using Model.Controls;
-using Model.Controls;
-using Raylib_CSharp.Interact;
 
 namespace RaylibUI.RunGame.Commands;
 
-public class EndTurn : IGameCommand
+[UsedImplicitly]
+public class EndTurn(GameScreen gameScreen) : IGameCommand
 {
-    private readonly GameScreen _gameScreen;
-
-    public EndTurn(GameScreen gameScreen)
-    {
-        _gameScreen = gameScreen;
-    }
-
     public string Id => CommandIds.EndTurn;
     
-    public Shortcut[] ActivationKeys { get; set; } = { new (KeyboardKey.Enter), new (KeyboardKey.KpEnter), new(KeyboardKey.N, ctrl: true)};
+    public Shortcut[] ActivationKeys { get; set; } = [new (Key.Enter), new(Key.N, ctrl: true)];
     public CommandStatus Status { get; private set; }
 
     public bool Update()
     {
-        Status = _gameScreen.ActiveMode == _gameScreen.ViewPiece || _gameScreen.ActiveMode == _gameScreen.Moving
+        Status = gameScreen.ActiveMode == gameScreen.ViewPiece || gameScreen.ActiveMode == gameScreen.Moving
             ? CommandStatus.Priority
             : CommandStatus.Disabled;
         return Status != CommandStatus.Disabled;
@@ -29,15 +23,15 @@ public class EndTurn : IGameCommand
 
     public void Action()
     {
-        if (_gameScreen.Game.ProcessEndOfTurn())
+        if (gameScreen.Game.ProcessEndOfTurn())
         {
-            _gameScreen.Game.ChoseNextCiv();
+            gameScreen.Game.ChoseNextCiv();
         }
     }
 
     public bool Checked => false;
     public MenuCommand? Command { get; set; }
-    public string ErrorDialog { get; } = string.Empty;
-    public DialogImageElements? ErrorImage { get; } = null;
-    public string? Name { get; }
+    public string ErrorDialog => string.Empty;
+    public DialogImageElements? ErrorImage => null;
+    public string? Name => "End Turn";
 }

@@ -13,7 +13,7 @@ public class AdvancedRules : BaseDialogHandler
     {
     }
 
-    public override ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox?> popups)
+    public override ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox> popups)
     {
         var res = base.UpdatePopupData(popups);
         res.Dialog.Options.CheckboxStates = new[]

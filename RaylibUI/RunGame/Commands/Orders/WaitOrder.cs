@@ -1,22 +1,14 @@
 using System.Diagnostics;
-using Civ2engine;
-using Civ2engine.IO;
-using Civ2engine.MapObjects;
-using Civ2engine.Units;
+using JetBrains.Annotations;
 using Model;
 using Model.Controls;
-using Raylib_CSharp.Interact;
+using Model.Input;
 
-namespace RaylibUI.RunGame.GameModes.Orders;
+namespace RaylibUI.RunGame.Commands.Orders;
 
-public class WaitOrder : Order
+[UsedImplicitly]
+public class WaitOrder(GameScreen gameScreen) : Order(gameScreen, new Shortcut(Key.W), CommandIds.WaitOrder)
 {
-
-    public WaitOrder(GameScreen gameScreen): 
-        base(gameScreen, new Shortcut(KeyboardKey.W), CommandIds.WaitOrder)
-    {
-    }
-
     public override bool Update()
     {
         return SetCommandState(GameScreen.Player.ActiveUnit != null ? CommandStatus.Normal : CommandStatus.Invalid);

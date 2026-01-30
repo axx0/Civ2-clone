@@ -18,7 +18,7 @@ public class LoadScenario : FileDialogHandler
     {
     }
 
-    public override ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox?> popup)
+    public override ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox> popup)
     {
         this.Title = Labels.For(LabelIndex.SelectScenarioToLoad);
         return this;

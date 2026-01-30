@@ -1,8 +1,7 @@
 using Civ2engine;
 using Civ2engine.IO;
-using Model;
 using Model.Controls;
-using Raylib_CSharp.Interact;
+using Model.Input;
 
 namespace Civ2.Menu
 {
@@ -23,9 +22,9 @@ namespace Civ2.Menu
                 {
                     var idx = s.IndexOf("&", StringComparison.Ordinal);
                     if (idx == -1 || idx >= s.Length - 1 ||
-                        !Enum.TryParse<KeyboardKey>( s.Substring(idx + 1, 1), true, out var hotkey))
+                        !Enum.TryParse<Key>( s.Substring(idx + 1, 1), true, out var hotkey))
                     {
-                        hotkey = KeyboardKey.Null;
+                        hotkey = Key.None;
                     }
 
                     idx = s.IndexOf("|", StringComparison.Ordinal);

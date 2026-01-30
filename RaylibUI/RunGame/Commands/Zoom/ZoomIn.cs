@@ -1,11 +1,13 @@
 using Civ2engine.Enums;
 using Civ2engine.Events;
 using Model.Controls;
-using Raylib_CSharp.Interact;
+using JetBrains.Annotations;
+using Model.Input;
 
-namespace RaylibUI.RunGame.Commands;
+namespace RaylibUI.RunGame.Commands.Zoom;
 
-public class ZoomIn(GameScreen gameScreen) : AlwaysOnCommand(gameScreen,CommandIds.ZoomIn, [new Shortcut(KeyboardKey.Z)])
+[UsedImplicitly]
+public class ZoomIn(GameScreen gameScreen) : AlwaysOnCommand(gameScreen,CommandIds.ZoomIn, [new Shortcut(Key.Z)])
 {
     public override void Action()
     {

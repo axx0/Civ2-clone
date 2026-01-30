@@ -1,10 +1,10 @@
-using Raylib_CSharp.Interact;
+using Model.Input;
 
 namespace Model.Controls;
 
 public class MenuCommand
 {
-    public MenuCommand(string text, KeyboardKey hotKey, Shortcut shortcut, IGameCommand? gameCommand)
+    public MenuCommand(string text, Key hotKey, Shortcut shortcut, IGameCommand? gameCommand)
     {
         HotKey = hotKey;
         _defaultText = text;
@@ -23,7 +23,7 @@ public class MenuCommand
     private readonly string _defaultText;
     private string _menuText;
 
-    public string MenuText
+    public string? MenuText
     {
         get => _menuText;
         set => _menuText = string.IsNullOrWhiteSpace(value) ? _defaultText : value;
@@ -32,5 +32,5 @@ public class MenuCommand
     public bool Enabled { get; set; }
     
     public IGameCommand? GameCommand { get; }
-    public KeyboardKey HotKey { get; set; }
+    public Key HotKey { get; set; }
 }

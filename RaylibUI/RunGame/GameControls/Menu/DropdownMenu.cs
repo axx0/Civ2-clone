@@ -1,5 +1,4 @@
 using System.Numerics;
-using Civ2engine.IO;
 using Model;
 using Model.Controls;
 using Raylib_CSharp.Collision;
@@ -7,27 +6,17 @@ using Raylib_CSharp.Colors;
 using Raylib_CSharp.Interact;
 using Raylib_CSharp.Rendering;
 using Raylib_CSharp.Transformations;
-using RaylibUI.BasicTypes.Controls;
 
 namespace RaylibUI.RunGame.GameControls.Menu;
 
-public class DropdownMenu :  BaseDialog
+public class DropdownMenu(GameScreen gameScreen) : BaseDialog(gameScreen.Main)
 {
     private bool _shown;
-    private readonly GameScreen _gameScreen;
     private int _current = -1;
-    private IUserInterface _active;
+    private readonly IUserInterface _active = gameScreen.MainWindow.ActiveInterface;
     private bool _clickInMenu;
     private bool _clickOutSide;
-    private List<int> _separatorOffsets = [];
-    private int _width, _height;
-
-    public DropdownMenu(GameScreen gameScreen) : base(gameScreen.Main)
-    {
-        _gameScreen = gameScreen;
-        _active = gameScreen.MainWindow.ActiveInterface;
-        MenuBar = gameScreen.MenuBar;
-    }
+    private readonly List<int> _separatorOffsets = [];
 
     /// <summary>
     /// Index of currently selected dropdown menu (-1 = no menu selected)
@@ -80,9 +69,9 @@ public class DropdownMenu :  BaseDialog
             itemNo++;
         }
 
-        _width = dropdownWidth;
-        _height = (int)(currentY - location.Y + 10);
-        _gameScreen.ShowDialog(this,true);
+        Width = dropdownWidth;
+        Height = currentY - location.Y + 3;
+        gameScreen.ShowDialog(this,true);
         _shown = true;
         _clickInMenu = false;
         _clickOutSide = false;
@@ -112,7 +101,7 @@ public class DropdownMenu :  BaseDialog
             {
                 foreach (var control in MenuBar.Controls!.OfType<MenuLabel>())
                 {
-                    if (ShapeHelper.CheckCollisionPointRec(mousePos, control!.Bounds))
+                    if (ShapeHelper.CheckCollisionPointRec(mousePos, control.Bounds))
                     {
                         if (control.Index == _current)
                         {
@@ -127,7 +116,7 @@ public class DropdownMenu :  BaseDialog
             if (_clickOutSide)
             {
                 Hide();
-                _gameScreen.Hovered = null;
+                gameScreen.Hovered = null;
             }
             
             // Activate another menu if the mouse hovers over it
@@ -145,10 +134,12 @@ public class DropdownMenu :  BaseDialog
         }
     }
 
-    public override int Height => _height;
-    public override int Width => _width;
+    //public override int Height => _height;
+    //public override int Width => _width;
 
-    public GameMenu MenuBar { get; }
+
+    public int Width { get; set; }
+    public GameMenu MenuBar { get; } = gameScreen.MenuBar;
 
     public override void OnKeyPress(KeyboardKey key)
     {
@@ -199,7 +190,7 @@ public class DropdownMenu :  BaseDialog
 
         if (Focused == null)
         {
-            var hotControl = Controls.FirstOrDefault(c => c is DropDownItem dd && dd.HotKey == key);
+            var hotControl = Controls.FirstOrDefault(c => c is DropDownItem dd && dd.HotKey == key.ToModelKey());
             if (hotControl != null)
             {
                 Focused = hotControl;
@@ -213,18 +204,19 @@ public class DropdownMenu :  BaseDialog
             {
                 if (i >= Controls.Count)
                 {
+                    if (idx == -1) break;
                     i = -1;
                     continue;
                 }
 
-                if (Controls[i] is DropDownItem dd && dd.HotKey == key)
+                if (Controls[i] is DropDownItem dd && dd.HotKey == key.ToModelKey())
                 {
                     Focused = Controls[i];
                     return;
                 }
             }
 
-            if (Controls[idx] is DropDownItem cdd && cdd.HotKey == key)
+            if (idx != -1 && Controls[idx] is DropDownItem cdd && cdd.HotKey == key.ToModelKey())
             {
                 //Do nothing as they pressed the hotkey for this element and there is no conflict
                 return;
@@ -267,7 +259,7 @@ public class DropdownMenu :  BaseDialog
     public void Hide()
     {
         _shown = false;
-        _gameScreen.CloseDialog(this);
-        _gameScreen.Focused = null;
+        gameScreen.CloseDialog(this);
+        gameScreen.Focused = null;
     }
 }

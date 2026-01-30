@@ -15,7 +15,7 @@ public abstract class FileDialogHandler : ICivDialogHandler
         Name = name;
     }
 
-    public abstract ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox?> popup);
+    public abstract ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox> popup);
 
     public DialogElements Dialog { get; }
     public IInterfaceAction HandleDialogResult(DialogResult result,

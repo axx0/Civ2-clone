@@ -107,6 +107,22 @@ public class TextBox : BaseControl
         return _minWidth;
     }
 
+    /**
+     * Note that TextBox implements BOTH onCharPressed and onKeyPressed.
+     * onCharPressed captures the user's inputted text,
+     * while onKeyPressed handles editing/navigation within the textbox.
+     */
+    public override bool OnCharPressed(char charPressed)
+    {
+        if (charPressed <= char.MinValue)
+        {
+            return false;
+        }
+        _text = _text.Insert(_editPosition, charPressed.ToString());
+        SetEditPosition(_editPosition + 1);
+        return true;
+    }
+
     public override bool OnKeyPressed(KeyboardKey key)
     {
         switch (key)
@@ -149,16 +165,6 @@ public class TextBox : BaseControl
                 if (_acceptAction != null)
                 {
                     _acceptAction(_text);
-                    return true;
-                }
-
-                break;
-            default:
-                var charPressed = Input.GetCharPressed();
-                if (charPressed > 0)
-                {
-                    _text = _text.Insert(_editPosition, Convert.ToChar(charPressed).ToString());
-                    SetEditPosition(_editPosition + 1);
                     return true;
                 }
 

@@ -1,35 +1,21 @@
-﻿using Civ2engine.MapObjects;
-using Civ2engine.Units;
 using Model;
-using Model.Images;
 using Model.Controls;
-using Raylib_CSharp;
-using RaylibUI.BasicTypes.Controls;
 
-namespace RaylibUI.RunGame.GameModes.Orders;
+namespace RaylibUI.RunGame.Commands.Orders;
 
-public abstract class Order : IGameCommand
+public abstract class Order(GameScreen gameScreen, Shortcut keyCombo, string id, string? name = null)
+    : IGameCommand
 {
-    public Shortcut[] ActivationKeys { get; set; }
-    protected readonly GameScreen GameScreen;
+    public Shortcut[] ActivationKeys { get; set; } = [keyCombo];
+    protected readonly GameScreen GameScreen = gameScreen;
 
-    protected Order(GameScreen gameScreen, Shortcut keyCombo, string id, string? name = null)
-    {
-        ActivationKeys = new[] { keyCombo};
-        Id = id;
-        Name = name;
-        GameScreen = gameScreen;
-
-        ErrorDialog = "CANTDO";
-    }
-
-    public string ErrorDialog { get; set; }
-    public string? Name { get; }
-    public DialogImageElements? ErrorImage { get; set; }
+    public string ErrorDialog { get; set; } = "CANTDO";
+    public string? Name { get; } = name;
+    public DialogImageElements? ErrorImage { get; private set; }
 
     public MenuCommand? Command { get; set; }
     
-    public string Id { get; }
+    public string Id { get; } = id;
 
     public bool Checked => false;
 
@@ -37,7 +23,7 @@ public abstract class Order : IGameCommand
 
     public abstract void Action();
 
-    public CommandStatus Status { get; set; }
+    public CommandStatus Status { get; private set; }
 
 
     protected bool SetCommandState(CommandStatus status = CommandStatus.Disabled, string? menuText = null,

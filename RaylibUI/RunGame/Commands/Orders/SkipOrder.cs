@@ -1,20 +1,13 @@
-using Civ2engine;
-using Civ2engine.MapObjects;
-using Civ2engine.Units;
+using JetBrains.Annotations;
 using Model;
 using Model.Controls;
-using Raylib_CSharp.Interact;
+using Model.Input;
 
-namespace RaylibUI.RunGame.GameModes.Orders;
+namespace RaylibUI.RunGame.Commands.Orders;
 
-public class SkipOrder : Order
+[UsedImplicitly]
+public class SkipOrder(GameScreen gameScreen) : Order(gameScreen, new Shortcut(Key.Space), CommandIds.SkipOrder)
 {
-
-    public SkipOrder(GameScreen gameScreen) : 
-        base(gameScreen, new Shortcut(KeyboardKey.Space), CommandIds.SkipOrder)
-    {
-    }
-
     public override bool Update()
     {
         return SetCommandState(GameScreen.Player.ActiveUnit != null ? CommandStatus.Normal : CommandStatus.Invalid);

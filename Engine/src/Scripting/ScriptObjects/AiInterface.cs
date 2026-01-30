@@ -85,20 +85,21 @@ public class AiInterface(AiPlayer player, Game game, StringBuilder log)
     /// <param name="tile">The tile to search from</param>
     /// <param name="inRadiusOnly">If true, only searches within a 2-tile radius; otherwise searches entire map</param>
     /// <returns>The nearest city, or null if none found</returns>
-    public City? GetNearestCity(Tile tile, bool inRadiusOnly = false)
+    public City? GetNearestCity(TileApi tile, bool inRadiusOnly = false)
     {
+        var baseTile = tile.BaseTile;
         // If there's a city on this tile, return it immediately
-        if(tile.CityHere != null) return tile.CityHere;
+        if(baseTile.CityHere != null) return baseTile.CityHere;
         
         if (inRadiusOnly)
         {
             // Search only immediate neighbors and second ring
-            return tile.Neighbours().FirstOrDefault(t => t.CityHere != null)?.CityHere ??
-                   tile.SecondRing().FirstOrDefault(t => t.CityHere != null)?.CityHere;
+            return baseTile.Neighbours().FirstOrDefault(t => t.CityHere != null)?.CityHere ??
+                   baseTile.SecondRing().FirstOrDefault(t => t.CityHere != null)?.CityHere;
         }
         
         // Search all cities on the map, ordered by distance
-        return game.AllCities.OrderBy(c => Utilities.DistanceTo(tile, c.Location)).FirstOrDefault();
+        return game.AllCities.OrderBy(c => Utilities.DistanceTo(baseTile, c.Location)).FirstOrDefault();
     }
 
     /// <summary>
@@ -107,21 +108,23 @@ public class AiInterface(AiPlayer player, Game game, StringBuilder log)
     /// <param name="currentTile">The settler's current location</param>
     /// <param name="unit">The settler unit</param>
     /// <returns>A move action to a more fertile tile, or a build city action</returns>
-    public UnitAction CheckFertility(Tile currentTile, Unit unit)
+    public UnitAction CheckFertility(TileApi currentTile, UnitApi unit)
     {
+        var baseTile = currentTile.BaseTile;
+        var baseUnit = unit.BaseUnit;
         // Look for nearby tiles with better fertility
-        var moreFertile = MovementFunctions.GetPossibleMoves(currentTile, unit)
-            .Where(n => n.Fertility > currentTile.Fertility).OrderByDescending(n => n.Fertility)
+        var moreFertile = MovementFunctions.GetPossibleMoves(baseTile, baseUnit)
+            .Where(n => n.Fertility > baseTile.Fertility).OrderByDescending(n => n.Fertility)
             .FirstOrDefault();
             
         if (moreFertile != null)
         {
             // Move to the more fertile location
-            return new MoveAction(unit, moreFertile, game);
+            return new MoveAction(baseUnit, moreFertile, game);
         }
         
         // Current location is best, build a city here
-        return new BuildCityAction(unit,game);
+        return new BuildCityAction(baseUnit,game);
     }
 
     /// <summary>

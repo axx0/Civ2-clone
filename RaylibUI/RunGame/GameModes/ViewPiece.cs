@@ -1,12 +1,8 @@
+using Model.Input;
 using System.Numerics;
-using System.Xml;
-using System.Xml.Linq;
 using Civ2engine;
-using Civ2engine.Enums;
-using Civ2engine.Events;
 using Civ2engine.MapObjects;
 using Civ2engine.Terrains;
-using Model;
 using Model.Controls;
 using Raylib_CSharp.Interact;
 using Raylib_CSharp.Transformations;
@@ -20,54 +16,55 @@ public class ViewPiece : IGameMode
 {
     private readonly GameScreen _gameScreen;
     private readonly LabelControl _title;
-    private readonly InterfaceStyle _look;
 
     public ViewPiece(GameScreen gameScreen)
     {
         _gameScreen = gameScreen;
-        _look = gameScreen.MainWindow.ActiveInterface.Look;
+        var look = gameScreen.MainWindow.ActiveInterface.Look;
 
-        _title = new LabelControl(gameScreen, Labels.For(LabelIndex.ViewingPieces), true, 
-            horizontalAlignment: HorizontalAlignment.Center, font: _look.StatusPanelLabelFont, fontSize: 18, spacing: 0, 
-            colorFront: _look.MovingUnitsViewingPiecesLabelColor, colorShadow: _look.MovingUnitsViewingPiecesLabelColorShadow, 
-            shadowOffset: new Vector2(1, 0));
+        _title = new LabelControl(gameScreen, Labels.For(LabelIndex.ViewingPieces), true,
+            horizontalAlignment: HorizontalAlignment.Center, font: look.StatusPanelLabelFont, fontSize: 18, spacing: 0,
+            colorFront: look.MovingUnitsViewingPiecesLabelColor,
+            colorShadow: look.MovingUnitsViewingPiecesLabelColorShadow, shadowOffset: new Vector2(1, 0));
 
-        Actions = new Dictionary<KeyboardKey, Func<bool>>
+        Actions = new Dictionary<Key, Func<bool>>
+        {
             {
+                Key.Enter, () =>
                 {
-                    KeyboardKey.Enter, () =>
+                    var playerActiveTile = _gameScreen.Game.ActivePlayer.ActiveTile;
+                    if (playerActiveTile.CityHere != null)
                     {
-                        var playerActiveTile = _gameScreen.Game.ActivePlayer.ActiveTile;
-                        if (playerActiveTile.CityHere != null)
-                        {
-                            _gameScreen.ShowCityWindow(playerActiveTile.CityHere);
-                            return true;
-                        }
-                        if (playerActiveTile.UnitsHere.Any(u => u.MovePoints > 0))
-                        {
-                            _gameScreen.ActivateUnits(playerActiveTile);
-                            return true;
-                        }
-                        /*else if (_gameScreen.StatusPanel.WaitingAtEndOfTurn)
-                        {
-                            main.StatusPanel.End_WaitAtEndOfTurn();
-                        }*/
-                        return false;
+                        _gameScreen.ShowCityWindow(playerActiveTile.CityHere);
+                        return true;
                     }
-                },
 
-                { KeyboardKey.Kp7, () => SetActive(-1, -1) }, { KeyboardKey.Kp8, () => SetActive(0, -2) },
-                { KeyboardKey.Kp9, () => SetActive(1, -1) },
-                { KeyboardKey.Kp1, () => SetActive(1, 1) }, { KeyboardKey.Kp2, () => SetActive(0, 2) },
-                { KeyboardKey.Kp3, () => SetActive(-1, 1) },
-                { KeyboardKey.Kp4, () => SetActive(-2, 0) }, { KeyboardKey.Kp6, () => SetActive(2, 0) },
+                    if (playerActiveTile.UnitsHere.Any(u => u.MovePoints > 0))
+                    {
+                        _gameScreen.ActivateUnits(playerActiveTile);
+                        return true;
+                    }
 
-                { KeyboardKey.Up, () => SetActive(0, -2) }, { KeyboardKey.Down, () => SetActive(0, 2) },
-                { KeyboardKey.Left, () => SetActive(-2, 0) }, { KeyboardKey.Right, () => SetActive(2, 0) },
-            };
-        }
+                    /*else if (_gameScreen.StatusPanel.WaitingAtEndOfTurn)
+                    {
+                        main.StatusPanel.End_WaitAtEndOfTurn();
+                    }*/
+                    return false;
+                }
+            },
 
-    public Dictionary<KeyboardKey,Func<bool>> Actions { get; set; }
+            { Key.D7, () => SetActive(-1, -1) }, { Key.D8, () => SetActive(0, -2) },
+            { Key.D9, () => SetActive(1, -1) },
+            { Key.D1, () => SetActive(1, 1) }, { Key.D2, () => SetActive(0, 2) },
+            { Key.D3, () => SetActive(-1, 1) },
+            { Key.D4, () => SetActive(-2, 0) }, { Key.D6, () => SetActive(2, 0) },
+
+            { Key.Up, () => SetActive(0, -2) }, { Key.Down, () => SetActive(0, 2) },
+            { Key.Left, () => SetActive(-2, 0) }, { Key.Right, () => SetActive(2, 0) },
+        };
+    }
+
+    private Dictionary<Key,Func<bool>> Actions { get; }
 
     private bool SetActive(int deltaX, int deltaY)
     {
@@ -137,11 +134,7 @@ public class ViewPiece : IGameMode
 
     public bool HandleKeyPress(Shortcut key)
     {
-        if (Actions.ContainsKey(key.Key))
-        {
-            return Actions[key.Key]();
-        }
-        return false;
+        return Actions.TryGetValue(key.Key, out var action) && action();
     }
 
     public bool Activate()
@@ -177,7 +170,7 @@ public class ViewPiece : IGameMode
         var currentX = bounds.X;
         var currentY = bounds.Y + _title.Height;
 
-        // Draw location & tile type on active square
+        // Draw location & tile type on the active square
         var activeTile = _gameScreen.Player.ActiveTile;
         var label1 = new StatusLabel(_gameScreen, $"{Labels.For(LabelIndex.Loc)}: ({activeTile.X}, {activeTile.Y}) {activeTile.Island}", fontSize: fontSize);
         label1.Location = new(currentX, currentY);
@@ -307,30 +300,30 @@ public class ViewPiece : IGameMode
                                currentX + unitDisplay.Width + nameLabel.Width }.Max();
 
                 // max for next unit
-                float maximum_nu = 0;
+                float maximumNu = 0;
                 if (i < unitsOnTile.Count - 1)
                 {
-                    var next_unit = unitsOnTile[i + 1];
-                    var cityNameLabel_nu = new StatusLabel(_gameScreen, (next_unit.HomeCity == null) ? Labels.For(LabelIndex.NONE) :
-                                    next_unit.HomeCity.Name, fontSize: fontSize);
-                    var cityNameLabelWidth_nu = cityNameLabel_nu.TextSize.X;
-                    var orderLabel_nu = new StatusLabel(_gameScreen, _gameScreen.Game.Order2String(next_unit.Order), fontSize: fontSize);
-                    var orderLabelWidth_nu = orderLabel_nu.TextSize.X;
-                    var nameLabel_nu = new StatusLabel(_gameScreen, next_unit.Veteran ? $"{next_unit.Name} ({Labels.For(LabelIndex.Veteran)})" :
-                            next_unit.Name, fontSize: fontSize);
-                    var nameLabelWidth_nu = nameLabel_nu.TextSize.X;
+                    var nextUnit = unitsOnTile[i + 1];
+                    var cityNameLabelNu = new StatusLabel(_gameScreen, (nextUnit.HomeCity == null) ? Labels.For(LabelIndex.NONE) :
+                                    nextUnit.HomeCity.Name, fontSize: fontSize);
+                    var cityNameLabelWidthNu = cityNameLabelNu.TextSize.X;
+                    var orderLabelNu = new StatusLabel(_gameScreen, _gameScreen.Game.Order2String(nextUnit.Order), fontSize: fontSize);
+                    var orderLabelWidthNu = orderLabelNu.TextSize.X;
+                    var nameLabelNu = new StatusLabel(_gameScreen, nextUnit.Veteran ? $"{nextUnit.Name} ({Labels.For(LabelIndex.Veteran)})" :
+                            nextUnit.Name, fontSize: fontSize);
+                    var nameLabelWidthNu = nameLabelNu.TextSize.X;
 
-                    maximum_nu = new[] { maximum + unitDisplay.Width + cityNameLabelWidth_nu,
-                               maximum + unitDisplay.Width + orderLabelWidth_nu,
-                               maximum + unitDisplay.Width + nameLabelWidth_nu }.Max();
+                    maximumNu = new[] { maximum + unitDisplay.Width + cityNameLabelWidthNu,
+                               maximum + unitDisplay.Width + orderLabelWidthNu,
+                               maximum + unitDisplay.Width + nameLabelWidthNu }.Max();
                 }
 
                 // Draw unit
                 if (i == unitsOnTile.Count - 1 &&
                     maximum < bounds.X + bounds.Width ||
                     i < unitsOnTile.Count - 1 &&
-                    (maximum_nu < bounds.X + bounds.Width ||
-                    maximum_nu >= bounds.X + bounds.Width &&
+                    (maximumNu < bounds.X + bounds.Width ||
+                    maximumNu >= bounds.X + bounds.Width &&
                     maximum + unitsLeftLabel.Width < bounds.X + bounds.Width))
                 {
                     unitDisplay.Location = new Vector2(unitDisplay.Location.X, unitDisplay.Location.Y);
@@ -348,7 +341,7 @@ public class ViewPiece : IGameMode
                 else if (i == unitsOnTile.Count - 1 &&
                     currentX + unitsLeftLabel.Width < bounds.X + bounds.Width ||
                     i < unitsOnTile.Count - 1 &&
-                    maximum_nu >= bounds.X + bounds.Width &&
+                    maximumNu >= bounds.X + bounds.Width &&
                     currentX + unitsLeftLabel.Width < bounds.X + bounds.Width)
                 {
                     unitsLeftLabel.Location = new(currentX, currentY);

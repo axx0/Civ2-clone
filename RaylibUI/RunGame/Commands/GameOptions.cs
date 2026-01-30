@@ -1,24 +1,18 @@
+using Model.Input;
 using Civ2engine;
+using JetBrains.Annotations;
 using Model;
 using Model.Controls;
-using Model.Images;
-using Raylib_CSharp.Interact;
 
 namespace RaylibUI.RunGame.Commands;
 
-public class GameOptions : IGameCommand
+[UsedImplicitly]
+public class GameOptions(GameScreen gameScreen) : IGameCommand
 {
-    private readonly GameScreen _gameScreen;
-    private readonly Options _options;
+    private readonly Options _options = gameScreen.Game.Options;
 
-    public GameOptions(GameScreen gameScreen)
-    {
-        _gameScreen = gameScreen;
-        _options = gameScreen.Game.Options;
-    }
-    
     public string Id => CommandIds.GameOptions;
-    public Shortcut[] ActivationKeys { get; set; } = { new(KeyboardKey.O, ctrl: true) };
+    public Shortcut[] ActivationKeys { get; set; } = { new(Key.O, ctrl: true) };
     public CommandStatus Status => CommandStatus.Normal;
 
     public bool Update()
@@ -29,15 +23,22 @@ public class GameOptions : IGameCommand
     public void Action()
     {
         // ReSharper disable once StringLiteralTypo
-        _gameScreen.ShowPopup("GAMEOPTIONS", DialogClick, 
-            checkboxStates: [_options.SoundEffects, _options.Music, _options.AlwaysWaitAtEndOfTurn, _options.AutosaveEachTurn, _options.ShowEnemyMoves, _options.NoPauseAfterEnemyMoves, _options.FastPieceSlide, _options.InstantAdvice, _options.TutorialHelp, _options.MoveUnitsWithoutMouse, _options.EnterClosestCityScreen]);
+
+        gameScreen.ShowPopup("GAMEOPTIONS", DialogClick,
+            checkboxStates: (List<bool>)
+            [
+                _options.SoundEffects, _options.Music, _options.AlwaysWaitAtEndOfTurn, _options.AutosaveEachTurn,
+                _options.ShowEnemyMoves, _options.NoPauseAfterEnemyMoves, _options.FastPieceSlide,
+                _options.InstantAdvice, _options.TutorialHelp, _options.MoveUnitsWithoutMouse,
+                _options.EnterClosestCityScreen
+            ]);
     }
 
     private void DialogClick(string button, int _, IList<bool>? checkboxes, IDictionary<string, string>? _2)
     {
         if (button == Labels.Ok)
         {
-            _options.SoundEffects = checkboxes[0];
+            _options.SoundEffects = checkboxes![0];
             _options.Music = checkboxes[1];
             _options.AlwaysWaitAtEndOfTurn = checkboxes[2];
             _options.AutosaveEachTurn = checkboxes[3];
@@ -53,7 +54,7 @@ public class GameOptions : IGameCommand
 
     public bool Checked => false;
     public MenuCommand? Command { get; set; }
-    public string ErrorDialog { get; } = string.Empty;
-    public DialogImageElements? ErrorImage { get; } = null;
-    public string? Name { get; }
+    public string ErrorDialog => string.Empty;
+    public DialogImageElements? ErrorImage => null;
+    public string? Name => "Game Options";
 }

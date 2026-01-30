@@ -1,20 +1,19 @@
+using Model.Input;
 using Civ2engine;
-using Model.Images;
 using Model.Controls;
-using Raylib_CSharp.Interact;
+using JetBrains.Annotations;
 
 namespace RaylibUI.RunGame.Commands;
 
-public class Quit : AlwaysOnCommand
+[UsedImplicitly]
+public class Quit(GameScreen gameScreen)
+    : AlwaysOnCommand(gameScreen, CommandIds.QuitGame, [new Shortcut(Key.Q, ctrl: true)])
 {
-    public Quit(GameScreen gameScreen) : base(gameScreen, CommandIds.QuitGame, [new Shortcut(KeyboardKey.Q, ctrl: true)])
-    {
-    }
-
     public override void Action()
     {
         // ReSharper disable once StringLiteralTypo
-        GameScreen.ShowPopup("REALLYQUIT", DialogClick, dialogImage: new(new[] { GameScreen.Main.ActiveInterface.PicSources["backgroundImageSmall2"][0] }));
+        GameScreen.ShowPopup("REALLYQUIT", DialogClick,
+            dialogImage: new([GameScreen.Main.ActiveInterface.PicSources["backgroundImageSmall2"][0]]));
     }
 
     private void DialogClick(string button, int option, IList<bool>? _, IDictionary<string, string>? _2)

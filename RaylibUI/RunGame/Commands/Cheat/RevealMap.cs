@@ -1,13 +1,13 @@
-using System.Drawing;
+using Model.Input;
 using Civ2engine;
 using Civ2engine.MapObjects;
 using Model.Controls;
-using Raylib_CSharp.Interact;
-using Point = Model.Point;
+using JetBrains.Annotations;
 
 namespace RaylibUI.RunGame.Commands.Cheat;
 
-public class RevealMap(GameScreen gameScreen) : AlwaysOnCommand(gameScreen, CommandIds.CheatRevealMapCommand, [new Shortcut(KeyboardKey.F2, shift: true)])
+[UsedImplicitly]
+public class RevealMap(GameScreen gameScreen) : AlwaysOnCommand(gameScreen, CommandIds.CheatRevealMapCommand, [new Shortcut(Key.F2, shift: true)])
 {
     private CivDialog? _revealMapDialog;
     private Tile? _cachedActive;
@@ -39,10 +39,7 @@ public class RevealMap(GameScreen gameScreen) : AlwaysOnCommand(gameScreen, Comm
         
             var civId = selection < GameScreen.Game.AllCivilizations.Count ? selection : GameScreen.Player.Civilization.Id;
             
-            if (_cachedActive == null)
-            {
-                _cachedActive = GameScreen.Player.ActiveTile;
-            }
+            _cachedActive ??= GameScreen.Player.ActiveTile;
 
             if (civId == GameScreen.Player.Civilization.Id)
             {

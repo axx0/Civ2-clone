@@ -1,29 +1,22 @@
-using System.Collections.Generic;
-using System.Linq;
 using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.MapObjects;
 using Civ2engine.UnitActions;
-using Civ2engine.Units;
+using JetBrains.Annotations;
 using Model;
-using Model.Core;
 using Model.Core.Units;
+using Model.Input;
 using Model.Interface;
 using Model.Controls;
-using Raylib_CSharp.Interact;
 using Path = Civ2engine.Units.Path;
 
-namespace RaylibUI.RunGame.GameModes.Orders;
+namespace RaylibUI.RunGame.Commands.Orders;
 
-public class GotoOrder : Order
+[UsedImplicitly]
+public class GotoOrder(GameScreen gameScreen) : Order(gameScreen, new Shortcut(Key.G), CommandIds.GotoOrder)
 {
-    private List<City> _cities;
+    private List<City> _cities = gameScreen.Player.Civilization.Cities;
     private bool _allCities;
-
-    public GotoOrder(GameScreen gameScreen) : 
-        base(gameScreen, new Shortcut(KeyboardKey.G), CommandIds.GotoOrder)
-    {
-    }
 
     public override bool Update()
     {
@@ -43,7 +36,7 @@ public class GotoOrder : Order
         if (button == Labels.Ok)
         {
             var city = _cities[index];
-            var path = Path.CalculatePathBetween(GameScreen.Game, activeUnit.CurrentLocation!, city.Location,
+            var path = Path.CalculatePathBetween(GameScreen.Game, activeUnit.CurrentLocation, city.Location,
                 activeUnit.Domain,
                 activeUnit.MaxMovePoints, activeUnit.Owner, activeUnit.Alpine, activeUnit.IgnoreZonesOfControl);
             if (path != null)
@@ -68,10 +61,10 @@ public class GotoOrder : Order
 
     private void Show(List<City> cities, Unit activeUnit)
     {
-            var islands = MovementFunctions.GetIslandsFor(activeUnit);
+        var islands = MovementFunctions.GetIslandsFor(activeUnit);
         _cities = cities.Where(c => c.Location != activeUnit.CurrentLocation &&
                                     islands.Contains(c.Location.Island) ||
-                                    c.Location.Neighbours().Any(l => islands.Contains(l.Island))).OrderBy(c=>c.Name)
+                                    c.Location.Neighbours().Any(l => islands.Contains(l.Island))).OrderBy(c => c.Name)
             .ToList();
         var listbox = new ListboxDefinition();
         listbox.Update(_cities.Select(c => c.Name).ToList());
