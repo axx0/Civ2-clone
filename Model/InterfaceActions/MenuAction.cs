@@ -1,4 +1,4 @@
-using Model.Dialog;
+using Model.Controls;
 
 namespace Model.InterfaceActions;
 

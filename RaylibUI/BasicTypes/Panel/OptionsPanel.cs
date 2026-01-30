@@ -1,6 +1,6 @@
 ﻿using Civ2engine.Scripting;
 using Model;
-using Model.Interface;
+using Model.Controls;
 using Raylib_CSharp.Colors;
 using Raylib_CSharp.Interact;
 using RaylibUI.BasicTypes.Controls;

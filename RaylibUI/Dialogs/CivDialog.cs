@@ -1,7 +1,7 @@
 using Civ2engine;
 using Model;
 using Model.Core;
-using Model.Dialog;
+using Model.Controls;
 using Raylib_CSharp.Fonts;
 using Raylib_CSharp.Interact;
 using Raylib_CSharp.Windowing;
@@ -198,7 +198,7 @@ public class CivDialog : DynamicSizingDialog
             labels.Add(new LabelControl(controller,
                         string.IsNullOrEmpty(texts[i]) && styles[i] == TextStyles.LeftOwnLine ? " " : texts[i],    // Add space if ^ is the only character 
                         false,
-                        alignment: styles[i] == TextStyles.Centered ? TextAlignment.Center : TextAlignment.Left,
+                        horizontalAlignment: styles[i] == TextStyles.Centered ? HorizontalAlignment.Center : HorizontalAlignment.Left,
                         wrapText: styles[i] == TextStyles.Left,
                         font: _active.Look.LabelFont, fontSize: _active.Look.LabelFontSize, colorFront: _active.Look.LabelColour, colorShadow: _active.Look.LabelShadowColour, shadowOffset: new Vector2(1, 1)));
         }
@@ -209,9 +209,9 @@ public class CivDialog : DynamicSizingDialog
     private int GetInnerPanelWidthFromText(IList<LabelControl> labels, int popupboxWidth)
     {
         var centredTextMaxWidth = 0.0;
-        if (labels.Where(t => t.Alignment == TextAlignment.Center || (t.Alignment == TextAlignment.Left && !t.WrapText)).Any())
+        if (labels.Where(t => t.HorizontalAlignment == HorizontalAlignment.Center || (t.HorizontalAlignment == HorizontalAlignment.Left && !t.WrapText)).Any())
             centredTextMaxWidth = (from label in labels
-                                   where label.Alignment == TextAlignment.Center || (label.Alignment == TextAlignment.Left && !label.WrapText)
+                                   where label.HorizontalAlignment == HorizontalAlignment.Center || (label.HorizontalAlignment == HorizontalAlignment.Left && !label.WrapText)
                                    orderby label.TextSize.X descending
                                    select label).ToList().FirstOrDefault().TextSize.X;
 

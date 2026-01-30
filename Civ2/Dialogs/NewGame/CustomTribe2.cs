@@ -1,6 +1,6 @@
 using Civ2.Rules;
 using Civ2engine;
-using Model.Dialog;
+using Model.Controls;
 using Model.Interface;
 using Model.InterfaceActions;
 

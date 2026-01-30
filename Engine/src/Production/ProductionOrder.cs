@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Model;
+using Model.Controls;
 using Model.Images;
-using Model.Interface;
 
 namespace Civ2engine.Production
 {

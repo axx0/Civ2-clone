@@ -1,30 +1,22 @@
 using System.Numerics;
 using Civ2engine;
 using Model;
-using Model.Images;
 using Raylib_CSharp.Colors;
-using Raylib_CSharp.Fonts;
 using Raylib_CSharp.Rendering;
 using Raylib_CSharp.Textures;
-using RaylibUI.BasicTypes.Controls;
 using Raylib_CSharp.Transformations;
-using Model.CityWindowModel;
 
 namespace RaylibUI.RunGame.GameControls.CityControls;
 
 public class FoodStorageBox : BaseControl
 {
     private readonly CityWindow _cityWindow;
-    private readonly Color _pen1;
-    private readonly Color _pen2;
+    private readonly Color _pen1, _pen2;
     private readonly Texture2D _foodIcon;
-    private readonly string _text;
-    private Vector2 _textDim;
     private readonly IUserInterface _active;
     private readonly City _city;
-    private float _fontSize, _iconWidth, _iconHeight;
+    private float _iconWidth, _iconHeight;
     private readonly int _boxRows;
-    private readonly LabelControl _label;
     private readonly Rectangle _panelBounds;
 
     public FoodStorageBox(CityWindow cityWindow) : base(cityWindow, true)
@@ -38,15 +30,7 @@ public class FoodStorageBox : BaseControl
         _foodIcon = TextureCache.GetImage(_active.ResourceImages
             .First(r => r.Name == "Food")
             .LargeImage);
-        _text = Labels.For(LabelIndex.FoodStorage);
         _boxRows = cityWindow.CurrentGameScreen.Game.Rules.Cosmic.RowsFoodBox;
-
-        Controls = [new CityLabel(cityWindow, _text, _active.Look.CityWindowFont, _active.Look.CityWindowFontSize, _pen1, Color.Black)
-        {
-            Location = new(0, 0),
-            Width = (int)_panelBounds.Width,
-            Height = 15
-        }];
     }
 
     public override void OnResize()
@@ -59,11 +43,6 @@ public class FoodStorageBox : BaseControl
 
         _iconWidth = _foodIcon.Width * _cityWindow.Scale;
         _iconHeight = _foodIcon.Height * _cityWindow.Scale;
-
-        foreach (var child in Controls)
-        {
-            child.OnResize();
-        }
     }
 
     public override void Draw(bool pulse)

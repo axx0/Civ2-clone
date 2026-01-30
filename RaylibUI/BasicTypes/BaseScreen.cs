@@ -3,6 +3,7 @@ using Raylib_CSharp;
 using Raylib_CSharp.Collision;
 using Raylib_CSharp.Interact;
 using Raylib_CSharp.Windowing;
+using RaylibUI.BasicTypes.Controls;
 using RaylibUI.Controls;
 using System.Diagnostics;
 using System.Numerics;
@@ -70,14 +71,14 @@ public abstract class BaseScreen : BaseLayoutController, IScreen
         }
 
         var mousePos = Input.GetMousePosition();
-        var control = layoutController.Hovered; 
+        var control = layoutController.Hovered;
         if (control != null)
         {
             control.OnMouseMove(Input.GetMouseDelta());
             if (control.Controls != null)
             {
                 var hoverChild = FindControl(control.Controls,
-                    child => ShapeHelper.CheckCollisionPointRec(mousePos, child.Bounds));
+                    child => ShapeHelper.CheckCollisionPointRec(mousePos, child.Bounds) && child.Visible);
                 if (hoverChild != null)
                 {
                     control.OnMouseLeave();
@@ -105,7 +106,7 @@ public abstract class BaseScreen : BaseLayoutController, IScreen
     private static void FindHovered(IControlLayout layoutController, Vector2 mousePos)
     {
         layoutController.Hovered = FindControl(layoutController.Controls,
-            control => ShapeHelper.CheckCollisionPointRec(mousePos, control.Bounds));
+            control => ShapeHelper.CheckCollisionPointRec(mousePos, control.Bounds) && control.Visible);
         layoutController.Hovered?.OnMouseEnter();
     }
 

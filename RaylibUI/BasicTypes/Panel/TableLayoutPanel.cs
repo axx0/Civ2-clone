@@ -8,6 +8,8 @@ namespace RaylibUI.BasicTypes;
 
 public class TableLayoutPanel : BaseControl
 {
+    public override bool CanFocus => false;
+
     private const int defaultHeight = 300;
 
     private readonly IControlLayout _controller;

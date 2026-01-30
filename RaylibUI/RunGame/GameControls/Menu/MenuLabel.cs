@@ -1,5 +1,6 @@
 using System.Numerics;
 using Model;
+using Model.Controls;
 using Raylib_CSharp.Interact;
 using RaylibUI.BasicTypes.Controls;
 

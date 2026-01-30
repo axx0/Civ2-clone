@@ -1,5 +1,5 @@
 using Civ2engine;
-using Model.Dialog;
+using Model.Controls;
 
 namespace Civ2.Dialogs.NewGame.PremadeWorld;
 

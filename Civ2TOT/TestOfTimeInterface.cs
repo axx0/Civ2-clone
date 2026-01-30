@@ -5,10 +5,10 @@ using Civ2engine.Enums;
 using Civ2engine.IO;
 using JetBrains.Annotations;
 using Model;
+using Model.Controls;
 using Model.Images;
 using Model.ImageSets;
 using Model.Interface;
-using Model.Menu;
 using Model.Utils;
 using Raylib_CSharp.Colors;
 using Raylib_CSharp.Images;
@@ -19,7 +19,7 @@ using Raylib_CSharp.Transformations;
 using RaylibUtils;
 using System.Numerics;
 using System.Runtime.Intrinsics.X86;
-using static Model.Menu.CommandIds;
+using static Model.Controls.CommandIds;
 
 namespace TOT;
 

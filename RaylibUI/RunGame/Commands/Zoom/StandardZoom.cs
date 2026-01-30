@@ -2,8 +2,7 @@ using Civ2engine.Enums;
 using Civ2engine.Events;
 using Civ2engine.MapObjects;
 using Model;
-using Model.Dialog;
-using Model.Menu;
+using Model.Controls;
 using Raylib_CSharp.Interact;
 
 namespace RaylibUI.RunGame.Commands;

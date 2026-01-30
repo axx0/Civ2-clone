@@ -4,7 +4,7 @@ using Civ2engine.IO;
 using Civ2engine.MapObjects;
 using Civ2engine.Units;
 using Model;
-using Model.Menu;
+using Model.Controls;
 using Raylib_CSharp.Interact;
 
 namespace RaylibUI.RunGame.GameModes.Orders;

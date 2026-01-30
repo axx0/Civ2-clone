@@ -1,5 +1,5 @@
 using Civ2engine;
-using Model.Menu;
+using Model.Controls;
 using Raylib_CSharp.Interact;
 
 namespace RaylibUI.RunGame.Commands;

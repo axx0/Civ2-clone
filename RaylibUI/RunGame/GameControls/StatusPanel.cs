@@ -10,6 +10,7 @@ using Raylib_CSharp.Transformations;
 using Raylib_CSharp.Textures;
 using Raylib_CSharp.Rendering;
 using Raylib_CSharp.Colors;
+using Model.Controls;
 
 namespace RaylibUI.RunGame.GameControls;
 
@@ -42,7 +43,7 @@ public class StatusPanel : BaseControl
             _game.GetPlayerCiv.Cities.Sum(c=>c.GetPopulation()).ToString("###,###,###", 
             new NumberFormatInfo() { NumberDecimalSeparator = "," }) + " " + Labels.For(LabelIndex.People);
         
-        var populLabel = new StatusLabel(_gameScreen, populText, alignment: TextAlignment.Right);
+        var populLabel = new StatusLabel(_gameScreen, populText, alignment: HorizontalAlignment.Right);
         populLabel.Padding = new(0, 8, 0, 0);
         populLabel.Location = new(_infoPanelRect.X, _infoPanelRect.Y + yOffset);
         populLabel.Width = (int)_infoPanelRect.Width;
@@ -62,7 +63,7 @@ public class StatusPanel : BaseControl
         goldLabel.Width = (int)_infoPanelRect.Width;
         goldLabel.Height = goldLabel.GetPreferredHeight();
 
-        var turnsLabel = new StatusLabel(_gameScreen, $"{Labels.For(LabelIndex.Turn)} {_game.TurnNumber}", TextAlignment.Right);
+        var turnsLabel = new StatusLabel(_gameScreen, $"{Labels.For(LabelIndex.Turn)} {_game.TurnNumber}", HorizontalAlignment.Right);
         turnsLabel.Padding = new (0, 8, 0, 0);
         turnsLabel.Location = new(_infoPanelRect.X, _infoPanelRect.Y + yOffset + 2 * labelHeight);
         turnsLabel.Width = (int)_infoPanelRect.Width;

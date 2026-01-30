@@ -1,5 +1,5 @@
-﻿﻿using Model;
-using Model.Interface;
+﻿using Model;
+using Model.Controls;
 using Neo.IronLua;
 using Raylib_CSharp.Colors;
 using Raylib_CSharp.Interact;
@@ -19,26 +19,45 @@ public class Listbox : BaseControl
     private ScrollBar _VscrollBar, _HscrollBar;
     private int _viewStartingRow, _viewStartingCol;
     private readonly IUserInterface? _active;
-    private readonly ListboxDefinition _def;
-    private int _selectedId;
+
+    private ListboxDefinition _def;
+    public ListboxDefinition Definition 
+    {
+        get => _def;
+        set
+        {
+            _def = value;
+            Update();
+        }
+    }
 
     public event EventHandler<ListboxSelectionEventArgs>? ItemSelected;
 
     public override bool CanFocus => true;
 
-    public Listbox(IControlLayout controller, ListboxDefinition def) : base(controller)
+    public Listbox(IControlLayout controller) : base(controller)
     {
         _active = controller.MainWindow.ActiveInterface;
         _controller = controller;
-        _def = def;
-        _selectedId = def.SelectedId;
 
+        Definition = new();
         if (_def.Type != null)
         {
             _def.Looks = _active.GetListboxLooks(_def.Type);
         }
+    }
 
-        Update();
+    public Listbox(IControlLayout controller, ListboxDefinition def) : base(controller)
+    {
+        _active = controller.MainWindow.ActiveInterface;
+        _controller = controller;
+
+        if (def.Type != null)
+        {
+            def.Looks = _active.GetListboxLooks(def.Type);
+        }
+
+        Definition = def;
     }
 
     public void Update(bool resetSelection = false)
@@ -48,7 +67,7 @@ public class Listbox : BaseControl
 
         if (resetSelection)
         {
-            _selectedId = 0;
+            _def.SelectedId = 0;
         }
 
         for (int i = 0; i < _def.Groups.Count; i++)
@@ -97,44 +116,45 @@ public class Listbox : BaseControl
         }
 
         _tableLayout = new TableLayout();
-        for (int col = 0; col < _totalColumns; col++)
+        for (var dir1 = 0; dir1 < (_def.HorizontalStacking ? _totalRows : _totalColumns); dir1++)
         {
-            for (int row = 0; row < _totalRows; row++)
+            for (var dir2 = 0; dir2 < (_def.HorizontalStacking ? _totalColumns : _totalRows); dir2++)
             {
-                var index = _totalRows * col + row;
+                var index = (_def.HorizontalStacking ? _totalColumns : _totalRows) * dir1 + dir2;
 
                 if (_controls.Count < index + 1)
                 {
                     break;
                 }
 
-                _tableLayout.Add(_controls[index], row, col);
+                _tableLayout.Add(_controls[index], _def.HorizontalStacking ? dir1 : dir2, _def.HorizontalStacking ? dir2 : dir1);
             }
         }
 
         // Select control at start
-        if (_selectedId == -1)  // If this is true there's something wrong
+        if (_def.Groups.Count > 0 && _def.Selectable)
         {
-            _selectedId = 0;
+            if (_def.SelectedId == -1)  // If this is true there's something wrong
+            {
+                _def.SelectedId = 0;
+            }
+            _controls[_def.SelectedId].SelectThis(true);
         }
-        _controls[_selectedId].SelectThis(true);
-
-        OnResize();
     }
 
     public override void OnResize()
     {
+        if (_controls.Count == 0) return;
+
+        int scrollBarWidth = 0;
+        if (_def.VerticalScrollbar && _controls.Count > _def.Rows * _def.Columns)
+        {
+            scrollBarWidth = _VscrollBar.Width;
+        }
+
         foreach (var control in _controls)
         {
-            control.Width = Width / _def.Columns;
-
-            // Change width of controls so they don't overlap with scrollbar
-            if (_def.VerticalScrollbar && _controls.Count > _def.Rows)
-            {
-                control.Width -= _VscrollBar.Width;
-            }
-            control.Width -= 4;
-
+            control.Width = (Width - scrollBarWidth) / _def.Columns;
             control.OnResize();
         }
 
@@ -161,11 +181,21 @@ public class Listbox : BaseControl
 
     private void Selected(ListboxControlGroup control, bool soft)
     {
-        _selectedId = _controls.IndexOf(control);
+        _def.SelectedId = _controls.IndexOf(control);
 
         // If the selected control is beyond the view
-        var selectedRow = _selectedId % _totalRows;
-        var selectedCol = _selectedId / _totalRows;
+        int selectedRow, selectedCol;
+        if (_def.HorizontalStacking)
+        {
+            selectedRow = _def.SelectedId / _totalColumns;
+            selectedCol = _def.SelectedId % _totalColumns;
+        }
+        else
+        {
+            selectedRow = _def.SelectedId % _totalRows;
+            selectedCol = _def.SelectedId / _totalRows;
+        }
+
         if (_viewStartingRow + _def.Rows <= selectedRow)
         {
             _viewStartingRow = selectedRow - _def.Rows + 1;
@@ -205,7 +235,7 @@ public class Listbox : BaseControl
         }
 
         ItemSelected?.Invoke(control,
-            new ListboxSelectionEventArgs(_selectedId, soft));
+            new ListboxSelectionEventArgs(_def.SelectedId, soft));
     }
 
     public void ScrollToEnd()
@@ -216,7 +246,7 @@ public class Listbox : BaseControl
 
     public void EnterPressed()
     {
-        _controls[_selectedId].SelectThis(false);
+        _controls[_def.SelectedId].SelectThis(false);
     }
 
     public override bool OnKeyPressed(KeyboardKey key)
@@ -227,44 +257,44 @@ public class Listbox : BaseControl
         switch (key)
         {
             case KeyboardKey.Down or KeyboardKey.Kp2:
-                _selectedId = Math.Min(_selectedId + 1, _controls.Count - 1);
-                _controls[_selectedId].SelectThis(true);
+                _def.SelectedId = Math.Min(_def.SelectedId + 1, _controls.Count - 1);
+                _controls[_def.SelectedId].SelectThis(true);
                 return true;
             case KeyboardKey.Up or KeyboardKey.Kp8:
-                _selectedId = Math.Max(_selectedId - 1, 0);
-                _controls[_selectedId].SelectThis(true);
+                _def.SelectedId = Math.Max(_def.SelectedId - 1, 0);
+                _controls[_def.SelectedId].SelectThis(true);
                 return true;
             case KeyboardKey.End:
-                _selectedId = _controls.Count - 1;
-                _controls[_selectedId].SelectThis(true);
+                _def.SelectedId = _controls.Count - 1;
+                _controls[_def.SelectedId].SelectThis(true);
                 return true;
             case KeyboardKey.Home:
-                _selectedId = 0;
-                _controls[_selectedId].SelectThis(true);
+                _def.SelectedId = 0;
+                _controls[_def.SelectedId].SelectThis(true);
                 return true;
             case KeyboardKey.Left or KeyboardKey.Kp4:
-                selectedCol = _selectedId / _totalRows;
+                selectedCol = _def.SelectedId / _totalRows;
                 if (selectedCol > 0)
                 {
-                    _selectedId -= _def.Rows;
-                    _controls[_selectedId].SelectThis(true);
+                    _def.SelectedId -= _def.Rows;
+                    _controls[_def.SelectedId].SelectThis(true);
                 }
                 return true;
             case KeyboardKey.Right or KeyboardKey.Kp6:
-                selectedCol = _selectedId / _totalRows;
-                if (selectedCol < _totalColumns - 1 && _selectedId + _def.Rows <= _controls.Count - 1)
+                selectedCol = _def.SelectedId / _totalRows;
+                if (selectedCol < _totalColumns - 1 && _def.SelectedId + _def.Rows <= _controls.Count - 1)
                 {
-                    _selectedId += _def.Rows;
-                    _controls[_selectedId].SelectThis(true);
+                    _def.SelectedId += _def.Rows;
+                    _controls[_def.SelectedId].SelectThis(true);
                 }
                 return true;
             case KeyboardKey.PageDown:
-                _selectedId = Math.Min(_selectedId + _def.Rows, _controls.Count - 1);
-                _controls[_selectedId].SelectThis(true);
+                _def.SelectedId = Math.Min(_def.SelectedId + _def.Rows, _controls.Count - 1);
+                _controls[_def.SelectedId].SelectThis(true);
                 return true;
             case KeyboardKey.PageUp:
-                _selectedId = Math.Max(_selectedId - _def.Rows, 0);
-                _controls[_selectedId].SelectThis(true);
+                _def.SelectedId = Math.Max(_def.SelectedId - _def.Rows, 0);
+                _controls[_def.SelectedId].SelectThis(true);
                 return true;
         }
 
@@ -275,6 +305,7 @@ public class Listbox : BaseControl
     {
         Graphics.DrawRectangleRec(Bounds, _def.Looks.BoxBackgroundColor);
         Graphics.DrawRectangleLinesEx(Bounds, 1f, _def.Looks.BoxLineColor);
+        //Graphics.DrawRectangleLinesEx(Bounds, 1f, Color.Magenta);
 
         base.Draw(pulse);
     }

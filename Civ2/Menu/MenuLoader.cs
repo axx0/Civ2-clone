@@ -1,7 +1,7 @@
 using Civ2engine;
 using Civ2engine.IO;
 using Model;
-using Model.Menu;
+using Model.Controls;
 using Raylib_CSharp.Interact;
 
 namespace Civ2.Menu

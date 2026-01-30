@@ -5,7 +5,7 @@ using Eto.Forms;
 using Eto.Drawing;
 using Civ2engine;
 using Model;
-using DialogResult = Model.DialogResult;
+using DialogResult = Model.ControlsResult;
 
 namespace EtoFormsUI
 {

@@ -1,8 +1,8 @@
 using Model;
 using Model.Constants;
+using Model.Controls;
 using Model.Core.Units;
 using Model.Images;
-using Model.Interface;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -68,7 +68,8 @@ namespace Civ2engine.Production
             {
                 Elements = [ new() { Icon = GetIcon(active), Width = 2 * 36 + 2 },
                              new() { Text = Improvement.Name, Width = 250 },
-                             new() { Text = $"({(10 * Improvement.Cost - city.ShieldsProgress) / city.Production} Turns)", RightAligned = true } ],
+                             new() { Text = $"({(10 * Improvement.Cost - city.ShieldsProgress) / city.Production} Turns)", 
+                                 HorizontalAlignment = HorizontalAlignment.Right } ],
                 Height = 24,
             };
         }

@@ -4,6 +4,7 @@ using Raylib_CSharp.Interact;
 using Raylib_CSharp.Rendering;
 using Raylib_CSharp.Transformations;
 using RaylibUI.BasicTypes;
+using RaylibUI.BasicTypes.Controls;
 using RaylibUI.Controls;
 using System.Diagnostics;
 using System.Numerics;
@@ -53,10 +54,8 @@ public abstract class BaseControl : IControl
         {
             if (Location.X + Width <= 0 ||
                 Location.X > Parent.Bounds.Width ||
-                //Location.X + Width > Parent.Bounds.Width ||
                 Location.Y + Height <= 0 ||
                 Location.Y > Parent.Bounds.Height)
-                //Location.Y + Height > Parent.Bounds.Height)
             {
                 return false; 
             }
@@ -109,7 +108,7 @@ public abstract class BaseControl : IControl
 
     public virtual void OnMouseMove(Vector2 moveAmount)
     {
-        if (!_visible) return;
+        if (!Visible) return;
 
         if (_clickStart)
         {
@@ -141,7 +140,7 @@ public abstract class BaseControl : IControl
 
     public virtual void OnMouseLeave()
     {
-        if (!_visible) return;
+        if (!Visible) return;
 
         _clickPossible = false;
         _clickStart = false;
@@ -149,9 +148,10 @@ public abstract class BaseControl : IControl
 
     public virtual void OnMouseEnter()
     {
-        if (!_visible) return;
+        if (!Visible) return;
 
         _clickPossible = !Input.IsMouseButtonDown(MouseButton.Left) && !Input.IsMouseButtonDown(MouseButton.Right);
+
         _clickStart = false;
     }
 

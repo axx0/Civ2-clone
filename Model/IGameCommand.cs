@@ -1,6 +1,5 @@
-using Model.Dialog;
 using Model.Images;
-using Model.Menu;
+using Model.Controls;
 using Raylib_CSharp;
 
 namespace Model;

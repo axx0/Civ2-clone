@@ -10,20 +10,19 @@ using Model;
 using Model.Images;
 using Model.ImageSets;
 using Model.InterfaceActions;
-using Model.Menu;
+using Model.Controls;
 using Raylib_CSharp.Interact;
 using Raylib_CSharp.Transformations;
 using Raylib_CSharp.Images;
 using Raylib_CSharp.Textures;
+using Raylib_CSharp.Colors;
 using RaylibUtils;
-using static Model.Menu.CommandIds;
+using static Model.Controls.CommandIds;
 using Civ2.Dialogs.Scenario;
 using Civ2engine.OriginalSaves;
 using Model.Constants;
 using Model.Core;
 using Model.Core.Advances;
-using Model.Dialog;
-using Model.Interface;
 
 namespace Civ2;
 
@@ -237,16 +236,32 @@ public abstract class Civ2Interface : IUserInterface
         _cityWindowLayout = new CityWindowLayout(new BitmapStorage("city", new Rectangle(0, 0, 640, 421)))
         {
             Height = 421, Width = 636,
-            InfoPanel = new Rectangle(193, 216, 242, 198),
+            InfoPanel = new InfoPanel
+            {
+                Box = new Rectangle(193, 215, 242, 198),
+                UnitsPresent = new UnitBox
+                {
+                    Box = new Rectangle(0, 0, 232, 84),
+                    Rows = 2,
+                    Columns = 5
+                }
+            },
             TileMap = new Rectangle(7, 65, 188, 137),
             FoodStorage = new Rectangle(437, 0, 195, 163),
+            CitizensBox = new Rectangle(3, 2, 433, 44),
             Production = new()
             {
                 Type = "Box",
                 Box = new Rectangle(437, 165, 195, 191),
-                BuyButtonBounds = new Rectangle(442, 181, buyButtonWidth, buttonHeight),
-                ChangeButtonBounds = new Rectangle(557, 181, buyButtonWidth, buttonHeight),
                 IconLocation = new(97.5f, 18)
+            },
+            Improvements = new ImprovementsBox()
+            {
+                Box = new Rectangle(5, 306, 170, 108),
+                Rows = 9,
+                LabelColor = Color.White,
+                LabelColorShadow = Color.Black,
+                ShadowOffset = new Vector2(1, 0)
             },
             Resources = new ResourceProduction
             {
@@ -321,22 +336,32 @@ public abstract class Civ2Interface : IUserInterface
                     }
                 }
             },
-            UnitSupport = new UnitSupport
+            UnitSupport = new UnitBox
             {
-                Position = new Rectangle(7, 215, 181, 69),
+                Box = new Rectangle(7, 215, 184, 69),
                 Rows = 2,
                 Columns = 4
-            }
+            },
         };
 
-        _cityWindowLayout.Buttons.Add("Buy", new Rectangle(442, 181, buyButtonWidth, buttonHeight));
-        _cityWindowLayout.Buttons.Add("Change", new Rectangle(557, 181, buyButtonWidth, buttonHeight));
-        _cityWindowLayout.Buttons.Add("Info", new Rectangle(459, 364, infoButtonWidth, buttonHeight));
-        _cityWindowLayout.Buttons.Add("Map", new Rectangle(517, 364, infoButtonWidth, buttonHeight));
-        _cityWindowLayout.Buttons.Add("Rename", new Rectangle(575, 364, infoButtonWidth, buttonHeight));
-        _cityWindowLayout.Buttons.Add("Happy", new Rectangle(459, 389, infoButtonWidth, buttonHeight));
-        _cityWindowLayout.Buttons.Add("View", new Rectangle(517, 389, infoButtonWidth, buttonHeight));
-        _cityWindowLayout.Buttons.Add("Exit", new Rectangle(575, 389, infoButtonWidth, buttonHeight));
+        _cityWindowLayout.Buttons.Add("Buy", new(Labels.For(LabelIndex.Buy), new(5, 16, buyButtonWidth, buttonHeight)));
+        _cityWindowLayout.Buttons.Add("Change", new(Labels.For(LabelIndex.Change), new(120, 16, buyButtonWidth, buttonHeight)));
+        _cityWindowLayout.Buttons.Add("Info", new(Labels.For(LabelIndex.Info), new(459, 364, infoButtonWidth, buttonHeight)));
+        _cityWindowLayout.Buttons.Add("Map", new(Labels.For(LabelIndex.Map), new(517, 364, infoButtonWidth, buttonHeight)));
+        _cityWindowLayout.Buttons.Add("Rename", new(Labels.For(LabelIndex.Rename), new(575, 364, infoButtonWidth, buttonHeight)));
+        _cityWindowLayout.Buttons.Add("Happy", new(Labels.For(LabelIndex.Happy), new(459, 389, infoButtonWidth, buttonHeight)));
+        _cityWindowLayout.Buttons.Add("View", new(Labels.For(LabelIndex.View), new(517, 389, infoButtonWidth, buttonHeight)));
+        _cityWindowLayout.Buttons.Add("Exit", new("Exit", new(575, 389, infoButtonWidth, buttonHeight)));
+
+        _cityWindowLayout.Labels.Add("FoodStorage", new(Labels.For(LabelIndex.FoodStorage), new(437, 0, 195, 12), new Color(75, 155, 35, 255), Color.Black));
+        _cityWindowLayout.Labels.Add("CityImprovements", new(Labels.For(LabelIndex.CityImprovements), new(3, 291, 189, 12), new Color(223, 187, 63, 255), new Color(67, 67, 67, 255)));
+        _cityWindowLayout.Labels.Add("UnitsPresent", new(Labels.For(LabelIndex.UnitsPresent), new(0, 0, 232, 12), new Color(223, 187, 63, 255), new Color(67, 67, 67, 255)));
+        _cityWindowLayout.Labels.Add("UnitsSupported", new(Labels.For(LabelIndex.UnitsSupported), new(3, 215, 189, 12), new Color(223, 187, 63, 255), new Color(67, 67, 67, 255)));
+        _cityWindowLayout.Labels.Add("ItemInProduction", new("", new(0, 4, 195, 12), new Color(63, 79, 167, 255), Color.Black));
+        _cityWindowLayout.Labels.Add("Supplies", new(Labels.For(LabelIndex.Supplies), new(0, 130, 232, 12), new Color(227, 83, 15, 255), new Color(67, 67, 67, 255)));
+        _cityWindowLayout.Labels.Add("Demands", new(Labels.For(LabelIndex.Demands), new(0, 143, 232, 12), new Color(227, 83, 15, 255), new Color(67, 67, 67, 255)));
+        _cityWindowLayout.Labels.Add("ResourceMap", new(Labels.For(LabelIndex.ResourceMap), new(0, 125, 189, 12), new Color(223, 187, 63, 255), new Color(0, 51, 0, 255)));
+        _cityWindowLayout.Labels.Add("Citizens", new(Labels.For(LabelIndex.Citizens), new(0, 46, 189, 12), new Color(223, 187, 63, 255), new Color(67, 67, 67, 255)));
 
 
         return _cityWindowLayout;

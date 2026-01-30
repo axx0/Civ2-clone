@@ -5,10 +5,13 @@ using Civ2engine.Events;
 using Civ2engine.MapObjects;
 using Civ2engine.Production;
 using Civ2engine.Units;
+using Model.Controls;
 using Model.Core;
 using Model.Core.Advances;
 using Model.Core.Units;
 using Model.Interface;
+using System;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace RaylibUI.RunGame;
 
@@ -83,8 +86,20 @@ public class LocalPlayer : IPlayer
         _gameScreen.ShowPopup("RESEARCH", (s, i, arg3, arg4) =>
             {
                 Civilization.ReseachingAdvance = researchPossibilities[i].Index;
-            }, replaceStrings: new string[] { activeInterface.GetScientistName(Civilization.Epoch) },
-            listBox: new ListboxDefinition());// { Vertical = false, Entries  =  researchPossibilities.Select(a => new ListboxEntry { Icon = activeInterface.GetAdvanceImage(a), LeftText = a.Name}).ToList() } );
+            }, replaceStrings: [activeInterface.GetScientistName(Civilization.Epoch)],
+            listBox: new ListboxDefinition
+            {
+                VerticalScrollbar = false,
+                Type = ListboxType.Default,
+                ImageShift = true,
+                Rows = 16,
+                Groups = researchPossibilities.Select(a => new ListboxGroup
+                {
+                    Elements = [new() { Icon = activeInterface.GetAdvanceImage(a), Width = 2 * 36 + 2 },
+                                new() { Text = a.Name } ],
+                    Height = 23
+                }).ToList()
+            });
     }
 
     public void CantProduce(City city, IProductionOrder? newItem)

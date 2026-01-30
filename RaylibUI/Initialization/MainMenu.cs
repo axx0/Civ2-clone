@@ -4,7 +4,7 @@ using Model.Core;
 using Model.InterfaceActions;
 using RaylibUtils;
 using Civ2;
-using Model.Dialog;
+using Model.Controls;
 using Raylib_CSharp.Windowing;
 using Raylib_CSharp.Rendering;
 using Raylib_CSharp.Colors;

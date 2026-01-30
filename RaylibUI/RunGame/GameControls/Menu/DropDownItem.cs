@@ -1,6 +1,6 @@
 using System.Numerics;
 using Model;
-using Model.Menu;
+using Model.Controls;
 using Raylib_CSharp.Colors;
 using Raylib_CSharp.Fonts;
 using Raylib_CSharp.Interact;
@@ -31,7 +31,7 @@ internal class DropDownItem : ControlGroup
         var texts = command.MenuText.Split("|");
         var textHeight = (int)TextManager.MeasureTextEx(look.MenuFont, texts[0], look.MenuFontSize, 0f).Y;
         Controls.Add(new LabelControl(dropdownMenu, texts[0].Replace("&", ""), true, defaultHeight: textHeight, font: look.MenuFont, fontSize: look.MenuFontSize, padding: new Padding(0, _paddingLeft, 0, 0)));
-        Controls.Add(new LabelControl(dropdownMenu, texts.Length > 1 ? texts[1] : string.Empty, true, defaultHeight: textHeight, font: look.MenuFont, fontSize: look.MenuFontSize, alignment: TextAlignment.Right, padding: new Padding(0, 0, 0, _paddingRight)));
+        Controls.Add(new LabelControl(dropdownMenu, texts.Length > 1 ? texts[1] : string.Empty, true, defaultHeight: textHeight, font: look.MenuFont, fontSize: look.MenuFontSize, horizontalAlignment: HorizontalAlignment.Right, padding: new Padding(0, 0, 0, _paddingRight)));
         Click += (_, _) => Activate();
     }
 

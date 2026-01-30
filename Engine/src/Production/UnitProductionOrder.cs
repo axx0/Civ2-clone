@@ -5,9 +5,9 @@ using Civ2engine.Statistics;
 using Civ2engine.Units;
 using Model;
 using Model.Constants;
+using Model.Controls;
 using Model.Core.Units;
 using Model.Images;
-using Model.Interface;
 
 namespace Civ2engine.Production
 {
@@ -85,7 +85,7 @@ namespace Civ2engine.Production
                              new() { Text = _unitDefinition.Name, Width = 200 },
                              new() { Text = $"({(10 * _unitDefinition.Cost - city.ShieldsProgress) / city.Production} Turns, ADM: " +
                              $"{_unitDefinition.Attack}/{_unitDefinition.Defense}/{_unitDefinition.Move / 3} " +
-                             $"HP: {_unitDefinition.Hitp / 10}/{_unitDefinition.Firepwr})", RightAligned = true } ],
+                             $"HP: {_unitDefinition.Hitp / 10}/{_unitDefinition.Firepwr})", HorizontalAlignment = HorizontalAlignment.Right } ],
                 Height = 24,
             };
         }

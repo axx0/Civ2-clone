@@ -1,5 +1,5 @@
 using Model;
-using Model.Menu;
+using Model.Controls;
 
 namespace Civ2;
 

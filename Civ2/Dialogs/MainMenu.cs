@@ -2,7 +2,7 @@ using Civ2.Dialogs.FileDialogs;
 using Civ2.Dialogs.NewGame;
 using Civ2.Rules;
 using Civ2engine;
-using Model.Dialog;
+using Model.Controls;
 using Model.InterfaceActions;
 
 namespace Civ2.Dialogs;

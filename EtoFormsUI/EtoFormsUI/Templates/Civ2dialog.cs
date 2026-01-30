@@ -7,7 +7,7 @@ using Civ2engine;
 using System.Diagnostics;
 using EtoFormsUI.Menu;
 using Model;
-using Model.Interface;
+using Model.Controls;
 
 namespace EtoFormsUI
 {

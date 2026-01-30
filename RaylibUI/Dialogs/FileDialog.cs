@@ -2,14 +2,15 @@
 using Civ2engine.Enums;
 using Civ2engine.MapObjects;
 using Model;
+using Model.Controls;
 using Model.Images;
-using Model.Interface;
 using Raylib_CSharp.Colors;
 using Raylib_CSharp.Interact;
 using Raylib_CSharp.Windowing;
 using RaylibUI.BasicTypes;
 using RaylibUI.BasicTypes.Controls;
 using RaylibUI.Controls;
+using RaylibUtils;
 using System.IO;
 using System.Numerics;
 
@@ -106,9 +107,12 @@ public class FileDialog : DynamicSizingDialog
                 _ => 1
             };
 
-            lists.Add(new ListboxGroup { Elements = 
+            lists.Add(new ListboxGroup
+            {
+                Elements =
                 [ new ListboxGroupElement { Icon = _active?.Look.DiskIcons[iconIndex] },
-                  new ListboxGroupElement { Text = _fileList.ElementAt(i).Key } ]
+                  new ListboxGroupElement { Text = _fileList.ElementAt(i).Key, VerticalAlignment = VerticalAlignment.Center } ],
+                Height = Images.GetImageHeight(_active?.Look.DiskIcons[0], _active)
             });
         }
         return lists;
@@ -171,6 +175,7 @@ public class FileDialog : DynamicSizingDialog
                     text = "";
                     _listboxDef.Groups = MakeListboxEntries();
                     _listbox.Update();
+                    _listbox.OnResize();
                 }
             }
             else
@@ -183,6 +188,7 @@ public class FileDialog : DynamicSizingDialog
                     text = "";
                     _listboxDef.Groups = MakeListboxEntries();
                     _listbox.Update(true);
+                    _listbox.OnResize();
                 }
             }
         }

@@ -1,4 +1,4 @@
-using Model.Interface;
+using Model.Controls;
 using RaylibUI.BasicTypes.Controls;
 using RaylibUI.Controls;
 

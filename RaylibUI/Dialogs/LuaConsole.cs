@@ -1,7 +1,7 @@
 using Civ2engine.Scripting;
 using Model;
+using Model.Controls;
 using Model.Core;
-using Model.Interface;
 using Raylib_CSharp.Interact;
 using RaylibUI.BasicTypes;
 using RaylibUI.BasicTypes.Controls;
@@ -26,6 +26,7 @@ public class LuaConsole : DynamicSizingDialog
         _script.Execute(command);
         _def.Update(_script.Log.Split(Environment.NewLine));
         _listbox.Update();
+        _listbox.OnResize();
         _listbox.ScrollToEnd();
         _commandBox.SetText(string.Empty);
     }

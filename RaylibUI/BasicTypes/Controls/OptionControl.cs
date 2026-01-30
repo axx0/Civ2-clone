@@ -18,7 +18,7 @@ public class OptionControl : LabelControl
     public override bool CanFocus => false;
 
     public OptionControl(IControlLayout controller, OptionsPanel parent, string text, int index, bool isChecked, IImageSource[] images) : 
-        base(controller, text, eventTransparent: false, 
+        base(controller, text, eventTransparent: false, verticalAlignment: Model.Controls.VerticalAlignment.Center,
         padding: new (0, Images.GetImageWidth(images[0], controller.MainWindow.ActiveInterface), 0, 0),
         font: controller.MainWindow.ActiveInterface.Look.LabelFont,
         fontSize: controller.MainWindow.ActiveInterface.Look.LabelFontSize,

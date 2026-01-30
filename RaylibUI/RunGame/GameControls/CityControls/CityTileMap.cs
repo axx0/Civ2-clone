@@ -1,8 +1,8 @@
-using System.Numerics;
 using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.MapObjects;
 using Model;
+using Model.Controls;
 using Model.Core;
 using Raylib_CSharp.Colors;
 using Raylib_CSharp.Fonts;
@@ -12,6 +12,7 @@ using Raylib_CSharp.Textures;
 using Raylib_CSharp.Transformations;
 using RaylibUI.RunGame.GameControls.Mapping;
 using RaylibUtils;
+using System.Numerics;
 
 namespace RaylibUI.RunGame.GameControls.CityControls;
 
@@ -21,10 +22,11 @@ public class CityTileMap : BaseControl
     private Texture2D? _texture;
     private float _scaleFactor;
     private Vector2 _offset;
-    private readonly Vector2 _textDim;
     private readonly string _text;
     private readonly IUserInterface _active;
     private readonly int _organizationLevel;
+    private readonly CityLabel _label;
+    private readonly CityWindowLayout _props;
 
     private IList<IViewElement> _viewElements;
 
@@ -32,9 +34,10 @@ public class CityTileMap : BaseControl
     {
         _cityWindow = cityWindow;
         _active = cityWindow.MainWindow.ActiveInterface;
+        _props = _cityWindow.CityWindowProps;
         Click += OnClick;
-        _text = Labels.For(LabelIndex.ResourceMap);
-        _textDim = TextManager.MeasureTextEx(_active.Look.CityWindowFont, _text, _active.Look.CityWindowFontSize, 1);
+        _label = new CityLabel(_cityWindow, _props.Labels["ResourceMap"]);
+        Controls.Add(_label);
         _organizationLevel = cityWindow.City.GetOrganizationLevel(game.Rules);
     }
 
@@ -198,18 +201,17 @@ public class CityTileMap : BaseControl
             element.Draw(element.Location * _scaleFactor + adjustedLocation, _scaleFactor);
         }
 
-        Graphics.DrawTextEx(_active.Look.CityWindowFont, _text,
-            new Vector2(Parent.Bounds.X + Location.X + Width / 2f - _textDim.X / 2, Parent.Bounds.Y + Location.Y + Height - _textDim.Y), 
-            _active.Look.CityWindowFontSize, 1, Color.Gold);
+        _label.Draw(true);
     }
 
     public override void OnResize()
     {
         var pos = _cityWindow.CityWindowProps.TileMap.ScaleAll(_cityWindow.Scale);
-        Location = new(pos.X, pos.Y);
+        Location = new(_cityWindow.LayoutPadding.Left + pos.X, _cityWindow.LayoutPadding.Top + pos.Y);
         Width = (int)pos.Width;
         Height = (int)pos.Height;
         base.OnResize();
+        _label.OnResize();
         Redraw();
     }
 

@@ -1,24 +1,38 @@
-﻿using Raylib_CSharp.Colors;
-using Raylib_CSharp.Fonts;
-using Raylib_CSharp.Transformations;
+﻿using Model;
+using Model.Controls;
 using RaylibUI.BasicTypes.Controls;
-using System.Numerics;
 
 namespace RaylibUI.RunGame.GameControls.CityControls;
 
 public class CityLabel : LabelControl
 {
     private readonly CityWindow _cityWindow;
-    private readonly int _baseFontSize;
+    private readonly IUserInterface _active;
+    private readonly CityLabelProperties _properties;
 
-    public CityLabel(CityWindow controller, string text, Font font, int fontSize, Color colorFront, Color colorShadow, TextAlignment alignment = TextAlignment.Center) : base(controller, text, true, font: font, fontSize: fontSize, colorFront: colorFront, colorShadow: colorShadow, alignment: alignment, shadowOffset: new Vector2(1, 1))
+    public CityLabel(CityWindow controller, CityLabelProperties properties) : 
+        base(controller, properties.Text, true, font: controller.MainWindow.ActiveInterface.Look.CityWindowFont, colorFront: properties.Color,
+        colorShadow: properties.ColorShadow, horizontalAlignment: properties.Alignment, shadowOffset: properties.ShadowOffset)
     {
         _cityWindow = controller;
-        _baseFontSize = fontSize;
+        _active = _cityWindow.MainWindow.ActiveInterface;
+        _properties = properties;
     }
 
     public override void OnResize()
     {
-        FontSize = _baseFontSize + (int)(16 * (_cityWindow.Scale - 1));
+        var scale = _cityWindow.Scale;
+        FontSize = _active.Look.CityWindowFontSize + (int)(12 * (scale - 1));
+        if (Parent == _cityWindow)
+        {
+            Location = new(_cityWindow.LayoutPadding.Left + _properties.Box.X * scale,
+                _cityWindow.LayoutPadding.Top + _properties.Box.Y * scale);
+        }
+        else
+        {
+            Location = new(_properties.Box.X * scale, _properties.Box.Y * scale);
+        }
+        Width = (int)(_properties.Box.Width * scale);
+        Height = (int)(_properties.Box.Height * scale);
     }
 }

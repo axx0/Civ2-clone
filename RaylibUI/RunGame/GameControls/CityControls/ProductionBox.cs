@@ -1,9 +1,8 @@
 using Civ2engine;
 using Civ2engine.Production;
 using Model;
-using Model.CityWindowModel;
+using Model.Controls;
 using Model.Images;
-using Model.Interface;
 using Raylib_CSharp.Audio;
 using Raylib_CSharp.Colors;
 using Raylib_CSharp.Fonts;
@@ -23,19 +22,17 @@ public class ProductionBox : BaseControl
     private readonly IUserInterface _active;
     private int _totalCost;
     private readonly int _shieldBoxRows;
-    private readonly Color _pen1, _pen2, _penTitle;
+    private readonly Color _pen1, _pen2;
     private readonly LabelControl _label;
     private readonly ShieldProduction _properties;
     private readonly CityButton _buyButton, _changeButton;
     private float _shieldWidth, _shieldHeight;
     private readonly City _city;
     private readonly IList<IProductionOrder> _canProduce;
-    private readonly ImageBox _iconControl;
-    private readonly IImageSource _icon;
+    private readonly ImageBox _icon;
 
     public ProductionBox(CityWindow cityWindow) : base(cityWindow, eventTransparent: false)
     {
-        _penTitle = new Color(63, 79, 167, 255);
         _pen1 = new Color(83, 103, 191, 255);
         _pen2 = new Color(0, 0, 95, 255);
         _shieldBoxRows = cityWindow.CurrentGameScreen.Game.Rules.Cosmic.RowsShieldBox;
@@ -48,31 +45,15 @@ public class ProductionBox : BaseControl
             .First(r => r.Name == "Shields")
             .LargeImage);
 
-        _label = new CityLabel(cityWindow, "", _active.Look.CityWindowFont, _active.Look.CityWindowFontSize, _penTitle, Color.Black)
-        {
-            Location = new(0, 0),
-            Width = (int)_properties.Box.Width,
-            Height = 19
-        };
+        _label = new CityLabel(_cityWindow, _cityWindow.CityWindowProps.Labels["ItemInProduction"]);
 
-        _buyButton = new CityButton(cityWindow, Labels.For(LabelIndex.Buy), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize)
-        {
-            Location = new(_properties.BuyButtonBounds.X - _properties.Box.X, _properties.BuyButtonBounds.Y - _properties.Box.Y),
-            Width = (int)_properties.BuyButtonBounds.Width,
-            Height = (int)_properties.BuyButtonBounds.Height
-        };
-        _changeButton = new CityButton(cityWindow, Labels.For(LabelIndex.Change), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize)
-        {
-            Location = new(_properties.ChangeButtonBounds.X - _properties.Box.X, _properties.ChangeButtonBounds.Y - _properties.Box.Y),
-            Width = (int)_properties.ChangeButtonBounds.Width,
-            Height = (int)_properties.ChangeButtonBounds.Height
-        };
+        _buyButton = new CityButton(cityWindow, "Buy");
+        _changeButton = new CityButton(cityWindow, "Change");
         _changeButton.Click += (_, _) =>
         {
             cityWindow.CurrentGameScreen.ShowPopup(
                 "PRODUCTION", handleButtonClick: BuildDialogClosed, replaceStrings: [_city.Name], listBox: new ListboxDefinition
                 {
-                    VerticalScrollbar = true,
                     Type = ListboxType.Default,
                     ImageShift = true,
                     Rows = 13,
@@ -81,8 +62,8 @@ public class ProductionBox : BaseControl
                 });
         };
 
-        _iconControl = new ImageBox(_cityWindow, _city.ItemInProduction.GetIcon(_active));
-        Controls = [_label, _iconControl, _buyButton, _changeButton];
+        _icon = new ImageBox(_cityWindow, _city.ItemInProduction.GetIcon(_active));
+        Controls = [_label, _icon, _buyButton, _changeButton];
 
         ChangeProductionDisplay();
     }
@@ -100,24 +81,17 @@ public class ProductionBox : BaseControl
 
         if (_city.ItemInProduction.Type == ItemType.Unit)
         {
-            _label.Text = "";
-            _iconControl.Scale = ImageUtils.ZoomScale(-1 + (int)(4 * (_cityWindow.Scale - 1)));
-            var iconW = _iconControl.GetPreferredWidth();
-            var iconH = _iconControl.GetPreferredHeight();
-            _iconControl.Location = new(_properties.IconLocation.X * _cityWindow.Scale - iconW / 2, 0);
-            _iconControl.Width = iconW;
-            _iconControl.Height = iconH;
+            _label.Visible = false;
+            _icon.Scale = ImageUtils.ZoomScale(-1 + (int)(4 * (_cityWindow.Scale - 1)));
+            _icon.Location = new(_properties.IconLocation.X * _cityWindow.Scale - _icon.Width / 2, 0);
         }
         else
         {
+            _label.Visible = true;
             _label.Text = _city.ItemInProduction.Title;
-            _iconControl.Scale = 1f;
-            var iconW = _iconControl.GetPreferredWidth();
-            var iconH = _iconControl.GetPreferredHeight();
-            _iconControl.Location = new(_properties.IconLocation.X * _cityWindow.Scale - iconW / 2, 
+            _icon.Scale = _cityWindow.Scale;
+            _icon.Location = new(_properties.IconLocation.X * _cityWindow.Scale - _icon.Width / 2, 
                 _properties.IconLocation.Y * _cityWindow.Scale);
-            _iconControl.Width = iconW;
-            _iconControl.Height = iconH;
         }
 
         foreach (var child in Controls)
@@ -128,7 +102,7 @@ public class ProductionBox : BaseControl
 
     private void ChangeProductionDisplay()
     {
-        _iconControl.Image = [_city.ItemInProduction.GetIcon(_active)];
+        _icon.Image = [_city.ItemInProduction.GetIcon(_active)];
 
         OnResize();
 

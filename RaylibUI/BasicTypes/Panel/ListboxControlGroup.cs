@@ -1,11 +1,13 @@
-﻿﻿using Raylib_CSharp.Colors;
+﻿using Model;
+using Model.Controls;
+using Raylib_CSharp.Colors;
 using Raylib_CSharp.Rendering;
 using RaylibUI.BasicTypes.Controls;
+using RaylibUI.RunGame.GameControls;
+using RaylibUI.RunGame.GameControls.CityControls;
+using RaylibUtils;
 using System.Diagnostics;
 using System.Numerics;
-using Model.Interface;
-using RaylibUtils;
-using Model;
 
 namespace RaylibUI.BasicTypes;
 
@@ -34,10 +36,15 @@ public class ListboxControlGroup : ControlGroup
             var element = _elements[i];
             if (element.Text != string.Empty)
             {
-                Controls.Add(new LabelControl(controller, element.Text, true, font: def.Looks.Font, fontSize: def.Looks.FontSize,
+                var label = new LabelControl(controller, element.Text, true, font: def.Looks.Font, fontSize: def.Looks.FontSize,
                     colorFront: def.Looks.TextColorFront, colorShadow: def.Looks.TextColorShadow,
-                    shadowOffset: def.Looks.TextShadowOffset, alignment: element.RightAligned ? TextAlignment.Right : TextAlignment.Left,
-                    defaultHeight: group.Height != null ? (int)group.Height : 32));
+                    shadowOffset: def.Looks.TextShadowOffset, horizontalAlignment: element.HorizontalAlignment,
+                    verticalAlignment: element.VerticalAlignment);
+                if (group.Height != null)
+                {
+                    label.Height = (int)group.Height;
+                }
+                Controls.Add(label);
             }
             else if (element.Icon is not null)
             {
@@ -60,6 +67,10 @@ public class ListboxControlGroup : ControlGroup
                 imagebox.Coords = new int[,] { { coordX, coordY } };
                 Controls.Add(imagebox);
             }
+            else if (element.Unit is not null)
+            {
+                Controls.Add(new UnitDisplay(controller, element.Unit, element.Game, new(0, 0), _active, element.ScaleIcon, true));
+            }
         }
 
         _softSelection = true;
@@ -67,7 +78,7 @@ public class ListboxControlGroup : ControlGroup
         Click += OnClick;
     }
 
-    public override bool CanFocus => false;//true;
+    public override bool CanFocus => false;
 
     private int _width;
     public override int Width
@@ -128,5 +139,12 @@ public class ListboxControlGroup : ControlGroup
         {
             Controls[^1].Width += Width - offset;
         }
+    }
+
+    public override void Draw(bool pulse)
+    {
+        //Graphics.DrawRectangleLinesEx(Bounds, 1f, Color.Magenta);
+
+        base.Draw(pulse);
     }
 }

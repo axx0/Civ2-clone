@@ -1,7 +1,7 @@
 using System.Drawing;
 using Civ2engine;
 using Civ2engine.MapObjects;
-using Model.Menu;
+using Model.Controls;
 using Raylib_CSharp.Interact;
 using Point = Model.Point;
 
@@ -17,7 +17,7 @@ public class RevealMap(GameScreen gameScreen) : AlwaysOnCommand(gameScreen, Comm
         var allLabel = Labels.For(LabelIndex.EntireMap);
         var noSpecial = Labels.For(LabelIndex.NoSpecialView);
         
-        _revealMapDialog = new CivDialog(GameScreen.Main, new Model.Dialog.DialogElements(new PopupBox
+        _revealMapDialog = new CivDialog(GameScreen.Main, new Model.Controls.DialogElements(new PopupBox
         {
             Title = "Reveal Map",
             Options = GameScreen.Game.AllCivilizations.Select(c=>c.TribeName).Concat<string>([noSpecial, allLabel]).ToArray(),

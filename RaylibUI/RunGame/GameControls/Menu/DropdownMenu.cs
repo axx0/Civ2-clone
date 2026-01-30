@@ -1,7 +1,7 @@
 using System.Numerics;
 using Civ2engine.IO;
 using Model;
-using Model.Menu;
+using Model.Controls;
 using Raylib_CSharp.Collision;
 using Raylib_CSharp.Colors;
 using Raylib_CSharp.Interact;

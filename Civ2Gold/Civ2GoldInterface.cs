@@ -8,7 +8,7 @@ using Model;
 using Model.Images;
 using Model.ImageSets;
 using Model.Interface;
-using Model.Menu;
+using Model.Controls;
 using Raylib_CSharp.Textures;
 using Raylib_CSharp.Transformations;
 using Raylib_CSharp.Colors;
@@ -16,7 +16,7 @@ using Raylib_CSharp.Interact;
 using Raylib_CSharp.Images;
 using Raylib_CSharp.Rendering;
 using RaylibUtils;
-using static Model.Menu.CommandIds;
+using static Model.Controls.CommandIds;
 using System.ComponentModel.Design;
 using Model.Utils;
 
@@ -60,7 +60,7 @@ public class Civ2GoldInterface : Civ2Interface
         LabelColour = new Color(31, 31, 31, 255),
         LabelShadowColour = new Color(191, 191, 191, 255),
         CityWindowFont = Fonts.Arial,
-        CityWindowFontSize = 15,
+        CityWindowFontSize = 14,  // small=6, normal=14, large=20
         MenuFont = Fonts.Arial,
         MenuFontSize = 14,
         StatusPanelLabelFont = Fonts.TnRbold,
@@ -68,7 +68,7 @@ public class Civ2GoldInterface : Civ2Interface
         StatusPanelLabelColorShadow = new Color(191, 191, 191, 255),
         MovingUnitsViewingPiecesLabelColor = Color.White,
         MovingUnitsViewingPiecesLabelColorShadow = Color.Black,
-        EndOfTurnColors = new[] { new Color(135, 135, 135, 255), Color.White },
+        EndOfTurnColors = [new Color(135, 135, 135, 255), Color.White],
     };
 
     public override bool IsButtonInOuterPanel => true;
@@ -145,6 +145,8 @@ public class Civ2GoldInterface : Civ2Interface
             { "close", new[] { new BitmapStorage("ICONS", new Rectangle(1, 389, 16, 16)) } },
             { "zoomIn", new[] { new BitmapStorage("ICONS", new Rectangle(18, 389, 16, 16)) } },
             { "zoomOut", new[] { new BitmapStorage("ICONS", new Rectangle(35, 389, 16, 16)) } },
+            { "gold,large", new[] { new BitmapStorage("ICONS", new Rectangle(16, 320, 14, 14)) } },
+            { "trade,small", new[] { new BitmapStorage("ICONS", new Rectangle(71, 334, 10, 10)) } },
             { "backgroundImage", new[]{ new BinaryStorage("Tiles.dll", 0xF7454, 0x1389D) } },
             { "backgroundImageSmall1", new[]{ new BinaryStorage("Tiles.dll", 0xED354, 0xA0FD, new Rectangle(332, 134, 64, 64)) } },
             { "backgroundImageSmall2", new[]{ new BinaryStorage("Tiles.dll", 0xED354, 0xA0FD, new Rectangle(398, 134, 64, 64)) } },
@@ -163,6 +165,8 @@ public class Civ2GoldInterface : Civ2Interface
             { "peoplePic1", new[]{ new BinaryStorage("Intro.dll", 0x84E90, 0x129CE) } },
             { "peoplePic2", new[]{ new BinaryStorage("Intro.dll", 0x97860, 0x139A0) } },
             { "templePic", new[]{ new BinaryStorage("Intro.dll", 0xAB200, 0xB839) } },
+            { "people", Enumerable.Range(0, 11 * 4).Select(i =>
+                        new BitmapStorage("PEOPLE", new Rectangle(2 + 28 * (i % 11), 6 + 31 * (i / 11), 27, 30))).ToArray()}
         };
 
         var src = new BitmapStorage[6 * 8];

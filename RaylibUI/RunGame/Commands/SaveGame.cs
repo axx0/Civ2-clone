@@ -6,8 +6,8 @@ using System.Text.Json;
 using Civ2engine;
 using Civ2engine.SaveLoad;
 using Model;
-using Model.Dialog;
-using Model.Menu;
+using Model.Controls;
+using Model.Controls;
 using Raylib_CSharp.Interact;
 
 namespace RaylibUI.RunGame.Commands;

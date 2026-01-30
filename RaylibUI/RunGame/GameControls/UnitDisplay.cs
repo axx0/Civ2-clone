@@ -15,19 +15,22 @@ public class UnitDisplay : BaseControl
     private Vector2 _previousLocation;
     private readonly List<IViewElement> _unitTextures;
     private float _scale;
+    private Vector2 _size;
 
-    public UnitDisplay(IControlLayout controller, Unit unit, IGame game, Vector2 location,
-        IUserInterface activeInterface, float scale = 1f) : base(controller)
+    public UnitDisplay(IControlLayout controller, IUnit unit, IGame game, Vector2 location,
+        IUserInterface activeInterface, float scale = 1f, bool eventTransparent = false) : base(controller, eventTransparent)
     {
         _previousLocation = location;
         _scale = scale;
         _unitTextures = new List<IViewElement>();
-        var size = ImageUtils.GetUnitTextures(unit, activeInterface, game, _unitTextures, location, true);
+        _size = ImageUtils.GetUnitTextures(unit, activeInterface, game, _unitTextures, location, true);
         Location = location;
-        Width = (int)(size.X * scale);
-        Height = (int)(size.Y * scale);
     }
 
+    public override int GetPreferredWidth() => (int)(_size.X * _scale);
+    public override int GetPreferredHeight() => (int)(_size.Y * _scale);
+    public override int Width => GetPreferredWidth();
+    public override int Height => GetPreferredHeight();
 
     public override void Draw(bool pulse)
     {

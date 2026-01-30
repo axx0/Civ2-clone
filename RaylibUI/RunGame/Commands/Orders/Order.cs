@@ -2,8 +2,7 @@
 using Civ2engine.Units;
 using Model;
 using Model.Images;
-using Model.Menu;
-using Model.Dialog;
+using Model.Controls;
 using Raylib_CSharp;
 using RaylibUI.BasicTypes.Controls;
 

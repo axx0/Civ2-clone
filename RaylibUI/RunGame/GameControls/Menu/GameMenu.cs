@@ -1,9 +1,9 @@
-using Model;
 using Raylib_CSharp.Colors;
 using Raylib_CSharp.Fonts;
 using Raylib_CSharp.Interact;
 using Raylib_CSharp.Rendering;
 using RaylibUI.BasicTypes.Controls;
+using Model.Controls;
 
 namespace RaylibUI.RunGame.GameControls.Menu;
 
