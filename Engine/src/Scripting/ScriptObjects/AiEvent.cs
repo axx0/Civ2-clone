@@ -9,4 +9,7 @@ public static class AiEvent
     public const string ResearchComplete = "Research_Complete";
     public const string UnitsLost = "Units_Lost";
     public const string UnitMoved = "Unit_Moved";
+    
+    public const string CityProductionComplete = "City_Production_Complete";
+    public const string CityProductionInvalid = "City_Production_Invalid";
 }

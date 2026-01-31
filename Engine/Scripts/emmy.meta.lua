@@ -31,7 +31,7 @@
 ---@field tribeMayBuild number
 ---@field useTransport number
 ---@field CombatValue number
----@field canEnter fun(tile: Tile|TileApi): boolean
+---@field canEnter fun(tile: Tile): boolean
 
 ---@class CivCore
 ---@field UnitEffects { Fanatics: number, FreeSupport: number, Partisan: number, SdiVulnerable: number }
@@ -50,18 +50,18 @@
 ---@field carriedBy Unit|nil
 ---@field damage number
 ---@field domainSpec number
----@field gotoTile TileApi|nil
+---@field gotoTile Tile|nil
 ---@field hitpoints number
 ---@field homeCity CityApi|nil
 ---@field id number
----@field location TileApi
+---@field location Tile
 ---@field moveSpent number
 ---@field order number
 ---@field owner Tribe
 ---@field type UnitType
 ---@field veteran boolean
 ---@field activate fun()
----@field teleport fun(tile: TileApi)
+---@field teleport fun(tile: Tile)
 ---@field GetNum fun(field: string): number
 ---@field SetNum fun(field: string, value: number)
 ---@field GetString fun(field: string): string|nil
@@ -147,7 +147,7 @@ _G.AiEvent = _G.AiEvent
 ---@class TerrainApi
 ---@field isOcean boolean
 
----@class TileApi
+---@class Tile
 ---@field baseTerrain BaseTerrain
 ---@field city City|nil
 ---@field defender Tribe|nil
@@ -167,36 +167,12 @@ _G.AiEvent = _G.AiEvent
 ---@field y number
 ---@field z number
 ---@field BaseTile Tile
----@field CityHere City|nil
----@field UnitsHere Unit[]
 
 ---@class BaseTerrain
 ---@field Terrain Terrain
 
 ---@class Terrain
 ---@field isOcean boolean
-
----@class Tile
----@field city City|nil
----@field defender any
----@field fertility number
----@field grasslandShield boolean
----@field hasGoodieHut boolean
----@field improvements number
----@field landmass number
----@field owner any
----@field river boolean
----@field terrain Terrain
----@field terrainType number
----@field units fun(): Unit[]
----@field visibility number
----@field visibleImprovements number[]
----@field x number
----@field y number
----@field z number
----@field impassable boolean
----@field CityHere City|nil
----@field UnitsHere Unit[]
 
 ---@class FastRandom
 ---@field Next fun(max: number): number
@@ -224,11 +200,11 @@ _G.AiEvent = _G.AiEvent
 ---@field RegisterEvent fun(eventName: string, callback: fun(ai: Ai, data: AiTurnData|AiUnitOrderData|AiUnitsLostData|table): any)
 ---@field HasEvent fun(eventName: string): boolean
 ---@field Call fun(eventName: string, args: table): any
----@field GetNearestCity fun(tile: TileApi|Tile, inRadiusOnly?: boolean): City|nil
----@field CheckFertility fun(currentTile: TileApi|Tile, unit: Unit): any
----@field RandomTile fun(args: table): TileApi
----@field NearestEnemy fun(args: table): TileApi|nil
----@field NearestFriend fun(args: table): TileApi|nil
+---@field GetNearestCity fun(tile: Tile, inRadiusOnly?: boolean): City|nil
+---@field CheckFertility fun(currentTile: Tile, unit: Unit): any
+---@field RandomTile fun(args: table): Tile
+---@field NearestEnemy fun(args: table): Tile|nil
+---@field NearestFriend fun(args: table): Tile|nil
 ---@field GetPossibleMoves fun(unit: Unit): AiUnitAction[]
 
 ---@type Ai

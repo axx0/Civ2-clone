@@ -72,13 +72,15 @@ namespace Civ2engine
             };
         }
 
-        public void CantProduce(City city, IProductionOrder newItem)
+        public void CantProduce(City city, IProductionOrder? newItem)
         {
+            
         }
 
         public void CityProductionComplete(City city)
         {
-            
+            var productionOrders = ProductionPossibilities.GetAllowedProductionOrders(city);
+            AI.Call(AiEvent.CityProductionComplete, new LuaTable { { "city", city }, { "productionOrders", productionOrders } });
         }
 
         public IInterfaceCommands Ui { get; } = null;

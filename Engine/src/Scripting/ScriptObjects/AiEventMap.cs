@@ -10,4 +10,7 @@ public class AiEventMap
     public string Unit_Orders_Needed = AiEvent.UnitOrdersNeeded;
     public string Research_Complete = AiEvent.ResearchComplete;
     public string Units_Lost = AiEvent.UnitsLost;
+    public string Unit_Moved = AiEvent.UnitMoved;
+    public string City_Production_Complete = AiEvent.CityProductionComplete;
+    public string City_Production_Invalid = AiEvent.CityProductionInvalid;
 }

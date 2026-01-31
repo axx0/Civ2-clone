@@ -270,7 +270,7 @@ public class GameScreen : BaseScreen
                 }
             },
             replaceNumbers: replaceNumbers,
-            options: new List<string> { Labels.For(LabelIndex.ZoomToCity), Labels.For(LabelIndex.Continue) },
+            options: [Labels.For(LabelIndex.ZoomToCity), Labels.For(LabelIndex.Continue)],
             replaceStrings: replaceStrings);
     }
 
