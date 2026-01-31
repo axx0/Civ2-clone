@@ -17,6 +17,7 @@ public class DropdownMenu(GameScreen gameScreen) : BaseDialog(gameScreen.Main)
     private bool _clickInMenu;
     private bool _clickOutSide;
     private readonly List<int> _separatorOffsets = [];
+    private int _width, _height;
 
     /// <summary>
     /// Index of currently selected dropdown menu (-1 = no menu selected)
@@ -69,8 +70,8 @@ public class DropdownMenu(GameScreen gameScreen) : BaseDialog(gameScreen.Main)
             itemNo++;
         }
 
-        Width = dropdownWidth;
-        Height = currentY - location.Y + 3;
+        _width = dropdownWidth;
+        _height = (int)(currentY - location.Y + 10);
         gameScreen.ShowDialog(this,true);
         _shown = true;
         _clickInMenu = false;
@@ -134,11 +135,10 @@ public class DropdownMenu(GameScreen gameScreen) : BaseDialog(gameScreen.Main)
         }
     }
 
-    //public override int Height => _height;
-    //public override int Width => _width;
+    public override int Height => _height;
+    public override int Width => _width;
 
 
-    public int Width { get; set; }
     public GameMenu MenuBar { get; } = gameScreen.MenuBar;
 
     public override void OnKeyPress(KeyboardKey key)

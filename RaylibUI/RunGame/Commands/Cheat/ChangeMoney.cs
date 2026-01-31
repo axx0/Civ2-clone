@@ -4,9 +4,9 @@ using Civ2engine;
 using Microsoft.VisualBasic.CompilerServices;
 using Model.Core;
 using Model.Interface;
-using Model.Menu;
 using Raylib_CSharp.Interact;
 using Point = Model.Point;
+using Model.Controls;
 
 namespace RaylibUI.RunGame.Commands.Cheat;
 
@@ -21,17 +21,17 @@ public class ChangeMoney(GameScreen gameScreen) : AlwaysOnCommand(gameScreen, Co
     {
         var allLabel = Labels.For(LabelIndex.EntireMap);
         var noSpecial = Labels.For(LabelIndex.NoSpecialView);
-        
-        _selectTribeDialog = new CivDialog(GameScreen.Main, new PopupBox
+
+        _selectTribeDialog = new CivDialog(GameScreen.Main, new DialogElements(new PopupBox
         {
             Title = "Pick A Player",
             Options = GameScreen.Game.AllCivilizations
-                .FindAll(c=>c.PlayerType != PlayerType.Barbarians)
-                .Select(c=>c.Adjective)
+                .FindAll(c => c.PlayerType != PlayerType.Barbarians)
+                .Select(c => c.Adjective)
                 .ToArray(),
             Button = [Labels.Ok, Labels.Cancel]
-        }, new Point(0,0), HandleClickSelectTribe );
-        
+        }), HandleClickSelectTribe);
+
         GameScreen.ShowDialog(_selectTribeDialog);
     }
 
@@ -57,7 +57,7 @@ public class ChangeMoney(GameScreen gameScreen) : AlwaysOnCommand(gameScreen, Co
     {
         String dialogTitle = $"Change {adjective} Treasury";
         String subtitle = $"{adjective} treasury currently {currentMoney} Gold";
-        
+
         TextBoxDefinition textBox = new TextBoxDefinition
         {
             Index = 0,
@@ -77,8 +77,8 @@ public class ChangeMoney(GameScreen gameScreen) : AlwaysOnCommand(gameScreen, Co
         };
 
         return new CivDialog(
-            GameScreen.Main, popupBox, new Point(0, 0), DoChangeMoney,
-            textBoxDefs: new List<TextBoxDefinition> { textBox });
+            GameScreen.Main, new DialogElements(popupBox) { TextBoxes = new List<TextBoxDefinition> { textBox } }, 
+            DoChangeMoney);
     }
 
     private void DoChangeMoney(string button, int selectedIndex, IList<bool>? check,

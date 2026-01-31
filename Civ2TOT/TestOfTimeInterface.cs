@@ -178,13 +178,13 @@ public class TestOfTimeInterface(IMain main) : Civ2Interface(main)
 
         PicSources.Add("unit",
             Enumerable.Range(0, 9 * UnitsRows).Select(i => new BitmapStorage("UNITS",
-                    new Rectangle(1 + 65 * (i % 9), 1 + (UnitsPxHeight + 1) * (i / 9f), 64, UnitsPxHeight), true, true))
+                    new Rectangle(1 + 65 * (i % 9), 1 + (UnitsPxHeight + 1) * (i / 9), 64, UnitsPxHeight), true, true))
                 .ToArray<IImageSource>());
         PicSources.Add("HPshield", [new BitmapStorage("UNITS", new Rectangle(586, 1, 32, 10), true)]);
         PicSources.Add("textColours", Enumerable.Range(0, 9).Select(col =>
             new BitmapStorage("CITIES", new Rectangle(1 + 15 * col, 421, 14, 3), true)).ToArray<IImageSource>());
         PicSources.Add("flags", Enumerable.Range(0, 2 * 9).Select(i =>
-                new BitmapStorage("CITIES", new Rectangle(1 + 15 * (i % 9), 425 + 23 * (i / 9f), 14, 22), true))
+                new BitmapStorage("CITIES", new Rectangle(1 + 15 * (i % 9), 425 + 23 * (i / 9), 14, 22), true))
             .ToArray<IImageSource>());
         PicSources.Add("fortify", [new BitmapStorage("CITIES", new Rectangle(143, 423, 64, 48), true)]);
         PicSources.Add("fortress", [new BitmapStorage("CITIES", new Rectangle(208, 423, 64, 48), true)]);
@@ -211,19 +211,19 @@ public class TestOfTimeInterface(IMain main) : Civ2Interface(main)
         PicSources.Add("dither", [new BitmapStorage("TERRAIN1", new Rectangle(1, 447, 64, 32), true)]);
         PicSources.Add("blank", [new BitmapStorage("TERRAIN1", new Rectangle(131, 447, 64, 32), true)]);
         PicSources.Add("connection", Enumerable.Range(0, 2 * 8).Select(i =>
-                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 1 + 33 * (i / 8f), 64, 32), true))
+                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 1 + 33 * (i / 8), 64, 32), true))
             .ToArray<IImageSource>());
         PicSources.Add("river", Enumerable.Range(0, 2 * 8).Select(i =>
-                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 67 + 33 * (i / 8f), 64, 32), true))
+                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 67 + 33 * (i / 8), 64, 32), true))
             .ToArray<IImageSource>());
         PicSources.Add("forest", Enumerable.Range(0, 2 * 8).Select(i =>
-                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 133 + 33 * (i / 8f), 64, 32), true))
+                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 133 + 33 * (i / 8), 64, 32), true))
             .ToArray<IImageSource>());
         PicSources.Add("mountain", Enumerable.Range(0, 2 * 8).Select(i =>
-                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 199 + 33 * (i / 8f), 64, 32), true))
+                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 199 + 33 * (i / 8), 64, 32), true))
             .ToArray<IImageSource>());
         PicSources.Add("hill", Enumerable.Range(0, 2 * 8).Select(i =>
-                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 265 + 33 * (i / 8f), 64, 32), true))
+                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 265 + 33 * (i / 8), 64, 32), true))
             .ToArray<IImageSource>());
         PicSources.Add("riverMouth", Enumerable.Range(0, 4).Select(col =>
             new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * col, 331, 64, 32), true)).ToArray<IImageSource>());

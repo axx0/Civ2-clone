@@ -23,8 +23,6 @@ public interface IControl : IComponent
 
     IComponent Parent { get; }
 
-    IList<IControl>? Children { get; }
-    
     /**
      * Accepts a keystroke. Keystrokes are used for shortcuts and keyboard-based navigation.
      * Keep in mind that keystrokes are not the same as chars; for example LEFT_ARROW is not
