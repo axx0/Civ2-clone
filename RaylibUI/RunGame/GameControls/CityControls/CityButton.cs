@@ -1,46 +1,39 @@
-﻿using Model.Images;
-using Raylib_CSharp.Colors;
-using Raylib_CSharp.Fonts;
-using Raylib_CSharp.Transformations;
-using RaylibUI.BasicTypes.Controls;
+﻿using Model;
+using Model.Controls;
 using RaylibUI.Controls;
-using System.Numerics;
 
 namespace RaylibUI.RunGame.GameControls.CityControls;
 
 public class CityButton : Button
 {
     private readonly CityWindow _cityWindow;
-    private readonly int _baseFontSize;
+    private readonly IUserInterface _active;
+    private readonly CityButtonProperties _properties;
 
-    public CityButton(CityWindow controller, string text, Font? font = null, int fontSize = 12, IImageSource? backgroundImage = null) : base(controller, text, font, fontSize, backgroundImage: backgroundImage)
+    public CityButton(CityWindow controller, string key) : 
+        base(controller, controller.CityWindowProps.Buttons[key].Text, controller.MainWindow.ActiveInterface.Look.CityWindowFont)
     {
         _cityWindow = controller;
-        _baseFontSize = fontSize;
+        _active = controller.MainWindow.ActiveInterface;
+        _properties = controller.CityWindowProps.Buttons[key];
     }
-
-    /// <summary>
-    /// Absolute position without padding
-    /// </summary>
-    public Rectangle? AbsolutePositionNoPadding { get; set; }
 
     public override void OnResize()
     {
         Scale = _cityWindow.Scale;
 
-        FontSize = _baseFontSize + (int)(16 * (Scale - 1));
+        FontSize = _active.Look.CityWindowFontSize + (int)(12 * (Scale - 1));
 
-        if (AbsolutePosition.HasValue)
+        if (Parent == _cityWindow)
         {
-            var absolutePosition = AbsolutePosition.Value.ScaleAll(Scale);
-            Bounds = new Rectangle(Controller.Location.X + Controller.LayoutPadding.Left + absolutePosition.X,
-                Controller.Location.Y + Controller.LayoutPadding.Top + absolutePosition.Y, absolutePosition.Width, absolutePosition.Height);
+            Location = new(_cityWindow.LayoutPadding.Left + _properties.Box.X * Scale,
+                    _cityWindow.LayoutPadding.Top + _properties.Box.Y * Scale);
         }
-        else if (AbsolutePositionNoPadding.HasValue)
+        else
         {
-            var absolutePosition = AbsolutePositionNoPadding.Value.ScaleAll(Scale);
-            Bounds = new Rectangle(Controller.Location.X + absolutePosition.X,
-                Controller.Location.Y + absolutePosition.Y, absolutePosition.Width, absolutePosition.Height);
+            Location = new(_properties.Box.X * Scale, _properties.Box.Y * Scale);
         }
+        Width = (int)(_properties.Box.Width * Scale);
+        Height = (int)(_properties.Box.Height * Scale);
     }
 }

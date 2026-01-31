@@ -1,8 +1,8 @@
 using Civ2engine.Enums;
 using Civ2engine.Events;
+using Model.Controls;
 using JetBrains.Annotations;
 using Model.Input;
-using Model.Menu;
 
 namespace RaylibUI.RunGame.Commands.Zoom;
 

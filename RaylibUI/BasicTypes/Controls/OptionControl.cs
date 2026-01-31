@@ -1,4 +1,3 @@
-using System.Net.Mime;
 using Model.Images;
 using Raylib_CSharp.Transformations;
 using Raylib_CSharp.Rendering;
@@ -6,18 +5,21 @@ using Raylib_CSharp.Colors;
 using RaylibUI.BasicTypes;
 using RaylibUI.BasicTypes.Controls;
 using RaylibUtils;
+using Raylib_CSharp.Interact;
 
 namespace RaylibUI;
 
-internal class OptionControl : LabelControl
+public class OptionControl : LabelControl
 {
     private readonly IImageSource[] _images;
     private readonly int _imageWidth, _imageHeight;
+    private readonly OptionsPanel _parent;
 
-    public override bool CanFocus => true;
+    public override bool CanFocus => false;
 
-    public OptionControl(IControlLayout controller, string text, int index, bool isChecked, IImageSource[] images) : base(
-        controller, text, eventTransparent: false, padding: new (0, Images.GetImageWidth(images[0], controller.MainWindow.ActiveInterface), 0, 0),
+    public OptionControl(IControlLayout controller, OptionsPanel parent, string text, int index, bool isChecked, IImageSource[] images) : 
+        base(controller, text, eventTransparent: false, verticalAlignment: Model.Controls.VerticalAlignment.Center,
+        padding: new (0, Images.GetImageWidth(images[0], controller.MainWindow.ActiveInterface), 0, 0),
         font: controller.MainWindow.ActiveInterface.Look.LabelFont,
         fontSize: controller.MainWindow.ActiveInterface.Look.LabelFontSize,
         colorFront: controller.MainWindow.ActiveInterface.Look.LabelColour,
@@ -25,6 +27,7 @@ internal class OptionControl : LabelControl
     {
         Index = index;
         Checked = isChecked;
+        _parent = parent;
         _images = images;
         _imageWidth = Images.GetImageWidth(images[0], controller.MainWindow.ActiveInterface);
         _imageHeight = Images.GetImageHeight(images[0], controller.MainWindow.ActiveInterface);
@@ -38,19 +41,21 @@ internal class OptionControl : LabelControl
         Checked = false;
     }
 
-    public override void Draw(bool pulse)
-    {
-        Graphics.DrawTexture(TextureCache.GetImage(_images[Checked || _images.Length == 1 ? 0: 1]), (int)Location.X,(int)Location.Y, Color.White);
-        base.Draw(pulse);
-        if (Controller.Focused == this)
-        {
-            Graphics.DrawRectangleLinesEx(new Rectangle(Bounds.X + _imageWidth - 1, Bounds.Y + 1, Bounds.Width - _imageWidth, Bounds.Height -2), 0.5f, Color.Black);
-        }
-    }
-
     public override int GetPreferredHeight()
     {
         var baseHeight = base.GetPreferredHeight();
         return baseHeight < _imageHeight ? _imageHeight : baseHeight;
+    }
+
+    public override void Draw(bool pulse)
+    {
+        if (!Visible) return;
+
+        Graphics.DrawTexture(TextureCache.GetImage(_images[Checked || _images.Length == 1 ? 0 : 1]), (int)Bounds.X, (int)Bounds.Y, Color.White);
+        base.Draw(pulse);
+        if (_parent.SelectedId == Index)
+        {
+            Graphics.DrawRectangleLinesEx(new Rectangle(Bounds.X + _imageWidth - 1, Bounds.Y + 1, Bounds.Width - _imageWidth, Bounds.Height - 2), 0.5f, Color.Black);
+        }
     }
 }   

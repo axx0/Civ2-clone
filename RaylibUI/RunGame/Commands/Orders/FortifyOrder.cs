@@ -5,8 +5,8 @@ using JetBrains.Annotations;
 using Model;
 using Model.Constants;
 using Model.Core;
+using Model.Controls;
 using Model.Input;
-using Model.Menu;
 
 namespace RaylibUI.RunGame.Commands.Orders;
 

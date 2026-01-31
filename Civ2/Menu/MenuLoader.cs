@@ -1,7 +1,7 @@
 using Civ2engine;
 using Civ2engine.IO;
+using Model.Controls;
 using Model.Input;
-using Model.Menu;
 
 namespace Civ2.Menu
 {

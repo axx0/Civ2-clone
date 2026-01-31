@@ -1,9 +1,9 @@
-using Model.Menu;
 using Raylib_CSharp.Colors;
 using Raylib_CSharp.Fonts;
 using Raylib_CSharp.Interact;
 using Raylib_CSharp.Rendering;
 using RaylibUI.BasicTypes.Controls;
+using Model.Controls;
 
 namespace RaylibUI.RunGame.GameControls.Menu;
 
@@ -28,7 +28,7 @@ public class GameMenu : ControlGroup
                               })
                               .ToList();
 
-        Children = _labels.Cast<IControl>().ToList();
+        Controls = _labels.Cast<IControl>().ToList();
     }
 
     public void Activate(int index)
@@ -71,7 +71,7 @@ public class GameMenu : ControlGroup
     public override void Draw(bool pulse)
     {
         Graphics.DrawRectangleRec(Bounds, Color.White);
-        foreach (var control in Children)
+        foreach (var control in Controls)
         {
             if (control == Controller.Focused)
             {

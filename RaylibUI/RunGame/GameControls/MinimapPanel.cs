@@ -62,7 +62,7 @@ public class MinimapPanel : BaseControl
             _map = _gameScreen.CurrentMap;
         };
 
-        Children = new List<IControl>() { _headerLabel, _closeMapButton, _nextMapButton, _prevMapButton };
+        Controls = [_headerLabel, _closeMapButton, _nextMapButton, _prevMapButton];
 
         controller.OnMapEvent += MapEventTriggered;
         Click += OnClick;
@@ -80,12 +80,19 @@ public class MinimapPanel : BaseControl
         _rotationShift = 0;
 
         _backgroundImage = ImageUtils.PaintDialogBase(_active, Width, Height, padding);
-        
-        _headerLabel.Bounds = new Rectangle((int)Location.X + 100, (int)Location.Y, Width - 200, padding.Top);
-        _headerLabel.OnResize();
-        _closeMapButton.Bounds = new Rectangle((int)Location.X + 14, (int)Location.Y + 6, _closeMapButton.GetPreferredWidth(), _closeMapButton.GetPreferredHeight());
-        _prevMapButton.Bounds = new Rectangle((int)Location.X + 30, (int)Location.Y + 6, _prevMapButton.GetPreferredWidth(), _prevMapButton.GetPreferredHeight());
-        _nextMapButton.Bounds = new Rectangle((int)Location.X + 46, (int)Location.Y + 6, _nextMapButton.GetPreferredWidth(), _nextMapButton.GetPreferredHeight());
+
+        _headerLabel.Location = new(100, 0);
+        _headerLabel.Width = Width - 200;
+        _headerLabel.Height = padding.Top;
+        _closeMapButton.Location = new(14, 6);
+        _closeMapButton.Width = _closeMapButton.GetPreferredWidth();
+        _closeMapButton.Height = _closeMapButton.GetPreferredHeight();
+        _prevMapButton.Location = new(39, 6);
+        _prevMapButton.Width = _prevMapButton.GetPreferredWidth();
+        _prevMapButton.Height = _prevMapButton.GetPreferredHeight();
+        _nextMapButton.Location = new(46, 6);
+        _nextMapButton.Width = _nextMapButton.GetPreferredWidth();
+        _nextMapButton.Height = _nextMapButton.GetPreferredHeight();
         _closeMapButton.OnResize();
         _prevMapButton.OnResize();
         _nextMapButton.OnResize();

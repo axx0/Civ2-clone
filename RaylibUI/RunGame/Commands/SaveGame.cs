@@ -1,8 +1,8 @@
 using Model.Input;
 using Civ2engine;
 using Civ2engine.SaveLoad;
+using Model.Controls;
 using JetBrains.Annotations;
-using Model.Menu;
 
 namespace RaylibUI.RunGame.Commands;
 

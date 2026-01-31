@@ -35,42 +35,67 @@ public class Button : BaseControl
         _fontSize = fontSize ?? _active?.Look.ButtonFontSize ?? 20;
         _textColour = _active?.Look.ButtonColour ?? Color.Black;
         _textSize = TextManager.MeasureTextEx(_font, text, _fontSize, 1f);
-        Height = (int)(_textSize.Y + 10f);
         _backgroundImage = backgroundImage;
         Scale = imageScale;
+    }
+
+    private int _width;
+    public override int Width
+    {
+        get
+        {
+            if (_width == 0)
+            {
+                _width = GetPreferredWidth();
+            }
+
+            return _width;
+        }
+        set { _width = value; }
+    }
+
+    private int _height;
+    public override int Height
+    {
+        get
+        {
+            if (_height == 0)
+            {
+                _height = GetPreferredHeight();
+            }
+
+            return _height;
+        }
+        set { _height = value; }
     }
 
     public override void Draw(bool pulse)
     {
         if (!Visible) return;
 
-        var x = (int)Location.X;
-        var y = (int)Location.Y;
-        var w = Width;
-        var h = Height;
-
         if (_backgroundImage == null)
         {
             if (_active != null)
             {
-                _active.DrawButton(Texture, x, y, w, h);
+                _active.DrawButton(Texture, Bounds);
             }
             else
             {
-                Graphics.DrawTexture(Texture, x, y, Color.White);
+                Graphics.DrawTexture(Texture, (int)Bounds.X, (int)Bounds.Y, Color.White);
             }
 
             if (_hovered)
             {
-                Graphics.DrawRectangleLinesEx(new Rectangle(x, y, w, h), 0.5f, Color.Magenta);
+                Graphics.DrawRectangleLinesEx(Bounds, 0.5f, Color.Magenta);
             }
         }
         else
         {
-            Graphics.DrawTextureEx(TextureCache.GetImage(_backgroundImage), new Vector2(x, y), 0.0f, Scale, Color.White);
+            Graphics.DrawTextureEx(TextureCache.GetImage(_backgroundImage), 
+                new Vector2(Bounds.X, Bounds.Y), 0.0f, Scale, Color.White);
         }
 
-        Graphics.DrawTextEx(_font, Text, new Vector2(x + w / 2 - (int)_textSize.X / 2, y + h / 2 - (int)_textSize.Y / 2), _fontSize, 1f, Enabled ? _textColour : Color.Gray);
+        Graphics.DrawTextEx(_font, Text, new Vector2(Bounds.X + Width / 2 - (int)_textSize.X / 2, Bounds.Y + Height / 2 - (int)_textSize.Y / 2), _fontSize, 1f, Enabled ? _textColour : Color.Gray);
 
         base.Draw(pulse);
     }
@@ -120,8 +145,7 @@ public class Button : BaseControl
 
     public override int GetPreferredHeight()
     {
-        return _backgroundImage == null ? 35 : 
-            Images.GetImageHeight(_backgroundImage, _active, Scale);
+        return _backgroundImage == null ? 36 : Images.GetImageHeight(_backgroundImage, _active, Scale);
     }
 
     public override int GetPreferredWidth()

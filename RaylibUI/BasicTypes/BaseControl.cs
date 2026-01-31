@@ -1,19 +1,22 @@
-using System.Numerics;
-using Raylib_CSharp.Transformations;
+using Civ2engine;
+using Raylib_CSharp.Colors;
 using Raylib_CSharp.Interact;
+using Raylib_CSharp.Rendering;
+using Raylib_CSharp.Transformations;
 using RaylibUI.BasicTypes;
+using RaylibUI.BasicTypes.Controls;
+using RaylibUI.Controls;
+using System.Diagnostics;
+using System.Numerics;
 
 namespace RaylibUI;
 
 public abstract class BaseControl : IControl
 {
     private Vector2 _location;
-    private int _width;
-    private Rectangle _bounds;
     private bool _clickPossible;
     private bool _clickStart;
     private MouseButton _clickButton;
-    private int _height;
     private bool _visible;
     protected IControlLayout Controller { get; }
     
@@ -32,52 +35,71 @@ public abstract class BaseControl : IControl
         set
         {
             _location = value;
-            _bounds = new Rectangle(value.X, value.Y, _width, _height);
         }
     }
 
-    public int Width
-    {
-        get => _width;
-        set
-        {
-            _width = value;
-            _bounds = new Rectangle(_location.X, _location.Y, _width, _height);
-        }
-    }
+    public virtual int Width { get; set; }
 
-    public int Height
-    {
-        get => _height;
-        set
-        {
-            _height = value;
-            _bounds = new Rectangle(_location.X, _location.Y, _width, _height);
-        }
-    }
+    public virtual int Height { get; set; }
 
-    public Rectangle Bounds
-    {
-        get => _bounds;
-        set
-        {
-            _bounds = value;
-            _location = new Vector2(_bounds.X, _bounds.Y);
-            _width = (int)_bounds.Width;
-            _height = (int)_bounds.Height;
-        }
-    }
+    public Rectangle Bounds => new(
+        Parent.Bounds.X + Location.X, 
+        Parent.Bounds.Y + Location.Y,
+        Width,
+        Height);
 
     public bool Visible
     {
-        get => _visible;
+        get 
+        {
+            if (Location.X + Width <= 0 ||
+                Location.X > Parent.Bounds.Width ||
+                Location.Y + Height <= 0 ||
+                Location.Y > Parent.Bounds.Height)
+            {
+                return false; 
+            }
+            else if (!Parent.Visible)
+            {
+                return false;
+            }
+            else
+            {
+                return _visible;
+            }
+            
+        }
         set => _visible = value;
     }
 
-    public Rectangle? AbsolutePosition { get; set; }
-
     public virtual bool CanFocus => false;
-    public IList<IControl>? Children { get; protected set; } = null;
+    public IList<IControl> Controls { get; protected set; } = [];
+
+    private IComponent _parent;
+    public IComponent? Parent => _parent ??= SearchForParent(Controller);
+
+    /// <summary>
+    /// Search for this control's parent control.
+    /// </summary>
+    private IComponent SearchForParent(IComponent parent)
+    {
+        foreach (IControl c in parent.Controls)
+        {
+            if (c == this)
+            {
+                return parent;
+            }
+            else
+            {
+                var candidate = SearchForParent(c);
+                if (candidate != null)
+                    return candidate;
+            }
+        }
+
+        return null;
+    }
+
 
     public virtual bool OnKeyPressed(KeyboardKey key)
     {
@@ -91,12 +113,13 @@ public abstract class BaseControl : IControl
 
     public virtual void OnMouseMove(Vector2 moveAmount)
     {
-        if (!_visible) return;
+        if (!Visible) return;
 
         if (_clickStart)
         {
             if (!Input.IsMouseButtonDown(_clickButton))
             {
+                _clickStart = false;
                 Click?.Invoke(this, new MouseEventArgs { Button = _clickButton});
             }   
         }
@@ -122,7 +145,7 @@ public abstract class BaseControl : IControl
 
     public virtual void OnMouseLeave()
     {
-        if (!_visible) return;
+        if (!Visible) return;
 
         _clickPossible = false;
         _clickStart = false;
@@ -130,9 +153,10 @@ public abstract class BaseControl : IControl
 
     public virtual void OnMouseEnter()
     {
-        if (!_visible) return;
+        if (!Visible) return;
 
         _clickPossible = !Input.IsMouseButtonDown(MouseButton.Left) && !Input.IsMouseButtonDown(MouseButton.Right);
+
         _clickStart = false;
     }
 
@@ -147,13 +171,6 @@ public abstract class BaseControl : IControl
 
     public virtual void OnResize()
     {
-        if (AbsolutePosition.HasValue)
-        {
-            var absolutePosition = AbsolutePosition.Value;
-            Bounds = new Rectangle(Controller.Location.X + Controller.LayoutPadding.Left + absolutePosition.X,
-                Controller.Location.Y + Controller.LayoutPadding.Top + absolutePosition.Y, absolutePosition.Width,
-                absolutePosition.Height);
-        }
     }
 
     public event EventHandler<MouseEventArgs> MouseDown;
@@ -162,10 +179,12 @@ public abstract class BaseControl : IControl
 
     public virtual void Draw(bool pulse)
     {
-        // This is used for debugging layout issues by drawing a box around the controls we can see where they think they are suppose to be and which is in the wrong place
-        // Graphics.DrawRectangleLines((int)_bounds.X, (int)_bounds.Y, _width,Height,Color.Magenta);
+        if (!Visible) return;
 
-        foreach (var control in Children ?? Enumerable.Empty<IControl>())
+        // This is used for debugging layout issues by drawing a box around the controls we can see where they think they are suppose to be and which is in the wrong place
+        //Graphics.DrawRectangleLinesEx(Bounds, 1f, Color.Magenta);
+
+        foreach (var control in Controls ?? Enumerable.Empty<IControl>())
         {
             control.Draw(pulse);
         }
@@ -183,7 +202,7 @@ public abstract class BaseControl : IControl
 
     protected Vector2 GetRelativeMousePosition()
     {
-        return Input.GetMousePosition() - _location;
+        return Input.GetMousePosition() - new Vector2(Bounds.X, Bounds.Y);
     }
 }
 

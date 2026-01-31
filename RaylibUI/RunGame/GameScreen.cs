@@ -4,9 +4,7 @@ using Civ2engine.Events;
 using Civ2engine.MapObjects;
 using Model;
 using Model.Core;
-using Model.Dialog;
-using Model.Interface;
-using Model.Menu;
+using Model.Controls;
 using Raylib_CSharp.Windowing;
 using Raylib_CSharp.Transformations;
 using RaylibUI.RunGame.Commands.Orders;
@@ -73,11 +71,11 @@ public class GameScreen : BaseScreen
     private CivDialog _currentPopupDialog;
     private Action<string,int,IList<bool>?,IDictionary<string,string>?>? _popupClicked;
 
-    private int _zoom;
+    private int _zoom, _width, _height;
 
     public event EventHandler<MapEventArgs>? OnMapEvent = null;
 
-    public GameScreen(Main main, IGame game, Sound soundman, IDictionary<string, string?>? viewData): base(main)
+    public GameScreen(Main main, IGame game, Sound soundman, IDictionary<string, string?>? viewData) : base(main)
     {
         TileCache = new TileTextureCache(this);
         Main = main;
@@ -114,8 +112,8 @@ public class GameScreen : BaseScreen
             ActiveMode = Processing;
         }
         
-        var width = Window.GetScreenWidth();
-        var height = Window.GetScreenHeight();
+        _width = Window.GetScreenWidth();
+        _height = Window.GetScreenHeight();
         
         var menuHeight = _menu.GetPreferredHeight();
         
@@ -124,12 +122,12 @@ public class GameScreen : BaseScreen
 
         _ToTPanelLayout = commands.Any(c => c.Id == CommandIds.MapLayoutToggle && c.Command is not null);   // Command for map layout change only in ToT
         _minimapGlobe = _ToTPanelLayout;
-        var mapWidth = width - MinimapWidth;
-        var mapRect = new Rectangle(0, menuHeight, mapWidth, height - menuHeight);
+        var mapWidth = _width - MinimapWidth;
+        var mapRect = new Rectangle(0, menuHeight, mapWidth, _height - menuHeight);
         if (_ToTPanelLayout)
         {
-            mapWidth = width;
-            mapRect = new Rectangle(0, menuHeight + MinimapHeight, mapWidth, height - menuHeight - MinimapHeight);
+            mapWidth = _width;
+            mapRect = new Rectangle(0, menuHeight + MinimapHeight, mapWidth, _height - menuHeight - MinimapHeight);
         }
         _mapControl = new MapControl(this, game, mapRect, _player);
 
@@ -159,6 +157,9 @@ public class GameScreen : BaseScreen
 
         GameCommands = lookup;
     }
+
+    public override int Width => _width;
+    public override int Height => _height;
 
     private Dictionary<Shortcut, IList<IGameCommand>> GameCommands { get; }
 
@@ -197,7 +198,7 @@ public class GameScreen : BaseScreen
     {
         if (key is KeyboardKey.LeftAlt or KeyboardKey.RightAlt)
         {
-            Focused = MenuBar.Children!.First();
+            Focused = MenuBar.Controls!.First();
             return;
         }
         var command = new Shortcut(key.ToModelKey(), Input.IsKeyDown(KeyboardKey.RightShift) ||
@@ -220,6 +221,8 @@ public class GameScreen : BaseScreen
 
     public override void Resize(int width, int height)
     {
+        _width = width;
+        _height = height;
         GetPanelBounds(width, height);
         base.Resize(width, height);
     }
@@ -239,10 +242,18 @@ public class GameScreen : BaseScreen
             minimapRect = new Rectangle(mapWidth - MinimapWidth, menuHeight, MinimapWidth, MinimapHeight);
             statusRect = new Rectangle(0, menuHeight, mapWidth - MinimapWidth, MiniMapGlobeHeight);
         }
-        _menu.Bounds = new Rectangle(0, 0, width, menuHeight);
-        _mapControl.Bounds = mapControlRect;
-        _minimapPanel.Bounds = minimapRect;
-        _statusPanel.Bounds = statusRect;
+        _menu.Location = new(0, 0);
+        _menu.Width = width;
+        _menu.Height = height;
+        _mapControl.Location = new(mapControlRect.X, mapControlRect.Y);
+        _mapControl.Width = (int)mapControlRect.Width;
+        _mapControl.Height = (int)mapControlRect.Height;
+        _minimapPanel.Location = new(minimapRect.X, minimapRect.Y);
+        _minimapPanel.Width = (int)minimapRect.Width;
+        _minimapPanel.Height = (int)minimapRect.Height;
+        _statusPanel.Location = new(statusRect.X, statusRect.Y);
+        _statusPanel.Width = (int)statusRect.Width;
+        _statusPanel.Height = (int)statusRect.Height;
     }
 
     public void ShowCityDialog(string dialog, City city, IList<string>? replaceStrings = null,
@@ -336,21 +347,50 @@ public class GameScreen : BaseScreen
     public void ShowPopup(string dialogName,
         Action<string, int, IList<bool>?, IDictionary<string, string>?>? handleButtonClick = null,
         IList<int>? replaceNumbers = null,
+        IList<string>? replaceStrings = null,
         IList<bool>? checkboxStates = null,
         List<string>? options = null,
         List<TextBoxDefinition>? textBoxes = null,
         DialogImageElements? dialogImage = null,
-        IList<string>? replaceStrings = null,
-        ListBoxDefinition? listBox = null)
+        ListboxDefinition? listBox = null)
     {
         var popupBox = MainWindow.ActiveInterface.GetDialog(dialogName);
         if (popupBox != null)
         {
-            popupBox.Options ??= options;
+            var dialog = new DialogElements(popupBox);
+            if (options != null)
+            {
+                dialog.Options = new()
+                {
+                    Texts = options
+                };
+            }
+            if (checkboxStates != null)
+            {
+                dialog.Options.CheckboxStates = checkboxStates;
+            }
+            if (replaceNumbers != null)
+            {
+                dialog.ReplaceNumbers = replaceNumbers;
+            }
+            if (replaceStrings != null)
+            {
+                dialog.ReplaceStrings = replaceStrings;
+            }
+            if (textBoxes != null)
+            {
+                dialog.TextBoxes = textBoxes;
+            }
+            if (dialogImage != null)
+            {
+                dialog.Image = dialogImage;
+            }
+            if (listBox != null)
+            {
+                dialog.Listbox = listBox;
+            }
             _popupClicked = handleButtonClick;
-            _currentPopupDialog = new CivDialog(MainWindow, popupBox, new Point(0, 0),
-                ClosePopup, textBoxDefs: textBoxes, image: dialogImage, replaceStrings: replaceStrings,
-                replaceNumbers: replaceNumbers, listBox: listBox, checkboxStates: checkboxStates);
+            _currentPopupDialog = new CivDialog(MainWindow, dialog, ClosePopup);
             ShowDialog(_currentPopupDialog, stack: true);
         }
     }

@@ -19,19 +19,6 @@ public abstract class BaseDialog : BaseLayoutController
     public override void Move(Vector2 moveAmount)
     {
         Location += moveAmount;
-        MoveChildren(moveAmount, Controls);
-    }
-
-    private static void MoveChildren(Vector2 moveAmount, IEnumerable<IControl> controls)
-    {
-        foreach (var control in controls)
-        {
-            control.Location += moveAmount;
-            if (control.Children != null)
-            {
-                MoveChildren(moveAmount, control.Children);
-            }
-        }
     }
 
     protected void SetLocation(int screenWidth, int dialogWidth, int screenHeight, int dialogHeight)

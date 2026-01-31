@@ -1,56 +1,87 @@
-using System.Numerics;
 using Model;
+using Model.Controls;
+using Raylib_CSharp.Colors;
+using RaylibUI.BasicTypes;
+using System;
 
 namespace RaylibUI.RunGame.GameControls.CityControls;
 
-public class UnitSupportBox : BaseControl
+public class UnitSupportBox : Listbox
 {
     private readonly CityWindow _cityWindow;
-    private readonly int _numberOfRows;
-    private readonly int _numberOfColumns;
+    private float _oldScale = 0f;
 
     public UnitSupportBox(CityWindow cityWindow) : base(cityWindow)
     {
         _cityWindow = cityWindow;
-        _numberOfRows = cityWindow.CityWindowProps.UnitSupport.Rows;
-        _numberOfColumns = cityWindow.CityWindowProps.UnitSupport.Columns;
+        ItemSelected += OpenPopup;
     }
 
     public override void OnResize()
     {
-        AbsolutePosition = _cityWindow.CityWindowProps.UnitSupport.Position.ScaleAll(_cityWindow.Scale);
-        base.OnResize();
+        if (_oldScale != _cityWindow.Scale)
+        {
+            Definition = MakeListbox(_cityWindow);
+            _oldScale = _cityWindow.Scale;
+        }
 
-        Recalculate();
+        var pos = _cityWindow.CityWindowProps.UnitSupport.Box;
+        Location = new(_cityWindow.LayoutPadding.Left + pos.X * _cityWindow.Scale,
+            _cityWindow.LayoutPadding.Top + pos.Y * _cityWindow.Scale);
+        Width = (int)(pos.Width * _cityWindow.Scale);
+        Height = (int)(pos.Height * _cityWindow.Scale);
+
+        if (Definition.Groups.Count <= Definition.Columns)
+        {
+            Height = Height / 2;
+            Location = new(Location.X, Location.Y + Height / 2);
+        }
+
+        base.OnResize();
     }
 
-    private void Recalculate()
+    static ListboxDefinition MakeListbox(CityWindow cityWindow)
     {
-        var units = _cityWindow.City.SupportedUnits;
-        if(units.Count > 0)
-        {
-            var activeInterface = _cityWindow.CurrentGameScreen.Main.ActiveInterface;
-            var unitRec = activeInterface.UnitImages.UnitRectangle; 
-            var requireHeight = (Height -4) / (float)_numberOfRows;
-            var scale = requireHeight / unitRec.Height;
-            var requiredWidth = (Bounds.Width - 15) / _numberOfColumns;
-            var row = 0;
-            var initialX = Bounds.X +2;
-            var location = new Vector2(initialX, Bounds.Y);
-            var rowLimit = Bounds.X + Bounds.Width;
-            var children = new List<IControl>();
-            for (int i = 0; i < units.Count && row < _numberOfRows; i++)
-            {
-                children.Add(new UnitDisplay(_cityWindow, units[i], _cityWindow.CurrentGameScreen.Game, location,activeInterface, scale ));
-                location = location with { X = location.X + requiredWidth };
-                if (location.X + requiredWidth > rowLimit)
-                {
-                    row++;
-                    location = new Vector2(initialX, location.Y + requireHeight);
-                }
-            }
+        var units = cityWindow.City.SupportedUnits;
+        var active = cityWindow.MainWindow.ActiveInterface;
+        var properties = cityWindow.CityWindowProps.UnitSupport;
 
-            Children = children;
+        List<ListboxGroup> groups = [];
+        foreach (var unit in units)
+        {
+            var group = new ListboxGroup()
+            {
+                Elements = [new ListboxGroupElement { Unit = unit, Game = cityWindow.CurrentGameScreen.Game, ScaleIcon = ImageUtils.ZoomScale(-3 + (int)(6 * (cityWindow.Scale - 1)))}],    // zoom = -6 / -3 / 0
+                Height = (int)Math.Ceiling(properties.Box.Height / properties.Rows * cityWindow.Scale)
+            };
+            groups.Add(group);
         }
+
+        return new ListboxDefinition()
+        {
+            Rows = properties.Rows,
+            Columns = properties.Columns,
+            HorizontalStacking = true,
+            Selectable = false,
+            Looks = new ListboxLooks()
+            {
+                Font = active.Look.CityWindowFont,
+                FontSize = active.Look.CityWindowFontSize + (int)(12 * (cityWindow.Scale - 1)),
+                TextColorFront = Color.Black,
+                TextColorShadow = Color.Gray
+            },
+            Groups = groups
+        };
+    }
+
+    private void OpenPopup(object? sender, ListboxSelectionEventArgs args)
+    {
+        var city = _cityWindow.City;
+        var screen = _cityWindow.CurrentGameScreen;
+        var unit = city.SupportedUnits[args.Index];
+
+        screen.ShowPopup("CHILDCLICK", 
+            replaceStrings: [$"{unit.Owner.Adjective} {unit.Name}", $"({unit.CurrentLocation.X},{unit.CurrentLocation.Y})"],
+            dialogImage: new(unit, screen.MainWindow.ActiveInterface));
     }
 }

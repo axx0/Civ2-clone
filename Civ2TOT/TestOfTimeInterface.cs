@@ -3,11 +3,11 @@ using Civ2.Dialogs;
 using Civ2engine.IO;
 using JetBrains.Annotations;
 using Model;
+using Model.Controls;
 using Model.Images;
 using Model.ImageSets;
 using Model.Input;
 using Model.Interface;
-using Model.Menu;
 using Model.Utils;
 using Raylib_CSharp.Colors;
 using Raylib_CSharp.Images;
@@ -16,7 +16,7 @@ using Raylib_CSharp.Rendering;
 using Raylib_CSharp.Textures;
 using Raylib_CSharp.Transformations;
 using RaylibUtils;
-using static Model.Menu.CommandIds;
+using static Model.Controls.CommandIds;
 
 namespace TOT;
 
@@ -168,21 +168,23 @@ public class TestOfTimeInterface(IMain main) : Civ2Interface(main)
 
         if (Dialogs.TryGetValue(MainMenu.Title + "2", out var menu2))
         {
-            var existingDialog = DialogHandlers[MainMenu.Title].Dialog.Dialog;
+            //var existingDialog = DialogHandlers[MainMenu.Title].Dialog;
+            //existingDialog.Options.Texts = menu2.Options.Concat(existingDialog.Options.Texts.Skip(5)).ToList();
+            var existingDialog = DialogHandlers[MainMenu.Title].Dialog;
             if (existingDialog?.Options != null && menu2?.Options != null)
-                existingDialog.Options = menu2.Options.Concat(existingDialog.Options.Skip(5)).ToList();
+                existingDialog.Options.Texts = menu2.Options.Concat(existingDialog.Options.Texts.Skip(5)).ToList();
         }
 
 
         PicSources.Add("unit",
             Enumerable.Range(0, 9 * UnitsRows).Select(i => new BitmapStorage("UNITS",
-                    new Rectangle(1 + 65 * (i % 9), 1 + (UnitsPxHeight + 1) * (i / 9f), 64, UnitsPxHeight), true, true))
+                    new Rectangle(1 + 65 * (i % 9), 1 + (UnitsPxHeight + 1) * (i / 9), 64, UnitsPxHeight), true, true))
                 .ToArray<IImageSource>());
         PicSources.Add("HPshield", [new BitmapStorage("UNITS", new Rectangle(586, 1, 32, 10), true)]);
         PicSources.Add("textColours", Enumerable.Range(0, 9).Select(col =>
             new BitmapStorage("CITIES", new Rectangle(1 + 15 * col, 421, 14, 3), true)).ToArray<IImageSource>());
         PicSources.Add("flags", Enumerable.Range(0, 2 * 9).Select(i =>
-                new BitmapStorage("CITIES", new Rectangle(1 + 15 * (i % 9), 425 + 23 * (i / 9f), 14, 22), true))
+                new BitmapStorage("CITIES", new Rectangle(1 + 15 * (i % 9), 425 + 23 * (i / 9), 14, 22), true))
             .ToArray<IImageSource>());
         PicSources.Add("fortify", [new BitmapStorage("CITIES", new Rectangle(143, 423, 64, 48), true)]);
         PicSources.Add("fortress", [new BitmapStorage("CITIES", new Rectangle(208, 423, 64, 48), true)]);
@@ -209,19 +211,19 @@ public class TestOfTimeInterface(IMain main) : Civ2Interface(main)
         PicSources.Add("dither", [new BitmapStorage("TERRAIN1", new Rectangle(1, 447, 64, 32), true)]);
         PicSources.Add("blank", [new BitmapStorage("TERRAIN1", new Rectangle(131, 447, 64, 32), true)]);
         PicSources.Add("connection", Enumerable.Range(0, 2 * 8).Select(i =>
-                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 1 + 33 * (i / 8f), 64, 32), true))
+                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 1 + 33 * (i / 8), 64, 32), true))
             .ToArray<IImageSource>());
         PicSources.Add("river", Enumerable.Range(0, 2 * 8).Select(i =>
-                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 67 + 33 * (i / 8f), 64, 32), true))
+                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 67 + 33 * (i / 8), 64, 32), true))
             .ToArray<IImageSource>());
         PicSources.Add("forest", Enumerable.Range(0, 2 * 8).Select(i =>
-                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 133 + 33 * (i / 8f), 64, 32), true))
+                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 133 + 33 * (i / 8), 64, 32), true))
             .ToArray<IImageSource>());
         PicSources.Add("mountain", Enumerable.Range(0, 2 * 8).Select(i =>
-                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 199 + 33 * (i / 8f), 64, 32), true))
+                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 199 + 33 * (i / 8), 64, 32), true))
             .ToArray<IImageSource>());
         PicSources.Add("hill", Enumerable.Range(0, 2 * 8).Select(i =>
-                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 265 + 33 * (i / 8f), 64, 32), true))
+                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 265 + 33 * (i / 8), 64, 32), true))
             .ToArray<IImageSource>());
         PicSources.Add("riverMouth", Enumerable.Range(0, 4).Select(col =>
             new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * col, 331, 64, 32), true)).ToArray<IImageSource>());
@@ -571,6 +573,21 @@ public class TestOfTimeInterface(IMain main) : Civ2Interface(main)
 
     public override Dictionary<string, IImageSource[]> PicSources { get; } = new();
 
+    public override ListboxLooks GetListboxLooks(ListboxType? type)
+    {
+        return type switch
+        {
+            ListboxType.Default => new ListboxLooks
+            {
+                Font = Fonts.Tnr,
+                FontSize = 12,
+                TextColorFront = Color.Black,
+                BoxBackgroundColor = new Color(67, 67, 67, 255)
+            },
+            _ => new ListboxLooks(),
+        };
+    }
+
     public override void LoadPlayerColours()
     {
         var playerColours = new PlayerColour[9];
@@ -675,8 +692,8 @@ public class TestOfTimeInterface(IMain main) : Civ2Interface(main)
 
     public override void DrawBorderLines(ref Image destination, int height, int width, Padding padding, bool statusPanel) { }
 
-    public override void DrawButton(Texture2D texture, int x, int y, int w, int h)
+    public override void DrawButton(Texture2D texture, Rectangle bounds)
     {
-        Graphics.DrawTexture(texture, x, y, Color.White);
+        Graphics.DrawTexture(texture, (int)bounds.X, (int)bounds.Y, Color.White);
     }
 }

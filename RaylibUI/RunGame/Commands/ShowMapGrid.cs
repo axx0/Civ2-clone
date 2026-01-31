@@ -2,9 +2,9 @@ using Model.Input;
 using Civ2engine;
 using JetBrains.Annotations;
 using Model;
-using Model.Dialog;
+using Model.Controls;
 using Model.Images;
-using Model.Menu;
+using Model.Controls;
 using Raylib_CSharp.Interact;
 
 namespace RaylibUI.RunGame.Commands;

@@ -3,7 +3,7 @@ using Civ2engine.Terrains;
 using Model;
 using Model.Constants;
 using Model.Core;
-using Model.Menu;
+using Model.Controls;
 
 namespace RaylibUI.RunGame.Commands.Orders;
 

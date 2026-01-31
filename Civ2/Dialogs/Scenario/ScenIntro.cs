@@ -1,7 +1,7 @@
 using Civ2.Dialogs.Scenario;
 using Civ2engine;
 using Model;
-using Model.Dialog;
+using Model.Controls;
 using Model.InterfaceActions;
 
 namespace Civ2.Dialogs;
@@ -13,13 +13,10 @@ public class ScenIntro : ICivDialogHandler
     public string Name { get; } = Title;
     public ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox> popups)
     {
-        Dialog = new DialogElements
+        Dialog = new DialogElements(popups[Name])
         {
-            Dialog = new PopupBox()
-            {
-                Name = Title,
-                Title = "",
-            },
+            Name = Title,
+            Title = "",
             DialogPos = new Point(0, 0)
         };
         return this;

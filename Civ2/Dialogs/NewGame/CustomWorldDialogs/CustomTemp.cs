@@ -1,6 +1,6 @@
 using Civ2.Rules;
 using Civ2engine;
-using Model.Dialog;
+using Model.Controls;
 
 namespace Civ2.Dialogs.NewGame.CustomWorldDialogs;
 
@@ -12,10 +12,10 @@ public class CustomTemp: SimpleSettingsDialog
     {
     }
 
-    protected override string SetConfigValue(DialogResult result, PopupBox? popupBox)
+    protected override string SetConfigValue(DialogResult result, DialogElements? dialog)
     {
-        Initialization.ConfigObject.Temperature = result.SelectedButton == popupBox.Button[0]
-            ? Initialization.ConfigObject.Random.Next(popupBox.Options.Count)
+        Initialization.ConfigObject.Temperature = result.SelectedButton == dialog.Button[0]
+            ? Initialization.ConfigObject.Random.Next(dialog.Options.Texts.Count)
             : result.SelectedIndex;
         return CustomAge.Title;
     }

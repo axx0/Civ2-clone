@@ -1,9 +1,8 @@
 using Model.Input;
 using Civ2engine;
 using Model;
-using Model.Dialog;
+using Model.Controls;
 using Model.Images;
-using Model.Menu;
 using Raylib_CSharp.Interact;
 
 namespace RaylibUI.RunGame.Commands;
@@ -15,7 +14,7 @@ public class CityReportOptions(GameScreen gameScreen)
     {
         var options = GameScreen.Game.Options;
         // ReSharper disable once StringLiteralTypo
-        GameScreen.ShowPopup("MESSAGEOPTIONS", DialogClick, 
+        GameScreen.ShowPopup("MESSAGEOPTIONS", DialogClick,
             checkboxStates: new List<bool> { options.WarnWhenCityGrowthHalted, options.ShowCityImprovementsBuilt, options.ShowNonCombatUnitsBuilt, options.ShowInvalidBuildInstructions, options.AnnounceCitiesInDisorder, options.AnnounceOrderRestored, options.AnnounceWeLoveKingDay, options.WarnWhenFoodDangerouslyLow, options.WarnWhenPollutionOccurs, options.WarnChangProductWillCostShields, options.ZoomToCityNotDefaultAction });
     }
 

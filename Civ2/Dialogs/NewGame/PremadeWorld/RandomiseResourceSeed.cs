@@ -1,6 +1,6 @@
 using Civ2.Rules;
 using Civ2engine;
-using Model.Dialog;
+using Model.Controls;
 
 namespace Civ2.Dialogs.NewGame.PremadeWorld;
 
@@ -11,7 +11,7 @@ public class RandomiseResourceSeed : SimpleSettingsDialog
     {
     }
 
-    protected override string SetConfigValue(DialogResult result, PopupBox? popupBox)
+    protected override string SetConfigValue(DialogResult result, DialogElements? dialog)
     {
         if (result.SelectedIndex == 0)
         {

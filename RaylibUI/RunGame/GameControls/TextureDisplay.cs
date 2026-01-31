@@ -20,7 +20,7 @@ public class TextureDisplay : BaseControl
 
     public override void Draw(bool pulse)
     {
-        Graphics.DrawTextureEx(_texture, _location, 0f, _scale, Color.White);
+        Graphics.DrawTextureEx(_texture, Parent.Location + _location, 0f, _scale, Color.White);
         base.Draw(pulse);
     }
 }

@@ -386,7 +386,7 @@ namespace Civ2engine
         Mtons = 387,
         sqmiles = 388,
         yrs = 391,
-        children = 392,
+        Controls = 392,
         million = 393,
         percapita = 394,
         Place1st = 395,

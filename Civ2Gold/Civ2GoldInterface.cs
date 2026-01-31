@@ -7,15 +7,16 @@ using Model.Images;
 using Model.ImageSets;
 using Model.Input;
 using Model.Interface;
-using Model.Menu;
+using Model.Controls;
+using Raylib_CSharp.Textures;
+using Raylib_CSharp.Transformations;
 using Model.Utils;
 using Raylib_CSharp.Colors;
 using Raylib_CSharp.Images;
 using Raylib_CSharp.Rendering;
-using Raylib_CSharp.Textures;
-using Raylib_CSharp.Transformations;
 using RaylibUtils;
-using static Model.Menu.CommandIds;
+using static Model.Controls.CommandIds;
+using System.ComponentModel.Design;
 
 namespace Civ2Gold;
 
@@ -33,7 +34,10 @@ public class Civ2GoldInterface(IMain main) : Civ2Interface(main)
 
         RadioButtons = [new BitmapStorage("buttons.png", 0, 0, 32), new BitmapStorage("buttons.png", 32, 0, 32)],
         CheckBoxes = [new BitmapStorage("buttons.png", 0, 32, 32), new BitmapStorage("buttons.png", 32, 32, 32)],
-        
+        DiskIcons = [new BitmapStorage("explorer_icons.png", 0, 0, 32), new BitmapStorage("explorer_icons.png", 32, 0, 32),
+          new BitmapStorage("explorer_icons.png", 64, 0, 32), new BitmapStorage("explorer_icons.png", 0, 32, 32),
+          new BitmapStorage("explorer_icons.png", 32, 32, 32), new BitmapStorage("explorer_icons.png", 64, 32, 32)],
+
         DefaultFont = Fonts.Tnr,
         ButtonFont = Fonts.Tnr,
         ButtonFontSize = 20,
@@ -51,7 +55,7 @@ public class Civ2GoldInterface(IMain main) : Civ2Interface(main)
         LabelColour = new Color(31, 31, 31, 255),
         LabelShadowColour = new Color(191, 191, 191, 255),
         CityWindowFont = Fonts.Arial,
-        CityWindowFontSize = 15,
+        CityWindowFontSize = 14,  // small=6, normal=14, large=20
         MenuFont = Fonts.Arial,
         MenuFontSize = 14,
         StatusPanelLabelFont = Fonts.TnRbold,
@@ -80,7 +84,7 @@ public class Civ2GoldInterface(IMain main) : Civ2Interface(main)
 
         PicSources.Add("unit",
             Enumerable.Range(0, 9 * UnitsRows).Select(i => new BitmapStorage("UNITS",
-                new Rectangle(1 + 65 * (i % 9), 1 + (UnitsPxHeight + 1) * (i / 9f), 64, UnitsPxHeight),
+                new Rectangle(1 + 65 * (i % 9), 1 + (UnitsPxHeight + 1) * (i / 9), 64, UnitsPxHeight),
                 searchFlagLoc: true)).ToArray<IImageSource>());
         PicSources.Add("HPshield", [new BitmapStorage("UNITS", new Rectangle(597, 30, 12, 20))]);
         PicSources.Add("backShield1", [new BitmapStorage("UNITS", new Rectangle(586, 1, 12, 20))]);
@@ -88,7 +92,7 @@ public class Civ2GoldInterface(IMain main) : Civ2Interface(main)
         PicSources.Add("textColours", Enumerable.Range(0, 9).Select(col =>
             new BitmapStorage("CITIES", new Rectangle(1 + 15 * col, 423, 14, 1))).ToArray<IImageSource>());
         PicSources.Add("flags", Enumerable.Range(0, 2 * 9).Select(i =>
-                new BitmapStorage("CITIES", new Rectangle(1 + 15 * (i % 9f), 425 + 23 * (i / 9f), 14, 22)))
+                new BitmapStorage("CITIES", new Rectangle(1 + 15 * (i % 9), 425 + 23 * (i / 9), 14, 22)))
             .ToArray<IImageSource>());
         PicSources.Add("fortify", [new BitmapStorage("CITIES", new Rectangle(143, 423, 64, 48))]);
         PicSources.Add("fortress", [new BitmapStorage("CITIES", new Rectangle(208, 423, 64, 48))]);
@@ -115,19 +119,19 @@ public class Civ2GoldInterface(IMain main) : Civ2Interface(main)
         PicSources.Add("dither", [new BitmapStorage("TERRAIN1", new Rectangle(1, 447, 64, 32))]);
         PicSources.Add("blank", [new BitmapStorage("TERRAIN1", new Rectangle(131, 447, 64, 32))]);
         PicSources.Add("connection", Enumerable.Range(0, 2 * 8).Select(i =>
-                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 1 + 33 * (i / 8f), 64, 32)))
+                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 1 + 33 * (i / 8), 64, 32)))
             .ToArray<IImageSource>());
         PicSources.Add("river", Enumerable.Range(0, 2 * 8).Select(i =>
-                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 67 + 33 * (i / 8f), 64, 32)))
+                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 67 + 33 * (i / 8), 64, 32)))
             .ToArray<IImageSource>());
         PicSources.Add("forest", Enumerable.Range(0, 2 * 8).Select(i =>
-                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 133 + 33 * (i / 8f), 64, 32)))
+                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 133 + 33 * (i / 8), 64, 32)))
             .ToArray<IImageSource>());
         PicSources.Add("mountain", Enumerable.Range(0, 2 * 8).Select(i =>
-                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 199 + 33 * (i / 8f), 64, 32)))
+                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 199 + 33 * (i / 8), 64, 32)))
             .ToArray<IImageSource>());
         PicSources.Add("hill", Enumerable.Range(0, 2 * 8).Select(i =>
-                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 265 + 33 * (i / 8f), 64, 32)))
+                new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 265 + 33 * (i / 8), 64, 32)))
             .ToArray<IImageSource>());
         PicSources.Add("riverMouth", Enumerable.Range(0, 4).Select(col =>
             new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * col, 331, 64, 32))).ToArray<IImageSource>());
@@ -143,6 +147,8 @@ public class Civ2GoldInterface(IMain main) : Civ2Interface(main)
         PicSources.Add("close", [new BitmapStorage("ICONS", new Rectangle(1, 389, 16, 16))]);
         PicSources.Add("zoomIn", [new BitmapStorage("ICONS", new Rectangle(18, 389, 16, 16))]);
         PicSources.Add("zoomOut", [new BitmapStorage("ICONS", new Rectangle(35, 389, 16, 16))]);
+        PicSources.Add("gold,large", [ new BitmapStorage("ICONS", new Rectangle(16, 320, 14, 14))]);
+        PicSources.Add("trade,small", [ new BitmapStorage("ICONS", new Rectangle(71, 334, 10, 10))]);
         PicSources.Add("backgroundImage", [new BinaryStorage("Tiles.dll", 0xF7454, 0x1389D)]);
         PicSources.Add("backgroundImageSmall1", [
                 new BinaryStorage("Tiles.dll", 0xED354, 0xA0FD, new Rectangle(332, 134, 64, 64))
@@ -167,7 +173,8 @@ public class Civ2GoldInterface(IMain main) : Civ2Interface(main)
         PicSources.Add("peoplePic1", [new BinaryStorage("Intro.dll", 0x84E90, 0x129CE)]);
         PicSources.Add("peoplePic2", [new BinaryStorage("Intro.dll", 0x97860, 0x139A0)]);
         PicSources.Add("templePic", [new BinaryStorage("Intro.dll", 0xAB200, 0xB839)]);
-
+        PicSources.Add("people", Enumerable.Range(0, 11 * 4).Select(i =>
+                        new BitmapStorage("PEOPLE", new Rectangle(2 + 28 * (i % 11), 6 + 31 * (i / 11), 27, 30))).ToArray<IImageSource>());
 
         var src = new IImageSource[6 * 8];
         for (var row = 0; row < 6; row++)
@@ -494,6 +501,27 @@ public class Civ2GoldInterface(IMain main) : Civ2Interface(main)
     public override int UnitsPxHeight => 48;
     public override Dictionary<string, IImageSource[]> PicSources { get; } = new();
 
+    public override ListboxLooks GetListboxLooks(ListboxType? type)
+    {
+        return type switch
+        {
+            ListboxType.Default => new ListboxLooks
+            {
+                BoxBackgroundColor = new Color(207, 207, 207, 255),
+                BoxLineColor = new Color(67, 67, 67, 255),
+                Font = Fonts.Tnr,
+                FontSize = 21,
+                TextColorFront = Color.Black,
+                TextColorShadow = Color.Blank,
+                SelectedTextFont = Fonts.TnRbold,
+                SelectedTextBackgroundColor = new Color(107, 107, 107, 255),
+                SelectedTextColorFront = Color.White,
+                SelectedTextColorShadow = Color.Black
+            },
+            _ => new ListboxLooks(),
+        };
+    }
+
     public override void GetShieldImages()
     {
         Color shadowColour = new(51, 51, 51, 255);
@@ -671,9 +699,14 @@ public class Civ2GoldInterface(IMain main) : Civ2Interface(main)
         }
     }
 
-    public override void DrawButton(Texture2D texture, int x, int y, int w, int h)
+    public override void DrawButton(Texture2D texture, Rectangle bounds)
     {
-        Graphics.DrawRectangleLinesEx(new Rectangle(x, y, w, h), 1.0f, new Color(100, 100, 100, 255));
+        var x = (int)bounds.X;
+        var y = (int)bounds.Y;
+        var w = (int)bounds.Width;
+        var h = (int)bounds.Height;
+
+        Graphics.DrawRectangleLinesEx(bounds, 1.0f, new Color(100, 100, 100, 255));
         Graphics.DrawRectangleRec(new Rectangle(x + 1, y + 1, w - 2, h - 2), Color.White);
         Graphics.DrawRectangleRec(new Rectangle(x + 3, y + 3, w - 6, h - 6), new Color(192, 192, 192, 255));
         Graphics.DrawLine(x + 2, y + h - 2, x + w - 2, y + h - 2, new Color(128, 128, 128, 255));

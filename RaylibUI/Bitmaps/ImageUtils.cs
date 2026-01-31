@@ -334,7 +334,8 @@ public static class ImageUtils
 
     public static Image[] GetScrollImages(int dim, bool vertical)
     {
-        var image = Image.GenColor(dim, dim, Color.Black);
+        var image = Image.GenColor(dim, dim, new Color(240, 240, 240, 255));
+
         var color1 = new Color(227, 227, 227, 255);
         image.DrawLine(0, 0, image.Width - 1, 0, color1);
         image.DrawLine(0, 0, 0, image.Height - 1, color1);
@@ -347,52 +348,50 @@ public static class ImageUtils
         image.DrawLine(3, 3, image.Width - 4, image.Height - 4, color3);
 
         var color4 = new Color(160, 160, 160, 255);
-        image.DrawLine(image.Width - 2, 1, image.Width - 2, image.Height - 2, color4);
+        image.DrawLine(image.Width - 2, 1, image.Width - 2, image.Height - 1, color4);
         image.DrawLine(1, image.Height - 2, image.Width - 2, image.Height - 2, color4);
 
         var color5 = new Color(105, 105, 105, 255);
-        image.DrawLine(0, image.Height - 1, image.Width - 1, image.Height - 1, color5);
+        image.DrawLine(0, image.Height - 1, image.Width, image.Height - 1, color5);
         image.DrawLine(image.Width - 1, 0, image.Width - 1, image.Height - 1, color5);
 
         var left = image.Copy();
         if (vertical)
         {
-            left.DrawPixel(9, 6, Color.Black);
-            left.DrawLine(8, 7, 10, 7, Color.Black);
-            left.DrawLine(7, 8, 11, 8, Color.Black);
-            left.DrawLine(6, 9, 12, 9, Color.Black);
-
+            left.DrawPixel(8, 6, Color.Black);
+            left.DrawLine(7, 7, 10, 7, Color.Black);
+            left.DrawLine(6, 8, 11, 8, Color.Black);
+            left.DrawLine(5, 9, 12, 9, Color.Black);
         }
         else
         {
-            left.DrawPixel(6, 9, Color.Black);
-            left.DrawLine(7, 8, 7, 10, Color.Black);
-            left.DrawLine(8, 7, 8, 11, Color.Black);
-            left.DrawLine(9, 6, 9, 12, Color.Black);
-
+            left.DrawPixel(6, 8, Color.Black);
+            left.DrawLine(7, 7, 7, 10, Color.Black);
+            left.DrawLine(8, 6, 8, 11, Color.Black);
+            left.DrawLine(9, 5, 9, 12, Color.Black);
         }
+
         var right = image.Copy();
         if (vertical)
         {
-            right.DrawPixel(9, dim - 6, Color.Black);
-            right.DrawLine(8, dim - 7, 10, dim - 7, Color.Black);
-            right.DrawLine(7, dim - 8, 11, dim - 8, Color.Black);
-            right.DrawLine(6, dim - 9, 12, dim - 9, Color.Black);
+            right.DrawPixel(8, dim - 7, Color.Black);
+            right.DrawLine(7, dim - 8, 10, dim - 8, Color.Black);
+            right.DrawLine(6, dim - 9, 11, dim - 9, Color.Black);
+            right.DrawLine(5, dim - 10, 12, dim - 10, Color.Black);
         }
         else
         {
-            right.DrawPixel(dim - 6, 9, Color.Black);
-            right.DrawLine(dim - 7, 8, dim - 7, 10, Color.Black);
-            right.DrawLine(dim - 8, 7, dim - 8, 11, Color.Black);
-            right.DrawLine(dim - 9, 6, dim - 9, 12, Color.Black);
+            right.DrawPixel(dim - 7, 8, Color.Black);
+            right.DrawLine(dim - 8, 7, dim - 8, 10, Color.Black);
+            right.DrawLine(dim - 9, 6, dim - 9, 11, Color.Black);
+            right.DrawLine(dim - 10, 5, dim - 10, 12, Color.Black);
         }
 
-        return new[] { left, image, right };
+        return [left, image, right];
     }
 
     public static Vector2 GetUnitTextures(IUnit unit, IUserInterface active, IGame game,
-        List<IViewElement> viewElements, Vector2 loc,
-        bool noStacking = false)
+        List<IViewElement> viewElements, Vector2 loc, bool noStacking = false)
     {
         var unitTexture = TextureCache.GetImage(active.UnitImages.Units[(int)unit.Type].Image);
         var shieldTexture = TextureCache.GetImage(active.UnitImages.Shields, active, unit.Owner.Id);

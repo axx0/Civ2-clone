@@ -2,7 +2,7 @@ using Civ2.Dialogs.FileDialogs;
 using Civ2.Dialogs.NewGame;
 using Civ2.Rules;
 using Civ2engine;
-using Model.Dialog;
+using Model.Controls;
 using Model.InterfaceActions;
 
 namespace Civ2.Dialogs;
@@ -16,7 +16,7 @@ public class MainMenu : BaseDialogHandler
         Dictionary<string, ICivDialogHandler> civDialogHandlers, Civ2Interface civ2Interface)
 
     {
-        if (result.SelectedButton == Dialog.Dialog.Button[1])
+        if (result.SelectedButton == Dialog.Button[1])
         {
             return civ2Interface.InitialMenu != Title ? civ2Interface.GetInitialAction() : ExitAction.Exit;
         }

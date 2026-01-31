@@ -1,6 +1,6 @@
 using Civ2engine;
 using Model;
-using Model.Dialog;
+using Model.Controls;
 using Model.InterfaceActions;
 
 namespace Civ2.Dialogs;
@@ -20,9 +20,8 @@ public abstract class BaseDialogHandler : ICivDialogHandler
     {
         if (popups.TryGetValue(Name, out var popup))
         {
-            Dialog = new DialogElements
+            Dialog = new DialogElements(popups[Name])
             {
-                Dialog = popup,
                 DialogPos = DialogPos
             };
         }

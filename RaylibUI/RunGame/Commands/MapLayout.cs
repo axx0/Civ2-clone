@@ -1,8 +1,7 @@
 using Civ2engine;
 using Model;
-using Model.Dialog;
+using Model.Controls;
 using Model.Images;
-using Model.Menu;
 
 namespace RaylibUI.RunGame.Commands;
 

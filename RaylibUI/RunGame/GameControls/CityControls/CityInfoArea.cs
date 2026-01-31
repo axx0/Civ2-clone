@@ -1,11 +1,13 @@
 using Civ2engine;
 using Model;
+using Model.Controls;
 using Model.Core;
 using Raylib_CSharp.Colors;
 using Raylib_CSharp.Fonts;
 using Raylib_CSharp.Rendering;
 using Raylib_CSharp.Transformations;
 using RaylibUI.BasicTypes.Controls;
+using RaylibUtils;
 using System.Numerics;
 
 namespace RaylibUI.RunGame.GameControls.CityControls;
@@ -15,9 +17,8 @@ public class CityInfoArea : BaseControl
     private readonly CityWindow _cityWindow;
     private CityDisplayMode _mode;
     private IUserInterface _active;
-    private readonly CityLabel _label;
-    private readonly Color _pen1, _pen2;
-    private float _fontSize;
+    private readonly CityLabel _label, _suppliesLabel, _demandsLabel;
+    private readonly CityLabel[] _tradeLabels;
     private readonly CityWindowLayout _props;
     private readonly IGame _game;
     private readonly City _city;
@@ -30,18 +31,75 @@ public class CityInfoArea : BaseControl
         _mode = CityDisplayMode.Info;
         _active = controller.MainWindow.ActiveInterface;
         _props = _cityWindow.CityWindowProps;
-        _pen1 = new Color(223, 187, 63, 255);
-        _pen2 = new Color(67, 67, 67, 255);
-        _label = new CityLabel(controller, Labels.For(LabelIndex.UnitsPresent), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize,
-            _pen1, _pen2)
+        _label = new CityLabel(controller, _props.Labels["UnitsPresent"]);
+        Controls.Add(_label);
+
+        var suppliesProp = _props.Labels["Supplies"];
+        var text = $"{suppliesProp.Text}: ";
+        if (_city.CommoditySupplied == null)
         {
-            AbsolutePosition = new Rectangle(_props.InfoPanel.X, _props.InfoPanel.Y, _props.InfoPanel.Width, 15)
+            text = String.Empty;
+        }
+        for (var i = 0; i < _city.CommoditySupplied?.Length; i++)
+        {
+            text += _city.CommoditySupplied[i].Name;
+            if (i < _city.CommoditySupplied?.Length - 1)
+            {
+                text += ", ";
+            }
+        }
+        _suppliesLabel = new CityLabel(controller, suppliesProp)
+        {
+            Text = text,
+            HorizontalAlignment = HorizontalAlignment.Left,
         };
+        Controls.Add(_suppliesLabel);
+
+        var demandsProp = _props.Labels["Demands"];
+        text = $"{demandsProp.Text}: ";
+        if (_city.CommodityDemanded == null)
+        {
+            text = String.Empty;
+        }
+        for (var i = 0; i < _city.CommodityDemanded?.Length; i++)
+        {
+            text += _city.CommodityDemanded[i].Name;
+            if (i < _city.CommodityDemanded?.Length - 1)
+            {
+                text += ", ";
+            }
+        }
+        _demandsLabel = new CityLabel(controller, demandsProp)
+        {
+            Text = text,
+            HorizontalAlignment = HorizontalAlignment.Left,
+        };
+        Controls.Add(_demandsLabel);
+
+        var noRoutes = _city.TradeRoutes?.Length ?? 0;
+        if (noRoutes > 0) 
+        {
+            _tradeLabels = new CityLabel[noRoutes];
+        }
+        for (var i = 0; i < noRoutes; i++)
+        {
+            var route = _city.TradeRoutes[i];
+            var tradeCity = _game.AllCities[route.Destination];
+            var box = new Rectangle(demandsProp.Box.X, demandsProp.Box.Y + 15 + 13 * i, demandsProp.Box.Width, demandsProp.Box.Height);
+            _tradeLabels[i] = new CityLabel(controller, new CityLabelProperties($"{tradeCity.Name} {route.Commodity.Name} +xx", 
+                box, demandsProp.Color, demandsProp.ColorShadow, HorizontalAlignment.Left, new Vector2(1, 1)));
+            Controls.Add(_tradeLabels[i]);
+        }
+
+        Controls.Add(new UnitsPresentBox(controller, this));
     }
 
     public override void OnResize()
     {
-        AbsolutePosition = _props.InfoPanel.ScaleAll(_cityWindow.Scale);
+        var pos = _props.InfoPanel.Box.ScaleAll(_cityWindow.Scale);
+        Location = new(_cityWindow.LayoutPadding.Left + pos.X, _cityWindow.LayoutPadding.Top + pos.Y);
+        Width = (int)pos.Width;
+        Height = (int)pos.Height;
         base.OnResize();
 
         _label.Text = _mode switch
@@ -51,70 +109,96 @@ public class CityInfoArea : BaseControl
             _ => Labels.For(LabelIndex.UnitsPresent),
         };
 
-        var activPos = new Vector2(Bounds.X, Bounds.Y + _label.TextSize.Y);
-        var children = new List<IControl>();
-        
+        var activPos = new Vector2(Location.X, Location.Y + _label.TextSize.Y);
+
+        _label.Visible = !(_mode == CityDisplayMode.Info && _city.UnitsInCity.Count > _props.InfoPanel.UnitsPresent.Columns);
+        _suppliesLabel.Visible = _mode == CityDisplayMode.Info;
+        _demandsLabel.Visible = _mode == CityDisplayMode.Info;
+        if (_tradeLabels != null)
+        {
+            for (var i = 0; i < _tradeLabels.Length; i++)
+            {
+                _tradeLabels[i].Visible = _mode == CityDisplayMode.Info;
+            }
+        }
+
+
         if (!(_mode == CityDisplayMode.Info && _city.UnitsInCity.Count > 5))
         {
-            children.Add(_label);
+            //_label.Visible = false;
         }
         else
         {
-            activPos = new Vector2(Bounds.X, Bounds.Y);
+            //_label.Visible = true;
+            activPos = new Vector2(Location.X, Location.Y);
         }
 
         if (_mode == CityDisplayMode.Info)
         {
-            float unitScale = ImageUtils.ZoomScale((int)(6 * _cityWindow.Scale - 8));    // zoom=-5/-2/+1
-            int row = 0;
-            foreach (var unit in _city.UnitsInCity.AsEnumerable().Reverse())
-            {
-                var unitDisplay = new UnitDisplay(_cityWindow, unit, _game, activPos, _active, unitScale);
-                _fontSize = 13 + 16 * (_cityWindow.Scale - 1);
-                var unitLabel = new LabelControl(_cityWindow, ShortCityName(_city), true, font: _active.Look.CityWindowFont,
-                    alignment: TextAlignment.Center, colorShadow: new Color(135, 135, 135, 255), shadowOffset: new Vector2(1, 1),
-                    fontSize: (int)_fontSize);
-                var textDim = TextManager.MeasureTextEx(_active.Look.CityWindowFont, unitLabel.Text, _fontSize, 1);
-                unitLabel.Bounds = new Rectangle(activPos.X, activPos.Y + unitDisplay.Height, unitDisplay.Width, textDim.Y);
-                children.Add(unitDisplay);
-                children.Add(unitLabel);
+            //Controls.Add(new UnitsPresentBox(_cityWindow));
 
-                activPos = activPos with { X = activPos.X + unitDisplay.Width };
-                if (activPos.X + unitDisplay.Width > Bounds.X + Bounds.Width)
-                {
-                    row++;
-                    if (row == 1)
-                    {
-                        activPos = new Vector2(Bounds.X, activPos.Y + unitDisplay.Height + 3 * _cityWindow.Scale);
-                    }
-                    else if (row == 2)
-                    {
-                        activPos = new Vector2(Bounds.X + unitDisplay.Width / 2, Bounds.Y + unitDisplay.Height / 2);
-                    }
-                    else if (row == 3)
-                    {
-                        activPos = new Vector2(Bounds.X + unitDisplay.Width / 2, Bounds.Y + 1.5f * unitDisplay.Height + 3 * _cityWindow.Scale);
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-            }
+            //float unitScale = ImageUtils.ZoomScale((int)(6 * _cityWindow.Scale - 8));    // zoom=-5/-2/+1
+            //int row = 0;
+            //foreach (var unit in _city.UnitsInCity.AsEnumerable().Reverse())
+            //{
+            //    var unitDisplay = new UnitDisplay(_cityWindow, unit, _game, activPos, _active, unitScale);
+            //    _fontSize = 13 + 16 * (_cityWindow.Scale - 1);
+            //    var unitLabel = new LabelControl(_cityWindow, ShortCityName(_city), true, font: _active.Look.CityWindowFont,
+            //        alignment: TextAlignment.Center, colorShadow: new Color(135, 135, 135, 255), shadowOffset: new Vector2(1, 1),
+            //        fontSize: (int)_fontSize);
+            //    var textDim = TextManager.MeasureTextEx(_active.Look.CityWindowFont, unitLabel.Text, _fontSize, 1);
+            //    unitLabel.Location = new(activPos.X, activPos.Y + unitDisplay.Height);
+            //    Width = unitDisplay.Width;
+            //    Height = (int)textDim.Y;
+            //    Controls.Add(unitDisplay);
+            //    Controls.Add(unitLabel);
 
-            children.Add(
-                new CityLabel(_cityWindow, $"{Labels.For(LabelIndex.Supplies)}: {string.Join(", ", _city.CommoditySupplied?.Select(c => _game.Rules.CaravanCommoditie[c.Id].Name) ?? Array.Empty<string>())}", _active.Look.CityWindowFont, _active.Look.CityWindowFontSize,
-                new Color(227, 83, 15, 255), new Color(67, 67, 67, 255), TextAlignment.Left)
-                    { AbsolutePosition = new Rectangle(_props.InfoPanel.X + 5, _props.InfoPanel.Y + 170, 0, 0) });
-            children.Add(
-                new CityLabel(_cityWindow, $"{Labels.For(LabelIndex.Demands)}: {string.Join(", ", _city.CommodityDemanded?.Select(c => _game.Rules.CaravanCommoditie[c.Id].Name) ?? Array.Empty<string>())}", _active.Look.CityWindowFont, _active.Look.CityWindowFontSize,
-                new Color(227, 83, 15, 255), new Color(67, 67, 67, 255), TextAlignment.Left)
-                { AbsolutePosition = new Rectangle(_props.InfoPanel.X + 5, _props.InfoPanel.Y + 183, 0, 0) });
+            //    activPos = activPos with { X = activPos.X + unitDisplay.Width };
+            //    if (activPos.X + unitDisplay.Width > Location.X + Width)
+            //    {
+            //        row++;
+            //        if (row == 1)
+            //        {
+            //            activPos = new Vector2(Location.X, activPos.Y + unitDisplay.Height + 3 * _cityWindow.Scale);
+            //        }
+            //        else if (row == 2)
+            //        {
+            //            activPos = new Vector2(Location.X + unitDisplay.Width / 2, Location.Y + unitDisplay.Height / 2);
+            //        }
+            //        else if (row == 3)
+            //        {
+            //            activPos = new Vector2(Location.X + unitDisplay.Width / 2, Location.Y + 1.5f * unitDisplay.Height + 3 * _cityWindow.Scale);
+            //        }
+            //        else
+            //        {
+            //            break;
+            //        }
+            //    }
+            //}
+
+            //Controls.Add(
+            //    new CityLabel(_cityWindow, $"{Labels.For(LabelIndex.Supplies)}: " +
+            //    $"{string.Join(", ", _city.CommoditySupplied?.Select(c => _game.Rules.CaravanCommoditie[c.Id].Name) ?? 
+            //    Array.Empty<string>())}", new Color(227, 83, 15, 255), new Color(67, 67, 67, 255), TextAlignment.Left)
+            //    {
+            //        Location = new(_props.InfoPanel.X + 5, _props.InfoPanel.Y + 170),
+            //        Width = 0,
+            //        Height = 0
+            //    });
+            //Controls.Add(
+            //    new CityLabel(_cityWindow, $"{Labels.For(LabelIndex.Demands)}: " +
+            //    $"{string.Join(", ", _city.CommodityDemanded?.Select(c => _game.Rules.CaravanCommoditie[c.Id].Name) ?? 
+            //    Array.Empty<string>())}", new Color(227, 83, 15, 255), new Color(67, 67, 67, 255), TextAlignment.Left)
+            //    {
+            //        Location = new(_props.InfoPanel.X + 5, _props.InfoPanel.Y + 183),
+            //        Width = 0,
+            //        Height = 0
+            //    });
         }
 
-        Children = children;
+        //Controls = Controls;
 
-        foreach (var child in Children)
+        foreach (var child in Controls)
         {
             child.OnResize();
         }
@@ -124,9 +208,19 @@ public class CityInfoArea : BaseControl
     {
         base.Draw(pulse);
 
-        //Graphics.DrawRectangleLines((int)Bounds.X, (int)Bounds.Y, Width,Height, Color.Magenta);
+        //Graphics.DrawRectangleLinesEx(Bounds, 1f, Color.Magenta);
 
-        if (_mode == CityDisplayMode.SupportMap)
+        if (_mode == CityDisplayMode.Info && _tradeLabels != null)
+        {
+            for (var i = 0; i < _tradeLabels.Length; i++)
+            {
+                Graphics.DrawTextureEx(TextureCache.GetImage(_active.PicSources["trade,small"][0]),
+                    new(_tradeLabels[i].Bounds.X + _tradeLabels[i].TextSize.X + 5, _tradeLabels[i].Bounds.Y), 
+                    0, _cityWindow.Scale, Color.White);
+            }
+                
+        }
+        else if (_mode == CityDisplayMode.SupportMap)
         {
             var map = _cityWindow.CurrentGameScreen.CurrentMap;
 
@@ -165,15 +259,5 @@ public class CityInfoArea : BaseControl
     {
         _mode = mode;
         OnResize();
-    }
-
-    /// <summary>
-    /// Returns 3 character city name
-    /// </summary>
-    /// <param name="city"></param>
-    /// <returns></returns>
-    private static string ShortCityName(City city)
-    {
-        return city == null ? "NON" : city.Name.Length < 3 ? city.Name : city.Name[..3];
     }
 }

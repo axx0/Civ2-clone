@@ -37,13 +37,16 @@ public class MapControl : BaseControl
     
     public MapControl(GameScreen gameScreen, IGame game, Rectangle initialBounds, LocalPlayer player) : base(gameScreen)
     {
-        Bounds = initialBounds;
+        Location = new(initialBounds.X, initialBounds.Y);
+        Width = (int)initialBounds.Width;
+        Height = (int)initialBounds.Height;
         _currentBounds = initialBounds;
         _gameScreen = gameScreen;
         _game = game;
         _active = gameScreen.MainWindow.ActiveInterface;
         
-        _headerLabel = new HeaderLabel(gameScreen, _active.Look, $"{_game.GetPlayerCiv.Adjective} {Labels.For(LabelIndex.Map)}", fontSize: _active.Look.HeaderLabelFontSizeNormal);
+        _headerLabel = new HeaderLabel(gameScreen, _active.Look, $"{_game.GetPlayerCiv.Adjective} {Labels.For(LabelIndex.Map)}", 
+            fontSize: _active.Look.HeaderLabelFontSizeNormal);
 
         _padding = _active.GetPadding(_headerLabel?.TextSize.Y ?? 0, false);
 
@@ -61,7 +64,7 @@ public class MapControl : BaseControl
                 _gameScreen.TriggerMapEvent(new MapEventArgs(MapEventType.ZoomChange) { Zoom = _gameScreen.Zoom - 1 });
         };
         SetDimensions();
-        Children = new List<IControl> { _headerLabel, _zoomInButton, _zoomOutButton };
+        Controls = [_headerLabel, _zoomInButton, _zoomOutButton];
 
         _currentView =
             _gameScreen.ActiveMode.GetDefaultView(gameScreen, null, _viewHeight, _viewWidth, ForceRedraw);
@@ -70,7 +73,6 @@ public class MapControl : BaseControl
         player.OnUnitEvent += UnitEventTriggered;
         Click += OnClick;
         MouseDown += OnMouseDown;
-
     }
 
     private void OnMouseDown(object? sender, MouseEventArgs e)
@@ -128,29 +130,24 @@ public class MapControl : BaseControl
         _zoomInButton.Visible = !_gameScreen.ToTPanelLayout;
         _zoomOutButton.Visible = !_gameScreen.ToTPanelLayout;
 
-        if (_gameScreen.ToTPanelLayout)
-        {
-            _padding = _active.GetPadding(0, false);
-        }
-        else
-        {
-            _padding = _active.GetPadding(_headerLabel.TextSize.Y, false);
-        }
+        _padding = _gameScreen.ToTPanelLayout ?
+            _active.GetPadding(0, false) :
+            _active.GetPadding(_headerLabel.TextSize.Y, false);
 
-        if (_backgroundImage != null)
-        {
-            _backgroundImage.Value.Unload();
-        }
+        _backgroundImage?.Unload();
         _backgroundImage = ImageUtils.PaintDialogBase(_active, Width, Height, _padding, noWallpaper:true);
 
         if (!_gameScreen.ToTPanelLayout)
         {
-            _headerLabel.Bounds = new Rectangle((int)Location.X + 100, (int)Location.Y, Width - 200, _padding.Top);
-            _zoomInButton.Bounds = new Rectangle((int)Location.X + 11, (int)Location.Y + 7, _zoomInButton.GetPreferredWidth(), _zoomInButton.GetPreferredHeight());
-            _zoomOutButton.Bounds = new Rectangle((int)Location.X + 11 + _zoomInButton.GetPreferredWidth() + 2, (int)Location.Y + 7, _zoomOutButton.GetPreferredWidth(), _zoomOutButton.GetPreferredHeight());
-            _headerLabel.OnResize();
-            _zoomInButton.OnResize();
-            _zoomOutButton.OnResize();
+            _headerLabel.Location = new(100, 0);
+            _headerLabel.Width = Width - 200;
+            _headerLabel.Height = _padding.Top;
+            _zoomInButton.Location = new(11, 7);
+            _zoomInButton.Width = _zoomInButton.GetPreferredWidth();
+            _zoomInButton.Height = _zoomInButton.GetPreferredHeight();
+            _zoomOutButton.Location = new(11 + _zoomInButton.Width + 2, 7);
+            _zoomOutButton.Width = _zoomOutButton.GetPreferredWidth();
+            _zoomOutButton.Height = _zoomOutButton.GetPreferredHeight();
         }
 
         _viewWidth = Width - _padding.Left - _padding.Right;

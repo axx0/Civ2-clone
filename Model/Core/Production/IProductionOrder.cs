@@ -1,7 +1,7 @@
 using Civ2engine.Production;
 using Model;
+using Model.Controls;
 using Model.Images;
-using Model.Interface;
 
 namespace Civ2engine;
 
@@ -19,5 +19,5 @@ public interface IProductionOrder
     IImageSource? GetIcon(IUserInterface activeInterface);
 
     string GetDescription();
-    ListBoxEntry GetBuildListEntry(IUserInterface active);
+    ListboxGroup GetBuildListEntry(IUserInterface active, City city);
 }

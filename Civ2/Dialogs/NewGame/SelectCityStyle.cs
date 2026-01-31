@@ -1,6 +1,6 @@
 using Civ2.Rules;
 using Civ2engine;
-using Model.Dialog;
+using Model.Controls;
 using Model.Interface;
 using Model.InterfaceActions;
 using RaylibUtils;
@@ -19,18 +19,21 @@ public class SelectCityStyle : BaseDialogHandler
     {
         var res = base.UpdatePopupData(popups);
 
-        if (!res.Dialog.Dialog.Button.Contains(Labels.Cancel))
+        if (!res.Dialog.Button.Contains(Labels.Cancel))
         {
-            res.Dialog.Dialog.Button.Add(Labels.Cancel);
+            res.Dialog.Button.Add(Labels.Cancel);
         }
         return res;
     }
 
     public override IInterfaceAction Show(Civ2Interface activeInterface)
     {
-        Dialog.OptionsIcons = activeInterface.CityImages.Sets.Take(4).Select(i => i.Skip(6).First().Image).ToArray();
-        Dialog.Dialog.Default = Initialization.ConfigObject.PlayerCiv.CityStyle;
-        Dialog.Dialog.Options ??= Labels.Items[247..251];
+        Dialog.Options = new()
+        {
+            Icons = activeInterface.CityImages.Sets.Take(4).Select(i => i.Skip(6).First().Image).ToArray(),
+            SelectedId = Initialization.ConfigObject.PlayerCiv.CityStyle
+        };
+        Dialog.Options.Texts ??= Labels.Items[247..251];
         return base.Show(activeInterface);
     }
 

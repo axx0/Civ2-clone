@@ -3,7 +3,7 @@ using Civ2.Rules;
 using Civ2engine;
 using Civ2engine.Enums;
 using Model;
-using Model.Dialog;
+using Model.Controls;
 using Model.InterfaceActions;
 
 namespace Civ2.Dialogs;
@@ -15,9 +15,8 @@ public class ScenarioLoadedDialog : ICivDialogHandler
     public string Name { get; } = Title;
     public ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox> popups)
     {
-        Dialog = new DialogElements
+        Dialog = new DialogElements(popups[Name])
         {
-            Dialog = popups[Name],
             DialogPos = new Point(0, 0)
         };
         return this;

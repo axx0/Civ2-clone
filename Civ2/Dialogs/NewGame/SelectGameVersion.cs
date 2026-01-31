@@ -1,6 +1,6 @@
 using Civ2.Rules;
 using Civ2engine;
-using Model.Dialog;
+using Model.Controls;
 using Model.InterfaceActions;
 
 namespace Civ2.Dialogs.NewGame;
@@ -24,7 +24,8 @@ public class SelectGameVersionHandler : BaseDialogHandler
 
     public override IInterfaceAction Show(Civ2Interface activeInterface)
     {
-        Dialog.Dialog.Options = activeInterface.MainApp.AllRuleSets.Select(r => r.Name).ToList();
+        Dialog.Options = new();
+        Dialog.Options.Texts = activeInterface.MainApp.AllRuleSets.Select(r => r.Name).ToList();
         return base.Show(activeInterface);
     }
 

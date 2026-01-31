@@ -5,9 +5,9 @@ using Civ2engine.UnitActions;
 using JetBrains.Annotations;
 using Model;
 using Model.Constants;
+using Model.Controls;
 using Model.Core;
 using Model.Input;
-using Model.Menu;
 using RaylibUtils;
 
 namespace RaylibUI.RunGame.Commands.Orders;

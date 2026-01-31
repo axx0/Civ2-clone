@@ -1,7 +1,7 @@
 using Model.Input;
 using Civ2engine;
+using Model.Controls;
 using JetBrains.Annotations;
-using Model.Menu;
 
 namespace RaylibUI.RunGame.Commands;
 

@@ -1,9 +1,8 @@
 using Model.Input;
 using Civ2engine;
 using Civ2engine.MapObjects;
+using Model.Controls;
 using JetBrains.Annotations;
-using Model.Menu;
-using Point = Model.Point;
 
 namespace RaylibUI.RunGame.Commands.Cheat;
 
@@ -18,12 +17,12 @@ public class RevealMap(GameScreen gameScreen) : AlwaysOnCommand(gameScreen, Comm
         var allLabel = Labels.For(LabelIndex.EntireMap);
         var noSpecial = Labels.For(LabelIndex.NoSpecialView);
         
-        _revealMapDialog = new CivDialog(GameScreen.Main, new PopupBox
+        _revealMapDialog = new CivDialog(GameScreen.Main, new DialogElements(new PopupBox
         {
             Title = "Reveal Map",
             Options = GameScreen.Game.AllCivilizations.Select(c=>c.TribeName).Concat<string>([noSpecial, allLabel]).ToArray(),
             Button = [Labels.Ok, Labels.Cancel]
-        }, new Point(0,0), HandleButtonClick );
+        }), HandleButtonClick );
         
         GameScreen.ShowDialog(_revealMapDialog);
     }

@@ -1,7 +1,6 @@
 using Civ2.Rules;
 using Civ2engine;
-using Model.Dialog;
-using Model.Interface;
+using Model.Controls;
 using Model.InterfaceActions;
 
 namespace Civ2.Dialogs.NewGame;
@@ -37,12 +36,12 @@ public class CustomTribe : BaseDialogHandler
                 }
             };
              
-            if (Dialog.Dialog.Options is not null)
+            if (Dialog.Options is not null)
             {
-                Dialog.TextBoxes[0].Description = Dialog.Dialog.Options[0];
-                Dialog.TextBoxes[1].Description = Dialog.Dialog.Options[1];
-                Dialog.TextBoxes[2].Description = Dialog.Dialog.Options[2];
-                Dialog.Dialog.Options = null;
+                Dialog.TextBoxes[0].Description = Dialog.Options.Texts[0];
+                Dialog.TextBoxes[1].Description = Dialog.Options.Texts[1];
+                Dialog.TextBoxes[2].Description = Dialog.Options.Texts[2];
+                Dialog.Options = null;
             }
         }
         else

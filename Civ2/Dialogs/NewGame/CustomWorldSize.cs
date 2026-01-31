@@ -1,8 +1,7 @@
 using Civ2.Dialogs.NewGame.CustomWorldDialogs;
 using Civ2.Rules;
 using Civ2engine;
-using Model.Dialog;
-using Model.Interface;
+using Model.Controls;
 using Model.InterfaceActions;
 
 namespace Civ2.Dialogs.NewGame;
@@ -17,9 +16,9 @@ public class CustomWorldSize : BaseDialogHandler
     public override ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox> popups)
     {
         var res = base.UpdatePopupData(popups);
-        if(!res.Dialog.Dialog.Button.Contains(Labels.Cancel))
+        if(!res.Dialog.Button.Contains(Labels.Cancel))
         {
-            res.Dialog.Dialog.Button.Add(Labels.Cancel);
+            res.Dialog.Button.Add(Labels.Cancel);
         }
         res.Dialog.TextBoxes = new List<TextBoxDefinition>
         {
@@ -34,11 +33,11 @@ public class CustomWorldSize : BaseDialogHandler
                 InitialValue = Initialization.ConfigObject.WorldSize[1].ToString(), Width = 75
             }
         };
-        if (res.Dialog.Dialog.Options is not null)
+        if (res.Dialog.Options is not null)
         {
-            res.Dialog.TextBoxes[0].Description = res.Dialog.Dialog.Options[0];
-            res.Dialog.TextBoxes[1].Description = res.Dialog.Dialog.Options[1];
-            res.Dialog.Dialog.Options = null;
+            res.Dialog.TextBoxes[0].Description = res.Dialog.Options.Texts[0];
+            res.Dialog.TextBoxes[1].Description = res.Dialog.Options.Texts[1];
+            res.Dialog.Options = null;
         }
         return res;
     }

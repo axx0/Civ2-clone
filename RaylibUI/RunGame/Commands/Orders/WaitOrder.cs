@@ -1,8 +1,8 @@
 using System.Diagnostics;
 using JetBrains.Annotations;
 using Model;
+using Model.Controls;
 using Model.Input;
-using Model.Menu;
 
 namespace RaylibUI.RunGame.Commands.Orders;
 

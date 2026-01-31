@@ -2,11 +2,10 @@ using System.Numerics;
 using Model;
 using Raylib_CSharp.Interact;
 using RaylibUI.Controls;
-using RaylibUI.Forms;
 
 namespace RaylibUI;
 
-public interface IControlLayout
+public interface IControlLayout : IComponent
 {
     Main MainWindow { get; }
     IList<IControl> Controls { get; }
@@ -21,5 +20,7 @@ public interface IControlLayout
     Padding LayoutPadding { get; set; }
     
     Vector2 Location { get; }
+    int Width { get; }
+    int Height { get; }
     void MouseOutsideControls(Vector2 mousePos);
 }

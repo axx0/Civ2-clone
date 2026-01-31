@@ -3,6 +3,8 @@ using Civ2engine.Units;
 using Model;
 using Model.Core;
 using Model.Core.Units;
+using Raylib_CSharp.Colors;
+using Raylib_CSharp.Rendering;
 using Raylib_CSharp.Transformations;
 using RaylibUI.RunGame.GameControls.Mapping;
 
@@ -13,18 +15,22 @@ public class UnitDisplay : BaseControl
     private Vector2 _previousLocation;
     private readonly List<IViewElement> _unitTextures;
     private float _scale;
+    private Vector2 _size;
 
-    public UnitDisplay(IControlLayout controller, Unit unit, IGame game, Vector2 location,
-        IUserInterface activeInterface,
-        float scale = 1f) : base(controller)
+    public UnitDisplay(IControlLayout controller, IUnit unit, IGame game, Vector2 location,
+        IUserInterface activeInterface, float scale = 1f, bool eventTransparent = false) : base(controller, eventTransparent)
     {
         _previousLocation = location;
         _scale = scale;
         _unitTextures = new List<IViewElement>();
-        var size = ImageUtils.GetUnitTextures(unit, activeInterface, game, _unitTextures, location, true);
-        Bounds = new Rectangle(location.X, location.Y, size.X * scale, size.Y * scale);
+        _size = ImageUtils.GetUnitTextures(unit, activeInterface, game, _unitTextures, location, true);
+        Location = location;
     }
 
+    public override int GetPreferredWidth() => (int)(_size.X * _scale);
+    public override int GetPreferredHeight() => (int)(_size.Y * _scale);
+    public override int Width => GetPreferredWidth();
+    public override int Height => GetPreferredHeight();
 
     public override void Draw(bool pulse)
     {
@@ -39,10 +45,11 @@ public class UnitDisplay : BaseControl
         }
         foreach (var element in _unitTextures)
         {
-            element.Draw(element.Location, scale: _scale, isShaded: element.IsShaded);
+            var parentLoc = new Vector2(Parent.Bounds.X, Parent.Bounds.Y);
+            element.Draw(parentLoc + element.Location, scale: _scale, isShaded: element.IsShaded);
         }
 
-        //Graphics.DrawRectangleLines((int)Bounds.X, (int)Bounds.Y, (int)Bounds.Width, (int)Bounds.Height, Color.Red);
+        //Graphics.DrawRectangleLinesEx(Bounds, 1f, Color.Red);
 
         base.Draw(pulse);
     }

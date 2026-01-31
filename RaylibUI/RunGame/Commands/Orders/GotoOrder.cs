@@ -7,7 +7,7 @@ using Model;
 using Model.Core.Units;
 using Model.Input;
 using Model.Interface;
-using Model.Menu;
+using Model.Controls;
 using Path = Civ2engine.Units.Path;
 
 namespace RaylibUI.RunGame.Commands.Orders;
@@ -66,8 +66,9 @@ public class GotoOrder(GameScreen gameScreen) : Order(gameScreen, new Shortcut(K
                                     islands.Contains(c.Location.Island) ||
                                     c.Location.Neighbours().Any(l => islands.Contains(l.Island))).OrderBy(c => c.Name)
             .ToList();
+        var listbox = new ListboxDefinition();
+        listbox.Update(_cities.Select(c => c.Name).ToList());
         GameScreen.ShowPopup("GOTO", handleButtonClick: HandleButtonClick,
-            listBox: new ListBoxDefinition
-                { Vertical = true, Entries = _cities.Select(c => new ListBoxEntry { LeftText = c.Name }).ToList() });
+            listBox: listbox);
     }
 }

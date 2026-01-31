@@ -29,6 +29,8 @@ public class InterfaceStyle
 
     public IImageSource[] RadioButtons { get; init; }
     public IImageSource[] CheckBoxes { get; init; }
+    public IImageSource[] DiskIcons { get; init; }
+    public IImageSource[] FolderIcons { get; init; }
 
     public Font DefaultFont { get; init; }
     public Font ButtonFont { get; init; }

@@ -2,7 +2,7 @@ using Civ2;
 using Civ2.Dialogs;
 using Civ2.Dialogs.NewGame;
 using Civ2.Rules;
-using Model.Dialog;
+using Model.Controls;
 using Model.InterfaceActions;
 
 namespace TOT.Dialogs;
@@ -13,7 +13,7 @@ public class StartMenuHandler() : BaseDialogHandler(Title)
 
     public override IInterfaceAction HandleDialogResult(DialogResult result, Dictionary<string, ICivDialogHandler> civDialogHandlers, Civ2Interface civ2Interface)
     {   
-        if (result.SelectedButton == Dialog.Dialog?.Button?[1])
+        if (result.SelectedButton == Dialog.Button[1])
         {
             return ExitAction.Exit;
         }

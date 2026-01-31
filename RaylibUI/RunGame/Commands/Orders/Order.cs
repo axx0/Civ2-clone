@@ -1,6 +1,5 @@
-﻿using Model;
-using Model.Dialog;
-using Model.Menu;
+using Model;
+using Model.Controls;
 
 namespace RaylibUI.RunGame.Commands.Orders;
 

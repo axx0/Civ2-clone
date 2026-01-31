@@ -1,7 +1,7 @@
 using Civ2.Rules;
 using Civ2engine;
 using Model;
-using Model.Dialog;
+using Model.Controls;
 using Model.InterfaceActions;
 
 namespace Civ2.Dialogs;
@@ -13,9 +13,8 @@ public class LoadOk : ICivDialogHandler
     public string Name { get; } = Title;
     public ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox> popups)
     {   
-        Dialog = new DialogElements
+        Dialog = new DialogElements(popups[Name])
         {
-            Dialog = popups[Name],
             DialogPos = new Point(0,0)
         };
         return this;
