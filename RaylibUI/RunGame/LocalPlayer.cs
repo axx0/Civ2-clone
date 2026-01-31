@@ -73,8 +73,8 @@ public class LocalPlayer : IPlayer
 
     public void CantMaintain(City city, Improvement cityImprovement)
     {
-        _gameScreen.ShowCityDialog("INHOCK", city, new[] { city.Name, cityImprovement.Name },
-            new[] { cityImprovement.Cost });
+        _gameScreen.ShowCityDialog("INHOCK", city, [city.Name, cityImprovement.Name],
+            [cityImprovement.Cost]);
     }
 
     public void SelectNewAdvance(IGame game, List<Advance> researchPossibilities)

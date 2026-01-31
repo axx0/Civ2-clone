@@ -4,6 +4,13 @@ ai.RegisterEvent(AiEvent.Turn_Start, function(ai,d)
     print(ai.civ.TribeName .. " Turn: " .. d.Turn)
 end)
 
+local function defender_score(unit)
+    local defense = unit.type and unit.type.defense or 0
+    local firepower = unit.type and unit.type.firepower or 1
+    local hitpoints = unit.hitpoints or 1
+    return defense * firepower * hitpoints
+end
+
 ai.RegisterEvent(AiEvent.Unit_Orders_Needed, function(ai, data)
     local unit = data.Unit;
 
@@ -11,11 +18,30 @@ ai.RegisterEvent(AiEvent.Unit_Orders_Needed, function(ai, data)
     local currentTile = unit.location;
 
     if unit.type.role == AiRoleType.Defend then
-        if currentTile.city then
-    
-            --if (currentTile.UnitsHere.Count(u => u != unit && u.AiRole == AiRoleType.Defend) <
-        -- 2 + currentTile.CityHere.Size / 3)
-            return "F"
+        local city = currentTile.city
+        if city then
+            local unitsHere = currentTile.units or city.UnitsInCity or {}
+            local defenders_count = 0
+            local weakest_defender_score = nil
+            for _, other in pairs(unitsHere) do
+                if other ~= unit and other.type and other.type.role == AiRoleType.Defend then
+                    defenders_count = defenders_count + 1
+                    local score = defender_score(other)
+                    if not weakest_defender_score or score < weakest_defender_score then
+                        weakest_defender_score = score
+                    end
+                end
+            end
+
+            local required_defenders = 2 + math.floor((city.Size or 0) / 3)
+            local unit_score = defender_score(unit)
+            if defenders_count < required_defenders then
+                return "F"
+            end
+            -- Weakest defender score will have a value when there are defenders if no defenders we exit above
+            if unit_score > weakest_defender_score then
+                return "F"
+            end
         end
     end
     
@@ -29,7 +55,6 @@ ai.RegisterEvent(AiEvent.Unit_Orders_Needed, function(ai, data)
         if isCityRadius then
             --TODO terrain improvements
         else
-            print("Checking current tile for suitability")
             return ai.CheckFertility(currentTile, unit)
         end
     end
