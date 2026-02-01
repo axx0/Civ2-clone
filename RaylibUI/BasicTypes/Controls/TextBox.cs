@@ -99,7 +99,7 @@ public class TextBox : BaseControl
 
     public override int GetPreferredHeight()
     {
-        return -1;
+        return Height > 0 ? Height : -1;
     }
 
     public override int GetPreferredWidth()

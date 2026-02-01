@@ -59,6 +59,7 @@ public class CivDialog : DynamicSizingDialog
             _listbox = new Listbox(this, dialog.Listbox);
             innerLayout.Add(_listbox, layoutRow++, 1, new Padding(2, 2, 2, 2));
             _listbox.ItemSelected += ListboxOnItemSelected;
+            _selectedIndex = 0;
         }
 
         if (dialog.TextBoxes is { Count: > 0 })

@@ -118,9 +118,9 @@ public class Read
         var firstCaravanBuilt = GetBit(bytes[paramsOffset + 0], 4);
         var wasRepublicDemocracyAdopted = GetBit(bytes[paramsOffset + 0], 5);
         var firstSignificantlyDamagedUnit = GetBit(bytes[paramsOffset + 0], 6) && GetBit(bytes[paramsOffset + 0], 7);
-        var turnNumber = BitConverter.ToInt16(bytes, paramsOffset + 4);
-        var turnNumberForGameYear = BitConverter.ToInt16(bytes, paramsOffset + 6);
-        var selectedUnitIndex = BitConverter.ToInt16(bytes, paramsOffset + 10);   // Unit selected at start of game (-1 if no unit)
+        var turnNumber = BitConverter.ToUInt16(bytes, paramsOffset + 4);
+        var turnNumberForGameYear = BitConverter.ToUInt16(bytes, paramsOffset + 6);
+        var selectedUnitIndex = BitConverter.ToUInt16(bytes, paramsOffset + 10);   // Unit selected at start of game (-1 if no unit)
         var playersCivIndex = bytes[paramsOffset + 15];   // Human player
         var whichCivsMapShown = bytes[paramsOffset + 16];
         var playersCivilizationNumberUsed = bytes[paramsOffset + 17]; // Players civ number used
@@ -138,10 +138,10 @@ public class Read
             humanPlayers[i] = GetBit(bytes[paramsOffset + 23], i);
 
         var globalTempRiseOccured = bytes[paramsOffset + 27];
-        var noPollutionSkulls = BitConverter.ToInt16(bytes, paramsOffset + 30);
+        var noPollutionSkulls = BitConverter.ToUInt16(bytes, paramsOffset + 30);
         var noOfTurnsOfPeace = bytes[paramsOffset + 32];
-        var numberOfUnits = BitConverter.ToInt16(bytes, paramsOffset + 34);
-        var numberOfCities = BitConverter.ToInt16(bytes, paramsOffset + 36);
+        var numberOfUnits = BitConverter.ToUInt16(bytes, paramsOffset + 34);
+        var numberOfCities = BitConverter.ToUInt16(bytes, paramsOffset + 36);
 
         #endregion
         #region Technologies
@@ -278,9 +278,9 @@ public class Read
             else offsetExtra = 7;  // TOT
 
             var gender = bytes[offsetT + sizeT * civId + 1]; // 0=male, 2=female
-            var money = BitConverter.ToInt16(bytes, offsetT + sizeT * civId + offsetExtra + 2);
+            var money = BitConverter.ToUInt16(bytes, offsetT + sizeT * civId + offsetExtra + 2);
             var tribeId = bytes[offsetT + sizeT * civId + offsetExtra + 6]; // Civ number as per @Leaders table in RULES.TXT
-            var science = BitConverter.ToInt16(bytes, offsetT + sizeT * civId + offsetExtra + 8);
+            var science = BitConverter.ToUInt16(bytes, offsetT + sizeT * civId + offsetExtra + 8);
             var researchingAdvance = bytes[offsetT + sizeT * civId + offsetExtra + 10]; // Advance currently being researched (FF(hex) = no goal)
             var numberAdvancesResearched = bytes[offsetT + sizeT * civId + offsetExtra + 16];
             var numberFutureTechsResearched = bytes[offsetT + sizeT * civId + offsetExtra + 17];
@@ -327,9 +327,9 @@ public class Read
                 }
             }
 
-            var numberMilitaryUnits = BitConverter.ToInt16(bytes, offsetT + sizeT * civId + offsetExtra + 102);
-            var numberCities = BitConverter.ToInt16(bytes, offsetT + sizeT * civId + offsetExtra + 104);
-            var sumCitySizes = BitConverter.ToInt16(bytes, offsetT + sizeT * civId + offsetExtra + 108);
+            var numberMilitaryUnits = BitConverter.ToUInt16(bytes, offsetT + sizeT * civId + offsetExtra + 102);
+            var numberCities = BitConverter.ToUInt16(bytes, offsetT + sizeT * civId + offsetExtra + 104);
+            var sumCitySizes = BitConverter.ToUInt16(bytes, offsetT + sizeT * civId + offsetExtra + 108);
 
             // No. of units per type (from Rules.txt)
             int noUnitsType = gameVersion switch
@@ -359,18 +359,18 @@ public class Read
             // Last contact with other civs
             var lastContact = new int[8];
             for (int civ2Id = 0; civ2Id < 8; civ2Id++)
-                lastContact[civ2Id] = BitConverter.ToInt16(bytes, offsetT + sizeT * civId + offsetExtra + 2 * civ2Id);
+                lastContact[civ2Id] = BitConverter.ToUInt16(bytes, offsetT + sizeT * civId + offsetExtra + 2 * civ2Id);
 
             // Spaceships
             var hasSpaceship = GetBit(bytes[offsetT + sizeT * civId + offsetExtra + 30], 0);
-            var spaceshipEstimatedArrival = BitConverter.ToInt16(bytes, offsetT + sizeT * civId + offsetExtra + 32);
-            var spaceshipLaunchYear = BitConverter.ToInt16(bytes, offsetT + sizeT * civId + offsetExtra + 34);
-            var spaceshipStructural = BitConverter.ToInt16(bytes, offsetT + sizeT * civId + offsetExtra + 38);
-            var spaceshipComponentsPropulsion = BitConverter.ToInt16(bytes, offsetT + sizeT * civId + offsetExtra + 40);
-            var spaceshipComponentsFuel = BitConverter.ToInt16(bytes, offsetT + sizeT * civId + offsetExtra + 42);
-            var spaceshipModulesHabitation = BitConverter.ToInt16(bytes, offsetT + sizeT * civId + offsetExtra + 44);
-            var spaceshipModulesLifeSupport = BitConverter.ToInt16(bytes, offsetT + sizeT * civId + offsetExtra + 46);
-            var spaceshipModulesSolarPanel = BitConverter.ToInt16(bytes, offsetT + sizeT * civId + offsetExtra + 48);
+            var spaceshipEstimatedArrival = BitConverter.ToUInt16(bytes, offsetT + sizeT * civId + offsetExtra + 32);
+            var spaceshipLaunchYear = BitConverter.ToUInt16(bytes, offsetT + sizeT * civId + offsetExtra + 34);
+            var spaceshipStructural = BitConverter.ToUInt16(bytes, offsetT + sizeT * civId + offsetExtra + 38);
+            var spaceshipComponentsPropulsion = BitConverter.ToUInt16(bytes, offsetT + sizeT * civId + offsetExtra + 40);
+            var spaceshipComponentsFuel = BitConverter.ToUInt16(bytes, offsetT + sizeT * civId + offsetExtra + 42);
+            var spaceshipModulesHabitation = BitConverter.ToUInt16(bytes, offsetT + sizeT * civId + offsetExtra + 44);
+            var spaceshipModulesLifeSupport = BitConverter.ToUInt16(bytes, offsetT + sizeT * civId + offsetExtra + 46);
+            var spaceshipModulesSolarPanel = BitConverter.ToUInt16(bytes, offsetT + sizeT * civId + offsetExtra + 48);
 
             var tribe = rules.Leaders[tribeId];
             // If leader name string is empty (no manual input), find the name in RULES.TXT (don't search for barbarians)
@@ -446,16 +446,16 @@ public class Read
 
             objects.Transporters = new();
 
-            noTransporters = BitConverter.ToInt16(bytes, offsetTr + 0);
+            noTransporters = BitConverter.ToUInt16(bytes, offsetTr + 0);
             for (int transpId = 0; transpId < noTransporters; transpId++)
             {
                 objects.Transporters.Add(new()
                 {
-                    X1 = BitConverter.ToInt16(bytes, offsetTr + 4 + 14 * transpId + 0),
-                    Y1 = BitConverter.ToInt16(bytes, offsetTr + 4 + 14 * transpId + 2),
+                    X1 = BitConverter.ToUInt16(bytes, offsetTr + 4 + 14 * transpId + 0),
+                    Y1 = BitConverter.ToUInt16(bytes, offsetTr + 4 + 14 * transpId + 2),
                     MapId1 = bytes[offsetTr + 4 + 14 * transpId + 4],
-                    X2 = BitConverter.ToInt16(bytes, offsetTr + 4 + 14 * transpId + 6),
-                    Y2 = BitConverter.ToInt16(bytes, offsetTr + 4 + 14 * transpId + 8),
+                    X2 = BitConverter.ToUInt16(bytes, offsetTr + 4 + 14 * transpId + 6),
+                    Y2 = BitConverter.ToUInt16(bytes, offsetTr + 4 + 14 * transpId + 8),
                     MapId2 = bytes[offsetTr + 4 + 14 * transpId + 10],
                     Look = bytes[offsetTr + 4 + 14 * transpId + 11]
                 });
@@ -473,13 +473,13 @@ public class Read
             _ => 29900 + 14 * noTransporters   // TOT
         };
 
-        var mapXdimX2 = BitConverter.ToInt16(bytes, offsetM + 0);  // Map X dimension x2
-        var mapYdim = BitConverter.ToInt16(bytes, offsetM + 2);
-        var mapArea = BitConverter.ToInt16(bytes, offsetM + 4);  // Xdim*Ydim/2
-        //var flatEarth = BitConverter.ToInt16(bytes, offsetM + 6);   // Flat Earth flag (info already given before!!)
-        var mapResourceSeed = BitConverter.ToInt16(bytes, offsetM + 8);    // not used in game?
-        var mapLocatorXdim = BitConverter.ToInt16(bytes, offsetM + 10);  // Minimap width (=MapXdim/2 rounded up), important for getting offset of unit block!!
-        var mapLocatorYdim = BitConverter.ToInt16(bytes, offsetM + 12);  // Minimap height (=MapYdim/4 rounded up), important for getting offset of unit block!!
+        var mapXdimX2 = BitConverter.ToUInt16(bytes, offsetM + 0);  // Map X dimension x2
+        var mapYdim = BitConverter.ToUInt16(bytes, offsetM + 2);
+        var mapArea = BitConverter.ToUInt16(bytes, offsetM + 4);  // Xdim*Ydim/2
+        //var flatEarth = BitConverter.ToUInt16(bytes, offsetM + 6);   // Flat Earth flag (info already given before!!)
+        var mapResourceSeed = BitConverter.ToUInt16(bytes, offsetM + 8);    // not used in game?
+        var mapLocatorXdim = BitConverter.ToUInt16(bytes, offsetM + 10);  // Minimap width (=MapXdim/2 rounded up), important for getting offset of unit block!!
+        var mapLocatorYdim = BitConverter.ToUInt16(bytes, offsetM + 12);  // Minimap height (=MapYdim/4 rounded up), important for getting offset of unit block!!
         var noSecondaryMaps = gameVersion > 44 ? BitConverter.ToInt16(bytes, offsetM + 14) : (short)0;    // Secondary maps only in TOT
 
         int ofsetB1 = gameVersion <= 44 ? offsetM + 14 : offsetM + 16; //offset for block 2 values
@@ -642,7 +642,7 @@ public class Read
             map.Tile = tile;
             objects.Maps.Add(map);
 
-            var mapSeed = gameVersion > 44 ? BitConverter.ToInt16(bytes, ofsetB2 + 6 * mapArea) : (byte)0;    // only in TOT
+            var mapSeed = gameVersion > 44 ? BitConverter.ToUInt16(bytes, ofsetB2 + 6 * mapArea) : (byte)0;    // only in TOT
 
             int mapSeedLength = gameVersion > 44 ? 2 : 0;
             ofsetB1 += 13 * mapArea + mapSeedLength;
@@ -683,12 +683,12 @@ public class Read
             totOffset = 0;
 
             var id = i;
-            var x = BitConverter.ToInt16(bytes, ofsetU + multipl * i + totOffset);  // <0 for dead unit
-            var y = BitConverter.ToInt16(bytes, ofsetU + multipl * i + 2 + totOffset);
+            var x = BitConverter.ToUInt16(bytes, ofsetU + multipl * i + totOffset);  // <0 for dead unit
+            var y = BitConverter.ToUInt16(bytes, ofsetU + multipl * i + 2 + totOffset);
             var mapIndex = 0;
             if (gameVersion > 44)  // TOT
             {
-                mapIndex = BitConverter.ToInt16(bytes, ofsetU + multipl * i + 4);
+                mapIndex = BitConverter.ToUInt16(bytes, ofsetU + multipl * i + 4);
                 totOffset += 2;
             }
             var madeFirstMove = GetBit(bytes[ofsetU + multipl * i + 4 + totOffset], 6);
@@ -728,20 +728,20 @@ public class Read
             var order = bytes[ofsetU + multipl * i + 15 + totOffset];
             //if (bytes[ofsetU + multipl * i + 15] == 27) data.UnitOrders[i] = OrderType.NoOrders;    // TODO: (this is temp) find out what 0x1B means in unit orders
             unitHomeCity[i] = bytes[ofsetU + multipl * i + 16 + totOffset];
-            var goToX = BitConverter.ToInt16(bytes, ofsetU + multipl * i + 18 + totOffset);
-            var goToY = BitConverter.ToInt16(bytes, ofsetU + multipl * i + 20 + totOffset);
+            var goToX = BitConverter.ToUInt16(bytes, ofsetU + multipl * i + 18 + totOffset);
+            var goToY = BitConverter.ToUInt16(bytes, ofsetU + multipl * i + 20 + totOffset);
             var goToMapIndex = 0;
             if (gameVersion > 44)  // TOT
             {
-                goToMapIndex = BitConverter.ToInt16(bytes, ofsetU + multipl * i + 24);
+                goToMapIndex = BitConverter.ToUInt16(bytes, ofsetU + multipl * i + 24);
                 totOffset += 2;
             }
-            var linkOtherUnitsOnTop = BitConverter.ToInt16(bytes, ofsetU + multipl * i + 22 + totOffset);
-            var linkOtherUnitsUnder = BitConverter.ToInt16(bytes, ofsetU + multipl * i + 24 + totOffset);
+            var linkOtherUnitsOnTop = BitConverter.ToUInt16(bytes, ofsetU + multipl * i + 22 + totOffset);
+            var linkOtherUnitsUnder = BitConverter.ToUInt16(bytes, ofsetU + multipl * i + 24 + totOffset);
             if (gameVersion > 44)  // TOT
             {
-                var animation = BitConverter.ToInt16(bytes, ofsetU + multipl * i + 30 + totOffset);
-                var orientation = BitConverter.ToInt16(bytes, ofsetU + multipl * i + 32 + totOffset);
+                var animation = BitConverter.ToUInt16(bytes, ofsetU + multipl * i + 30 + totOffset);
+                var orientation = BitConverter.ToUInt16(bytes, ofsetU + multipl * i + 32 + totOffset);
             }
 
             if (mapIndex < 0) mapIndex = 0;   // avoid dead unit errors
@@ -805,12 +805,12 @@ public class Read
         for (int i = 0; i < numberOfCities; i++)
         {
             totOffset = 0;
-            var x = BitConverter.ToInt16(bytes, ofsetC + multipl * i + 0);
-            var y = BitConverter.ToInt16(bytes, ofsetC + multipl * i + 2);
+            var x = BitConverter.ToUInt16(bytes, ofsetC + multipl * i + 0);
+            var y = BitConverter.ToUInt16(bytes, ofsetC + multipl * i + 2);
             var mapIndex = 0;
             if (gameVersion > 44)  // TOT
             {
-                mapIndex = BitConverter.ToInt16(bytes, ofsetC + multipl * i + 4);
+                mapIndex = BitConverter.ToUInt16(bytes, ofsetC + multipl * i + 4);
                 totOffset += 2;
             }
             var civilDisorder = GetBit(bytes[ofsetC + multipl * i + 4 + totOffset], 0);
@@ -857,9 +857,9 @@ public class Read
                 }
             }
 
-            var foodInStorage = BitConverter.ToInt16(bytes, ofsetC + multipl * i + 26 + totOffset);
-            var shieldsProgress = BitConverter.ToInt16(bytes, ofsetC + multipl * i + 28 + totOffset);
-            var netTrade = BitConverter.ToInt16(bytes, ofsetC + multipl * i + 30 + totOffset);
+            var foodInStorage = BitConverter.ToUInt16(bytes, ofsetC + multipl * i + 26 + totOffset);
+            var shieldsProgress = BitConverter.ToUInt16(bytes, ofsetC + multipl * i + 28 + totOffset);
+            var netTrade = BitConverter.ToUInt16(bytes, ofsetC + multipl * i + 30 + totOffset);
             var name = ReadString(bytes, 16, ofsetC + multipl * i + 32 + totOffset);
 
             // Distribution of workers on map in city view
@@ -916,14 +916,14 @@ public class Read
             // 1st, 2nd, 3rd trade route partner city number
             var tradeRoutePartnerCity = new int[]
             {
-                BitConverter.ToInt16(bytes, ofsetC + multipl * i + 68 + totOffset),
-                BitConverter.ToInt16(bytes, ofsetC + multipl * i + 70 + totOffset),
-                BitConverter.ToInt16(bytes, ofsetC + multipl * i + 72 + totOffset)
+                BitConverter.ToUInt16(bytes, ofsetC + multipl * i + 68 + totOffset),
+                BitConverter.ToUInt16(bytes, ofsetC + multipl * i + 70 + totOffset),
+                BitConverter.ToUInt16(bytes, ofsetC + multipl * i + 72 + totOffset)
             };
 
-            var science = BitConverter.ToInt16(bytes, ofsetC + multipl * i + 74 + totOffset);
-            var tax = BitConverter.ToInt16(bytes, ofsetC + multipl * i + 76 + totOffset);
-            var noOfTradeIcons = BitConverter.ToInt16(bytes, ofsetC + multipl * i + 78 + totOffset);
+            var science = BitConverter.ToUInt16(bytes, ofsetC + multipl * i + 74 + totOffset);
+            var tax = BitConverter.ToUInt16(bytes, ofsetC + multipl * i + 76 + totOffset);
+            var noOfTradeIcons = BitConverter.ToUInt16(bytes, ofsetC + multipl * i + 78 + totOffset);
             var totalFoodProduction = bytes[ofsetC + multipl * i + 80 + totOffset];
             var totalShieldProduction = bytes[ofsetC + multipl * i + 81 + totOffset];
             var happyCitizens = bytes[ofsetC + multipl * i + 82 + totOffset];
@@ -1114,15 +1114,15 @@ public class Read
             }
             scenarioName = String.Concat(chars);
 
-            techParadigm = BitConverter.ToInt16(bytes, ofsetS + 82);
-            turnYearIncrement = BitConverter.ToInt16(bytes, ofsetS + 84);
-            startingYear = BitConverter.ToInt16(bytes, ofsetS + 86);
-            maxTurns = BitConverter.ToInt16(bytes, ofsetS + 88);
+            techParadigm = BitConverter.ToUInt16(bytes, ofsetS + 82);
+            turnYearIncrement = BitConverter.ToUInt16(bytes, ofsetS + 84);
+            startingYear = BitConverter.ToUInt16(bytes, ofsetS + 86);
+            maxTurns = BitConverter.ToUInt16(bytes, ofsetS + 88);
             objectiveProtagonist = bytes[ofsetS + 90];
-            noObjectivesDecisiveVictory = BitConverter.ToInt16(bytes, ofsetS + 92);
-            noObjectivesMarginalVictory = BitConverter.ToInt16(bytes, ofsetS + 94);
-            noObjectivesMarginalDefeat = BitConverter.ToInt16(bytes, ofsetS + 96);
-            noObjectivesDecisiveDefeat = BitConverter.ToInt16(bytes, ofsetS + 98);
+            noObjectivesDecisiveVictory = BitConverter.ToUInt16(bytes, ofsetS + 92);
+            noObjectivesMarginalVictory = BitConverter.ToUInt16(bytes, ofsetS + 94);
+            noObjectivesMarginalDefeat = BitConverter.ToUInt16(bytes, ofsetS + 96);
+            noObjectivesDecisiveDefeat = BitConverter.ToUInt16(bytes, ofsetS + 98);
 
             // Correct offset
             ofsetS += 100;
@@ -1165,7 +1165,7 @@ public class Read
         if (offsetE != -1)
         {
             offsetE += 4;
-            var numberOfEvents = BitConverter.ToInt16(bytes, offsetE);
+            var numberOfEvents = BitConverter.ToUInt16(bytes, offsetE);
 
             offsetE += 4;
             multipl = gameVersion <= 44 ? 444 : 276;  // no of bytes for each event
@@ -1246,7 +1246,7 @@ public class Read
                             Actions = CreateScenarioActions(gameVersion, eventActionIds,
                                 eventModifiers, eventActionParam, eventStrings, objects),
                             Delay = eventModifiers[1] ?
-                                BitConverter.ToInt16(new byte[2] { eventActionParam[195], eventActionParam[196] }) : null,
+                                BitConverter.ToUInt16(new byte[2] { eventActionParam[195], eventActionParam[196] }) : null,
                             JustOnce = eventActionIds.Contains(6),
                             Continuous = eventModifiers[7]
                         };
@@ -1571,8 +1571,8 @@ public class Read
                 trigger = new TurnTrigger()
                 {
                     Turn = version <= 44 ?
-                            BitConverter.ToInt16(new byte[2] { triggerParam[36], triggerParam[37] }) :
-                            BitConverter.ToInt16(new byte[2] { triggerParam[30], triggerParam[31] })
+                            BitConverter.ToUInt16(new byte[2] { triggerParam[36], triggerParam[37] }) :
+                            BitConverter.ToUInt16(new byte[2] { triggerParam[30], triggerParam[31] })
                 };
                 break;
 
@@ -1580,8 +1580,8 @@ public class Read
                 trigger = new TurnInterval
                 {
                     Interval = version <= 44 ?
-                            BitConverter.ToInt16(new byte[2] { triggerParam[36], triggerParam[37] }) :
-                            BitConverter.ToInt16(new byte[2] { triggerParam[30], triggerParam[31] })
+                            BitConverter.ToUInt16(new byte[2] { triggerParam[36], triggerParam[37] }) :
+                            BitConverter.ToUInt16(new byte[2] { triggerParam[30], triggerParam[31] })
                 };
                 break;
 
