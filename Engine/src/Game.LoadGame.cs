@@ -26,7 +26,7 @@ namespace Civ2engine
             Date = new Date(0, 0, difficulty);
             _barbarianActivity = (BarbarianActivityType)barbarianActivity;
             _difficultyLevel = difficulty;
-
+            
             var tile0 = _maps[0].Tile[0, 0];
             
             AllCivilizations.AddRange(civilizations);
@@ -70,6 +70,7 @@ namespace Civ2engine
 
             var gameData = objects.GameData;
             TurnNumber = gameData.TurnNumber;
+            DifficultyLevel = gameData.DifficultyLevel;
             Date = new Date(gameData.StartingYear, gameData.TurnYearIncrement, gameData.DifficultyLevel);
 
             PollutionSkulls = gameData.NoPollutionSkulls;

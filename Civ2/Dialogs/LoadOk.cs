@@ -37,7 +37,7 @@ public class LoadOk : ICivDialogHandler
         {
             playerCiv.LeaderTitle, playerCiv.LeaderName,
             playerCiv.TribeName, game.Date.GameYearString(game.TurnNumber),
-            game.DifficultyLevel.ToString()
+            game.Rules.Difficulty[game.DifficultyLevel]
         };
         return new MenuAction(Dialog);
     }

@@ -48,4 +48,5 @@ public interface IGame
     void SetHumanPlayer(int playerCivId);
     void StartPlayerTurn(IPlayer activePlayer);
     void StartNextTurn();
+    string GetRealmName(int government);
 }
