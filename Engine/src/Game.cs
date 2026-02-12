@@ -128,5 +128,18 @@ namespace Civ2engine
             Players[id] = player;
             Script.Connect(player.Ui);
         }
+
+        public string GetRealmName(int governmentLevel)
+        {
+            return governmentLevel switch
+            {
+                0 or 1 => Labels.For(LabelIndex.Empire),
+                2 => Labels.For(LabelIndex.Kingdom),
+                3 => Labels.For(LabelIndex.PeoplesRepublic),
+                4 => Labels.For(LabelIndex.HolyEmpire),
+                5 or 6 => Labels.For(LabelIndex.Republic),
+                _ => throw new ArgumentOutOfRangeException($"Not expected government value: {governmentLevel}")
+            };
+        }
     }
 }
