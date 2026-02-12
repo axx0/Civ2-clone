@@ -144,10 +144,13 @@ public class Civ2GoldInterface(IMain main) : Civ2Interface(main)
             new BitmapStorage("ICONS", new Rectangle(49 + 15 * col, 290, 14, 14))).ToArray<IImageSource>());
         PicSources.Add("globalWarming", Enumerable.Range(0, 4).Select(col =>
             new BitmapStorage("ICONS", new Rectangle(49 + 15 * col, 305, 14, 14))).ToArray<IImageSource>());
+        PicSources.Add("advanceCategories", Enumerable.Range(0, 5 * 4).Select(i =>
+            new BitmapStorage("ICONS", new Rectangle(343 + 37 * (i % 5), 211 + 21 * (i / 5), 36, 20))).ToArray<IImageSource>());
         PicSources.Add("close", [new BitmapStorage("ICONS", new Rectangle(1, 389, 16, 16))]);
         PicSources.Add("zoomIn", [new BitmapStorage("ICONS", new Rectangle(18, 389, 16, 16))]);
         PicSources.Add("zoomOut", [new BitmapStorage("ICONS", new Rectangle(35, 389, 16, 16))]);
-        PicSources.Add("gold,large", [ new BitmapStorage("ICONS", new Rectangle(16, 320, 14, 14))]);
+        PicSources.Add("gold,large", [new BitmapStorage("ICONS", new Rectangle(16, 320, 14, 14))]);
+        PicSources.Add("science,large", [new BitmapStorage("ICONS", new Rectangle(31, 320, 14, 14))]);
         PicSources.Add("trade,small", [ new BitmapStorage("ICONS", new Rectangle(71, 334, 10, 10))]);
         PicSources.Add("backgroundImage", [new BinaryStorage("Tiles.dll", 0xF7454, 0x1389D)]);
         PicSources.Add("backgroundImageSmall1", [
@@ -160,6 +163,12 @@ public class Civ2GoldInterface(IMain main) : Civ2Interface(main)
         );
         PicSources.Add("cityBuiltAncient", [new BinaryStorage("Tiles.dll", 0xDEDA4, 0x46FF)]);
         PicSources.Add("cityBuiltModern", [new BinaryStorage("Tiles.dll", 0xE34A4, 0x4A42)]);
+        PicSources.Add("taxRateBack", [new BinaryStorage("Tiles.dll", 0xAB2E8, 0xB271, new Rectangle(0, 0, 600, 384))]);
+        PicSources.Add("cityReport", [new BinaryStorage("Tiles.dll", 0x1E8B0, 0x13A3F, new Rectangle(0, 0, 600, 400))]);
+        PicSources.Add("defenseMinister", [new BinaryStorage("Tiles.dll", 0x322F0, 0xDE6D, new Rectangle(0, 0, 600, 400))]);
+        PicSources.Add("attitudeAdvisor", [new BinaryStorage("Tiles.dll", 0x4CB3C, 0xCDFA, new Rectangle(0, 0, 600, 400))]);
+        PicSources.Add("tradeAdvisor", [new BinaryStorage("Tiles.dll", 0x59938, 0xD878, new Rectangle(0, 0, 600, 400))]);
+        PicSources.Add("scienceAdvisor", [new BinaryStorage("Tiles.dll", 0x671B0, 0xCFD2, new Rectangle(0, 0, 600, 400))]);
         PicSources.Add("sinaiPic", [new BinaryStorage("Intro.dll", 0x1E630, 0x9F78)]);
         PicSources.Add("stPeterburgPic", [new BinaryStorage("Intro.dll", 0x285A8, 0x15D04)]);
         PicSources.Add("desertPic", [new BinaryStorage("Intro.dll", 0xD0140, 0xA35A)]);
@@ -283,11 +292,11 @@ public class Civ2GoldInterface(IMain main) : Civ2Interface(main)
             Key = "KINGDOM", Defaults = new List<MenuElement>
             {
                 new("&Kingdom", Shortcut.None, Key.K),
-                new("&Tax Rate|Shift+T", new Shortcut(Key.T, shift: true), Key.T),
+                new("&Tax Rate|Shift+T", new Shortcut(Key.T, shift: true), Key.T, commandId: ChangeTaxRate),
                 new("-", Shortcut.None, Key.None),
                 new("View T&hrone Room|Shift+H", new Shortcut(Key.H, shift: true),
                     Key.H),
-                new("Find &City|Shift+C", new Shortcut(Key.C, shift: true), Key.C),
+                new("Find &City|Shift+C", new Shortcut(Key.C, shift: true), Key.C, commandId: FindCity),
                 new("-", Shortcut.None, Key.None),
                 new("&REVOLUTION|Shift+R", new Shortcut(Key.R, shift: true), Key.R)
             },
@@ -369,13 +378,13 @@ public class Civ2GoldInterface(IMain main) : Civ2Interface(main)
                     Key.K),
                 new("Consult &High Council", Shortcut.None, Key.H),
                 new("-", Shortcut.None, Key.None),
-                new("&City Status|F1", new Shortcut(Key.F1), Key.C),
-                new("&Defense Minister|F2", new Shortcut(Key.F2), Key.D),
+                new("&City Status|F1", new Shortcut(Key.F1), Key.C, commandId: CityStatus),
+                new("&Defense Minister|F2", new Shortcut(Key.F2), Key.D, commandId: DefenseMinister),
                 new("&Foreign Minister|F3", new Shortcut(Key.F3), Key.F),
                 new("-", Shortcut.None, Key.None),
-                new("&Attitude Advisor|F4", new Shortcut(Key.F4), Key.A),
-                new("&Trade Advisor|F5", new Shortcut(Key.F5), Key.T),
-                new("&Science Advisor|F6", new Shortcut(Key.F6), Key.S),
+                new("&Attitude Advisor|F4", new Shortcut(Key.F4), Key.A, commandId: AttitudeAdvisor),
+                new("&Trade Advisor|F5", new Shortcut(Key.F5), Key.T, commandId: TradeAdvisor),
+                new("&Science Advisor|F6", new Shortcut(Key.F6), Key.S, commandId: ScienceAdvisor),
                 new("-", Shortcut.None, Key.None),
                 new("Cas&ualty Timeline|Ctrl-D", new Shortcut(Key.D, ctrl: true),
                     Key.U)

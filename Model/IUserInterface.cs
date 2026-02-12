@@ -22,6 +22,7 @@ public interface IUserInterface
     IInterfaceAction GetInitialAction();
     
     IImageSource? ScenTitleImage { get; set; }
+    int GetCityStyleIndexFromEpoch(int cityStyle, int epoch);
     int GetCityIndexForStyle(int cityStyleIndex, City city, int citySize);
     void LoadPlayerColours();
 

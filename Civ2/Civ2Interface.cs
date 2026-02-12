@@ -1,24 +1,26 @@
-using System.Text.RegularExpressions;
 using Civ2.Dialogs;
 using Civ2.Dialogs.NewGame;
 using Civ2.Menu;
 using Civ2.Rules;
 using Civ2engine;
+using Civ2engine.Enums;
 using Civ2engine.IO;
+using Civ2engine.MapObjects;
 using Model;
-using Model.Images;
-using Model.ImageSets;
-using Model.InterfaceActions;
-using Model.Controls;
-using Raylib_CSharp.Transformations;
-using Raylib_CSharp.Images;
-using Raylib_CSharp.Textures;
-using Raylib_CSharp.Colors;
 using Model.Constants;
+using Model.Controls;
 using Model.Core;
 using Model.Core.Advances;
+using Model.Images;
+using Model.ImageSets;
 using Model.Input;
+using Model.InterfaceActions;
+using Raylib_CSharp.Colors;
+using Raylib_CSharp.Images;
+using Raylib_CSharp.Textures;
+using Raylib_CSharp.Transformations;
 using System.Numerics;
+using System.Text.RegularExpressions;
 
 namespace Civ2;
 
@@ -79,6 +81,20 @@ public abstract class Civ2Interface(IMain main) : IUserInterface
 
     public IImageSource? ScenTitleImage { get; set; } = null;
     
+    public int GetCityStyleIndexFromEpoch(int cityStyle, int epoch)
+    {
+        int style = cityStyle;
+        if (epoch == (int)EpochType.Industrial)
+        {
+            style = 4;
+        }
+        else if (epoch == (int)EpochType.Modern)
+        {
+            style = 5;
+        }
+        return style;
+    }
+
     public int GetCityIndexForStyle(int cityStyleIndex, City city, int citySize)
     {
         var index = cityStyleIndex switch

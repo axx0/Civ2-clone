@@ -16,6 +16,7 @@ using Model.Interface;
 using RaylibUI.RunGame.GameControls.Mapping;
 using RaylibUI.RunGame.GameControls.Mapping.Views.ViewElements;
 using RaylibUtils;
+using RaylibUI.BasicTypes.Controls;
 
 namespace RaylibUI;
 
@@ -334,57 +335,61 @@ public static class ImageUtils
 
     public static Image[] GetScrollImages(int dim, bool vertical)
     {
-        var image = Image.GenColor(dim, dim, new Color(240, 240, 240, 255));
+        Image image = vertical ? 
+            Image.GenColor(dim, ScrollBar.ScrollbarDimDefault, new Color(240, 240, 240, 255)) :
+            Image.GenColor(ScrollBar.ScrollbarDimDefault, dim, new Color(240, 240, 240, 255));
+        var w = image.Width;
+        var h = image.Height;
 
         var color1 = new Color(227, 227, 227, 255);
-        image.DrawLine(0, 0, image.Width - 1, 0, color1);
-        image.DrawLine(0, 0, 0, image.Height - 1, color1);
+        image.DrawLine(0, 0, w - 1, 0, color1);
+        image.DrawLine(0, 0, 0, h - 1, color1);
 
         var color2 = Color.White;
-        image.DrawLine(1, 1, image.Width - 2, 1, color2);
-        image.DrawLine(1, 1, 1, image.Height - 2, color2);
+        image.DrawLine(1, 1, w - 2, 1, color2);
+        image.DrawLine(1, 1, 1, h - 2, color2);
 
         var color3 = new Color(240, 240, 240, 255);
-        image.DrawLine(3, 3, image.Width - 4, image.Height - 4, color3);
+        image.DrawLine(3, 3, w - 4, h - 4, color3);
 
         var color4 = new Color(160, 160, 160, 255);
-        image.DrawLine(image.Width - 2, 1, image.Width - 2, image.Height - 1, color4);
-        image.DrawLine(1, image.Height - 2, image.Width - 2, image.Height - 2, color4);
+        image.DrawLine(w - 2, 1, w - 2, h - 1, color4);
+        image.DrawLine(1, h - 2, w - 2, h - 2, color4);
 
         var color5 = new Color(105, 105, 105, 255);
-        image.DrawLine(0, image.Height - 1, image.Width, image.Height - 1, color5);
-        image.DrawLine(image.Width - 1, 0, image.Width - 1, image.Height - 1, color5);
+        image.DrawLine(0, h - 1, w, h - 1, color5);
+        image.DrawLine(w - 1, 0, w - 1, h - 1, color5);
 
         var left = image.Copy();
         if (vertical)
         {
-            left.DrawPixel(8, 6, Color.Black);
-            left.DrawLine(7, 7, 10, 7, Color.Black);
-            left.DrawLine(6, 8, 11, 8, Color.Black);
-            left.DrawLine(5, 9, 12, 9, Color.Black);
+            left.DrawPixel(w / 2, 6, Color.Black);
+            left.DrawLine(w / 2 - 1, 7, w / 2 + 2, 7, Color.Black);
+            left.DrawLine(w / 2 - 2, 8, w / 2 + 3, 8, Color.Black);
+            left.DrawLine(w / 2 - 3, 9, w / 2 + 4, 9, Color.Black);
         }
         else
         {
-            left.DrawPixel(6, 8, Color.Black);
-            left.DrawLine(7, 7, 7, 10, Color.Black);
-            left.DrawLine(8, 6, 8, 11, Color.Black);
-            left.DrawLine(9, 5, 9, 12, Color.Black);
+            left.DrawPixel(6, h / 2, Color.Black);
+            left.DrawLine(7, h / 2 - 1, 7, h / 2 + 2, Color.Black);
+            left.DrawLine(8, h / 2 - 2, 8, h / 2 + 3, Color.Black);
+            left.DrawLine(9, h / 2 - 3, 9, h / 2 + 4, Color.Black);
         }
 
         var right = image.Copy();
         if (vertical)
         {
-            right.DrawPixel(8, dim - 7, Color.Black);
-            right.DrawLine(7, dim - 8, 10, dim - 8, Color.Black);
-            right.DrawLine(6, dim - 9, 11, dim - 9, Color.Black);
-            right.DrawLine(5, dim - 10, 12, dim - 10, Color.Black);
+            right.DrawPixel(w / 2, h - 7, Color.Black);
+            right.DrawLine(w / 2 - 1, h - 8, w / 2 + 2, h - 8, Color.Black);
+            right.DrawLine(w / 2 - 2, h - 9, w / 2 + 3, h - 9, Color.Black);
+            right.DrawLine(w / 2 - 3, h - 10, w / 2 + 4, h - 10, Color.Black);
         }
         else
         {
-            right.DrawPixel(dim - 7, 8, Color.Black);
-            right.DrawLine(dim - 8, 7, dim - 8, 10, Color.Black);
-            right.DrawLine(dim - 9, 6, dim - 9, 11, Color.Black);
-            right.DrawLine(dim - 10, 5, dim - 10, 12, Color.Black);
+            right.DrawPixel(w - 7, h / 2, Color.Black);
+            right.DrawLine(w - 8, h / 2 - 1, w - 8, h / 2 + 2, Color.Black);
+            right.DrawLine(w - 9, h / 2 - 2, w - 9, h / 2 + 3, Color.Black);
+            right.DrawLine(w - 10, h / 2 - 3, w - 10, h / 2 + 4, Color.Black);
         }
 
         return [left, image, right];

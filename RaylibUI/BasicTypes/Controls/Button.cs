@@ -15,7 +15,6 @@ namespace RaylibUI.Controls;
 
 public class Button : BaseControl
 {
-    private readonly string _text;
     private Vector2 _textSize;
     private readonly Font _font;
     private int _fontSize;
@@ -24,19 +23,27 @@ public class Button : BaseControl
     private readonly IUserInterface? _active;
     private bool _hovered;
     public override bool CanFocus => true;
-    public string Text => _text;
 
     public Button(IControlLayout controller, string text, Font? font = null, int? fontSize = null, IImageSource? backgroundImage = null, float imageScale = 1.0f) : base(controller)
     {
         _active = controller.MainWindow.ActiveInterface;
-        _text = text;
-        
         _font = _active == null ? font ?? Fonts.Tnr : font ?? _active.Look.ButtonFont;        
         _fontSize = fontSize ?? _active?.Look.ButtonFontSize ?? 20;
+        Text = text;
         _textColour = _active?.Look.ButtonColour ?? Color.Black;
-        _textSize = TextManager.MeasureTextEx(_font, text, _fontSize, 1f);
         _backgroundImage = backgroundImage;
         Scale = imageScale;
+    }
+
+    private string _text;
+    public string Text
+    {
+        get => _text;
+        set
+        {
+            _text = value;
+            _textSize = TextManager.MeasureTextEx(_font, _text, _fontSize, 0f);
+        }
     }
 
     private int _width;
@@ -95,7 +102,7 @@ public class Button : BaseControl
                 new Vector2(Bounds.X, Bounds.Y), 0.0f, Scale, Color.White);
         }
 
-        Graphics.DrawTextEx(_font, Text, new Vector2(Bounds.X + Width / 2 - (int)_textSize.X / 2, Bounds.Y + Height / 2 - (int)_textSize.Y / 2), _fontSize, 1f, Enabled ? _textColour : Color.Gray);
+        Graphics.DrawTextEx(_font, Text, new Vector2(Bounds.X + Width / 2 - (int)_textSize.X / 2, Bounds.Y + Height / 2 - (int)_textSize.Y / 2), _fontSize, 0f, Enabled ? _textColour : Color.Gray);
 
         base.Draw(pulse);
     }
@@ -106,7 +113,7 @@ public class Button : BaseControl
         set
         { 
             _fontSize = value;
-            _textSize = TextManager.MeasureTextEx(_font, _text, _fontSize, 1f);
+            _textSize = TextManager.MeasureTextEx(_font, _text, _fontSize, 0f);
         }
     }
 

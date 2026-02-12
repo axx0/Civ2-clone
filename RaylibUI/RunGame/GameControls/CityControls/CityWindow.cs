@@ -42,8 +42,9 @@ public class CityWindow : BaseDialog
 
         _cityWindowProps = _active.GetCityWindowDefinition();
 
-        _headerLabel = new HeaderLabel(this, _active.Look, $"City of {City.Name}, {game.Date.GameYearString(game.TurnNumber)}, " +
-            $"Population {city.GetPopulation()} (Treasury {city.Owner.Money} Gold)",
+        _headerLabel = new HeaderLabel(this, _active.Look, $"{Labels.For(LabelIndex.City)} {Labels.For(LabelIndex.of)} {City.Name}, " +
+            $"{game.Date.GameYearString(game.TurnNumber)}, {Labels.For(LabelIndex.Population)} {city.GetPopulation()} " +
+            $"({Labels.For(LabelIndex.Treasury)} {city.Owner.Money} {Labels.For(LabelIndex.Gold)})",
             fontSize: _active.Look.CityHeaderLabelFontSizeNormal);
 
         Controls.Add(_headerLabel);

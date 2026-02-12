@@ -6,7 +6,7 @@ using Model.Constants;
 
 namespace Model.Core.Units
 {
-    public class Unit: IUnit
+    public class Unit : IUnit
     {
         private Tile _currentLocation;
         private bool _dead;

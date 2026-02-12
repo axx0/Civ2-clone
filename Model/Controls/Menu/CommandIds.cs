@@ -9,6 +9,15 @@ public static class CommandIds
     public const string LoadGame = "LOAD_GAME";
     public const string QuitGame = "GAME_QUIT";
 
+    public const string ChangeTaxRate = "CHANGE_TAX_RATE";
+    public const string FindCity = "FIND_CITY";
+
+    public const string CityStatus = "CITY_STATUS";
+    public const string DefenseMinister = "DEFENSE_MINISTER";
+    public const string AttitudeAdvisor = "ATTITUDE_ADVISOR";
+    public const string TradeAdvisor = "TRADE_ADVISOR";
+    public const string ScienceAdvisor = "SCIENCE_ADVISOR";
+
     public const string ZoomIn = "ZOOM_IN";
     public const string ZoomOut = "ZOOM_OUT";
     public const string MaxZoomIn = "MAX_ZOOM_IN";

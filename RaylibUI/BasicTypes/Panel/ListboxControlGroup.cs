@@ -36,10 +36,13 @@ public class ListboxControlGroup : ControlGroup
             var element = _elements[i];
             if (element.Text != string.Empty)
             {
-                var label = new LabelControl(controller, element.Text, true, font: def.Looks.Font, fontSize: def.Looks.FontSize,
-                    colorFront: def.Looks.TextColorFront, colorShadow: def.Looks.TextColorShadow,
-                    shadowOffset: def.Looks.TextShadowOffset, horizontalAlignment: element.HorizontalAlignment,
-                    verticalAlignment: element.VerticalAlignment);
+                var fontSize = element.TextSizeOverride != null ? element.TextSizeOverride : def.Looks.FontSize;
+                var colorFront = element.FrontColorOverride != null ? element.FrontColorOverride : def.Looks.TextColorFront;
+                var colorShadow = element.ShadowColorOverride != null ? element.ShadowColorOverride : def.Looks.TextColorShadow;
+
+                var label = new LabelControl(controller, element.Text, true, font: def.Looks.Font, fontSize: (int)fontSize,
+                    colorFront: colorFront, colorShadow: colorShadow, shadowOffset: def.Looks.TextShadowOffset, 
+                    horizontalAlignment: element.HorizontalAlignment, verticalAlignment: element.VerticalAlignment);
                 if (group.Height != null)
                 {
                     label.Height = (int)group.Height;

@@ -223,16 +223,8 @@ public abstract class BaseGameView : IGameView
         var playerKnowledge = tile.PlayerKnowledge[civilizationId];
         if (playerKnowledge.CityHere != null)
         {
-            var cityStyleIndex = _gameScreen.Game.Players[playerKnowledge.CityHere.OwnerId].Civilization.CityStyle;
-            if (tile.CityHere.Owner.Epoch == (int)Civ2engine.Enums.EpochType.Industrial)
-            {
-                cityStyleIndex = 4;
-            }
-            else if (tile.CityHere.Owner.Epoch == (int)Civ2engine.Enums.EpochType.Modern)
-            {
-                cityStyleIndex = 5;
-            }
-
+            var apparentOwner = _gameScreen.Game.Players[playerKnowledge.CityHere.OwnerId].Civilization;
+            var cityStyleIndex = _gameScreen.Main.ActiveInterface.GetCityStyleIndexFromEpoch(apparentOwner.CityStyle, apparentOwner.Epoch);
             var sizeIncrement =
                 _gameScreen.Main.ActiveInterface.GetCityIndexForStyle(cityStyleIndex,
                     tile.CityHere, playerKnowledge.CityHere.Size);
