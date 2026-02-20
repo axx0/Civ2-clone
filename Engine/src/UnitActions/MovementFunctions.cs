@@ -5,9 +5,6 @@ using Civ2engine.Terrains;
 using Civ2engine.Units;
 using Model.Core;
 using Model.Core.Units;
-using Model.Core.GoodyHuts;
-using Model.Core.GoodyHuts.Outcomes;
-using Model.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -466,11 +463,11 @@ namespace Civ2engine.UnitActions
                     game.TriggerMapEvent(MapEventType.UpdateMap, neighbours);
                 }
 
-                if(tileTo.HasGoodyHut) 
+                if(tileTo.HasGoodyHut)
                 {
                     var outcome = tileTo.ConsumeGoodyHut(unit);
                     game.TriggerMapEvent(MapEventType.UpdateMap, new List<Tile> { tileTo });
-                    game.TriggerUnitEvent(new GoodyHutOutcomeEventArgs(unit, outcome));
+                    game.Players[unit.Owner.Id].GoodyHutTriggered(unit, outcome);
                 }
             }
         }

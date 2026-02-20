@@ -8,6 +8,7 @@ using Civ2engine.Units;
 using Model.Controls;
 using Model.Core;
 using Model.Core.Advances;
+using Model.Core.GoodyHuts.Outcomes;
 using Model.Core.Units;
 using Model.Events;
 using Model.Interface;
@@ -207,29 +208,16 @@ public class LocalPlayer : IPlayer
 
     public event EventHandler<UnitEventArgs> OnUnitEvent;
 
-    public void SubscribeToUnitEvents(IGame game)
+    public void GoodyHutTriggered(Unit unit, GoodyHutOutcomeResult outcome)
     {
-        game.OnUnitEvent += HandleUnitEvent;
-    }
+        var args = new GoodyHutOutcomeEventArgs(unit, outcome);
+        OnUnitEvent?.Invoke(this, args);
 
-    private void HandleUnitEvent(object? sender, UnitEventArgs args)
-    {
-        if (args is GoodyHutOutcomeEventArgs outcomeArgs && outcomeArgs.Unit.Owner == Civilization)
-        {
-            GoodyHutOutcomeReceived(outcomeArgs);
-        }
-    }
-
-    public void GoodyHutOutcomeReceived(GoodyHutOutcomeEventArgs args)
-    {
-        var outcomeType = args.Outcome.OutcomeType;
-        var message = args.Outcome.Message;
-
-        var popupName = outcomeType switch
+        var popupName = outcome.OutcomeType switch
         {
             "Gold" => "SURPRISEMETALS",
             "Scrolls" => "SURPRISESCROLLS",
-            "Tribe" => "SURPRISENOMADS", //SURPRISETRIBE
+            "Tribe" => "SURPRISENOMADS",
             "Barbarians" => "SURPRISEBARB",
             "AbandonedVillage" => "SURPRISENOTHING",
             "Mercenaries" => "SURPRISEMERCS",
@@ -237,8 +225,5 @@ public class LocalPlayer : IPlayer
         };
 
         _gameScreen.ShowPopup(popupName);
-            // TODO: Image dialogImage: new(new[] { _active.PicSources["cityBuiltAncient"][0] }));
-            // TODO: Number substitutions
-
     }
 }

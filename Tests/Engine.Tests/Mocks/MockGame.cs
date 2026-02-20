@@ -25,8 +25,6 @@ internal class MockGame : IGame
     public Dictionary<string, List<string>?> CityNames => throw new NotImplementedException();
     public Dictionary<Civilization, int> CitiesBuiltSoFar { get; }
 
-    public event EventHandler<UnitEventArgs> OnUnitEvent;
-
     public void ConnectPlayer(IPlayer player) => throw new NotImplementedException();
     public string Order2String(int unitOrder) => throw new NotImplementedException();
     public void ChooseNextUnit() => throw new NotImplementedException();
@@ -50,15 +48,7 @@ internal class MockGame : IGame
     public int NoMaps => throw new NotImplementedException();
     public List<Civilization> AllCivilizations { get; set; }
 
-    // TODO: Refactor / Remove
-    // public void TriggerUnitEvent(UnitEventType eventType, IUnit triggerUnit, BlockedReason reason = BlockedReason.NotBlocked) => throw new NotImplementedException();
     public void SetHumanPlayer(int playerCivId) => throw new NotImplementedException();
     public void StartPlayerTurn(IPlayer activePlayer) => throw new NotImplementedException();
     public void StartNextTurn() => throw new NotImplementedException();
-
-    // TODO: Refactor / Remove
-    public void TriggerUnitEvent(UnitEventArgs combatEventArgs)
-    {
-        throw new NotImplementedException();
-    }
 }

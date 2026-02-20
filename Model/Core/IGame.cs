@@ -1,10 +1,8 @@
 using Civ2engine;
 using Civ2engine.Enums;
-using Civ2engine.Events;
 using Civ2engine.MapObjects;
 using Civ2engine.Units;
 using Model.Core.Units;
-using Model.Events;
 using System.Collections;
 
 namespace Model.Core;
@@ -50,8 +48,4 @@ public interface IGame
     void SetHumanPlayer(int playerCivId);
     void StartPlayerTurn(IPlayer activePlayer);
     void StartNextTurn();
-
-    //TODO: Remove/fold back into master branch properly
-    event EventHandler<UnitEventArgs> OnUnitEvent;
-    void TriggerUnitEvent(UnitEventArgs combatEventArgs);
 }

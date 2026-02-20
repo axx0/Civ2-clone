@@ -12,6 +12,7 @@ using Civ2engine.UnitActions;
 using Civ2engine.Units;
 using Model.Core;
 using Model.Core.Advances;
+using Model.Core.GoodyHuts.Outcomes;
 using Model.Core.Units;
 using Neo.IronLua;
 
@@ -196,6 +197,10 @@ namespace Civ2engine
         public void MoveBlocked(Unit unit, BlockedReason blockedReason)
         {
             //TODO: Does the AI care? Can this even happen?
+        }
+
+        public void GoodyHutTriggered(Unit unit, GoodyHutOutcomeResult outcome)
+        {
         }
 
         private UnitAction? TileToAction(Tile tile, Unit unit)

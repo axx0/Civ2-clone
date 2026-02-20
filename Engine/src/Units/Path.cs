@@ -1,10 +1,8 @@
 using Civ2engine.Enums;
-using Civ2engine.Events;
 using Civ2engine.MapObjects;
 using Civ2engine.UnitActions;
 using Model.Core;
 using Model.Core.Units;
-using Model.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -179,24 +177,12 @@ public class Path
         do
         {
             var tileTo = Tiles[pos++];
-            var tileFrom = unit.CurrentLocation;
             MovementFunctions.UnitMoved(game, unit, tileTo, unit.CurrentLocation);
-            if (MovementFunctions.UnitMoved(game, unit, tileTo, unit.CurrentLocation!))
+            if (tileTo.HasGoodyHut)
             {
-                var neighbours = tileTo.Neighbours().Where(n => !n.IsVisible(unit.Owner.Id)).ToList();
-                if (neighbours.Count > 0)
-                {
-                    neighbours.ForEach(n => n.SetVisible(unit.Owner.Id));
-                    game.TriggerMapEvent(MapEventType.UpdateMap, neighbours);
-                }
-                game.TriggerUnitEvent(new MovementEventArgs(unit, tileFrom, tileTo));
-
-                if(tileTo.HasGoodyHut)
-                {
-                    var outcome = tileTo.ConsumeGoodyHut(unit);
-                    game.TriggerMapEvent(MapEventType.UpdateMap, new List<Tile> { tileTo });
-                    game.TriggerUnitEvent(new GoodyHutOutcomeEventArgs(unit, outcome));
-                }
+                var outcome = tileTo.ConsumeGoodyHut(unit);
+                game.TriggerMapEvent(MapEventType.UpdateMap, new List<Tile> { tileTo });
+                game.Players[unit.Owner.Id].GoodyHutTriggered(unit, outcome);
             }
         } while (unit.MovePoints > 0 && pos < Tiles.Length &&
                  !MovementFunctions.IsNextToEnemy(unit.CurrentLocation!, unit.Owner, unit.Domain));

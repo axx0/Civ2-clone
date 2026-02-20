@@ -11,7 +11,6 @@ using Civ2engine.Units;
 using Model;
 using Model.Core;
 using Model.Core.Units;
-using Model.Events;
 
 namespace Civ2engine
 {
@@ -128,19 +127,6 @@ namespace Civ2engine
             player.SetUnitActive(currentPlayer.ActiveUnit, false);
             Players[id] = player;
             Script.Connect(player.Ui);
-        }
-
-
-        //public void TriggerUnitEvent(UnitEventType eventType, IUnit movedUnit,
-        //    BlockedReason blockedReason = BlockedReason.NotBlocked)
-        //{
-        //    OnUnitEvent?.Invoke(this, new MovementBlockedEventArgs(eventType, movedUnit, blockedReason));
-        //}
-
-        //TOOD: Remove / fold back into master properly
-        public void TriggerUnitEvent(UnitEventArgs args)
-        {
-            OnUnitEvent?.Invoke(this, args);
         }
     }
 }
