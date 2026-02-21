@@ -121,7 +121,15 @@ public class LabelControl : BaseControl
 
             return _width; 
         }
-        set { _width = value; }
+        set 
+        { 
+            _width = value;
+
+            if (WrapText)
+            {
+                _wrappedText = DialogUtils.GetWrappedTexts(_active, _text, _width, _font, _fontSize);
+            }
+        }
     }
 
     private int _height;

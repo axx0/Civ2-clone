@@ -47,18 +47,7 @@ public class ScenChoseCiv : ICivDialogHandler
         }
         Initialization.ConfigObject.ScenPlayerCivId = boolPos[result.SelectedIndex + 1];
 
-        var difficultyDialog = civDialogHandlers[DifficultyHandler.Title];
-        var popupContent = difficultyDialog.Dialog;
-        popupContent!.Options.Texts = new List<string> { 
-            Labels.For(LabelIndex.Chieftan) + " (easiest)", Labels.For(LabelIndex.Warlord),
-            Labels.For(LabelIndex.Prince), Labels.For(LabelIndex.King), 
-            Labels.For(LabelIndex.Emperor), Labels.For(LabelIndex.Deity) + " (toughest)"};
-
-        popupContent.Button = new List<string> { Labels.Ok, Labels.Cancel };
-
-        popupContent.Title = $"Select {Labels.For(LabelIndex.Difficulty)} Level";
-
-        return difficultyDialog.Show(civ2Interface);
+        return civDialogHandlers["DIFFICULTY"].Show(civ2Interface);
     }
 
     public IInterfaceAction Show(Civ2Interface activeInterface)

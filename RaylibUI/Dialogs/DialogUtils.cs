@@ -30,10 +30,10 @@ public static class DialogUtils
                 combinedWord = combinedWord + " " + words[i];
             }
 
-            combinedTextSize = (int)TextManager.MeasureTextEx(active.Look.DefaultFont, combinedWord, fontSize, 1.0f).X;
+            combinedTextSize = (int)TextManager.MeasureTextEx(font, combinedWord, fontSize, 0.0f).X;
             if (i != words.Length - 1)
             {
-                combinedTextSizeNext = (int)TextManager.MeasureTextEx(active.Look.DefaultFont, combinedWord + " " + words[i + 1], fontSize, 1.0f).X;
+                combinedTextSizeNext = (int)TextManager.MeasureTextEx(font, combinedWord + " " + words[i + 1], fontSize, 0.0f).X;
             }
             else    // Last word
             {
@@ -57,7 +57,7 @@ public static class DialogUtils
         int[] wrappedLinesLength = new int[wrappedLines.Count];
         for (int i = 0; i < wrappedLines.Count; i++)
         {
-            wrappedLinesLength[i] = (int)TextManager.MeasureTextEx(active.Look.DefaultFont, wrappedLines[i], fontSize, 1.0f).X;
+            wrappedLinesLength[i] = (int)TextManager.MeasureTextEx(font, wrappedLines[i], fontSize, 0.0f).X;
         }
 
         return wrappedLines;

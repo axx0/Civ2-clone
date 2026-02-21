@@ -51,8 +51,8 @@ public class Civ2GoldInterface(IMain main) : Civ2Interface(main)
         HeaderLabelShadow = true,
         HeaderLabelColour = new Color(135, 135, 135, 255),
         LabelFont = Fonts.Tnr,
-        LabelFontSize = 25,
-        LabelColour = new Color(31, 31, 31, 255),
+        LabelFontSize = 27,
+        LabelColour = new Color(51, 51, 51, 255),
         LabelShadowColour = new Color(191, 191, 191, 255),
         CityWindowFont = Fonts.Arial,
         CityWindowFontSize = 14,  // small=6, normal=14, large=20
@@ -169,6 +169,7 @@ public class Civ2GoldInterface(IMain main) : Civ2Interface(main)
         PicSources.Add("attitudeAdvisor", [new BinaryStorage("Tiles.dll", 0x4CB3C, 0xCDFA, new Rectangle(0, 0, 600, 400))]);
         PicSources.Add("tradeAdvisor", [new BinaryStorage("Tiles.dll", 0x59938, 0xD878, new Rectangle(0, 0, 600, 400))]);
         PicSources.Add("scienceAdvisor", [new BinaryStorage("Tiles.dll", 0x671B0, 0xCFD2, new Rectangle(0, 0, 600, 400))]);
+        PicSources.Add("worldWonders", [new BinaryStorage("Tiles.dll", 0x74184, 0x77E6, new Rectangle(0, 0, 600, 400))]);
         PicSources.Add("sinaiPic", [new BinaryStorage("Intro.dll", 0x1E630, 0x9F78)]);
         PicSources.Add("stPeterburgPic", [new BinaryStorage("Intro.dll", 0x285A8, 0x15D04)]);
         PicSources.Add("desertPic", [new BinaryStorage("Intro.dll", 0xD0140, 0xA35A)]);
@@ -397,7 +398,7 @@ public class Civ2GoldInterface(IMain main) : Civ2Interface(main)
             Key = "WORLD", Defaults = new List<MenuElement>
             {
                 new("&World", Shortcut.None, Key.W),
-                new("&Wonders of the World|F7", new Shortcut(Key.F7), Key.W),
+                new("&Wonders of the World|F7", new Shortcut(Key.F7), Key.W, commandId: WorldWonders),
                 new("&Top 5 Cities|F8", new Shortcut(Key.F8), Key.T),
                 new("&Civilization Score|F9", new Shortcut(Key.F9), Key.C),
                 new("-", Shortcut.None, Key.None),
@@ -491,7 +492,7 @@ public class Civ2GoldInterface(IMain main) : Civ2Interface(main)
             Key = "PEDIA", Defaults = new List<MenuElement>
             {
                 new("&Civilopedia", Shortcut.None, Key.C),
-                new("Civilization &Advances", Shortcut.None, Key.A),
+                new("Civilization &Advances", Shortcut.None, Key.A, commandId: CivAdvances),
                 new("City &Improvements", Shortcut.None, Key.I),
                 new("&Wonders of the World", Shortcut.None, Key.W),
                 new("Military &Units", Shortcut.None, Key.U),

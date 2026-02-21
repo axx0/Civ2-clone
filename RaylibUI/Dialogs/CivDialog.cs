@@ -26,9 +26,9 @@ public class CivDialog : DynamicSizingDialog
 
     public CivDialog(Main host, DialogElements dialog, Action<string, int, IList<bool>?, IDictionary<string, string>?> handleButtonClick) :
         base(host, DialogUtils.ReplacePlaceholders(dialog.Title, dialog.ReplaceStrings, dialog.ReplaceNumbers),
+            dialog.Width == null ? host.ActiveInterface.DefaultDialogWidth : (int)(1.5 * dialog.Width),
             dialog.X != null || dialog.Y != null ? new Point(dialog.X ?? 0 / Window.GetScreenWidth(),
-            dialog.Y ?? 0 / Window.GetScreenHeight()) : dialog.DialogPos, requestedWidth: dialog.Width == 0 ?
-            host.ActiveInterface.DefaultDialogWidth : dialog.Width)
+            dialog.Y ?? 0 / Window.GetScreenHeight()) : dialog.DialogPos)
     {
         _active = host.ActiveInterface;
         _handleButtonClick = handleButtonClick;
@@ -197,7 +197,7 @@ public class CivDialog : DynamicSizingDialog
         for (int i = 0; i < texts.Count; i++)
         {
             labels.Add(new LabelControl(controller,
-                        string.IsNullOrEmpty(texts[i]) && styles[i] == TextStyles.LeftOwnLine ? " " : texts[i],    // Add space if ^ is the only character 
+                        string.IsNullOrEmpty(texts[i]) && (styles[i] == TextStyles.Left || styles[i] == TextStyles.LeftOwnLine)  ? " " : texts[i],    // Add space if ^ is the only character 
                         false,
                         horizontalAlignment: styles[i] == TextStyles.Centered ? HorizontalAlignment.Center : HorizontalAlignment.Left,
                         wrapText: styles[i] == TextStyles.Left,
@@ -217,7 +217,7 @@ public class CivDialog : DynamicSizingDialog
                                    select label).ToList().FirstOrDefault().TextSize.X;
 
         if (popupboxWidth != 0)
-            return (int)Math.Ceiling(Math.Max(centredTextMaxWidth, popupboxWidth));
+            return (int)Math.Ceiling(Math.Max(centredTextMaxWidth, 1.5 * popupboxWidth));
         else
             return (int)Math.Ceiling(Math.Max(centredTextMaxWidth, _active.DefaultDialogWidth));    // 660=440*1.5
     }

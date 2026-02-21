@@ -678,6 +678,7 @@ public class Read
 
         var unitHomeCity = new byte[numberOfUnits];
         int totOffset;
+        int selectedUnitType = 0;
         for (int i = 0; i < numberOfUnits; i++)
         {
             totOffset = 0;
@@ -783,7 +784,10 @@ public class Read
             objects.Civilizations[civId].Units.Add(unit);
 
             if (i == selectedUnitIndex)
+            {
                 objects.ActiveUnit = unit;
+                selectedUnitType = type;
+            }
         }
         #endregion
         #region Cities
@@ -1115,7 +1119,7 @@ public class Read
             scenarioName = String.Concat(chars);
 
             techParadigm = BitConverter.ToUInt16(bytes, ofsetS + 82);
-            turnYearIncrement = BitConverter.ToUInt16(bytes, ofsetS + 84);
+            turnYearIncrement = BitConverter.ToInt16(bytes, ofsetS + 84);
             startingYear = BitConverter.ToUInt16(bytes, ofsetS + 86);
             maxTurns = BitConverter.ToUInt16(bytes, ofsetS + 88);
             objectiveProtagonist = bytes[ofsetS + 90];
@@ -1264,7 +1268,7 @@ public class Read
         objects.Scenario = new Scenario
         {
             Events = events,
-            Flags = flags == null ? null : flags,
+            Flags = flags ?? null,
             TotalWar = totalWar,
             ObjectiveVictory = objectiveVictory,
             CountWondersAsObjectives = countWondersAsObjectives,
@@ -1281,7 +1285,8 @@ public class Read
             NoObjectivesDecisiveVictory = noObjectivesDecisiveVictory,
             NoObjectivesMarginalVictory = noObjectivesMarginalVictory,
             NoObjectivesMarginalDefeat = noObjectivesMarginalDefeat,
-            NoObjectivesDecisiveDefeat = noObjectivesDecisiveDefeat
+            NoObjectivesDecisiveDefeat = noObjectivesDecisiveDefeat,
+            ActiveUnitType = selectedUnitType
         };
 
         // If there are no events in .sav read them from EVENTS.TXT (if it exists)

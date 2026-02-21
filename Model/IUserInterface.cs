@@ -61,7 +61,7 @@ public interface IUserInterface
     IMain MainApp { get; }
     int InterfaceIndex { get; set; }
     IInterfaceAction HandleLoadGame(IGame game, Rules rules, Ruleset ruleset, Dictionary<string, string?> viewData);
-    IInterfaceAction HandleLoadScenario(IGame game, string scnName, string scnDirectory);
+    IInterfaceAction HandleLoadScenario(IGame game, string scnName, Ruleset ruleset);
     IInterfaceAction InitNewGame(bool quickStart);
     IImageSource? GetImprovementImage(Improvement improvement, int firstWonderIndex);
     IImageSource? GetAdvanceImage(Advance advance);
