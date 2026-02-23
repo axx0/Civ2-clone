@@ -39,43 +39,43 @@ public static class ImageUtils
         }
     }
 
-    /// <summary>
-    /// Draw tiles within a rectangle (chose tiles randomly)
-    /// </summary>
-    /// <param name="tiles">Wallpaper tile images</param>
-    /// <param name="dest">Destination image</param>
-    /// <param name="rect">Rectangle within the image where tiles are to be drawn</param>
-    public static void DrawTiledRectangle(Image[] tiles, ref Image dest, Rectangle rect)
-    {
-        var rnd = new Random();
-        var len = tiles.Length;
+    ///// <summary>
+    ///// Draw tiles within a rectangle (chose tiles randomly)
+    ///// </summary>
+    ///// <param name="tiles">Wallpaper tile images</param>
+    ///// <param name="dest">Destination image</param>
+    ///// <param name="rect">Rectangle within the image where tiles are to be drawn</param>
+    //public static void DrawTiledRectangle(Image[] tiles, ref Image dest, Rectangle rect)
+    //{
+    //    var rnd = new Random();
+    //    var len = tiles.Length;
 
-        var totalColumns = Math.Ceiling(rect.Width / tiles[0].Width);
-        var totalRows = Math.Ceiling(rect.Height / tiles[0].Height);
+    //    var totalColumns = Math.Ceiling(rect.Width / tiles[0].Width);
+    //    var totalRows = Math.Ceiling(rect.Height / tiles[0].Height);
 
-        for (int row = 0; row < totalRows; row++)
-        {
-            for (int col = 0; col < totalColumns; col++)
-            {
-                var srcRec = new Rectangle { Height = tiles[0].Height, Width = tiles[0].Width };
-                var destRec = new Rectangle(rect.X + col * tiles[0].Width, rect.Y + row * tiles[0].Height, tiles[0].Width, tiles[0].Height);
+    //    for (int row = 0; row < totalRows; row++)
+    //    {
+    //        for (int col = 0; col < totalColumns; col++)
+    //        {
+    //            var srcRec = new Rectangle { Height = tiles[0].Height, Width = tiles[0].Width };
+    //            var destRec = new Rectangle(rect.X + col * tiles[0].Width, rect.Y + row * tiles[0].Height, tiles[0].Width, tiles[0].Height);
 
-                if (col == totalColumns - 1)
-                {
-                    srcRec.Width = rect.Width - tiles[0].Width * col;
-                    destRec.Width = srcRec.Width;
-                }
+    //            if (col == totalColumns - 1)
+    //            {
+    //                srcRec.Width = rect.Width - tiles[0].Width * col;
+    //                destRec.Width = srcRec.Width;
+    //            }
 
-                if (row == totalRows - 1)
-                {
-                    srcRec.Height = rect.Height - tiles[0].Height * row;
-                    destRec.Height = srcRec.Height;
-                }
+    //            if (row == totalRows - 1)
+    //            {
+    //                srcRec.Height = rect.Height - tiles[0].Height * row;
+    //                destRec.Height = srcRec.Height;
+    //            }
 
-                dest.Draw(tiles[rnd.Next(len)], srcRec, destRec, Color.White);
-            }
-        }
-    }
+    //            dest.Draw(tiles[rnd.Next(len)], srcRec, destRec, Color.White);
+    //        }
+    //    }
+    //}
 
 
     public static void DrawTiledImage(Wallpaper wp, ref Image destination, int height, int width, Padding padding, bool statusPanel = false, bool ToTStatusPanelLayout = false)
@@ -86,23 +86,23 @@ public static class ImageUtils
 
         if (!statusPanel)
         {
-            DrawTiledRectangle(tiles, ref destination,
+            DrawUtils.TileFill(tiles, ref destination,
                 new Rectangle(padding.Left, padding.Top, width - padding.Left - padding.Right, height - padding.Top - padding.Bottom));
         }
         else
         {
             if (ToTStatusPanelLayout)
             {
-                DrawTiledRectangle(tiles, ref destination,
+                DrawUtils.TileFill(tiles, ref destination,
                     new Rectangle(padding.Left, padding.Top, 0.25f * width - padding.Left - padding.Right, height - padding.Top - padding.Bottom));
-                DrawTiledRectangle(tiles, ref destination,
+                DrawUtils.TileFill(tiles, ref destination,
                     new Rectangle(padding.Left + (0.25f * width - padding.Left - padding.Right) + 8, padding.Top, width - 0.25f * width - 8, height - padding.Top - padding.Bottom));
             }
             else
             {
-                DrawTiledRectangle(tiles, ref destination,
+                DrawUtils.TileFill(tiles, ref destination,
                     new Rectangle(padding.Left, padding.Top, width - padding.Left - padding.Right, 60));
-                DrawTiledRectangle(tiles, ref destination,
+                DrawUtils.TileFill(tiles, ref destination,
                     new Rectangle(padding.Left, padding.Top + 68, width - padding.Left - padding.Right, height - padding.Top - padding.Bottom - 68));
             }
         }

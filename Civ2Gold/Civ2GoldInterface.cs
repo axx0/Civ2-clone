@@ -600,40 +600,14 @@ public class Civ2GoldInterface(IMain main) : Civ2Interface(main)
     /// <param name="statusPanel">is this status panel?</param>
     public override void DrawBorderWallpaper(Wallpaper wallpaper, ref Image destination, int height, int width, Padding padding, bool statusPanel)
     {
-        var rows = height / wallpaper.Outer.Height + 1;
-        var columns = width / wallpaper.Outer.Width + 1;
-        var headerSourceRec = new Rectangle { Height = padding.Top, Width = wallpaper.Outer.Width };
-        for (var col = 0; col < columns; col++)
-        {
-            destination.Draw(wallpaper.Outer, headerSourceRec,
-                new Rectangle(col * wallpaper.Outer.Width, 0, wallpaper.Outer.Width, padding.Top), Color.White);
-        }
-        var leftSide = new Rectangle { Height = wallpaper.Outer.Height, Width = DialogPadding.Left };
-
-        var rightEdge = width - DialogPadding.Right;
-        var rightOffset = width % wallpaper.Outer.Width;
-        var rightSide = new Rectangle { X = rightOffset, Height = wallpaper.Outer.Height, Width = DialogPadding.Right };
-
-        for (var row = 0; row < rows; row++)
-        {
-            destination.Draw(wallpaper.Outer, leftSide,
-                new Rectangle(0, row * wallpaper.Outer.Height, DialogPadding.Left, wallpaper.Outer.Height), Color.White);
-            destination.Draw(wallpaper.Outer, rightSide,
-                new Rectangle(rightEdge, row * wallpaper.Outer.Height, DialogPadding.Right, wallpaper.Outer.Height), Color.White);
-        }
-
-        var bottomEdge = height - padding.Bottom;
-        var bottomOffset = height % wallpaper.Outer.Height;
-        var bottomSource = new Rectangle { Y = bottomOffset, Height = padding.Bottom, Width = wallpaper.Outer.Width };
-        for (var col = 0; col < columns; col++)
-        {
-            destination.Draw(wallpaper.Outer, bottomSource,
-                new Rectangle(col * wallpaper.Outer.Width, bottomEdge, wallpaper.Outer.Width, padding.Bottom), Color.White);
-        }
+        DrawUtils.TileFill([wallpaper.Outer], ref destination, new Rectangle(0, 0, width, padding.Top));
+        DrawUtils.TileFill([wallpaper.Outer], ref destination, new Rectangle(0, padding.Top, padding.Left, height - padding.Top - padding.Bottom));
+        DrawUtils.TileFill([wallpaper.Outer], ref destination, new Rectangle(width - padding.Right, padding.Top, padding.Right, height - padding.Top - padding.Bottom));
+        DrawUtils.TileFill([wallpaper.Outer], ref destination, new Rectangle(0, height - padding.Bottom, width, padding.Bottom));
 
         if (statusPanel)
         {
-            columns = (width - padding.Left - padding.Right) / wallpaper.Outer.Width + 1;
+            var columns = (width - padding.Left - padding.Right) / wallpaper.Outer.Width + 1;
             var sourceRec = new Rectangle { Height = 4, Width = wallpaper.Outer.Width };
             for (var col = 0; col < columns; col++)
             {
