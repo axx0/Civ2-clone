@@ -224,6 +224,6 @@ public class LocalPlayer : IPlayer
             _ => "GOODYHUT_DEFAULT"
         };
 
-        _gameScreen.ShowPopup(popupName);
+        _gameScreen.ShowPopup(popupName, replaceNumbers: [50]);
     }
 }
