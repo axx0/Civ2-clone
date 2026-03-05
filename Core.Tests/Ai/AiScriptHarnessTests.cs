@@ -1,20 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Civ2engine;
-using Civ2engine.Enums;
 using Civ2engine.IO;
 using Civ2engine.MapObjects;
 using Civ2engine.SaveLoad.SavFile;
 using Civ2engine.Scripting.ScriptObjects;
-using Engine.Tests.TestFiles;
+using Core.Tests.TestFiles;
 using Model.Constants;
 using Model.Core.Units;
 using Neo.IronLua;
-using Xunit;
 
-namespace Engine.Tests;
+namespace Core.Tests.Ai;
 
 public class AiScriptHarnessTests
 {

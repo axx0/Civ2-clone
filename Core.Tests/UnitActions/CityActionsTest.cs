@@ -3,7 +3,7 @@ using Civ2engine.UnitActions;
 using Model.Core;
 using Moq;
 
-namespace Engine.Tests.UnitActions;
+namespace Core.Tests.UnitActions;
 
 public class CityActionsTest
 {
@@ -28,6 +28,7 @@ public class CityActionsTest
             c.Owner = civ;
             history.CityBuilt(c);
         }
+
         game.Setup(g => g.History).Returns(history);
         // and N cities built by this civilization in the game data
         Dictionary<Civilization, int> citiesBuiltCount = new Dictionary<Civilization, int>();
