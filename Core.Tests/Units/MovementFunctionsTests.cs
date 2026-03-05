@@ -8,7 +8,8 @@ using Civ2engine.UnitActions;
 using Model.Core;
 using Model.Core.Units;
 
-namespace Engine.Tests;
+namespace Core.Tests.Units;
+using Mocks;
 
 public class MovementFunctionsTests
 {
@@ -118,9 +119,9 @@ public class MovementFunctionsTests
         var baseMoveCost = 10;
 
         var road = SetupRoadProperties();
-        
+
         // Add road to both tiles
-        tileTo.AddImprovement(road, new AllowedTerrain(), 1, [], [] );
+        tileTo.AddImprovement(road, new AllowedTerrain(), 1, [], []);
         tileFrom.AddImprovement(road, new AllowedTerrain(), 1, [], []);
 
         // Act
@@ -306,7 +307,7 @@ public class MovementFunctionsTests
         var (tile, _) = GetOfTypeNextToLand();
         var unit = CreateTestUnit(UnitGas.Ground, _civ);
         unit.CurrentLocation = tile;
-        var count = tile.Neighbours().Count(t=>t.Terrain.Type != TerrainType.Ocean);
+        var count = tile.Neighbours().Count(t => t.Terrain.Type != TerrainType.Ocean);
 
         // Act
         var possibleMoves = MovementFunctions.GetPossibleMoves(tile, unit).ToList();
@@ -314,7 +315,7 @@ public class MovementFunctionsTests
         // Assert
         Assert.Equal(possibleMoves.Count, count);
     }
-    
+
 
     [Fact]
     public void GetPossibleMoves_SeaUnit_OnlyReturnsOceanTiles()
@@ -332,7 +333,7 @@ public class MovementFunctionsTests
         // All possible moves should be ocean tiles
         Assert.All(possibleMoves, t => Assert.Equal(TerrainType.Ocean, t.Terrain.Type));
     }
-    
+
     [Fact]
     public void GetPossibleMoves_SeaUnit_ReturnsAllTiles_When_CarryingUnits()
     {
@@ -405,7 +406,7 @@ public class MovementFunctionsTests
         var attackingUnit = CreateTestUnit(UnitGas.Ground, _civ);
         var defendingUnit = CreateTestUnit(UnitGas.Ground, _enemyCiv);
         var (tile, from) = GetOfTypeNextToLand();
-        
+
         attackingUnit.CurrentLocation = from;
         defendingUnit.CurrentLocation = tile;
         tile.UnitsHere.Add(defendingUnit);
@@ -462,7 +463,7 @@ public class MovementFunctionsTests
             {
                 if (_map.Tile[i, j].Terrain.Type == type)
                 {
-                    var to = _map.Tile[i, j].Neighbours().FirstOrDefault(t=>t.Terrain.Type != TerrainType.Ocean);
+                    var to = _map.Tile[i, j].Neighbours().FirstOrDefault(t => t.Terrain.Type != TerrainType.Ocean);
                     if (to != null)
                     {
                         return new Tuple<Tile, Tile>(_map.Tile[i, j], to);
@@ -470,9 +471,10 @@ public class MovementFunctionsTests
                 }
             }
         }
+
         throw new Exception("No valid tiles found");
     }
-    
+
 
     #endregion
 
@@ -497,12 +499,12 @@ public class MovementFunctionsTests
             XDim = 10,
             YDim = 10
         };
-        
-        var plains = new Terrain { Type = TerrainType.Plains, Specials = []};
-        var ocean = new Terrain { Type = TerrainType.Ocean, Specials = []};
+
+        var plains = new Terrain { Type = TerrainType.Plains, Specials = [] };
+        var ocean = new Terrain { Type = TerrainType.Ocean, Specials = [] };
 
         Terrain[] terrains = [plains, ocean];
-        
+
         var seed = 1;
 
         // Initialize all tiles
@@ -510,7 +512,7 @@ public class MovementFunctionsTests
         {
             for (int y = 0; y < map.YDim; y++)
             {
-                map.Tile[x, y] = new Tile(x, y, terrains[ran.Next(terrains.Length)], seed, map,x, [] )
+                map.Tile[x, y] = new Tile(x, y, terrains[ran.Next(terrains.Length)], seed, map, x, [])
                 {
                     Island = 1
                 };
@@ -550,5 +552,3 @@ public class MovementFunctionsTests
 
     #endregion
 }
-
-// Extended MockGame for testing

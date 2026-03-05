@@ -2,13 +2,12 @@ using Civ2engine;
 using Civ2engine.IO;
 using Civ2engine.SaveLoad;
 using Civ2engine.SaveLoad.SavFile;
-using Civ2engine.Units;
-using Engine.Tests.TestFiles;
-using Model;
+using Core.Tests.Mocks;
+using Core.Tests.TestFiles;
 using Model.Core;
 using Model.InterfaceActions;
 
-namespace Engine.Tests;
+namespace Core.Tests.SaveLoad;
 
 public class GameLoaderTests
 {
@@ -26,7 +25,7 @@ public class GameLoaderTests
         var savFile = new MockSavFile();
         var gameLoader = new GameLoader(path, savDirectory, rules, activeRuleSet, savFile);
         var game = new MockGame();
-        var activeInterface = new MockInterface();
+        var activeInterface = new LoadGameTests.MockInterface();
 
         // Act
         var result = gameLoader.LoadGame(game, activeInterface);
@@ -50,7 +49,7 @@ public class GameLoaderTests
         var savFile = new MockSavFile();
         var gameLoader = new GameLoader(path, savDirectory, rules, activeRuleSet, savFile);
         var game = new MockGame();
-        var activeInterface = new MockInterface();
+        var activeInterface = new LoadGameTests.MockInterface();
 
         // Act
         var result = gameLoader.LoadGame(game, activeInterface);
@@ -59,12 +58,12 @@ public class GameLoaderTests
         Assert.NotNull(result);
         Assert.IsAssignableFrom<IInterfaceAction>(result);
     }
-}
 
-internal class MockSavFile : SavFileBase
-{
-    public override IGame LoadGame(byte[] fileData, Ruleset activeRuleSet, Rules rules)
+    internal class MockSavFile : SavFileBase
     {
-        return new MockGame();
+        public override IGame LoadGame(byte[] fileData, Ruleset activeRuleSet, Rules rules)
+        {
+            return new MockGame();
+        }
     }
 }

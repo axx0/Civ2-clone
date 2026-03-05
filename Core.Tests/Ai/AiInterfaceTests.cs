@@ -1,10 +1,8 @@
-using System.Linq;
 using Civ2engine.Scripting;
-using Civ2engine.Scripting.ScriptObjects;
+using Core.Tests.Scripting.ScriptObjects;
 using Neo.IronLua;
-using Xunit;
 
-namespace Engine.Tests;
+namespace Core.Tests.Ai;
 
 public class AiInterfaceTests
 {
@@ -13,7 +11,7 @@ public class AiInterfaceTests
     {
         var (game, aiPlayer, civ) = ApiTestHarness.CreateGameAndAi();
         var api = aiPlayer.AI;
-        
+
         Assert.Equal(civ, api.civ);
         Assert.Equal(aiPlayer.DifficultyLevel, api.difficulty);
     }
@@ -25,7 +23,7 @@ public class AiInterfaceTests
         var api = aiPlayer.AI;
         var tile = ApiTestHarness.FindEmptyTile(game);
         var city = ApiTestHarness.CreateCity(game, civ, tile, "Rome");
-        
+
         var nearest = api.GetNearestCity(new TileApi(tile, game));
         Assert.Equal(city, nearest);
     }
@@ -35,7 +33,7 @@ public class AiInterfaceTests
     {
         var (game, aiPlayer, _) = ApiTestHarness.CreateGameAndAi();
         var api = aiPlayer.AI;
-        
+
         var tile = api.RandomTile(new LuaTable { { "global", true } });
         Assert.NotNull(tile);
         Assert.IsType<TileApi>(tile);
@@ -46,15 +44,16 @@ public class AiInterfaceTests
     {
         var (game, aiPlayer, _) = ApiTestHarness.CreateGameAndAi();
         var api = aiPlayer.AI;
-        
+
         bool called = false;
-        api.RegisterEvent("test_event", (ai, args) => {
+        api.RegisterEvent("test_event", (ai, args) =>
+        {
             called = (bool)args["val"];
             return "success";
         });
-        
+
         var result = api.Call("test_event", new LuaTable { { "val", true } });
-        
+
         Assert.True(called);
         Assert.Equal("success", result);
     }

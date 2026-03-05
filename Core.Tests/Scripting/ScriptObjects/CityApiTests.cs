@@ -1,9 +1,4 @@
-using System.Linq;
-using Civ2engine.Scripting.ScriptObjects;
-using Neo.IronLua;
-using Xunit;
-
-namespace Engine.Tests;
+namespace Core.Tests.Scripting.ScriptObjects;
 
 public class CityApiTests
 {
@@ -14,7 +9,7 @@ public class CityApiTests
         var tile = ApiTestHarness.FindEmptyTile(game);
         var city = ApiTestHarness.CreateCity(game, civ, tile, "Rome");
         var api = new CityApi(city, game);
-        
+
         Assert.Equal(city, api.BaseCity);
     }
 }

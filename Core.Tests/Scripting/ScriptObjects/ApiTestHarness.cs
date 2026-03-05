@@ -1,20 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Civ2engine;
-using Civ2engine.Enums;
 using Civ2engine.IO;
 using Civ2engine.MapObjects;
 using Civ2engine.SaveLoad.SavFile;
-using Civ2engine.Scripting;
-using Civ2engine.Scripting.ScriptObjects;
-using Engine.Tests.TestFiles;
-using Model.Constants;
+using Core.Tests.TestFiles;
 using Model.Core.Units;
-using Neo.IronLua;
 
-namespace Engine.Tests;
+namespace Core.Tests.Scripting.ScriptObjects;
 
 public static class ApiTestHarness
 {
@@ -31,12 +22,12 @@ public static class ApiTestHarness
         var game = (Game)savFile.LoadGame(File.ReadAllBytes(savePath), ruleset, rules);
 
         var civ = game.AllCivilizations.First(c => c.PlayerType != PlayerType.Barbarians);
-        
+
         // Ensure the player is an AiPlayer
         if (game.Players[civ.Id] is not AiPlayer aiPlayer)
         {
-             aiPlayer = new AiPlayer(0, civ, game.Maps[0].Tile[0,0], game);
-             game.Players[civ.Id] = aiPlayer;
+            aiPlayer = new AiPlayer(0, civ, game.Maps[0].Tile[0, 0], game);
+            game.Players[civ.Id] = aiPlayer;
         }
 
         return (game, aiPlayer, civ);

@@ -7,7 +7,7 @@ using Model.Core.Advances;
 using Model.Core.GoodyHuts.Outcomes;
 using Model.Core.Units;
 
-namespace Engine.Tests;
+namespace Core.Tests.Mocks;
 
 public class MockPlayer : IPlayer
 {
@@ -20,6 +20,7 @@ public class MockPlayer : IPlayer
     public Tile ActiveTile { get; set; }
     public Unit? ActiveUnit { get; }
     public List<Unit> WaitingList { get; }
+
     public void CivilDisorder(City city)
     {
         throw new NotImplementedException();
@@ -61,6 +62,7 @@ public class MockPlayer : IPlayer
     }
 
     public IInterfaceCommands Ui { get; }
+
     public void NotifyImprovementEnabled(TerrainImprovement improvement, int level)
     {
         throw new NotImplementedException();

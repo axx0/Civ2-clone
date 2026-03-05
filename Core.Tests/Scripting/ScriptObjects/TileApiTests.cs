@@ -1,11 +1,8 @@
-using System.Collections;
-using System.Linq;
 using Civ2engine.Scripting;
 using Civ2engine.Scripting.ScriptObjects;
 using Neo.IronLua;
-using Xunit;
 
-namespace Engine.Tests;
+namespace Core.Tests.Scripting.ScriptObjects;
 
 public class TileApiTests
 {
@@ -15,7 +12,7 @@ public class TileApiTests
         var (game, _, civ) = ApiTestHarness.CreateGameAndAi();
         var tile = ApiTestHarness.FindEmptyTile(game);
         var api = new TileApi(tile, game);
-        
+
         Assert.Equal(tile.X, api.x);
         Assert.Equal(tile.Y, api.y);
         Assert.Equal(tile.Z, api.z);
@@ -29,14 +26,15 @@ public class TileApiTests
         var tile = ApiTestHarness.FindEmptyTile(game);
         var unitType = game.Rules.UnitTypes.First();
         var unit = ApiTestHarness.CreateUnit(civ, unitType, tile);
-        
+
         var api = new TileApi(tile, game);
         var unitsTable = (LuaTable)api.units;
         var units = new List<UnitApi>();
-        foreach(var entry in (IEnumerable<KeyValuePair<object, object>>)unitsTable) {
+        foreach (var entry in (IEnumerable<KeyValuePair<object, object>>)unitsTable)
+        {
             if (entry.Key is int && entry.Value is UnitApi u) units.Add(u);
         }
-        
+
         Assert.Single(units);
         Assert.Equal(unit.Id, units[0].id);
     }
@@ -47,7 +45,7 @@ public class TileApiTests
         var (game, _, civ) = ApiTestHarness.CreateGameAndAi();
         var tile = ApiTestHarness.FindEmptyTile(game);
         var city = ApiTestHarness.CreateCity(game, civ, tile, "TestCity");
-        
+
         var api = new TileApi(tile, game);
         Assert.NotNull(api.city);
         Assert.Equal("TestCity", api.city.Name);
@@ -59,9 +57,9 @@ public class TileApiTests
         var (game, _, civ) = ApiTestHarness.CreateGameAndAi();
         var tile = ApiTestHarness.FindEmptyTile(game);
         var api = new TileApi(tile, game);
-        
+
         Assert.Null(api.owner);
-        
+
         api.owner = new Tribe(civ);
         Assert.Equal(civ.Id, tile.Owner);
         Assert.NotNull(api.owner);
@@ -75,15 +73,16 @@ public class TileApiTests
         var tile = ApiTestHarness.FindEmptyTile(game);
         // ApiTestHarness.CreateUnit already adds to tile.UnitsHere
         ApiTestHarness.CreateUnit(civ, game.Rules.UnitTypes.First(), tile);
-        
+
         var api = new TileApi(tile, game);
-        
+
         using var l = new Lua();
         var g = l.CreateEnvironment();
         g["tile"] = api;
-        
+
         // Iterating over LuaTable using pairs
-        var result = g.DoChunk("local count = 0; for _ in ipairs(tile.units) do count = count + 1 end; return count", "test.lua");
+        var result = g.DoChunk("local count = 0; for _ in ipairs(tile.units) do count = count + 1 end; return count",
+            "test.lua");
         Assert.Equal(1, (int)result[0]);
     }
 }
