@@ -239,4 +239,19 @@ public class UnitApi
             _unit.ExtendedData[field] = value;
         }
     }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is UnitApi other && other.BaseUnit == BaseUnit;
+    }
+
+    protected bool Equals(UnitApi other)
+    {
+        return _unit.Equals(other._unit);
+    }
+
+    public override int GetHashCode()
+    {
+        return _unit.GetHashCode();
+    }
 }

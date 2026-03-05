@@ -51,4 +51,5 @@ internal class MockGame : IGame
     public void SetHumanPlayer(int playerCivId) => throw new NotImplementedException();
     public void StartPlayerTurn(IPlayer activePlayer) => throw new NotImplementedException();
     public void StartNextTurn() => throw new NotImplementedException();
+    public string GetRealmName(int government) => throw new NotImplementedException();
 }

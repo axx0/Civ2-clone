@@ -131,6 +131,11 @@ internal class MockInterface : IUserInterface
         throw new NotImplementedException();
     }
 
+    public void DrawButton(Texture2D texture, Rectangle bounds)
+    {
+        throw new NotImplementedException();
+    }
+
     public void DrawButton(Texture2D texture, int x, int y, int w, int h)
     {
         throw new NotImplementedException();
@@ -151,12 +156,22 @@ internal class MockInterface : IUserInterface
         throw new NotImplementedException();
     }
 
+    public int GetCityStyleIndexFromEpoch(int cityStyle, int epoch)
+    {
+        throw new NotImplementedException();
+    }
+
     public int GetCityIndexForStyle(int cityStyleIndex, City city, int citySize)
     {
         throw new NotImplementedException();
     }
 
     public CityWindowLayout GetCityWindowDefinition()
+    {
+        throw new NotImplementedException();
+    }
+
+    public ListboxLooks GetListboxLooks(ListboxType? type)
     {
         throw new NotImplementedException();
     }
@@ -196,19 +211,9 @@ internal class MockInterface : IUserInterface
         return new MockAction();
     }
 
-    public IInterfaceAction HandleLoadGame(IGame game, Rules rules, Ruleset ruleset)
-    {
-        return new MockAction();
-    }
-
     public IInterfaceAction HandleLoadGame(IGame game, Rules rules, Ruleset ruleset, Dictionary<string, string?> viewData)
     {
         return new MockAction();
-    }
-
-    public IInterfaceAction HandleLoadScenario(GameData gameData, string scnName, string scnDirectory)
-    {
-        throw new NotImplementedException();
     }
 
     public IInterfaceAction HandleLoadScenario(IGame game, string scnName, string scnDirectory)
