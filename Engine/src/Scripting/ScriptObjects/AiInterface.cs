@@ -20,7 +20,7 @@ namespace Civ2engine.Scripting.ScriptObjects;
 /// Provides the AI interface exposed to Lua scripts for controlling AI players.
 /// This class bridges C# game logic with Lua AI scripts.
 /// </summary>
-public class AiInterface(AiPlayer player, Game game, StringBuilder log)
+public class AiInterface(Game game, Civilization civilization, int playerDifficulty, IScriptEngine scriptEngine)
 {
     private readonly Dictionary<string, Func<AiInterface, LuaTable, object>> _events= new();
     
@@ -32,12 +32,12 @@ public class AiInterface(AiPlayer player, Game game, StringBuilder log)
     /// <summary>
     /// The civilization this AI controls
     /// </summary>
-    public Civilization civ => player.Civilization;
+    public Civilization civ => civilization;
 
     /// <summary>
     /// The difficulty level of this AI player
     /// </summary>
-    public int difficulty => player.DifficultyLevel;
+    public int difficulty => playerDifficulty;
 
     /// <summary>
     /// Checks if an event handler has been registered for the given event name
@@ -63,8 +63,8 @@ public class AiInterface(AiPlayer player, Game game, StringBuilder log)
         }
         catch (LuaException e)
         {
-            log.AppendLine("Error running: " + eventName);
-            log.AppendLine(e.Message);
+            scriptEngine.AppendToLog("Error running: " + eventName);
+            scriptEngine.AppendToLog(e.Message);
             return null;
         }
     }

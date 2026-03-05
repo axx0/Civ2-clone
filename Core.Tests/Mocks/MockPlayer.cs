@@ -73,7 +73,7 @@ public class MockPlayer : IPlayer
         throw new NotImplementedException();
     }
 
-    public void WaitingAtEndOfTurn(IGame game)
+    public void WaitingAtEndOfTurn()
     {
         throw new NotImplementedException();
     }

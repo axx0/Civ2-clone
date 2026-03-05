@@ -141,7 +141,7 @@ public class LocalPlayer : IPlayer
         _gameScreen.ForceRedraw();
     }
 
-    public void WaitingAtEndOfTurn(IGame game)
+    public void WaitingAtEndOfTurn()
     {
         _gameScreen.ActiveMode = _gameScreen.ViewPiece;
     }

@@ -11,7 +11,6 @@ namespace Civ2engine.Scripting
 {
     public class ScriptEngine : IDisposable, IScriptEngine
     {
-        private readonly Game _game;
         private readonly Lua _lua;
         private readonly LuaGlobal _environment;
         private readonly List<string> _scriptPaths;
@@ -20,7 +19,6 @@ namespace Civ2engine.Scripting
 
         public ScriptEngine(Game game, string[] paths)
         {
-            _game = game;
             _scriptPaths = paths.ToList();
             _scriptPaths.Add(Environment.CurrentDirectory + Path.DirectorySeparatorChar + "Scripts"); 
             _lua = new Lua();
@@ -90,7 +88,6 @@ namespace Civ2engine.Scripting
         {
             if (player is AiPlayer aiPlayer)
             {
-                aiPlayer.AI = new AiInterface(aiPlayer, _game, _log);
                 var scriptName = aiPlayer.AIScript;
                 if (!scriptName.EndsWith(".lua"))
                 {
@@ -98,10 +95,15 @@ namespace Civ2engine.Scripting
                 }
 
                 dynamic dg = _environment;
-                dg.ai = aiPlayer.AI;
+                dg.ai = aiPlayer.Ai;
                 RunScript(scriptName);
                 dg.ai = null;
             }
+        }
+
+        public void AppendToLog(string message)
+        {
+            _log.AppendLine(message);
         }
     }
 }

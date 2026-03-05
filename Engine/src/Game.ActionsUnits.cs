@@ -39,7 +39,7 @@ namespace Civ2engine
                 var anyUnitsMoved = units.Any(u => u.MovePointsLost > 0);
                 if ((!anyUnitsMoved || Options.AlwaysWaitAtEndOfTurn))
                 {
-                    Players[_activeCiv.Id].WaitingAtEndOfTurn(this);
+                    Players[_activeCiv.Id].WaitingAtEndOfTurn();
                 }
                 else
                 {

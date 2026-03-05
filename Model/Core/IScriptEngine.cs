@@ -9,4 +9,5 @@ public interface IScriptEngine
     void Connect(IInterfaceCommands playerUi);
     void RunScript(string scriptFile);
     void RunPlayerScript(IPlayer player);
-}
+    void AppendToLog(string message);
+}   

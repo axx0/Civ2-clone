@@ -22,7 +22,7 @@ public class AiScriptHarnessTests
         var defenderType = game.Rules.UnitTypes.First(t => t.AIrole == AiRoleType.Defend);
         var unit = CreateUnit(civ, defenderType, tile, veteran: false);
 
-        var result = aiPlayer.AI.Call(AiEvent.UnitOrdersNeeded, new LuaTable { { "Unit", new UnitApi(unit, game) } });
+        var result = aiPlayer.Ai.Call(AiEvent.UnitOrdersNeeded, new LuaTable { { "Unit", new UnitApi(unit, game) } });
 
         Assert.Equal("F", UnwrapLuaResult(result));
     }
@@ -39,7 +39,7 @@ public class AiScriptHarnessTests
         CreateUnit(civ, defenderType, tile, veteran: false);
         var unit = CreateUnit(civ, defenderType, tile, veteran: true);
 
-        var result = aiPlayer.AI.Call(AiEvent.UnitOrdersNeeded, new LuaTable { { "Unit", new UnitApi(unit, game) } });
+        var result = aiPlayer.Ai.Call(AiEvent.UnitOrdersNeeded, new LuaTable { { "Unit", new UnitApi(unit, game) } });
 
         Assert.Equal("F", UnwrapLuaResult(result));
     }

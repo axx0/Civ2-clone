@@ -71,7 +71,7 @@ namespace Civ2engine
             }
             else
             {
-                activePlayer.WaitingAtEndOfTurn(this);
+                activePlayer.WaitingAtEndOfTurn();
             }
         }
 
