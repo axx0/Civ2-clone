@@ -1,7 +1,7 @@
-using System.Collections.Immutable;
 using Civ2engine.Terrains;
-using Civ2engine.Units;
 using Model.Core;
+using Model.Core.GoodyHuts;
+using Model.Core.GoodyHuts.Outcomes;
 using Model.Core.Mapping;
 using Model.Core.Units;
 
@@ -79,11 +79,50 @@ namespace Civ2engine.MapObjects
                 var d = 1 << ((seed >> 4) & 3);
                 Special = (d & a) == (d & b) ? 1 : 0;
             }
+
+            if(terrain.Type != TerrainType.Ocean && CalculateGoodyHut(seed))
+            {
+                IsGoodyHutTile = true;
+                _goodyHut = new GoodyHut();
+            }
+
             // Terrain must be set after special to get the correct EffectiveTerrain type for specials
             Terrain = terrain;
         }
 
+        private bool CalculateGoodyHut(int seed)
+        {
+            // https://apolyton.net/forum/miscellaneous/archives/civ2-strategy-archive/80739-location-of-huts
+            // https://apolyton.net/forum/miscellaneous/archives/civ2-strategy-archive/48020-hut-pattern
+            // This one seems pretty close to matching the forums for hut locations.
+            var nSum = (X + Y) / 2;
+            var nDiff = (X - Y) / 2;
+            nDiff = (nDiff + 4096) % 4096;
+            var hash = (nSum / 4 * 11) + (nDiff / 4 * 13 + 8);
+            hash = (hash + seed) % 32;
+            var expectedHash = (nSum % 4) + (nDiff % 4) * 4;
+
+            return hash == expectedHash;
+        }
+
         public bool HasShield { get; }
+        
+        private GoodyHut? _goodyHut;
+        public bool IsGoodyHutTile { get; private set; }
+        public bool HasGoodyHut 
+        {
+            get 
+            { 
+                return IsGoodyHutTile && _goodyHut != null;
+            }
+        }
+        
+        public GoodyHutOutcomeResult ConsumeGoodyHut(Unit unit)
+        {
+            var outcome = _goodyHut?.Trigger(unit);
+            _goodyHut = null; // Consume / remove the goody hut from the game.
+            return outcome;
+        }
 
         private bool HasSheild()
         {

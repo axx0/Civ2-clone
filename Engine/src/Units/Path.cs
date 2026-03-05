@@ -1,12 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Civ2engine.Enums;
-using Civ2engine.Events;
 using Civ2engine.MapObjects;
 using Civ2engine.UnitActions;
 using Model.Core;
 using Model.Core.Units;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Civ2engine.Units;
 
@@ -178,8 +177,13 @@ public class Path
         do
         {
             var tileTo = Tiles[pos++];
-            var tileFrom = unit.CurrentLocation;
             MovementFunctions.UnitMoved(game, unit, tileTo, unit.CurrentLocation);
+            if (tileTo.HasGoodyHut)
+            {
+                var outcome = tileTo.ConsumeGoodyHut(unit);
+                game.TriggerMapEvent(MapEventType.UpdateMap, new List<Tile> { tileTo });
+                game.Players[unit.Owner.Id].GoodyHutTriggered(unit, outcome);
+            }
         } while (unit.MovePoints > 0 && pos < Tiles.Length &&
                  !MovementFunctions.IsNextToEnemy(unit.CurrentLocation!, unit.Owner, unit.Domain));
 

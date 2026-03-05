@@ -3,16 +3,15 @@ using Civ2engine.IO;
 using Civ2engine.SaveLoad;
 using Engine.Tests.TestFiles;
 using Model;
-using Model.Controls.CityWindow;
 using Model.Core;
 using Model.Core.Advances;
 using Model.Controls;
 using Model.Images;
 using Model.ImageSets;
 using Model.InterfaceActions;
-using Model.Menu;
 using Raylib_CSharp.Images;
 using Raylib_CSharp.Textures;
+using Raylib_CSharp.Transformations;
 
 namespace Engine.Tests;
 
@@ -137,6 +136,11 @@ internal class MockInterface : IUserInterface
         throw new NotImplementedException();
     }
 
+    public void DrawButton(Texture2D texture, Rectangle bounds)
+    {
+        throw new NotImplementedException();
+    }
+
     public IList<Ruleset> FindRuleSets(string[] searchPaths)
     {
         throw new NotImplementedException();
@@ -168,6 +172,11 @@ internal class MockInterface : IUserInterface
     }
 
     public IInterfaceAction GetInitialAction()
+    {
+        throw new NotImplementedException();
+    }
+
+    public ListboxLooks GetListboxLooks(ListboxType? type)
     {
         throw new NotImplementedException();
     }

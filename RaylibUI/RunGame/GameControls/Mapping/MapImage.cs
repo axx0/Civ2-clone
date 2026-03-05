@@ -147,8 +147,13 @@ public static class MapImage
                 Color.White);
         }
 
-        
-        var tileDetails = new TileDetails { Image = tilePic };
+        if(tile.HasGoodyHut)
+        {
+            // Add a goody hut if it exists on this tile.
+            tilePic.Draw(Images.ExtractBitmap(terrainSet.Huts), TileRec, TileRec, Color.White);
+        }    
+
+            var tileDetails = new TileDetails { Image = tilePic };
         if (tile.Map.MapRevealed || (tile.PlayerKnowledge != null && tile.PlayerKnowledge.Length > civilizationId &&
             tile.PlayerKnowledge[civilizationId] != null))
         {

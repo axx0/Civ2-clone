@@ -6,6 +6,7 @@
         StatusUpdate = 1,
         NewUnitActivated = 2,
         Attack = 3,
-        MovementBlocked = 4
+        MovementBlocked = 4,
+        GoodyHutOutcome = 5
     }
 }

@@ -4,6 +4,7 @@ using Civ2engine.Events;
 using Civ2engine.MapObjects;
 using Model.Core;
 using Model.Core.Advances;
+using Model.Core.GoodyHuts.Outcomes;
 using Model.Core.Units;
 
 namespace Engine.Tests;
@@ -120,5 +121,9 @@ public class MockPlayer : IPlayer
     public void MoveBlocked(Unit unit, BlockedReason blockedReason)
     {
         throw new NotImplementedException();
+    }
+
+    public void GoodyHutTriggered(Unit unit, GoodyHutOutcomeResult outcome)
+    {
     }
 }

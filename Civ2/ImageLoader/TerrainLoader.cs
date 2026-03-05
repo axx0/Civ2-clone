@@ -119,6 +119,7 @@ namespace Civ2.ImageLoader
 
             //Note airbase and fortress are now loaded directly by the cities loader
             terrain.GrasslandShield = MapIndexChange((BitmapStorage)active.PicSources["shield"][0], index, active);
+            terrain.Huts = MapIndexChange((BitmapStorage)active.PicSources["hut"][0], index, active);
 
             return terrain;
         }

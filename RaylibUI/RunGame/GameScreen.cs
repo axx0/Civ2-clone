@@ -97,7 +97,8 @@ public class GameScreen : BaseScreen
         VisibleCivId = _player.Civilization.Id;
         game.ConnectPlayer(_player);
 
-        
+        _ToTPanelLayout = false;
+
         var commands = SetupCommands(game);
         var menuElements = main.ActiveInterface.ConfigureGameCommands(commands);
         _menu = new GameMenu(this, menuElements);
