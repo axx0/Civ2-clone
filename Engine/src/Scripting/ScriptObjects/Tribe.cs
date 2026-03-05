@@ -7,6 +7,7 @@ public class Tribe
     public Tribe(Civilization civ)
     {
         Civ = civ;
+        Id = civ.Id;
     }
 
     public int Id { get; set; }

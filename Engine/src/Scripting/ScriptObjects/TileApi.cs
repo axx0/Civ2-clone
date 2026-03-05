@@ -6,6 +6,7 @@ using Civ2engine.MapObjects;
 using Civ2engine.Scripting.ScriptObjects;
 using Civ2engine.Units;
 using Model.Core.Units;
+using Neo.IronLua;
 
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedMember.Global
@@ -99,7 +100,7 @@ public class TileApi(Tile tile, Game game)
     /// <summary>
     /// Returns the terrain object associated with the tile.
     /// </summary>
-    public TerrainApi terrain => new TerrainApi(tile);
+    public TerrainApi terrain => new(tile);
     
     public int terrainType
     {
@@ -110,7 +111,7 @@ public class TileApi(Tile tile, Game game)
     /// <summary>
     /// Returns an iterator yielding all units at the tile's location.
     /// </summary>
-    public IEnumerable<Unit> units => tile.UnitsHere;
+    public object units => LuaTable.pack(tile.UnitsHere.Select(u => new UnitApi(u, game)).ToArray());
 
     /// <summary>
     /// Returns the tile's visibility for each tribe (bitmask).
