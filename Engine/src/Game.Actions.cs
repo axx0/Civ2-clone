@@ -10,6 +10,7 @@ using Civ2engine.UnitActions;
 using Civ2engine.Units;
 using Model.Constants;
 using Model.Core;
+using Model.Core.Player;
 using Model.Core.Units;
 using Neo.IronLua;
 

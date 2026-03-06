@@ -22,7 +22,7 @@ namespace Civ2engine.Scripting.ScriptObjects;
 /// </summary>
 public class AiInterface(Game game, Civilization civilization, int playerDifficulty, IScriptEngine scriptEngine)
 {
-    private readonly Dictionary<string, Func<AiInterface, LuaTable, object>> _events= new();
+    private readonly Dictionary<string, Func<AiInterface, LuaTable, LuaResult>> _events= new();
     
     /// <summary>
     /// Access to the game's random number generator for AI decision-making
@@ -55,7 +55,7 @@ public class AiInterface(Game game, Civilization civilization, int playerDifficu
     /// <param name="eventName">The name of the event to call</param>
     /// <param name="args">Arguments to pass to the event handler</param>
     /// <returns>The result from the event handler, or null if no handler exists or an error occurs</returns>
-    public object? Call(string eventName, LuaTable args)
+    public virtual LuaResult? Call(string eventName, LuaTable args)
     {
         try
         {
@@ -74,9 +74,9 @@ public class AiInterface(Game game, Civilization civilization, int playerDifficu
     /// </summary>
     /// <param name="eventName">The name of the event (e.g., "Turn_Start", "Unit_Orders_Needed")</param>
     /// <param name="callback">The Lua function to call when the event occurs</param>
-    public void RegisterEvent(string eventName, Func<AiInterface, LuaTable, object> callback)
+    public void RegisterEvent(string eventName, Func<AiInterface, LuaTable, LuaResult> callback)
     {
-        _events.Add(eventName, callback);
+        _events[eventName] = callback;
     }
 
     /// <summary>

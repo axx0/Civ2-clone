@@ -1,4 +1,5 @@
 using Civ2engine;
+using Model.Core.Player;
 
 namespace Model.Core;
 

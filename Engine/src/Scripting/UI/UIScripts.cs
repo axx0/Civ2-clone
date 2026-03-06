@@ -1,5 +1,6 @@
 using System.Text;
 using Model.Core;
+using Model.Core.Player;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable InconsistentNaming

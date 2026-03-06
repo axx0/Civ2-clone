@@ -2,6 +2,7 @@ using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.MapObjects;
 using Model.Core;
+using Model.Core.Player;
 
 namespace Core.Tests.Mocks;
 

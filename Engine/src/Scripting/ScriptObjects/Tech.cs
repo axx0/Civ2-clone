@@ -6,7 +6,7 @@ using Model.Core.Advances;
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedMember.Global
 
-namespace Civ2engine.Scripting
+namespace Civ2engine.Scripting.ScriptObjects
 {
     public class Tech
     {

@@ -10,9 +10,9 @@ using Civ2engine.Scripting.ScriptObjects;
 using Civ2engine.Scripting.UnitActions;
 using Civ2engine.UnitActions;
 using Civ2engine.Units;
-using Model.Core;
 using Model.Core.Advances;
 using Model.Core.GoodyHuts.Outcomes;
+using Model.Core.Player;
 using Model.Core.Units;
 using Neo.IronLua;
 
@@ -53,16 +53,27 @@ namespace Civ2engine
         {
         }
 
-        public void SelectNewAdvance(IGame game, List<Advance> researchPossibilities)
+        public void SelectNewAdvance(List<Advance> researchPossibilities)
         {
             var res = Ai.Call(AiEvent.ResearchComplete,
-                new LuaTable { { "researchPossibilities", researchPossibilities } });
-            Civilization.ReseachingAdvance = res switch
+                new LuaTable
+                {
+                    {
+                        "researchPossibilities",
+                        LuaTable.pack(researchPossibilities.Select(object (a) => new Tech(game.Rules.Advances, a.Index))
+                            .ToArray())
+                    }
+                });
+            if (res is not null && res.Count > 0)
             {
-                Advance advance => advance.Index,
-                int index and >= 0 when index < researchPossibilities.Count => researchPossibilities[index].Index,
-                _ => game.Random.ChooseFrom(researchPossibilities).Index
-            };
+                Civilization.ReseachingAdvance = res.Values[0] switch
+                {
+                    Tech tech => tech.id,
+                    Advance advance => advance.Index,
+                    int index and >= 0 when index < researchPossibilities.Count => researchPossibilities[index].Index,
+                    _ => game.Random.ChooseFrom(researchPossibilities).Index
+                };
+            }
         }
 
         public void CantProduce(City city, IProductionOrder? newItem)

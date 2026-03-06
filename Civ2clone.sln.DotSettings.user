@@ -91,7 +91,9 @@
   &lt;Solution /&gt;
 &lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=7ce84f90_002D6ae2_002D4e9e_002D860e_002Deb90f45871f3/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Junie Session" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
-  &lt;Project Location="/var/home/reubene/RiderProjects/Civ2-clone/Core.Tests" Presentation="&amp;lt;Tests&amp;gt;\&amp;lt;Core.Tests&amp;gt;" /&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;xUnit::C273CD89-A78B-44FA-9FF2-EA06BB1DB118::net9.0::Core.Tests.Ai.AiInterfaceTests&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String>
 	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=24718bad_002Db4d0_002D43e9_002Dabfa_002D1176d54ff8ad_0023EtoFormsUI/@EntryIndexedValue">True</s:Boolean>
 	

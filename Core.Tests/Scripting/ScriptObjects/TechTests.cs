@@ -1,4 +1,5 @@
 using Civ2engine.Scripting;
+using Civ2engine.Scripting.ScriptObjects;
 using Neo.IronLua;
 
 namespace Core.Tests.Scripting.ScriptObjects;

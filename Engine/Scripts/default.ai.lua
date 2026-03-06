@@ -119,3 +119,21 @@ ai.RegisterEvent(AiEvent.Unit_Orders_Needed, function(ai, data)
 
     return best_move
 end)
+
+ai.RegisterEvent(AiEvent.Research_Complete, function(ai, data)
+    print("Research_Complete called")
+    local possibilities = data.researchPossibilities
+    local bestTech = nil
+    for _, tech in pairs(possibilities) do
+        print("Considering tech: " .. (tech.name or "unknown"))
+        if not bestTech or tech.aiValue > bestTech.aiValue then
+            bestTech = tech
+        end
+    end
+    if bestTech then
+        print("Selected tech: " .. bestTech.name)
+    else
+        print("No tech selected")
+    end
+    return bestTech
+end)

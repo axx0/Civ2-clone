@@ -49,12 +49,12 @@ public class AiInterfaceTests
         api.RegisterEvent("test_event", (ai, args) =>
         {
             called = (bool)args["val"];
-            return "success";
+            return new LuaResult("success");
         });
 
         var result = api.Call("test_event", new LuaTable { { "val", true } });
 
         Assert.True(called);
-        Assert.Equal("success", result);
+        Assert.Equal("success", result?[0]);
     }
 }

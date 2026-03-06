@@ -2,9 +2,9 @@ using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.Events;
 using Civ2engine.MapObjects;
-using Model.Core;
 using Model.Core.Advances;
 using Model.Core.GoodyHuts.Outcomes;
+using Model.Core.Player;
 using Model.Core.Units;
 
 namespace Core.Tests.Mocks;
@@ -46,7 +46,7 @@ public class MockPlayer : IPlayer
         throw new NotImplementedException();
     }
 
-    public void SelectNewAdvance(IGame game, List<Advance> researchPossibilities)
+    public void SelectNewAdvance(List<Advance> researchPossibilities)
     {
         throw new NotImplementedException();
     }

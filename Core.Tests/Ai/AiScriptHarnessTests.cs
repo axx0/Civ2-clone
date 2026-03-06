@@ -44,6 +44,30 @@ public class AiScriptHarnessTests
         Assert.Equal("F", UnwrapLuaResult(result));
     }
 
+    [Fact]
+    public void ResearchComplete_ReturnsBestTech()
+    {
+        var (game, aiPlayer, civ) = CreateGameAndAi();
+
+        var tech1 = new Tech(game.Rules.Advances, 0) { aiValue = 10, name = "Low Value" };
+        var tech2 = new Tech(game.Rules.Advances, 1) { aiValue = 50, name = "High Value" };
+        var tech3 = new Tech(game.Rules.Advances, 2) { aiValue = 30, name = "Medium Value" };
+
+        var possibilities = new LuaTable
+        {
+            [1] = tech1,
+            [2] = tech2,
+            [3] = tech3
+        };
+
+        var result = aiPlayer.Ai.Call(AiEvent.ResearchComplete,
+            new LuaTable { { "researchPossibilities", possibilities } });
+
+        var selectedTech = Assert.IsType<Tech>(UnwrapLuaResult(result));
+        Assert.Equal(50, selectedTech.aiValue);
+        Assert.Equal("High Value", selectedTech.name);
+    }
+
     private static (Game game, AiPlayer aiPlayer, Civilization civ) CreateGameAndAi()
     {
         var testFilesDirectory = TestFileUtils.GetTestFileDirectory();
