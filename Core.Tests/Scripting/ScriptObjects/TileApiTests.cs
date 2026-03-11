@@ -60,7 +60,7 @@ public class TileApiTests
 
         Assert.Null(api.owner);
 
-        api.owner = new Tribe(civ);
+        api.owner = new Tribe(civ, game);
         Assert.Equal(civ.Id, tile.Owner);
         Assert.NotNull(api.owner);
         Assert.Equal(civ.Id, api.owner.Civ.Id);

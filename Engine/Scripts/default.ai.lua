@@ -124,10 +124,18 @@ ai.RegisterEvent(AiEvent.Research_Complete, function(ai, data)
     print("Research_Complete called")
     local possibilities = data.researchPossibilities
     local bestTech = nil
+    local bestScore = -1
     for _, tech in pairs(possibilities) do
-        print("Considering tech: " .. (tech.name or "unknown"))
-        if not bestTech or tech.aiValue > bestTech.aiValue then
+        local name = tech.name or "unknown"
+        local epoch = tech.epoch or 0
+        local aiValue = tech.aiValue or 0
+        -- Bias towards lower epochs by penalizing higher ones
+        local score = aiValue - (epoch * 2)
+        
+        print("Considering tech: " .. name .. " (Epoch: " .. epoch .. ", Value: " .. aiValue .. ", Score: " .. score .. ")")
+        if not bestTech or score > bestScore then
             bestTech = tech
+            bestScore = score
         end
     end
     if bestTech then

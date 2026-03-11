@@ -34,12 +34,12 @@ public class TileApi(Tile tile, Game game)
     /// <summary>
     ///Returns the city at the tile's location, or `nil` if there's no city there.
     /// </summary>
-    public City city => tile.CityHere;
+    public City? city => tile.CityHere;
 
     /// <summary>
     /// Returns the tile's defender.
     /// </summary>
-    public Tribe defender => tile.UnitsHere.Count > 0 ? new Tribe(tile.UnitsHere[0].Owner) : null;
+    public Tribe? defender => tile.UnitsHere.Count > 0 ? new Tribe(tile.UnitsHere[0].Owner, game) : null;
 
     /// <summary>
     /// Returns the tile's fertility.
@@ -81,10 +81,10 @@ public class TileApi(Tile tile, Game game)
     /// </summary>
     public Tribe? owner
     {
-        get => tile.Owner == -1 ? null : new Tribe(game.AllCivilizations[tile.Owner]);
+        get => tile.Owner == -1 ? null : new Tribe(game.AllCivilizations[tile.Owner], game);
         set
         {
-            if (value != null) tile.Owner = value.Id;
+            if (value != null) tile.Owner = value.id;
         }
     }
 
