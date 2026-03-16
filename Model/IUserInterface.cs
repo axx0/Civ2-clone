@@ -66,4 +66,5 @@ public interface IUserInterface
     IImageSource? GetImprovementImage(Improvement improvement, int firstWonderIndex);
     IImageSource? GetAdvanceImage(Advance advance);
     string GetScientistName(int civilizationEpoch);
+    CivilopediaProperties GetCivilopediaProperties(Civilopedia civilopedia);
 }

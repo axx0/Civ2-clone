@@ -8,7 +8,7 @@ public static class DialogUtils
     /// <summary>
     /// Returns a list of strings for wrapped text
     /// </summary>
-    public static List<string> GetWrappedTexts(IUserInterface active, string text, int maxWidth, Font font, int fontSize)
+    public static List<string> GetWrappedTexts(string text, int maxWidth, Font font, int fontSize)
     {
         string[] words = text.Split();
         List<string> wrappedLines = new ();

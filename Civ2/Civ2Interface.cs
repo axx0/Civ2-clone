@@ -50,6 +50,7 @@ public abstract class Civ2Interface(IMain main) : IUserInterface
         //    value.Width = (int)(value.Width * 1.5m); // update this in CivDialog class so that you don't skip advisor, scenario and other popups
         //}
         Labels.UpdateLabels(null);
+        CivilopediaLoader.UpdateMapping(null);
         
         var handlerInterface = typeof(ICivDialogHandler);
         DialogHandlers = AppDomain.CurrentDomain.GetAssemblies()
@@ -469,6 +470,12 @@ public abstract class Civ2Interface(IMain main) : IUserInterface
             Labels.UpdateLabels(ruleset);
         }
 
+        var describePath = FileUtilities.GetFile(ruleset.FolderPath, "describe.txt");
+        if (describePath != null)
+        {
+            CivilopediaLoader.UpdateMapping(ruleset);
+        }
+        
         // Load custom intro if it exists in txt file
         var introFile = Regex.Replace(scnName, ".scn", ".txt", RegexOptions.IgnoreCase);
         var introPath = FileUtilities.GetFile(ruleset.FolderPath, introFile);
@@ -555,5 +562,39 @@ public abstract class Civ2Interface(IMain main) : IUserInterface
     public string GetScientistName(int epoch)
     {
         return Labels.For(epoch < 3 ? LabelIndex.wisemen : LabelIndex.scientists);
+    }
+
+    public CivilopediaProperties GetCivilopediaProperties(Civilopedia civilopedia)
+    {
+        return new()
+        {
+            Listbox = new()
+            {
+                Rows = 9,
+                Columns = 2,
+                RowHeight = 33,
+                VerticalScrollbar = false,
+                IconScale = civilopedia.InfoType switch
+                {
+                    CivilopediaInfoType.Advances or CivilopediaInfoType.Improvements or CivilopediaInfoType.Wonders => 1.5f,
+                    _ => 1.0f
+                },
+            },
+            Buttons = civilopedia switch
+            {
+                var c when c.WindowType == CivilopediaWindowType.Description || c.WindowType == CivilopediaWindowType.Tree 
+                    => ["Go Back", "Close"],
+                var c when c.WindowType == CivilopediaWindowType.Listbox && c.InfoType == CivilopediaInfoType.Advances
+                    => ["Info", "Tree", "Close"],
+                var c when c.WindowType == CivilopediaWindowType.Listbox && c.InfoType != CivilopediaInfoType.Advances
+                    => ["Info", "Close"],
+                var c when c.WindowType == CivilopediaWindowType.Info && c.InfoType == CivilopediaInfoType.Advances
+                    => ["Go Back", "Tree", "Description", "Close"],
+                var c when c.WindowType == CivilopediaWindowType.Info && 
+                    (c.InfoType == CivilopediaInfoType.Governments || c.InfoType == CivilopediaInfoType.Concepts)
+                    => ["Go Back", "Close"],
+                _ => ["Go Back", "Description", "Close"],
+            }
+        };
     }
 }

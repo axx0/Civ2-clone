@@ -52,6 +52,7 @@ public class InterfaceStyle
     public int CityWindowFontSize { get; init; }
     public Font MenuFont { get; init; }
     public int MenuFontSize { get; init; }
+    public int CivilopediaFontSize { get; init; }
     public Font StatusPanelLabelFont { get; init; }
     public Color StatusPanelLabelColor { get; init; }
     public Color StatusPanelLabelColorShadow { get; init; }

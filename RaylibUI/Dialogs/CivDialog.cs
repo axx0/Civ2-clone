@@ -89,7 +89,7 @@ public class CivDialog : DynamicSizingDialog
             {
                 if (styles[j] == TextStyles.Left)
                 {
-                    var wrappedTexts = DialogUtils.GetWrappedTexts(_active, texts[j], maxTextWidth, _active.Look.LabelFont, _active.Look.LabelFontSize);
+                    var wrappedTexts = DialogUtils.GetWrappedTexts(texts[j], maxTextWidth, _active.Look.LabelFont, _active.Look.LabelFontSize);
 
                     foreach (var text in wrappedTexts)
                     {

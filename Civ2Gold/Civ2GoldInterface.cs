@@ -58,6 +58,7 @@ public class Civ2GoldInterface(IMain main) : Civ2Interface(main)
         CityWindowFontSize = 14,  // small=6, normal=14, large=20
         MenuFont = Fonts.Arial,
         MenuFontSize = 14,
+        CivilopediaFontSize = 22,
         StatusPanelLabelFont = Fonts.TnRbold,
         StatusPanelLabelColor = new Color(51, 51, 51, 255),
         StatusPanelLabelColorShadow = new Color(191, 191, 191, 255),
@@ -492,15 +493,15 @@ public class Civ2GoldInterface(IMain main) : Civ2Interface(main)
             Key = "PEDIA", Defaults = new List<MenuElement>
             {
                 new("&Civilopedia", Shortcut.None, Key.C),
-                new("Civilization &Advances", Shortcut.None, Key.A, commandId: CivAdvances),
-                new("City &Improvements", Shortcut.None, Key.I),
-                new("&Wonders of the World", Shortcut.None, Key.W),
-                new("Military &Units", Shortcut.None, Key.U),
+                new("Civilization &Advances", Shortcut.None, Key.A, commandId: CivilopediaAdvances),
+                new("City &Improvements", Shortcut.None, Key.I, commandId: CivilopediaImprovements),
+                new("&Wonders of the World", Shortcut.None, Key.W, commandId: CivilopediaWonders),
+                new("Military &Units", Shortcut.None, Key.U, commandId: CivilopediaUnits),
                 new("-", Shortcut.None, Key.None),
-                new("&Governments", Shortcut.None, Key.G),
-                new("&Terrain Types", Shortcut.None, Key.T),
+                new("&Governments", Shortcut.None, Key.G, commandId: CivilopediaGovernments),
+                new("&Terrain Types", Shortcut.None, Key.T, commandId: CivilopediaTerrain),
                 new("-", Shortcut.None, Key.None),
-                new("Game &Concepts", Shortcut.None, Key.C),
+                new("Game &Concepts", Shortcut.None, Key.C, commandId: CivilopediaConcepts),
                 new("-", Shortcut.None, Key.None),
                 new("&About Civilization II", Shortcut.None, Key.A)
             },
@@ -519,7 +520,7 @@ public class Civ2GoldInterface(IMain main) : Civ2Interface(main)
             {
                 BoxBackgroundColor = new Color(207, 207, 207, 255),
                 BoxLineColor = new Color(67, 67, 67, 255),
-                Font = Fonts.Tnr,
+                Font = Look.DefaultFont,
                 FontSize = 21,
                 TextColorFront = Color.Black,
                 TextColorShadow = Color.Blank,
@@ -527,6 +528,14 @@ public class Civ2GoldInterface(IMain main) : Civ2Interface(main)
                 SelectedTextBackgroundColor = new Color(107, 107, 107, 255),
                 SelectedTextColorFront = Color.White,
                 SelectedTextColorShadow = Color.Black
+            },
+            ListboxType.Civilopedia => new ListboxLooks
+            {
+                BoxBackgroundColor = new Color(240, 240, 240, 255),
+                BoxLineColor = new Color(100, 100, 100, 255),
+                Font = Look.DefaultFont,
+                FontSize = Look.CivilopediaFontSize,
+                TextColorShadow = Color.Blank
             },
             _ => new ListboxLooks(),
         };
