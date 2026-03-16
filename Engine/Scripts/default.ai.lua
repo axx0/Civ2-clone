@@ -8,7 +8,11 @@ local function defender_score(unit)
     local defense = unit.type and unit.type.defense or 0
     local firepower = unit.type and unit.type.firepower or 1
     local hitpoints = unit.hitpoints or 1
-    return defense * firepower * hitpoints
+    local score = defense * firepower * hitpoints
+    if unit.veteran then
+        score = score * 1.5
+    end
+    return score
 end
 
 ai.RegisterEvent(AiEvent.Unit_Orders_Needed, function(ai, data)
@@ -20,10 +24,10 @@ ai.RegisterEvent(AiEvent.Unit_Orders_Needed, function(ai, data)
     if unit.type.role == AiRoleType.Defend then
         local city = currentTile.city
         if city then
-            local unitsHere = currentTile.units or city.UnitsInCity or {}
             local defenders_count = 0
             local weakest_defender_score = nil
-            for _, other in pairs(unitsHere) do
+            local units_here = currentTile.units or {}
+            for _, other in pairs(units_here) do
                 if other ~= unit and other.type and other.type.role == AiRoleType.Defend then
                     defenders_count = defenders_count + 1
                     local score = defender_score(other)
@@ -46,7 +50,6 @@ ai.RegisterEvent(AiEvent.Unit_Orders_Needed, function(ai, data)
     end
     
     print(unit.type.role)
-    print(AiRoleType.Settle)
 
     if unit.type.role == AiRoleType.Settle then
         print("Check for city near")

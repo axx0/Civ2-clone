@@ -8,6 +8,7 @@ using Civ2engine.Production;
 using Civ2engine.Units;
 using Model.Core;
 using Model.Core.Advances;
+using Model.Core.GoodyHuts.Outcomes;
 using Model.Core.Units;
 
 namespace Civ2engine
@@ -68,12 +69,17 @@ namespace Civ2engine
         void CombatHappened(CombatEventArgs combatEventArgs);
         
         /// <summary>
-        /// Called when a move order can't be followed and has been canceled. 
+        /// Called when a move order can't be followed and has been canceled.
         /// </summary>
         /// <param name="unit"></param>
         /// <param name="blockedReason"></param>
         void MoveBlocked(Unit unit, BlockedReason blockedReason);
-    }   
+
+        /// <summary>
+        /// Called when a unit triggers a goody hut on the tile it moved to.
+        /// </summary>
+        void GoodyHutTriggered(Unit unit, GoodyHutOutcomeResult outcome);
+    }
 
     public interface IInterfaceCommands
     {

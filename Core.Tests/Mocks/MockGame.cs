@@ -1,11 +1,9 @@
 using Civ2engine;
 using Civ2engine.Enums;
-using Civ2engine.Events;
 using Civ2engine.MapObjects;
 using Model.Core;
-using Model.Core.Units;
 
-namespace Engine.Tests;
+namespace Core.Tests.Mocks;
 
 internal class MockGame : IGame
 {
@@ -30,12 +28,20 @@ internal class MockGame : IGame
     public void ChooseNextUnit() => throw new NotImplementedException();
     public bool ProcessEndOfTurn() => throw new NotImplementedException();
     public void ChoseNextCiv() => throw new NotImplementedException();
-    public void TriggerMapEvent(MapEventType updateMap, List<Tile> tiles) {
-        
+
+    public void TriggerMapEvent(MapEventType updateMap, List<Tile> tiles)
+    {
+
     }
-    
+
     public double MaxDistance => throw new NotImplementedException();
-    public int DifficultyLevel { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+    public int DifficultyLevel
+    {
+        get => throw new NotImplementedException();
+        set => throw new NotImplementedException();
+    }
+
     public IGameDate Date => throw new NotImplementedException();
     public int TurnNumber => throw new NotImplementedException();
     public List<City> AllCities => throw new NotImplementedException();
@@ -48,8 +54,8 @@ internal class MockGame : IGame
     public int NoMaps => throw new NotImplementedException();
     public List<Civilization> AllCivilizations { get; set; }
 
-    public void TriggerUnitEvent(UnitEventType eventType, IUnit triggerUnit, BlockedReason reason = BlockedReason.NotBlocked) => throw new NotImplementedException();
     public void SetHumanPlayer(int playerCivId) => throw new NotImplementedException();
     public void StartPlayerTurn(IPlayer activePlayer) => throw new NotImplementedException();
     public void StartNextTurn() => throw new NotImplementedException();
+    public string GetRealmName(int government) => throw new NotImplementedException();
 }

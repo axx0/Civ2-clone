@@ -160,7 +160,7 @@ _G.AiEvent = _G.AiEvent
 ---@field river boolean
 ---@field terrain TerrainApi
 ---@field terrainType number
----@field units Unit[]
+---@field units fun(): Unit
 ---@field visibility number
 ---@field visibleImprovements number[]
 ---@field x number

@@ -8,7 +8,9 @@ using Civ2engine.Units;
 using Model.Controls;
 using Model.Core;
 using Model.Core.Advances;
+using Model.Core.GoodyHuts.Outcomes;
 using Model.Core.Units;
+using Model.Events;
 using Model.Interface;
 using System;
 using static System.Net.Mime.MediaTypeNames;
@@ -204,7 +206,24 @@ public class LocalPlayer : IPlayer
         OnUnitEvent?.Invoke(this, new MovementBlockedEventArgs(unit, blockedReason));
     }
 
-
     public event EventHandler<UnitEventArgs> OnUnitEvent;
-    
+
+    public void GoodyHutTriggered(Unit unit, GoodyHutOutcomeResult outcome)
+    {
+        var args = new GoodyHutOutcomeEventArgs(unit, outcome);
+        OnUnitEvent?.Invoke(this, args);
+
+        var popupName = outcome.OutcomeType switch
+        {
+            "Gold" => "SURPRISEMETALS",
+            "Scrolls" => "SURPRISESCROLLS",
+            "Tribe" => "SURPRISENOMADS",
+            "Barbarians" => "SURPRISEBARB",
+            "AbandonedVillage" => "SURPRISENOTHING",
+            "Mercenaries" => "SURPRISEMERCS",
+            _ => "GOODYHUT_DEFAULT"
+        };
+
+        _gameScreen.ShowPopup(popupName, replaceNumbers: [50]);
+    }
 }
