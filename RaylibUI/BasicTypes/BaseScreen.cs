@@ -29,7 +29,7 @@ public abstract class BaseScreen : BaseLayoutController, IScreen
             ControlEvents(layoutController);
         }
 
-        foreach (var control in Controls)
+        foreach (var control in Controls.Where(c => c.Visible))
         {
             control.Draw(pulse);
         }

@@ -10,6 +10,7 @@ public static class CommandIds
     public const string QuitGame = "GAME_QUIT";
 
     public const string ChangeTaxRate = "CHANGE_TAX_RATE";
+    public const string ViewThroneRoom = "THRONE_ROOM";
     public const string FindCity = "FIND_CITY";
 
     public const string CityStatus = "CITY_STATUS";

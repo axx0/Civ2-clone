@@ -120,6 +120,8 @@ public class MinimapPanel : BaseControl
 
     public void OnClick(object? sender, MouseEventArgs mouseEventArgs)
     {
+        if (!Visible) return;
+
         if (_gameScreen.MinimapGlobe)
         {
             _gameScreen.RemoveGlobe();
@@ -156,6 +158,8 @@ public class MinimapPanel : BaseControl
 
     private void MapEventTriggered(object sender, MapEventArgs e)
     {
+        if (!Visible) return;
+
         switch (e.EventType)
         {
             case MapEventType.MapViewChanged:

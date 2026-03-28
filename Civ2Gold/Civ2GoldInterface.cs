@@ -16,7 +16,6 @@ using Raylib_CSharp.Images;
 using Raylib_CSharp.Rendering;
 using RaylibUtils;
 using static Model.Controls.CommandIds;
-using System.ComponentModel.Design;
 
 namespace Civ2Gold;
 
@@ -212,6 +211,54 @@ public class Civ2GoldInterface(IMain main) : Civ2Interface(main)
 
         PicSources.Add("coastline", src);
 
+        PicSources.Add("trBase", [new BinaryStorage("pv.dll", 0x1EFA0, 0x20A3E)]);
+        PicSources.Add("trWallBack", [new BinaryStorage("pv.dll", 0x3F9E0, 0x122EE), 
+            new BinaryStorage("pv.dll", 0x51CD0, 0x122EE), new BinaryStorage("pv.dll", 0x63FC0, 0x9F1D), 
+            new BinaryStorage("pv.dll", 0x6DEE0, 0x964D)]);
+        PicSources.Add("trFloor", [new BinaryStorage("pv.dll", 0x77530, 0xB8FD), 
+            new BinaryStorage("pv.dll", 0x82E30, 0x10162), new BinaryStorage("pv.dll", 0x92F94, 0xB8EB), 
+            new BinaryStorage("pv.dll", 0x9E880, 0xD827)]);
+        PicSources.Add("trRug", [new BinaryStorage("pv.dll", 0xAC0A8, 0x5B1F), 
+            new BinaryStorage("pv.dll", 0xB1BC8, 0x573B), new BinaryStorage("pv.dll", 0xB7304, 0x3429), 
+            new BinaryStorage("pv.dll", 0xBA730, 0x6A9D)]);
+        PicSources.Add("trWallFront", [new BinaryStorage("pv.dll", 0xC11D0, 0x186F1), 
+            new BinaryStorage("pv.dll", 0xD98C4, 0x16AD6), new BinaryStorage("pv.dll", 0xF039C, 0x118B3), 
+            new BinaryStorage("pv.dll", 0x101C50, 0x1785E)]);
+        PicSources.Add("trThroneDecor", [new BinaryStorage("pv.dll", 0x1194B0, 0x3466), 
+            new BinaryStorage("pv.dll", 0x11C918, 0x6D85), new BinaryStorage("pv.dll", 0x1236A0, 0x64D4), 
+            new BinaryStorage("pv.dll", 0x129B74, 0x5592)]);
+        PicSources.Add("trColumnsBack", [new BinaryStorage("pv.dll", 0x12F108, 0x9776),
+            new BinaryStorage("pv.dll", 0x138880, 0x60F3), new BinaryStorage("pv.dll", 0x13E974, 0x61DE), 
+            new BinaryStorage("pv.dll", 0x144B54, 0xC289)]);
+        PicSources.Add("trThrone", [new BinaryStorage("pv.dll", 0x150DE0, 0x2311), 
+            new BinaryStorage("pv.dll", 0x1530F4, 0x1E31), new BinaryStorage("pv.dll", 0x154F28, 0x3137), 
+            new BinaryStorage("pv.dll", 0x158060, 0x1DA0)]);
+        PicSources.Add("trColumnsFront", [new BinaryStorage("pv.dll", 0x159E00, 0x2BA2), 
+            new BinaryStorage("pv.dll", 0x15C9A4, 0x3056), new BinaryStorage("pv.dll", 0x15F9FC, 0x4DBA), 
+            new BinaryStorage("pv.dll", 0x1647B8, 0x5E7D)]);
+        PicSources.Add("trDecorRugs", [new BinaryStorage("pv.dll", 0x16A638, 0x20A8)]);
+        PicSources.Add("trDecorPaintings", [new BinaryStorage("pv.dll", 0x16C6E0, 0x9CEF)]);
+        PicSources.Add("trDecorBushes", [new BinaryStorage("pv.dll", 0x1763D0, 0x1AFE)]);
+        PicSources.Add("trDecorThroneBushes", [new BinaryStorage("pv.dll", 0x177ED0, 0x1EC0)]);
+        PicSources.Add("trDecorPots", [new BinaryStorage("pv.dll", 0x179D90, 0x148C)]);
+        PicSources.Add("trDecorTreasures", [new BinaryStorage("pv.dll", 0x17B21C, 0x29B7)]);
+        PicSources.Add("trDecorStatues", [new BinaryStorage("pv.dll", 0x17DBD4, 0x6CEA)]);
+        PicSources.Add("trWallBack_section", [new BinaryStorage("pv.dll", 0x1848C0, 0x24FB)]);
+        PicSources.Add("trFloor_section", [new BinaryStorage("pv.dll", 0x186DBC, 0x35EA)]);
+        PicSources.Add("trRug_section", [new BinaryStorage("pv.dll", 0x18A3A8, 0xE8F)]);
+        PicSources.Add("trWallFront_section", [new BinaryStorage("pv.dll", 0x18B238, 0x19C3)]);
+        PicSources.Add("trThroneDecor_section", [new BinaryStorage("pv.dll", 0x18CBFC, 0x10EF)]);
+        PicSources.Add("trColumnsBack_section", [new BinaryStorage("pv.dll", 0x18DCEC, 0x47E3)]);
+        PicSources.Add("trThrone_section", [new BinaryStorage("pv.dll", 0x1924D0, 0x822)]);
+        PicSources.Add("trColumnsFront_section", [new BinaryStorage("pv.dll", 0x192CF4, 0x1AD7)]);
+        PicSources.Add("trDecorRugs_section", [new BinaryStorage("pv.dll", 0x1947CC, 0xA0F)]);
+        PicSources.Add("trDecorPaintings_section", [new BinaryStorage("pv.dll", 0x1951DC, 0xF5C)]);
+        PicSources.Add("trDecorBushes_section", [new BinaryStorage("pv.dll", 0x196138, 0xAB0)]);
+        PicSources.Add("trDecorThroneBushes_section", [new BinaryStorage("pv.dll", 0x196BE8, 0xBC4)]);
+        PicSources.Add("trDecorPots_section", [new BinaryStorage("pv.dll", 0x1977AC, 0x901)]);
+        PicSources.Add("trDecorTreasures_section", [new BinaryStorage("pv.dll", 0x1980B0, 0x8E5)]);
+        PicSources.Add("trDecorStatues_section", [new BinaryStorage("pv.dll", 0x198998, 0xFC1)]);
+
 
         DialogHandlers["MAINMENU"].Dialog.Decorations
             .Add(new Decoration(PicSources["sinaiPic"][0], new Point(0.08, 0.09)));
@@ -297,7 +344,7 @@ public class Civ2GoldInterface(IMain main) : Civ2Interface(main)
                 new("&Tax Rate|Shift+T", new Shortcut(Key.T, shift: true), Key.T, commandId: ChangeTaxRate),
                 new("-", Shortcut.None, Key.None),
                 new("View T&hrone Room|Shift+H", new Shortcut(Key.H, shift: true),
-                    Key.H),
+                    Key.H, commandId: ViewThroneRoom),
                 new("Find &City|Shift+C", new Shortcut(Key.C, shift: true), Key.C, commandId: FindCity),
                 new("-", Shortcut.None, Key.None),
                 new("&REVOLUTION|Shift+R", new Shortcut(Key.R, shift: true), Key.R)
