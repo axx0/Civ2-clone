@@ -47,6 +47,9 @@ public interface IUserInterface
     CityWindowLayout GetCityWindowDefinition();
     ListboxLooks GetListboxLooks(ListboxType? type);
 
+    List<CityViewTiles> GetCityViewTiles();
+    List<BinaryStorage> GetCityViewAltTiles();
+
     Dictionary<string, IImageSource[]> PicSources { get; }
     IList<ResourceImage> ResourceImages { get; }
     PopupBox? GetDialog(string dialogName);

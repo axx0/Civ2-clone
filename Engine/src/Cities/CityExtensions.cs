@@ -386,5 +386,7 @@ namespace Civ2engine
         public static bool IsNextToOcean(this City city) =>
         city.Location.Neighbours().Any(t => t.Type == TerrainType.Ocean);
 
+        public static bool IsNextToRiver(this City city) =>
+        city.Location.Neighbours().Any(t => t.River);
     }
 }

@@ -259,6 +259,22 @@ public class Civ2GoldInterface(IMain main) : Civ2Interface(main)
         PicSources.Add("trDecorTreasures_section", [new BinaryStorage("pv.dll", 0x1980B0, 0x8E5)]);
         PicSources.Add("trDecorStatues_section", [new BinaryStorage("pv.dll", 0x198998, 0xFC1)]);
 
+        PicSources.Add("cvOcean", [
+            new BinaryStorage("cv.dll", 0x9D250, 0x45423), 
+            new BinaryStorage("cv.dll", 0xE2674, 0x46642),
+            new BinaryStorage("cv.dll", 0x128CB8, 0x44E6A), 
+            new BinaryStorage("cv.dll", 0x16DB24, 0x44B23)]);
+        PicSources.Add("cvRiver", [
+            new BinaryStorage("cv.dll", 0x1B2648, 0x47B68), 
+            new BinaryStorage("cv.dll", 0x1FA1B0, 0x48F7A),
+            new BinaryStorage("cv.dll", 0x24312C, 0x472FA), 
+            new BinaryStorage("cv.dll", 0x28A428, 0x473B0)]);
+        PicSources.Add("cvContinent", [
+            new BinaryStorage("cv.dll", 0x2D17D8, 0x48D0A), 
+            new BinaryStorage("cv.dll", 0x31A4E4, 0x4A859),
+            new BinaryStorage("cv.dll", 0x364D40, 0x483D5), 
+            new BinaryStorage("cv.dll", 0x3AD118, 0x48FFE)]);
+        PicSources.Add("cvImprovements", [new BinaryStorage("cv.dll", 0x432F0, 0x35C79)]);
 
         DialogHandlers["MAINMENU"].Dialog.Decorations
             .Add(new Decoration(PicSources["sinaiPic"][0], new Point(0.08, 0.09)));
@@ -586,6 +602,117 @@ public class Civ2GoldInterface(IMain main) : Civ2Interface(main)
             },
             _ => new ListboxLooks(),
         };
+    }
+
+    public override List<CityViewTiles> GetCityViewTiles()
+    {
+        return
+        [
+            new(0, 62, new BinaryStorage("cv.dll", 0x432F0, 0x35C79, new(160, 116, 158, 114)), new(4, 0), 2),   // manhattan project
+            new(1, 24, new BinaryStorage("cv.dll", 0x1E6E0, 0x24C0F, new(497, 84, 123, 82)), new(165, 47), 15),   // supermarket
+            new(2, 9, new BinaryStorage("cv.dll", 0x1E6E0, 0x24C0F, new(1, 1, 123, 82)), new(267, 10), 2),   // aqueduct
+            new(3, 49, new BinaryStorage("cv.dll", 0x432F0, 0x35C79, new(319, 116, 158, 114)), new(401, 10), 5),   // michel. chapel
+            new(4, 5, new BinaryStorage("cv.dll", 0x1E6E0, 0x24C0F, new(125, 84, 123, 82)), new(556, 5), 15),   // marketplace
+            new(5, 26, new BinaryStorage("cv.dll", 0x1E6E0, 0x24C0F, new(373, 84, 123, 82)), new(653, 1), 14),   // research lab
+            new(6, 50, new BinaryStorage("cv.dll", 0x432F0, 0x35C79, new(478, 231, 158, 114)), new(728, 9), 2),   // copernicus obs.
+            new(7, 54, new BinaryStorage("cv.dll", 0x432F0, 0x35C79, new(319, 346, 158, 114)), new(850, 9), 2),   // j.s.bach's
+            new(8, 7, new BinaryStorage("cv.dll", 0x1E6E0, 0x24C0F, new(125, 1, 123, 82)), new(980, 7), 1),   // courthouse
+            new(9, 32, new BinaryStorage("cv.dll", 0x1E6E0, 0x24C0F, new(1, 167, 123, 82)), new(1116, 7), 0),   // airport
+            new(10, 16, new BinaryStorage("cv.dll", 0x1E6E0, 0x24C0F, new(1, 84, 123, 82)), new(60, 110), 13),   // mfg plant
+            new(11, 18, new BinaryStorage("cv.dll", 0x1E6E0, 0x24C0F, new(1, 416, 123, 82)), new(170, 100), 12),   // recycl. center
+            new(12, 17, new BinaryStorage("cv.dll", 0x1E6E0, 0x24C0F, new(497, 167, 123, 82)), new(268, 100), 15),   // sdi defense
+            new(13, 27, new BinaryStorage("cv.dll", 0x1E6E0, 0x24C0F, new(125, 250, 123, 82)), new(370, 100), 13),   // sam battery
+            new(14, 3, new BinaryStorage("cv.dll", 0x1E6E0, 0x24C0F, new(373, 1, 123, 82)), new(514, 63), 18),   // granary
+            new(15, 4, new BinaryStorage("cv.dll", 0x1E6E0, 0x24C0F, new(1, 333, 123, 82)), new(620, 67), 15),   // temple
+            new(16, 39, new BinaryStorage("cv.dll", 0x432F0, 0x35C79, new(1, 576, 158, 114)), new(460, 120), 20),   // pyramids
+            new(17, 56, new BinaryStorage("cv.dll", 0x432F0, 0x35C79, new(160, 576, 158, 114)), new(586, 100), 15),   // adam smith's
+            new(18, 1, new BinaryStorage("cv.dll", 0x1E6E0, 0x24C0F, new(373, 333, 123, 82)), new(676, 114), 14),   // palace
+            new(19, 11, new BinaryStorage("cv.dll", 0x1E6E0, 0x24C0F, new(373, 250, 123, 82)), new(775, 105), 12),   // cathedral
+            new(20, 14, new BinaryStorage("cv.dll", 0x1E6E0, 0x24C0F, new(249, 167, 123, 82)), new(870, 100), 13),   // colosseum
+            new(21, 21, new BinaryStorage("cv.dll", 0x1E6E0, 0x24C0F, new(249, 84, 123, 82)), new(960, 114), 15),   // nucl. plant
+            new(22, 66, new BinaryStorage("cv.dll", 0x432F0, 0x35C79, new(478, 576, 158, 114)), new(1062, 105), 14),   // cure cancer
+            new(23, 40, new BinaryStorage("cv.dll", 0x432F0, 0x35C79, new(1, 116, 158, 114)), new(1162, 100), 12),   // hang. gardens
+            new(24, 53, new BinaryStorage("cv.dll", 0x432F0, 0x35C79, new(1, 461, 158, 114)), new(95, 150), 15),   // leonardo's wrk.
+            new(25, 57, new BinaryStorage("cv.dll", 0x432F0, 0x35C79, new(1, 346, 158, 114)), new(192, 150), 15),   // darwin's voy.
+            new(26, 10, new BinaryStorage("cv.dll", 0x1E6E0, 0x24C0F, new(125, 167, 123, 82)), new(290, 150), 14),   // bank
+            new(27, 2, new BinaryStorage("cv.dll", 0x1E6E0, 0x24C0F, new(249, 250, 123, 82)), new(537, 153), 19),   // barracks
+            new(28, 12, new BinaryStorage("cv.dll", 0x1E6E0, 0x24C0F, new(373, 167, 123, 82)), new(533, 200), 19),   // university
+            new(29, 47, new BinaryStorage("cv.dll", 0x432F0, 0x35C79, new(478, 461, 158, 114)), new(658, 156), 4),   // king richard
+            new(30, 61, new BinaryStorage("cv.dll", 0x432F0, 0x35C79, new(319, 1, 158, 114)), new(780, 156), 2),   // hoover dam
+            new(31, 15, new BinaryStorage("cv.dll", 0x1E6E0, 0x24C0F, new(249, 1, 123, 82)), new(916, 167), 15),   // factory
+            new(32, 60, new BinaryStorage("cv.dll", 0x432F0, 0x35C79, new(160, 1, 158, 114)), new(1036, 175), 0),   // women suffrage
+            new(33, 28, new BinaryStorage("cv.dll", 0x1E6E0, 0x24C0F, new(1, 250, 123, 82)), new(1160, 213), 14),   // coastal fort.
+            new(34, 22, new BinaryStorage("cv.dll", 0x1E6E0, 0x24C0F, new(125, 416, 123, 82)), new(0, 213), 2),   // stock exch.
+            new(35, 23, new BinaryStorage("cv.dll", 0x1E6E0, 0x24C0F, new(497, 250, 123, 82)), new(110, 260), 14),   // sewer system
+            new(36, 29, new BinaryStorage("cv.dll", 0x1E6E0, 0x24C0F, new(1, 618, 123, 82)), new(210, 226), 3),   // solar plant
+            new(37, 43, new BinaryStorage("cv.dll", 0x432F0, 0x35C79, new(478, 1, 158, 114)), new(332, 226), 2),   // great library
+            new(38, 44, new BinaryStorage("cv.dll", 0x432F0, 0x35C79, new(478, 116, 158, 114)), new(450, 256), 7),   // oracle
+            new(39, 52, new BinaryStorage("cv.dll", 0x432F0, 0x35C79, new(1, 231, 158, 114)), new(572, 256), 7),   // shakespeare th.
+            new(40, 6, new BinaryStorage("cv.dll", 0x1E6E0, 0x24C0F, new(497, 1, 123, 82)), new(735, 250), 20),   // library
+            new(41, 13, new BinaryStorage("cv.dll", 0x1E6E0, 0x24C0F, new(125, 618, 123, 82)), new(845, 259), 15),   // mass transit
+            new(42, 59, new BinaryStorage("cv.dll", 0x432F0, 0x35C79, new(319, 576, 158, 114)), new(10, 295), 3),   // eiffel tower
+            new(43, 19, new BinaryStorage("cv.dll", 0x1E6E0, 0x24C0F, new(125, 333, 123, 82)), new(167, 287), 3),   // power plant
+            new(44, 20, new BinaryStorage("cv.dll", 0x1E6E0, 0x24C0F, new(249, 333, 123, 82)), new(293, 287), 1),   // hydro plant
+            new(45, 55, new BinaryStorage("cv.dll", 0x432F0, 0x35C79, new(160, 346, 158, 114)), new(0, 364), 2),   // Is. Newton's
+            new(46, 63, new BinaryStorage("cv.dll", 0x432F0, 0x35C79, new(160, 231, 158, 114)), new(129, 356), 1),  // untd. nations
+            new(47, 51, new BinaryStorage("cv.dll", 0x432F0, 0x35C79, new(478, 346, 158, 114)), new(250, 356), 2),  // magellan exp.
+            new(48, 48, new BinaryStorage("cv.dll", 0x432F0, 0x35C79, new(319, 461, 158, 114)), new(411, 324), 4),  // m.polo embassy
+            new(49, 64, new BinaryStorage("cv.dll", 0x432F0, 0x35C79, new(1, 1, 158, 114)), new(533, 324), 1),   // apollo program
+            new(50, 65, new BinaryStorage("cv.dll", 0x432F0, 0x35C79, new(319, 231, 158, 114)), new(680, 284), 3),   // seti program
+            // Draw altern. tile where ocean/river is (continental only):
+            new(51, -1, new BinaryStorage("cv.dll", 0x432F0, 0x35C79, new(0, 0, 0, 0)), new(928, 273), 12),
+            new(52, -1, new BinaryStorage("cv.dll", 0x432F0, 0x35C79, new(0, 0, 0, 0)), new(1020, 256), 15),
+            new(53, -1, new BinaryStorage("cv.dll", 0x432F0, 0x35C79, new(0, 0, 0, 0)), new(1156, 286), 2),
+            new(54, -1, new BinaryStorage("cv.dll", 0x432F0, 0x35C79, new(0, 0, 0, 0)), new(1043, 328), 2),
+            // Draw altern. tile where ocean is (continental & river):
+            new(55, -1, new BinaryStorage("cv.dll", 0x432F0, 0x35C79, new(0, 0, 0, 0)), new(1155, 396), 13),
+            new(56, 8, new BinaryStorage("cv.dll", 0x1E6E0, 0x24C0F, new(249, 416, 357, 78)), new(368, 390), 0),    // city walls
+            new(57, 31, new BinaryStorage("cv.dll", 0x1E6E0, 0x24C0F, new(590, 499, 105, 105)), new(926, 366), 0),   // offshore platf.
+            new(58, 30, new BinaryStorage("cv.dll", 0x1E6E0, 0x24C0F, new(1, 499, 220, 100)), new(907, 274), 0),   // harbor
+            new(59, 34, new BinaryStorage("cv.dll", 0x1E6E0, 0x24C0F, new(222, 499, 367, 118)), new(907, 296), 0),   // port facility
+            new(60, 41, new BinaryStorage("cv.dll", 0x432F0, 0x35C79, new(407, 852, 94, 160)), new(1070, 319), 0),   // colossus (sea)
+            new(61, 41, new BinaryStorage("cv.dll", 0x432F0, 0x35C79, new(502, 852, 94, 160)), new(1070, 319), 0),   // colossus (sea)
+            new(62, 42, new BinaryStorage("cv.dll", 0x432F0, 0x35C79, new(253, 852, 76, 133)), new(1184, 305), 0),   // lighthouse (sea)
+            new(63, 42, new BinaryStorage("cv.dll", 0x432F0, 0x35C79, new(330, 852, 76, 133)), new(1184, 305), 0),   // lighthouse (land)
+            new(64, 45, new BinaryStorage("cv.dll", 0x432F0, 0x35C79, new(1, 691, 304, 160)), new(0, 0), 0),   // great wall
+            new(65, 45, new BinaryStorage("cv.dll", 0x432F0, 0x35C79, new(306, 691, 304, 160)), new(0, 0), 0),   // great wall (alt.)
+            new(66, 58, new BinaryStorage("cv.dll", 0x432F0, 0x35C79, new(1, 852, 125, 253)), new(0, 0), 0),   // statue liberty (sea)
+            new(67, 58, new BinaryStorage("cv.dll", 0x432F0, 0x35C79, new(127, 852, 125, 253)), new(0, 0), 0),   // statue liberty (land)
+        ];
+    }
+
+    public override List<BinaryStorage> GetCityViewAltTiles()
+    {
+        return
+        [
+            new BinaryStorage("cv.dll", 0x78F6C, 0x242E4, new(1, 1, 158, 114)),
+            new BinaryStorage("cv.dll", 0x78F6C, 0x242E4, new(160, 1, 158, 114)),
+            new BinaryStorage("cv.dll", 0x78F6C, 0x242E4, new(319, 1, 158, 114)),
+            new BinaryStorage("cv.dll", 0x78F6C, 0x242E4, new(478, 1, 158, 114)),
+            new BinaryStorage("cv.dll", 0x78F6C, 0x242E4, new(1, 116, 158, 114)),
+            new BinaryStorage("cv.dll", 0x78F6C, 0x242E4, new(160, 116, 158, 114)),
+            new BinaryStorage("cv.dll", 0x78F6C, 0x242E4, new(319, 116, 158, 114)),
+            new BinaryStorage("cv.dll", 0x78F6C, 0x242E4, new(478, 116, 158, 114)),
+            new BinaryStorage("cv.dll", 0x78F6C, 0x242E4, new(1, 231, 158, 114)),
+            new BinaryStorage("cv.dll", 0x78F6C, 0x242E4, new(160, 231, 158, 114)),
+            new BinaryStorage("cv.dll", 0x78F6C, 0x242E4, new(319, 231, 158, 114)),
+            new BinaryStorage("cv.dll", 0x78F6C, 0x242E4, new(478, 231, 158, 114)),
+            new BinaryStorage("cv.dll", 0x78F6C, 0x242E4, new(1, 346, 123, 82)),
+            new BinaryStorage("cv.dll", 0x78F6C, 0x242E4, new(125, 346, 123, 82)),
+            new BinaryStorage("cv.dll", 0x78F6C, 0x242E4, new(249, 346, 123, 82)),
+            new BinaryStorage("cv.dll", 0x78F6C, 0x242E4, new(373, 346, 123, 82)),
+            new BinaryStorage("cv.dll", 0x78F6C, 0x242E4, new(497, 346, 123, 82)),
+            new BinaryStorage("cv.dll", 0x78F6C, 0x242E4, new(1, 429, 123, 82)),
+            new BinaryStorage("cv.dll", 0x78F6C, 0x242E4, new(125, 429, 123, 82)),
+            new BinaryStorage("cv.dll", 0x78F6C, 0x242E4, new(249, 429, 123, 82)),
+            new BinaryStorage("cv.dll", 0x78F6C, 0x242E4, new(373, 429, 123, 82)),
+            new BinaryStorage("cv.dll", 0x78F6C, 0x242E4, new(497, 429, 123, 82)),
+            new BinaryStorage("cv.dll", 0x78F6C, 0x242E4, new(1, 512, 123, 82)),
+            new BinaryStorage("cv.dll", 0x78F6C, 0x242E4, new(125, 512, 123, 82)),
+            new BinaryStorage("cv.dll", 0x78F6C, 0x242E4, new(249, 512, 123, 82)),
+            new BinaryStorage("cv.dll", 0x78F6C, 0x242E4, new(373, 512, 123, 82)),
+            new BinaryStorage("cv.dll", 0x78F6C, 0x242E4, new(497, 512, 123, 82))
+        ];
     }
 
     public override void GetShieldImages()

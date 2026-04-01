@@ -73,7 +73,7 @@ public class CityWindow : BaseDialog
         Controls.Add(happyButton);
 
         var viewButton = new CityButton(this, "View");
-        viewButton.Click += (_, _) => { };
+        viewButton.Click += (_, _) => gameScreen.ShowDialog(new CityView(gameScreen, city)); ;
         Controls.Add(viewButton);
 
         var exitButton = new CityButton(this, "Exit");
