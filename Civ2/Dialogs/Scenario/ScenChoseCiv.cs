@@ -2,6 +2,7 @@ using Civ2.Dialogs.FileDialogs;
 using Civ2.Dialogs.NewGame;
 using Civ2.Rules;
 using Civ2engine;
+using Civ2engine.IO;
 using Model;
 using Model.Controls;
 using Model.InterfaceActions;

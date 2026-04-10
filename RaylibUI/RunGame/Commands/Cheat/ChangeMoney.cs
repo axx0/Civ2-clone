@@ -1,6 +1,7 @@
 using Model.Input;
 using System.Diagnostics;
 using Civ2engine;
+using Civ2engine.IO;
 using Microsoft.VisualBasic.CompilerServices;
 using Model.Core;
 using Model.Interface;

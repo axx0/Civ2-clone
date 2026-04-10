@@ -23,65 +23,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="38862fe7-8760-4eef-9f9f-5fdba728b888" name="Changes" comment="Added tests">
-      <change afterPath="$PROJECT_DIR$/Engine/src/IO/CivilopediaLoader.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Model/Controls/CityWindow/CityViewTiles.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Model/Controls/Civilopedia/Civilopedia.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Model/Controls/Civilopedia/CivilopediaInfoType.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Model/Controls/Civilopedia/CivilopediaListbox.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Model/Controls/Civilopedia/CivilopediaProperties.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Model/Controls/Civilopedia/CivilopediaWindowType.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Model/Core/ThroneRoom.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Civilopedia/CivilopediaAdvances.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Civilopedia/CivilopediaConcepts.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Civilopedia/CivilopediaGovernments.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Civilopedia/CivilopediaImprovements.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Civilopedia/CivilopediaTerrain.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Civilopedia/CivilopediaUnits.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Civilopedia/CivilopediaWonders.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/ViewThroneRoom.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/WorldWonders.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/CityView.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Civilopedia/CivilopediaDescription.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Civilopedia/CivilopediaInfo.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Civilopedia/CivilopediaTree.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Civilopedia/CivilopediaWindow.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Civilopedia/PediaLabel.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Civilopedia/PediaLinkLabel.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/FullscreenView.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/ThroneRoomWindow.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/World/WondersWindow.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RaylibUtils/DrawUtils.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Civ2/Civ2Interface.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Civ2Interface.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/Scenario/ScenChoseCiv.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/Scenario/ScenChoseCiv.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/Scenario/ScenCustomIntro.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/Scenario/ScenCustomIntro.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Civ2Gold/Civ2GoldInterface.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2Gold/Civ2GoldInterface.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Civ2TOT/TestOfTimeInterface.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2TOT/TestOfTimeInterface.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Cities/CityExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Cities/CityExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/OriginalSaves/Read.ClassicSav.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/OriginalSaves/Read.ClassicSav.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/SaveLoad/GameLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/GameLoader.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/UI/Dialog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/UI/Dialog.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Controls/ListboxType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Controls/ListboxType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Controls/Menu/CommandIds.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Controls/Menu/CommandIds.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Core/Civilization.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Civilization.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Core/GameInitializationConfig.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/GameInitializationConfig.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Core/PopupBox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/PopupBox.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Core/Scenario.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Scenario.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/IUserInterface.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/IUserInterface.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/InterfaceStyle.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/InterfaceStyle.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Utils/FileUtilities.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Utils/FileUtilities.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/BaseDialog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/BaseDialog.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/BaseScreen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/BaseScreen.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/HeaderLabel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/HeaderLabel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/LabelControl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/LabelControl.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/DynamicSizingDialog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/DynamicSizingDialog.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/Panel/Listbox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/Panel/Listbox.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Bitmaps/ImageUtils.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Bitmaps/ImageUtils.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Dialogs/CivDialog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Dialogs/CivDialog.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Dialogs/DialogUtils.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Dialogs/DialogUtils.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Advisors/ScienceAdvisorWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Advisors/ScienceAdvisorWindow.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/CityWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/CityWindow.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/MinimapPanel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/MinimapPanel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core.Tests/SaveLoad/GameLoaderTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core.Tests/SaveLoad/GameLoaderTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core.Tests/SaveLoad/LoadGameTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core.Tests/SaveLoad/LoadGameTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/IO/Labels.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/IO/Labels.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -188,7 +133,7 @@
     "cidr.known.project.marker": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "Merging master",
+    "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
     "junie.onboarding.icon.badge.shown": "true",
     "node.js.detected.package.eslint": "true",
@@ -298,7 +243,7 @@
       <workItem from="1772833174830" duration="23239000" />
       <workItem from="1775782662182" duration="17000" />
       <workItem from="1775782687724" duration="22000" />
-      <workItem from="1775782871012" duration="5593000" />
+      <workItem from="1775782871012" duration="7422000" />
     </task>
     <task id="LOCAL-00001" summary="Reveal map working">
       <option name="closed" value="true" />
@@ -412,7 +357,15 @@
       <option name="project" value="LOCAL" />
       <updated>1775790351704</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="Added tests">
+      <option name="closed" value="true" />
+      <created>1775792238526</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1775792238526</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

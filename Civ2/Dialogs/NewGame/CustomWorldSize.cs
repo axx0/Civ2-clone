@@ -1,6 +1,7 @@
 using Civ2.Dialogs.NewGame.CustomWorldDialogs;
 using Civ2.Rules;
 using Civ2engine;
+using Civ2engine.IO;
 using Model.Controls;
 using Model.InterfaceActions;
 

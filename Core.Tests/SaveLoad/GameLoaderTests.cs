@@ -25,7 +25,7 @@ public class GameLoaderTests
         var savFile = new MockSavFile();
         var gameLoader = new GameLoader(path, savDirectory, rules, activeRuleSet, savFile);
         var game = new MockGame();
-        var activeInterface = new LoadGameTests.MockInterface();
+        var activeInterface = new MockInterface();
 
         // Act
         var result = gameLoader.LoadGame(game, activeInterface);
@@ -49,7 +49,7 @@ public class GameLoaderTests
         var savFile = new MockSavFile();
         var gameLoader = new GameLoader(path, savDirectory, rules, activeRuleSet, savFile);
         var game = new MockGame();
-        var activeInterface = new LoadGameTests.MockInterface();
+        var activeInterface = new MockInterface();
 
         // Act
         var result = gameLoader.LoadGame(game, activeInterface);
@@ -57,13 +57,5 @@ public class GameLoaderTests
         // Assert
         Assert.NotNull(result);
         Assert.IsAssignableFrom<IInterfaceAction>(result);
-    }
-
-    internal class MockSavFile : SavFileBase
-    {
-        public override IGame LoadGame(byte[] fileData, Ruleset activeRuleSet, Rules rules)
-        {
-            return new MockGame();
-        }
     }
 }
