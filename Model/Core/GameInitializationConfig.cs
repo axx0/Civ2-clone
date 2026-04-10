@@ -55,5 +55,7 @@ namespace Civ2engine
         public int StartingYear { get; set; }
         public int TurnYearIncrement { get; set; }
         public int MaxTurns { get; set; }
+        public int ObjectivesProtagonist { get; set; }
+        public int ActiveUnitType { get; set; }
     }
 }

@@ -25,4 +25,5 @@ public class Scenario
     public int NoObjectivesMarginalVictory { get; set; }
     public int NoObjectivesMarginalDefeat { get; set; }
     public int NoObjectivesDecisiveDefeat { get; set; }
+    public int ActiveUnitType { get; set; }
 }

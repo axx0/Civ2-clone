@@ -15,6 +15,7 @@ using Model.Images;
 using Model.ImageSets;
 using Model.Input;
 using Model.InterfaceActions;
+using Model.Utils;
 using Raylib_CSharp.Colors;
 using Raylib_CSharp.Images;
 using Raylib_CSharp.Textures;
@@ -44,11 +45,12 @@ public abstract class Civ2Interface(IMain main) : IUserInterface
         {
             Dialogs.Add(popup, new PopupBox());
         }
-        foreach (var value in Dialogs.Values)
-        {
-            value.Width = (int)(value.Width * 1.5m);
-        }
+        //foreach (var value in Dialogs.Values)
+        //{
+        //    value.Width = (int)(value.Width * 1.5m); // update this in CivDialog class so that you don't skip advisor, scenario and other popups
+        //}
         Labels.UpdateLabels(null);
+        CivilopediaLoader.UpdateMapping(null);
         
         var handlerInterface = typeof(ICivDialogHandler);
         DialogHandlers = AppDomain.CurrentDomain.GetAssemblies()
@@ -399,6 +401,8 @@ public abstract class Civ2Interface(IMain main) : IUserInterface
     public abstract int UnitsRows { get; }
     public abstract int UnitsPxHeight { get; }
     public abstract Dictionary<string, IImageSource[]> PicSources { get; }
+    public abstract List<CityViewTiles> GetCityViewTiles();
+    public abstract List<BinaryStorage> GetCityViewAltTiles();
     public abstract void GetShieldImages();
     public abstract UnitShield UnitShield(int unitType);
     public abstract void DrawBorderWallpaper(Wallpaper wallpaper, ref Image destination, int height, int width, Padding padding, bool statusPanel);
@@ -434,7 +438,7 @@ public abstract class Civ2Interface(IMain main) : IUserInterface
     
     public int InterfaceIndex { get; set; }
 
-    public IInterfaceAction HandleLoadScenario(IGame game, string scnName, string scnDirectory)
+    public IInterfaceAction HandleLoadScenario(IGame game, string scnName, Ruleset ruleset)
     {
         ExpectedMaps = game.NoMaps;
         Initialization.LoadGraphicsAssets(this);
@@ -449,24 +453,38 @@ public abstract class Civ2Interface(IMain main) : IUserInterface
         config.TurnYearIncrement = game.ScenarioData.TurnYearIncrement;
         config.DifficultyLevel = game.DifficultyLevel;
         config.MaxTurns = game.ScenarioData.MaxTurns;
-        config.CivsInPlay = game.AllCivilizations.Select(c => c.Alive).ToArray(); ;
+        config.CivsInPlay = game.AllCivilizations.Select(c => c.Alive).ToArray();
+        config.ObjectivesProtagonist = game.ScenarioData.ObjectiveProtagonist;
+        config.ScenPlayerCivId = game.AllCivilizations.FindIndex(c => c.PlayerType == PlayerType.Local);
+        config.ActiveUnitType = game.ScenarioData.ActiveUnitType;
 
         Initialization.Start(game);
 
-        var titleImage = "Title.gif";
-        var foundTitleImage = Directory.EnumerateFiles(scnDirectory, titleImage, new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive }).FirstOrDefault();
-        if (foundTitleImage != null)
+        var titleImgPath = FileUtilities.GetFile(ruleset.FolderPath, "title.gif");
+        if (titleImgPath != null)
         {
-            ScenTitleImage = new BitmapStorage(foundTitleImage);
+            ScenTitleImage = new BitmapStorage(titleImgPath);
         }
 
+        var labelsPath = FileUtilities.GetFile(ruleset.FolderPath, "labels.txt");
+        if (labelsPath != null)
+        {
+            Labels.UpdateLabels(ruleset);
+        }
+
+        var describePath = FileUtilities.GetFile(ruleset.FolderPath, "describe.txt");
+        if (describePath != null)
+        {
+            CivilopediaLoader.UpdateMapping(ruleset);
+        }
+        
         // Load custom intro if it exists in txt file
         var introFile = Regex.Replace(scnName, ".scn", ".txt", RegexOptions.IgnoreCase);
-        var foundIntroFile = Directory.EnumerateFiles(scnDirectory, introFile, new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive }).FirstOrDefault();
-        if (foundIntroFile != null)
+        var introPath = FileUtilities.GetFile(ruleset.FolderPath, introFile);
+        if (introPath != null)
         {
             var boxes = new Dictionary<string, PopupBox>();
-            TextFileParser.ParseFile(Path.Combine(scnDirectory, foundIntroFile), new PopupBoxReader (boxes), true);
+            TextFileParser.ParseFile(Path.Combine(ruleset.FolderPath, introPath), new PopupBoxReader (boxes), true);
             if (boxes.TryGetValue("SCENARIO", out var dialogInfo))
             {
                 DialogHandlers[ScenCustomIntro.Title].UpdatePopupData(new()
@@ -546,5 +564,39 @@ public abstract class Civ2Interface(IMain main) : IUserInterface
     public string GetScientistName(int epoch)
     {
         return Labels.For(epoch < 3 ? LabelIndex.wisemen : LabelIndex.scientists);
+    }
+
+    public CivilopediaProperties GetCivilopediaProperties(Civilopedia civilopedia)
+    {
+        return new()
+        {
+            Listbox = new()
+            {
+                Rows = 9,
+                Columns = 2,
+                RowHeight = 33,
+                VerticalScrollbar = false,
+                IconScale = civilopedia.InfoType switch
+                {
+                    CivilopediaInfoType.Advances or CivilopediaInfoType.Improvements or CivilopediaInfoType.Wonders => 1.5f,
+                    _ => 1.0f
+                },
+            },
+            Buttons = civilopedia switch
+            {
+                var c when c.WindowType == CivilopediaWindowType.Description || c.WindowType == CivilopediaWindowType.Tree 
+                    => ["Go Back", "Close"],
+                var c when c.WindowType == CivilopediaWindowType.Listbox && c.InfoType == CivilopediaInfoType.Advances
+                    => ["Info", "Tree", "Close"],
+                var c when c.WindowType == CivilopediaWindowType.Listbox && c.InfoType != CivilopediaInfoType.Advances
+                    => ["Info", "Close"],
+                var c when c.WindowType == CivilopediaWindowType.Info && c.InfoType == CivilopediaInfoType.Advances
+                    => ["Go Back", "Tree", "Description", "Close"],
+                var c when c.WindowType == CivilopediaWindowType.Info && 
+                    (c.InfoType == CivilopediaInfoType.Governments || c.InfoType == CivilopediaInfoType.Concepts)
+                    => ["Go Back", "Close"],
+                _ => ["Go Back", "Description", "Close"],
+            }
+        };
     }
 }

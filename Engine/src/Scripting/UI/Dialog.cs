@@ -32,7 +32,7 @@ namespace Civ2engine.Scripting
 
         public int width
         {
-            get => _popup.Width;
+            get => _popup.Width ?? 0;
             set => _popup.Width = value;
         }
         

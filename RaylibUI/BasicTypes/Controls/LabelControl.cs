@@ -11,12 +11,9 @@ namespace RaylibUI.BasicTypes.Controls;
 
 public class LabelControl : BaseControl
 {
-    public readonly bool WrapText;
-
     private readonly int _minWidth;
     private readonly int _defaultHeight;
     private readonly float _spacing;
-    private List<string>? _wrappedText;
     private readonly IUserInterface _active;
     private readonly Timer _timer;
     private bool _switch;
@@ -30,7 +27,6 @@ public class LabelControl : BaseControl
         HorizontalAlignment horizontalAlignment = HorizontalAlignment.Left,
         VerticalAlignment verticalAlignment = VerticalAlignment.Top,
         int defaultHeight = 32,
-        bool wrapText = false,
         Font? font = null,
         int fontSize = 20,
         float spacing = 0f,
@@ -46,7 +42,6 @@ public class LabelControl : BaseControl
         _text = text;
         HorizontalAlignment = horizontalAlignment;
         VerticalAlignment = verticalAlignment;
-        WrapText = wrapText;
         _minWidth = minWidth;
         _defaultHeight = defaultHeight;
         _fontSize = fontSize;
@@ -142,18 +137,10 @@ public class LabelControl : BaseControl
 
     public override int GetPreferredWidth()
     {
-        if (WrapText) return Width;
-
         return Math.Max(_minWidth, (int)_textSize.X + Padding.Left + Padding.Right + (HorizontalAlignment == HorizontalAlignment.Center ? 10 : 0));
     }
 
-    public override int GetPreferredHeight()
-    {
-        if (!WrapText) return (int)_textSize.Y + Padding.Top + Padding.Bottom;
-        
-        _wrappedText = DialogUtils.GetWrappedTexts(_active, _text, Width, _font, _fontSize);
-        return (int)(_wrappedText.Count * _textSize.Y + Padding.Top + Padding.Bottom) ;
-    }
+    public override int GetPreferredHeight() => (int)_textSize.Y + Padding.Top + Padding.Bottom;
 
     public override void Draw(bool pulse)
     {
@@ -163,54 +150,40 @@ public class LabelControl : BaseControl
         {
             Graphics.DrawRectangleRec(Bounds, BackgroundColor.Value);
         }
-        if (WrapText && _wrappedText?.Count > 1)
+        
+        var textPosition = new Vector2(Bounds.X + Padding.Left, Bounds.Y + Padding.Top);
+
+        if (HorizontalAlignment == HorizontalAlignment.Center)
         {
-            var unitHeight = (Height - Padding.Top - Padding.Bottom) / _wrappedText.Count;
-            var y = Bounds.Y + Padding.Top + unitHeight / 2f - _textSize.Y / 2f;
-            for (var i = 0; i < _wrappedText.Count; i++)
-            {
-                var textPosition = new Vector2(Bounds.X + Padding.Left, y);
-                Graphics.DrawTextEx(_font, _wrappedText[i], textPosition + ShadowOffset, _fontSize, _spacing, ColorShadow);
-                Graphics.DrawTextEx(_font, _wrappedText[i], textPosition, _fontSize, _spacing, ColorFront);
-                y += unitHeight;
-            }
+            textPosition.X += (Width - Padding.Left - Padding.Right) / 2f - _textSize.X / 2f;
+        }
+        else if (HorizontalAlignment == HorizontalAlignment.Right)
+        {
+            textPosition.X += Width - Padding.Left - Padding.Right - _textSize.X;
+        }
+
+        if (VerticalAlignment == VerticalAlignment.Center)
+        {
+            textPosition.Y += (Height - Padding.Top - Padding.Bottom) / 2f - _textSize.Y / 2f;
+        }
+        else if (VerticalAlignment == VerticalAlignment.Bottom)
+        {
+            textPosition.Y += Height - Padding.Top - Padding.Bottom - _textSize.Y;
+        }
+
+        Color colorFront, colorShadow;
+        if (_switchColors is not null)
+        {
+            colorFront = _switch ? _switchColors[0] : _switchColors[1];
+            colorShadow = Color.Black;
         }
         else
         {
-            var textPosition = new Vector2(Bounds.X + Padding.Left, Bounds.Y + Padding.Top);
-
-            if (HorizontalAlignment == HorizontalAlignment.Center)
-            {
-                textPosition.X += (Width - Padding.Left - Padding.Right) / 2f - _textSize.X / 2f;
-            }
-            else if (HorizontalAlignment == HorizontalAlignment.Right)
-            {
-                textPosition.X += Width - Padding.Left - Padding.Right - _textSize.X;
-            }
-
-            if (VerticalAlignment == VerticalAlignment.Center)
-            {
-                textPosition.Y += (Height - Padding.Top - Padding.Bottom) / 2f - _textSize.Y / 2f;
-            }
-            else if (VerticalAlignment == VerticalAlignment.Bottom)
-            {
-                textPosition.Y += Height - Padding.Top - Padding.Bottom - _textSize.Y;
-            }
-
-            Color colorFront, colorShadow;
-            if (_switchColors is not null)
-            {
-                colorFront = _switch ? _switchColors[0] : _switchColors[1];
-                colorShadow = Color.Black;
-            }
-            else
-            {
-                colorFront = ColorFront;
-                colorShadow = ColorShadow;
-            }
-            Graphics.DrawTextEx(_font, _text, textPosition + ShadowOffset, _fontSize, _spacing, colorShadow);
-            Graphics.DrawTextEx(_font, _text, textPosition, _fontSize, _spacing, colorFront);
+            colorFront = ColorFront;
+            colorShadow = ColorShadow;
         }
+        Graphics.DrawTextEx(_font, _text, textPosition + ShadowOffset, _fontSize, _spacing, colorShadow);
+        Graphics.DrawTextEx(_font, _text, textPosition, _fontSize, _spacing, colorFront);
 
         // Draw control's bounds
         //Graphics.DrawRectangleLinesEx(Bounds, 1f, Color.Blue);

@@ -13,7 +13,7 @@ namespace Civ2engine
         /// <summary>
         /// Requested width of popup.
         /// </summary>
-        public int Width { get; set; }
+        public int? Width { get; set; }
 
         /// <summary>
         /// Header text.

@@ -3,6 +3,7 @@ using System.Linq;
 using Civ2engine.Advances;
 using Civ2engine.Units;
 using Model.Constants;
+using Model.Core;
 using Model.Core.Units;
 
 namespace Civ2engine
@@ -53,6 +54,7 @@ namespace Civ2engine
         
         public AdvanceGroupAccess[] AllowedAdvanceGroups { get; set; }
         public Dictionary<Effects, int> GlobalEffects { get; } = new();
+        public ThroneRoom ThroneRoom { get; set; } = new();
         public int Betrayals { get; set; }
         public int FutureTechCount { get; set; }
         public int Patience { get; set; }

@@ -5,6 +5,7 @@ using Civ2engine.SaveLoad.SavFile;
 using Model;
 using Model.Core;
 using Model.InterfaceActions;
+using Model.Utils;
 
 namespace Civ2engine.SaveLoad;
 
@@ -36,7 +37,7 @@ public class GameLoader : IGameLoader
         if (string.Equals(Path.GetExtension(path), ".scn", StringComparison.OrdinalIgnoreCase))
         {
             var scnName = Path.GetFileName(path);
-            return activeInterface.HandleLoadScenario(game, scnName, savDirectory);
+            return activeInterface.HandleLoadScenario(game, scnName, activeRuleSet);
         }
         return activeInterface.HandleLoadGame(game, rules, activeRuleSet, savFile.ViewData!);
     }

@@ -1,7 +1,7 @@
 using Civ2engine;
 using Model;
-using Model.Core;
 using Model.Controls;
+using Model.Core;
 using Raylib_CSharp.Fonts;
 using Raylib_CSharp.Interact;
 using Raylib_CSharp.Windowing;
@@ -9,6 +9,7 @@ using RaylibUI.BasicTypes;
 using RaylibUI.BasicTypes.Controls;
 using RaylibUI.Controls;
 using RaylibUI.Dialogs;
+using System.Linq;
 using System.Numerics;
 
 namespace RaylibUI;
@@ -26,9 +27,9 @@ public class CivDialog : DynamicSizingDialog
 
     public CivDialog(Main host, DialogElements dialog, Action<string, int, IList<bool>?, IDictionary<string, string>?> handleButtonClick) :
         base(host, DialogUtils.ReplacePlaceholders(dialog.Title, dialog.ReplaceStrings, dialog.ReplaceNumbers),
+            dialog.Width == null ? host.ActiveInterface.DefaultDialogWidth : (int)(1.5 * dialog.Width),
             dialog.X != null || dialog.Y != null ? new Point(dialog.X ?? 0 / Window.GetScreenWidth(),
-            dialog.Y ?? 0 / Window.GetScreenHeight()) : dialog.DialogPos, requestedWidth: dialog.Width == 0 ?
-            host.ActiveInterface.DefaultDialogWidth : dialog.Width)
+            dialog.Y ?? 0 / Window.GetScreenHeight()) : dialog.DialogPos)
     {
         _active = host.ActiveInterface;
         _handleButtonClick = handleButtonClick;
@@ -45,12 +46,71 @@ public class CivDialog : DynamicSizingDialog
         var maxTextWidth = 0;
         if (dialog.Text?.Count > 0)
         {
-            var textLabels = GetTextLabels(this, dialog.Text, dialog.LineStyles, dialog.ReplaceStrings, dialog.ReplaceNumbers);
-            maxTextWidth = GetInnerPanelWidthFromText(textLabels, dialog.Width ?? 0);
-            for (int i = 0; i < textLabels.Count; i++)
+            var texts = dialog.Text;
+            var styles = dialog.LineStyles;
+
+            // Group left-aligned texts
+            int i = 0;
+            while (i < texts.Count - 1)
             {
-                textLabels[i].Width = maxTextWidth;
-                innerLayout.Add(textLabels[i], layoutRow++, 1);
+                i++;
+                if (styles[i - 1] == TextStyles.Left && styles[i] == TextStyles.Left)
+                {
+                    texts[i] = $"{texts[i - 1]} {texts[i]}";
+                    texts.RemoveAt(i - 1);
+                    styles.RemoveAt(i - 1);
+                    i = 0;
+                }
+            }
+
+            // Replace %STRING, %NUMBER
+            texts = texts.Select(t => DialogUtils.ReplacePlaceholders(t, dialog.ReplaceStrings, dialog.ReplaceNumbers)).ToList();
+            texts = texts.Select(t => t.Replace("_", " ")).ToList();
+
+            // First make center and own line labels as they determine dialog width
+            List<LabelControl> nonWrappedLabels = [];
+            for (var j = 0; j < texts.Count; j++)
+            {
+                if (styles[j] != TextStyles.Left)
+                {
+                    nonWrappedLabels.Add(new LabelControl(this,
+                        string.IsNullOrEmpty(texts[j]) && styles[j] == TextStyles.LeftOwnLine ? " " : texts[j],    // Add space if ^ is the only character 
+                        false,
+                        horizontalAlignment: styles[j] == TextStyles.Centered ? HorizontalAlignment.Center : HorizontalAlignment.Left,
+                        font: _active.Look.LabelFont, fontSize: _active.Look.LabelFontSize, colorFront: _active.Look.LabelColour, colorShadow: _active.Look.LabelShadowColour, shadowOffset: new Vector2(1, 1)));
+                }
+            }
+
+            maxTextWidth = GetInnerPanelWidthFromText(nonWrappedLabels, dialog.Width ?? 0);
+
+            // Make wrapped labels and adjust width of all labels
+            List<LabelControl> textLabels = [];
+            for (var j = 0; j < texts.Count; j++)
+            {
+                if (styles[j] == TextStyles.Left)
+                {
+                    var wrappedTexts = DialogUtils.GetWrappedTexts(texts[j], maxTextWidth, _active.Look.LabelFont, _active.Look.LabelFontSize);
+
+                    foreach (var text in wrappedTexts)
+                    {
+                        var wrappedLabel = new LabelControl(this,
+                            string.IsNullOrEmpty(text) ? " " : text,    // Add space if ^ is the only character 
+                            false,
+                            horizontalAlignment: styles[i] == TextStyles.Centered ? HorizontalAlignment.Center : HorizontalAlignment.Left,
+                            font: _active.Look.LabelFont, fontSize: _active.Look.LabelFontSize,
+                            colorFront: _active.Look.LabelColour, colorShadow: _active.Look.LabelShadowColour, shadowOffset: new Vector2(1, 1));
+
+                        innerLayout.Add(wrappedLabel, layoutRow++, 1);
+                    }
+
+                }
+                else
+                {
+                    var label = nonWrappedLabels[0];
+                    label.Width = maxTextWidth;
+                    innerLayout.Add(label, layoutRow++, 1);
+                    nonWrappedLabels.RemoveAt(0);
+                }
             }
         }
 
@@ -172,52 +232,17 @@ public class CivDialog : DynamicSizingDialog
             .ToDictionary(k => k.Name, v => v.Value);
     }
 
-    private List<LabelControl> GetTextLabels(IControlLayout controller, IList<string>? texts, IList<TextStyles>? styles, IList<string> replaceStrings, IList<int> replaceNumbers)
-    {
-        // Group left-aligned texts
-        int j = 0;
-        while (j < texts.Count - 1)
-        {
-            j++;
-            if (styles[j - 1] == TextStyles.Left && styles[j] == TextStyles.Left)
-            {
-                texts[j] = $"{texts[j - 1]} {texts[j]}";
-                texts.RemoveAt(j - 1);
-                styles.RemoveAt(j - 1);
-                j = 0;
-            }
-        }
-
-        // Replace %STRING, %NUMBER
-        texts = texts.Select(t => DialogUtils.ReplacePlaceholders(t, replaceStrings, replaceNumbers)).ToList();
-        texts = texts.Select(t => t.Replace("_", " ")).ToList();
-
-        // Make labels
-        var labels = new List<LabelControl>();
-        for (int i = 0; i < texts.Count; i++)
-        {
-            labels.Add(new LabelControl(controller,
-                        string.IsNullOrEmpty(texts[i]) && styles[i] == TextStyles.LeftOwnLine ? " " : texts[i],    // Add space if ^ is the only character 
-                        false,
-                        horizontalAlignment: styles[i] == TextStyles.Centered ? HorizontalAlignment.Center : HorizontalAlignment.Left,
-                        wrapText: styles[i] == TextStyles.Left,
-                        font: _active.Look.LabelFont, fontSize: _active.Look.LabelFontSize, colorFront: _active.Look.LabelColour, colorShadow: _active.Look.LabelShadowColour, shadowOffset: new Vector2(1, 1)));
-        }
-
-        return labels;
-    }
-
     private int GetInnerPanelWidthFromText(IList<LabelControl> labels, int popupboxWidth)
     {
         var centredTextMaxWidth = 0.0;
-        if (labels.Where(t => t.HorizontalAlignment == HorizontalAlignment.Center || (t.HorizontalAlignment == HorizontalAlignment.Left && !t.WrapText)).Any())
-            centredTextMaxWidth = (from label in labels
-                                   where label.HorizontalAlignment == HorizontalAlignment.Center || (label.HorizontalAlignment == HorizontalAlignment.Left && !label.WrapText)
+        var _labels = labels.Where(l => l != null).ToList();
+        if (_labels.Count != 0)
+            centredTextMaxWidth = (from label in _labels
                                    orderby label.TextSize.X descending
                                    select label).ToList().FirstOrDefault().TextSize.X;
 
         if (popupboxWidth != 0)
-            return (int)Math.Ceiling(Math.Max(centredTextMaxWidth, popupboxWidth));
+            return (int)Math.Ceiling(Math.Max(centredTextMaxWidth, 1.5 * popupboxWidth));
         else
             return (int)Math.Ceiling(Math.Max(centredTextMaxWidth, _active.DefaultDialogWidth));    // 660=440*1.5
     }

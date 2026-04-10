@@ -13,7 +13,7 @@ public class HeaderLabel : LabelControl
     public HeaderLabel(IControlLayout controller, InterfaceStyle look, string title, int fontSize = 0) : 
         base(controller, title, eventTransparent: false, horizontalAlignment: HorizontalAlignment.Center,
         verticalAlignment: VerticalAlignment.Center, font: look.HeaderLabelFont, fontSize: fontSize, 
-        spacing: 0.0f, colorFront: look.HeaderLabelColour,  colorShadow: Color.Black, 
+        colorFront: look.HeaderLabelColour, colorShadow: Color.Black, 
         shadowOffset: look.HeaderLabelShadow ? new Vector2(1, 1) : new Vector2(0, 0))
     {
     }

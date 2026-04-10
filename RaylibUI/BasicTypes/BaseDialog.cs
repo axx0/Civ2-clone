@@ -48,7 +48,10 @@ public abstract class BaseDialog : BaseLayoutController
 
     public override void Draw(bool pulse)
     {
-        Graphics.DrawTexture(BackgroundImage.Value,(int)Location.X, (int)Location.Y, Color.White);
+        if (BackgroundImage != null)
+        {
+            Graphics.DrawTexture(BackgroundImage.Value, (int)Location.X, (int)Location.Y, Color.White);
+        }
         foreach (var control in Controls)
         {
             control.Draw(pulse);

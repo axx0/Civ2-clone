@@ -27,6 +27,10 @@ public class Listbox : BaseControl
         set
         {
             _def = value;
+            if (_def.Type != null)
+            {
+                _def.Looks = _active.GetListboxLooks(_def.Type);
+            }
             Update();
         }
     }

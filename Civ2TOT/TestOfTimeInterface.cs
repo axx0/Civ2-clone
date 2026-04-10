@@ -573,6 +573,9 @@ public class TestOfTimeInterface(IMain main) : Civ2Interface(main)
 
     public override Dictionary<string, IImageSource[]> PicSources { get; } = new();
 
+    public override List<CityViewTiles> GetCityViewTiles() => [];
+    public override List<BinaryStorage> GetCityViewAltTiles() => [];
+
     public override ListboxLooks GetListboxLooks(ListboxType? type)
     {
         return type switch

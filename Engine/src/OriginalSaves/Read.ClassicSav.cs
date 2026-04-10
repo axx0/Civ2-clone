@@ -361,6 +361,11 @@ public class Read
             for (int civ2Id = 0; civ2Id < 8; civ2Id++)
                 lastContact[civ2Id] = BitConverter.ToUInt16(bytes, offsetT + sizeT * civId + offsetExtra + 2 * civ2Id);
 
+            // Throne room
+            var throneRoom = new byte[9];
+            for (int i = 0; i < 9; i++)
+                throneRoom[i] = bytes[offsetT + sizeT * civId + offsetExtra + 17 + i];
+
             // Spaceships
             var hasSpaceship = GetBit(bytes[offsetT + sizeT * civId + offsetExtra + 30], 0);
             var spaceshipEstimatedArrival = BitConverter.ToUInt16(bytes, offsetT + sizeT * civId + offsetExtra + 32);
@@ -408,7 +413,25 @@ public class Read
                 TaxRate = taxRate * 10,
                 Government = governmentId,
                 AllowedAdvanceGroups = tribe.AdvanceGroups ?? [AdvanceGroupAccess.CanResearch],
-                PowerRating = new List<int> (new int[turnNumber / 2])
+                PowerRating = new List<int> (new int[turnNumber / 2]),
+                ThroneRoom = new()
+                {
+                    WallBack = throneRoom[0],
+                    Floor = throneRoom[1],
+                    Rug = throneRoom[2],
+                    WallFront = throneRoom[3],
+                    ThroneDecor = throneRoom[4],
+                    ColumnsBack = throneRoom[5],
+                    Throne = throneRoom[6],
+                    ColumnsFront = throneRoom[7],
+                    DecorRugs = GetBit(throneRoom[8], 0),
+                    DecorPaintings = GetBit(throneRoom[8], 1),
+                    DecorBushes = GetBit(throneRoom[8], 2),
+                    DecorThroneBushes = GetBit(throneRoom[8], 3),
+                    DecorPots = GetBit(throneRoom[8], 4),
+                    DecorTreasures = GetBit(throneRoom[8], 5),
+                    DecorStatues = GetBit(throneRoom[8], 6)
+                }
             });
         }
 
@@ -678,6 +701,7 @@ public class Read
 
         var unitHomeCity = new byte[numberOfUnits];
         int totOffset;
+        int selectedUnitType = 0;
         for (int i = 0; i < numberOfUnits; i++)
         {
             totOffset = 0;
@@ -783,7 +807,10 @@ public class Read
             objects.Civilizations[civId].Units.Add(unit);
 
             if (i == selectedUnitIndex)
+            {
                 objects.ActiveUnit = unit;
+                selectedUnitType = type;
+            }
         }
         #endregion
         #region Cities
@@ -1129,7 +1156,7 @@ public class Read
             scenarioName = String.Concat(chars);
 
             techParadigm = BitConverter.ToUInt16(bytes, ofsetS + 82);
-            turnYearIncrement = BitConverter.ToUInt16(bytes, ofsetS + 84);
+            turnYearIncrement = BitConverter.ToInt16(bytes, ofsetS + 84);
             startingYear = BitConverter.ToUInt16(bytes, ofsetS + 86);
             maxTurns = BitConverter.ToUInt16(bytes, ofsetS + 88);
             objectiveProtagonist = bytes[ofsetS + 90];
@@ -1278,7 +1305,7 @@ public class Read
         objects.Scenario = new Scenario
         {
             Events = events,
-            Flags = flags == null ? null : flags,
+            Flags = flags ?? null,
             TotalWar = totalWar,
             ObjectiveVictory = objectiveVictory,
             CountWondersAsObjectives = countWondersAsObjectives,
@@ -1295,7 +1322,8 @@ public class Read
             NoObjectivesDecisiveVictory = noObjectivesDecisiveVictory,
             NoObjectivesMarginalVictory = noObjectivesMarginalVictory,
             NoObjectivesMarginalDefeat = noObjectivesMarginalDefeat,
-            NoObjectivesDecisiveDefeat = noObjectivesDecisiveDefeat
+            NoObjectivesDecisiveDefeat = noObjectivesDecisiveDefeat,
+            ActiveUnitType = selectedUnitType
         };
 
         // If there are no events in .sav read them from EVENTS.TXT (if it exists)

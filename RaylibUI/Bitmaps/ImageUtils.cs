@@ -39,43 +39,43 @@ public static class ImageUtils
         }
     }
 
-    /// <summary>
-    /// Draw tiles within a rectangle (chose tiles randomly)
-    /// </summary>
-    /// <param name="tiles">Wallpaper tile images</param>
-    /// <param name="dest">Destination image</param>
-    /// <param name="rect">Rectangle within the image where tiles are to be drawn</param>
-    public static void DrawTiledRectangle(Image[] tiles, ref Image dest, Rectangle rect)
-    {
-        var rnd = new Random();
-        var len = tiles.Length;
+    ///// <summary>
+    ///// Draw tiles within a rectangle (chose tiles randomly)
+    ///// </summary>
+    ///// <param name="tiles">Wallpaper tile images</param>
+    ///// <param name="dest">Destination image</param>
+    ///// <param name="rect">Rectangle within the image where tiles are to be drawn</param>
+    //public static void DrawTiledRectangle(Image[] tiles, ref Image dest, Rectangle rect)
+    //{
+    //    var rnd = new Random();
+    //    var len = tiles.Length;
 
-        var totalColumns = Math.Ceiling(rect.Width / tiles[0].Width);
-        var totalRows = Math.Ceiling(rect.Height / tiles[0].Height);
+    //    var totalColumns = Math.Ceiling(rect.Width / tiles[0].Width);
+    //    var totalRows = Math.Ceiling(rect.Height / tiles[0].Height);
 
-        for (int row = 0; row < totalRows; row++)
-        {
-            for (int col = 0; col < totalColumns; col++)
-            {
-                var srcRec = new Rectangle { Height = tiles[0].Height, Width = tiles[0].Width };
-                var destRec = new Rectangle(rect.X + col * tiles[0].Width, rect.Y + row * tiles[0].Height, tiles[0].Width, tiles[0].Height);
+    //    for (int row = 0; row < totalRows; row++)
+    //    {
+    //        for (int col = 0; col < totalColumns; col++)
+    //        {
+    //            var srcRec = new Rectangle { Height = tiles[0].Height, Width = tiles[0].Width };
+    //            var destRec = new Rectangle(rect.X + col * tiles[0].Width, rect.Y + row * tiles[0].Height, tiles[0].Width, tiles[0].Height);
 
-                if (col == totalColumns - 1)
-                {
-                    srcRec.Width = rect.Width - tiles[0].Width * col;
-                    destRec.Width = srcRec.Width;
-                }
+    //            if (col == totalColumns - 1)
+    //            {
+    //                srcRec.Width = rect.Width - tiles[0].Width * col;
+    //                destRec.Width = srcRec.Width;
+    //            }
 
-                if (row == totalRows - 1)
-                {
-                    srcRec.Height = rect.Height - tiles[0].Height * row;
-                    destRec.Height = srcRec.Height;
-                }
+    //            if (row == totalRows - 1)
+    //            {
+    //                srcRec.Height = rect.Height - tiles[0].Height * row;
+    //                destRec.Height = srcRec.Height;
+    //            }
 
-                dest.Draw(tiles[rnd.Next(len)], srcRec, destRec, Color.White);
-            }
-        }
-    }
+    //            dest.Draw(tiles[rnd.Next(len)], srcRec, destRec, Color.White);
+    //        }
+    //    }
+    //}
 
 
     public static void DrawTiledImage(Wallpaper wp, ref Image destination, int height, int width, Padding padding, bool statusPanel = false, bool ToTStatusPanelLayout = false)
@@ -86,23 +86,23 @@ public static class ImageUtils
 
         if (!statusPanel)
         {
-            DrawTiledRectangle(tiles, ref destination,
+            DrawUtils.TileFill(tiles, ref destination,
                 new Rectangle(padding.Left, padding.Top, width - padding.Left - padding.Right, height - padding.Top - padding.Bottom));
         }
         else
         {
             if (ToTStatusPanelLayout)
             {
-                DrawTiledRectangle(tiles, ref destination,
+                DrawUtils.TileFill(tiles, ref destination,
                     new Rectangle(padding.Left, padding.Top, 0.25f * width - padding.Left - padding.Right, height - padding.Top - padding.Bottom));
-                DrawTiledRectangle(tiles, ref destination,
+                DrawUtils.TileFill(tiles, ref destination,
                     new Rectangle(padding.Left + (0.25f * width - padding.Left - padding.Right) + 8, padding.Top, width - 0.25f * width - 8, height - padding.Top - padding.Bottom));
             }
             else
             {
-                DrawTiledRectangle(tiles, ref destination,
+                DrawUtils.TileFill(tiles, ref destination,
                     new Rectangle(padding.Left, padding.Top, width - padding.Left - padding.Right, 60));
-                DrawTiledRectangle(tiles, ref destination,
+                DrawUtils.TileFill(tiles, ref destination,
                     new Rectangle(padding.Left, padding.Top + 68, width - padding.Left - padding.Right, height - padding.Top - padding.Bottom - 68));
             }
         }
@@ -154,112 +154,6 @@ public static class ImageUtils
         }
         image.Draw(btn[^1], new Rectangle(0, 0, btn[0].Width, btn[0].Height), new Rectangle(width - btn[0].Width, 0, btn[0].Width, btn[0].Height), Color.White);
         return Texture2D.LoadFromImage(image);
-    }
-
-    public static void PaintRadioButton(int x, int y, bool isSelected)
-    {
-        Graphics.DrawCircle(x + 8, y + 8, 8.0f, new Color(128, 128, 128, 255));
-        Graphics.DrawCircleLines(x + 8 + 1, y + 8 + 1, 8.0f, Color.Black);
-        Graphics.DrawRectangle(x + 1, y + 4, 2, 3, Color.Black);
-        Graphics.DrawRectangle(x + 3, y + 2, 2, 2, Color.Black);
-        Graphics.DrawRectangle(x + 6, y + 1, 1, 1, Color.Black);
-        Graphics.DrawRectangle(x + 11, y + 15, 3, 2, Color.Black);
-        Graphics.DrawRectangle(x + 14, y + 13, 2, 2, Color.Black);
-        Graphics.DrawRectangle(x + 16, y + 11, 1, 1, Color.Black);
-        Graphics.DrawCircleLines(x + 8, y + 8, 8.0f, Color.White);
-
-        if (!isSelected)
-        {
-            Graphics.DrawRectangle(x + 6, y + 4, 5, 9, new Color(192, 192, 192, 255));
-            Graphics.DrawRectangle(x + 4, y + 6, 9, 5, new Color(192, 192, 192, 255));
-            Graphics.DrawRectangle(x + 5, y + 11, 1, 1, Color.White);
-            Graphics.DrawRectangle(x + 4, y + 6, 1, 5, Color.White);
-            Graphics.DrawRectangle(x + 5, y + 5, 1, 2, Color.White);
-            Graphics.DrawRectangle(x + 6, y + 4, 1, 2, Color.White);
-            Graphics.DrawRectangle(x + 7, y + 4, 4, 1, Color.White);
-            Graphics.DrawRectangle(x + 11, y + 5, 1, 1, Color.White);
-            Graphics.DrawRectangle(x + 11, y + 11, 1, 1, new Color(192, 192, 192, 255));
-            Graphics.DrawRectangle(x + 7, y + 13, 4, 1, Color.White);
-            Graphics.DrawRectangle(x + 11, y + 12, 1, 1, Color.White);
-            Graphics.DrawRectangle(x + 12, y + 11, 1, 1, Color.White);
-            Graphics.DrawRectangle(x + 13, y + 7, 1, 4, Color.White);
-        }
-        else
-        {
-            Graphics.DrawRectangle(x + 7, y + 4, 4, 10, new Color(192, 192, 192, 255));
-            Graphics.DrawRectangle(x + 4, y + 7, 10, 4, new Color(192, 192, 192, 255));
-            Graphics.DrawRectangle(x + 6, y + 5, 6, 8, new Color(192, 192, 192, 255));
-            Graphics.DrawRectangle(x + 5, y + 6, 8, 6, new Color(192, 192, 192, 255));
-            Graphics.DrawRectangle(x + 7, y + 6, 4, 6, Color.Black);
-            Graphics.DrawRectangle(x + 6, y + 7, 6, 4, Color.Black);
-        }
-    }
-
-    public static void PaintCheckbox(int x, int y, bool isChecked)
-    {
-        Graphics.DrawRectangle(x + 3, y + 2, 15, 17, Color.White);
-        Graphics.DrawRectangle(x + 2, y + 3, 17, 15, Color.White);
-        Graphics.DrawRectangle(x + 4, y + 3, 13, 15, new Color(128, 128, 128, 255));
-        Graphics.DrawRectangle(x + 3, y + 4, 15, 13, new Color(128, 128, 128, 255));
-        Graphics.DrawLine(x + 4, y + 3, x + 16, y + 3, Color.Black);
-        Graphics.DrawLine(x + 3, y + 4, x + 3, y + 16, Color.Black);
-        Graphics.DrawLine(x + 3, y + 4, x + 4, y + 4, Color.Black);
-        Graphics.DrawLine(x + 4, y + 19, x + 18, y + 19, Color.Black);
-        Graphics.DrawLine(x + 18, y + 18, x + 19, y + 18, Color.Black);
-        Graphics.DrawLine(x + 19, y + 4, x + 19, y + 17, Color.Black);
-
-        if (isChecked)
-        {
-            Graphics.DrawLine(x + 21, y + 3, x + 25, y + 3, Color.Black);
-            Graphics.DrawLine(x + 20, y + 4, x + 23, y + 4, Color.Black);
-            Graphics.DrawLine(x + 19, y + 5, x + 21, y + 5, Color.Black);
-            Graphics.DrawLine(x + 18, y + 6, x + 20, y + 6, Color.Black);
-            Graphics.DrawLine(x + 17, y + 7, x + 19, y + 7, Color.Black);
-            Graphics.DrawLine(x + 16, y + 8, x + 18, y + 8, Color.Black);
-            Graphics.DrawLine(x + 15, y + 9, x + 17, y + 9, Color.Black);
-            Graphics.DrawLine(x + 5, y + 10, x + 6, y + 10, Color.Black);
-            Graphics.DrawLine(x + 14, y + 10, x + 16, y + 10, Color.Black);
-            Graphics.DrawLine(x + 6, y + 11, x + 7, y + 11, Color.Black);
-            Graphics.DrawLine(x + 14, y + 11, x + 16, y + 11, Color.Black);
-            Graphics.DrawLine(x + 7, y + 12, x + 8, y + 12, Color.Black);
-            Graphics.DrawLine(x + 13, y + 12, x + 15, y + 12, Color.Black);
-            Graphics.DrawLine(x + 8, y + 13, x + 14, y + 13, Color.Black);
-            Graphics.DrawLine(x + 12, y + 13, x + 15, y + 13, Color.Black);
-            Graphics.DrawLine(x + 12, y + 14, x + 14, y + 14, Color.Black);
-            Graphics.DrawLine(x + 9, y + 15, x + 12, y + 15, Color.Black);
-            Graphics.DrawLine(x + 10, y + 16, x + 12, y + 16, Color.Black);
-            Graphics.DrawLine(x + 11, y + 16, x + 11, y + 17, Color.Black);
-            Graphics.DrawLine(x + 20, y + 1, x + 22, y + 1, Color.White);
-            Graphics.DrawLine(x + 19, y + 2, x + 20, y + 2, Color.White);
-            Graphics.DrawLine(x + 20, y + 2, x + 22, y + 2, new Color(192, 192, 192, 255));
-            Graphics.DrawLine(x + 18, y + 3, x + 19, y + 3, Color.White);
-            Graphics.DrawLine(x + 19, y + 3, x + 20, y + 3, new Color(192, 192, 192, 255));
-            Graphics.DrawLine(x + 17, y + 4, x + 18, y + 4, Color.White);
-            Graphics.DrawLine(x + 18, y + 4, x + 19, y + 4, new Color(192, 192, 192, 255));
-            Graphics.DrawLine(x + 16, y + 5, x + 17, y + 5, Color.White);
-            Graphics.DrawLine(x + 17, y + 5, x + 18, y + 5, new Color(192, 192, 192, 255));
-            Graphics.DrawLine(x + 15, y + 6, x + 16, y + 6, Color.White);
-            Graphics.DrawLine(x + 16, y + 6, x + 17, y + 6, new Color(192, 192, 192, 255));
-            Graphics.DrawLine(x + 14, y + 7, x + 15, y + 7, Color.White);
-            Graphics.DrawLine(x + 15, y + 7, x + 16, y + 7, new Color(192, 192, 192, 255));
-            Graphics.DrawLine(x + 4, y + 8, x + 5, y + 8, Color.White);
-            Graphics.DrawLine(x + 5, y + 8, x + 5, y + 9, new Color(192, 192, 192, 255));
-            Graphics.DrawLine(x + 13, y + 8, x + 14, y + 8, Color.White);
-            Graphics.DrawLine(x + 14, y + 8, x + 15, y + 8, new Color(192, 192, 192, 255));
-            Graphics.DrawLine(x + 6, y + 9, x + 6, y + 10, new Color(192, 192, 192, 255));
-            Graphics.DrawLine(x + 13, y + 9, x + 14, y + 9, new Color(192, 192, 192, 255));
-            Graphics.DrawLine(x + 7, y + 10, x + 7, y + 11, new Color(192, 192, 192, 255));
-            Graphics.DrawLine(x + 12, y + 10, x + 13, y + 10, Color.White);
-            Graphics.DrawLine(x + 13, y + 10, x + 13, y + 11, new Color(192, 192, 192, 255));
-            Graphics.DrawLine(x + 8, y + 11, x + 8, y + 12, new Color(192, 192, 192, 255));
-            Graphics.DrawLine(x + 11, y + 11, x + 12, y + 11, Color.White);
-            Graphics.DrawLine(x + 12, y + 11, x + 13, y + 11, new Color(192, 192, 192, 255));
-            Graphics.DrawLine(x + 9, y + 12, x + 9, y + 13, new Color(192, 192, 192, 255));
-            Graphics.DrawLine(x + 11, y + 12, x + 12, y + 12, new Color(192, 192, 192, 255));
-            Graphics.DrawLine(x + 9, y + 13, x + 11, y + 13, new Color(192, 192, 192, 255));
-            Graphics.DrawLine(x + 9, y + 14, x + 11, y + 14, new Color(192, 192, 192, 255));
-            Graphics.DrawLine(x + 10, y + 14, x + 10, y + 15, new Color(192, 192, 192, 255));
-        }
     }
 
     public static Wallpaper? Wallpaper { get; set; }

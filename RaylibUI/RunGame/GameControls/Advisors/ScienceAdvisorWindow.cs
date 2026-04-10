@@ -1,6 +1,7 @@
 ﻿using Civ2engine;
 using Model;
 using Model.Controls;
+using Model.Core.Advances;
 using Raylib_CSharp.Colors;
 using Raylib_CSharp.Interact;
 using Raylib_CSharp.Rendering;
@@ -90,7 +91,12 @@ public class ScienceAdvisorWindow : BaseDialog
             Height = 240,
             Location = new(LayoutPadding.Left + 2, LayoutPadding.Top + 130)
         };
-        listbox.ItemSelected += (_, i) => { };
+        listbox.ItemSelected += (_, i) => 
+        {
+            // fix this because it can chose wrong advance
+            gameScreen.ShowDialog(new CivilopediaWindow(gameScreen, 
+                new(CivilopediaInfoType.Advances, CivilopediaWindowType.Info, i.Index)));
+        };
         Controls.Add(listbox);
 
         var btnWidth = (_width - PaddingSide - 6) / 2;

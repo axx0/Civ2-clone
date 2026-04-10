@@ -44,12 +44,17 @@ public class ScenCustomIntro : ICivDialogHandler
         var config = Initialization.ConfigObject;
         var date = new Date(config.StartingYear, config.TurnYearIncrement, config.DifficultyLevel);
 
-        Dialog.ReplaceNumbers = new List<int> { config.TechParadigm };
-        Dialog.ReplaceStrings = new List<string>
-        {
+        Dialog.ReplaceNumbers = [config.TechParadigm];
+        Dialog.ReplaceStrings =
+        [
             config.ScenarioName, date.GameYearString(1),
             date.GameYearString(config.MaxTurns),
-        };
+        ];
+
+        if (config.ObjectivesProtagonist == config.ScenPlayerCivId)
+        {
+            Dialog.Image = new(activeInterface.PicSources["unit"][config.ActiveUnitType]);
+        }
 
         return new MenuAction(Dialog);
     }
