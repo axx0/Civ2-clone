@@ -10,7 +10,7 @@ public class AiInterfaceTests
     public void AiInterface_BasicProperties()
     {
         var (game, aiPlayer, civ) = ApiTestHarness.CreateGameAndAi();
-        var api = aiPlayer.AI;
+        var api = aiPlayer.Ai;
 
         Assert.Equal(civ, api.civ);
         Assert.Equal(aiPlayer.DifficultyLevel, api.difficulty);
@@ -20,7 +20,7 @@ public class AiInterfaceTests
     public void AiInterface_GetNearestCity()
     {
         var (game, aiPlayer, civ) = ApiTestHarness.CreateGameAndAi();
-        var api = aiPlayer.AI;
+        var api = aiPlayer.Ai;
         var tile = ApiTestHarness.FindEmptyTile(game);
         var city = ApiTestHarness.CreateCity(game, civ, tile, "Rome");
 
@@ -32,7 +32,7 @@ public class AiInterfaceTests
     public void AiInterface_RandomTile()
     {
         var (game, aiPlayer, _) = ApiTestHarness.CreateGameAndAi();
-        var api = aiPlayer.AI;
+        var api = aiPlayer.Ai;
 
         var tile = api.RandomTile(new LuaTable { { "global", true } });
         Assert.NotNull(tile);
@@ -43,18 +43,18 @@ public class AiInterfaceTests
     public void AiInterface_RegisterAndCallEvent()
     {
         var (game, aiPlayer, _) = ApiTestHarness.CreateGameAndAi();
-        var api = aiPlayer.AI;
+        var api = aiPlayer.Ai;
 
         bool called = false;
         api.RegisterEvent("test_event", (ai, args) =>
         {
             called = (bool)args["val"];
-            return "success";
+            return new LuaResult("success");
         });
 
         var result = api.Call("test_event", new LuaTable { { "val", true } });
 
         Assert.True(called);
-        Assert.Equal("success", result);
+        Assert.Equal("success", result?[0]);
     }
 }

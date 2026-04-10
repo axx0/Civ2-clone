@@ -55,5 +55,56 @@ namespace Civ2engine
         public AdvanceGroupAccess[] AllowedAdvanceGroups { get; set; }
         public Dictionary<Effects, int> GlobalEffects { get; } = new();
         public ThroneRoom ThroneRoom { get; set; } = new();
+        public int Betrayals { get; set; }
+        public int FutureTechCount { get; set; }
+        public int Patience { get; set; }
+
+        public int[] Attitude { get; set; } = [];
+        public int[] Reputation { get; set; } = [];
+        public Relation?[] Relations { get; set; } = [];
+    }
+
+    public class Relation
+    {
+        public int Summary
+        {
+            get
+            {
+                var status = 0;
+                if (Contact) status |= 1;
+                if (CeaseFire) status |= 2;
+                if (Peace) status |= 4;
+                if (Alliance) status |= 8;
+                if (Vendetta) status |= 16;
+                if (Embassy) status |= 32;
+                if (War) status |= 64;
+                return status;
+            }
+        }
+
+        public void UpdateFrom(int value)
+        {
+            Contact = (value & 1) != 0;
+            CeaseFire = (value & 2) != 0;
+            Peace = (value & 4) != 0;
+            Alliance = (value & 8) != 0;
+            Vendetta = (value & 16) != 0;
+            Embassy = (value & 32) != 0;
+            War = (value & 64) != 0;
+        }
+
+        public bool War { get; set; }
+
+        public bool Embassy { get; set; }
+
+        public bool Vendetta { get; set; }
+
+        public bool Alliance { get; set; }
+
+        public bool Peace { get; set; }
+
+        public bool CeaseFire { get; set; }
+
+        public bool Contact { get; set; }
     }
 }

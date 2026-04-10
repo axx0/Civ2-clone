@@ -2,6 +2,7 @@ using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.MapObjects;
 using Model.Core;
+using Model.Core.Player;
 
 namespace Core.Tests.Mocks;
 
@@ -25,7 +26,11 @@ internal class MockGame : IGame
 
     public void ConnectPlayer(IPlayer player) => throw new NotImplementedException();
     public string Order2String(int unitOrder) => throw new NotImplementedException();
-    public void ChooseNextUnit() => throw new NotImplementedException();
+    public bool ChooseNextUnitCalled { get; private set; }
+    public void ChooseNextUnit()
+    {
+        ChooseNextUnitCalled = true;
+    }
     public bool ProcessEndOfTurn() => throw new NotImplementedException();
     public void ChoseNextCiv() => throw new NotImplementedException();
 

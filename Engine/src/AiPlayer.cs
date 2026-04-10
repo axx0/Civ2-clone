@@ -10,38 +10,30 @@ using Civ2engine.Scripting.ScriptObjects;
 using Civ2engine.Scripting.UnitActions;
 using Civ2engine.UnitActions;
 using Civ2engine.Units;
-using Model.Core;
 using Model.Core.Advances;
 using Model.Core.GoodyHuts.Outcomes;
+using Model.Core.Player;
 using Model.Core.Units;
 using Neo.IronLua;
 
 namespace Civ2engine
 {
-    public class AiPlayer : IPlayer
+    public class AiPlayer(int difficultyLevel, Civilization civilization, Tile tile0, Game game, AiInterface ai)
+        : IPlayer
     {
-        private readonly Game _game;
-        public AiInterface AI;
-        public Civilization Civilization { get; set; }
+        public AiInterface Ai { get; } = ai;
+        public Civilization Civilization { get; } = civilization;
 
-        public int DifficultyLevel { get; }
-
-        public AiPlayer(int difficultyLevel, Civilization civilization, Tile tile0, Game game)
-        {
-            _game = game;
-            DifficultyLevel = difficultyLevel;
-            Civilization = civilization;
-            ActiveTile = civilization.Units.FirstOrDefault()?.CurrentLocation ??
-                         civilization.Cities.FirstOrDefault()?.Location ?? tile0; 
-            AIScript = civilization.PlayerType == PlayerType.Barbarians ? "barbarian.ai" : "default.ai";
-        }
+        public int DifficultyLevel { get; } = difficultyLevel;
 
         public void WeLoveTheKingCanceled(City city)
         {
         }
 
-        public Tile ActiveTile { get; set; }
-        public Unit? ActiveUnit { get; set; }
+        public Tile ActiveTile { get; set; } = civilization.Units.FirstOrDefault()?.CurrentLocation ??
+                                               civilization.Cities.FirstOrDefault()?.Location ?? tile0;
+
+        public Unit? ActiveUnit { get; private set; }
 
         public List<Unit> WaitingList { get; } = [];
 
@@ -61,16 +53,27 @@ namespace Civ2engine
         {
         }
 
-        public void SelectNewAdvance(IGame game, List<Advance> researchPossibilities)
+        public void SelectNewAdvance(List<Advance> researchPossibilities)
         {
-            var res = AI.Call(AiEvent.ResearchComplete,
-                new LuaTable { { "researchPossibilities", researchPossibilities } });
-            Civilization.ReseachingAdvance = res switch
+            var res = Ai.Call(AiEvent.ResearchComplete,
+                new LuaTable
+                {
+                    {
+                        "researchPossibilities",
+                        LuaTable.pack(researchPossibilities.Select(object (a) => new Tech(game.Rules.Advances, a.Index))
+                            .ToArray())
+                    }
+                });
+            if (res is not null && res.Count > 0)
             {
-                Advance advance => advance.Index,
-                int index and >= 0 when index < researchPossibilities.Count => researchPossibilities[index].Index,
-                _ => game.Random.ChooseFrom(researchPossibilities).Index
-            };
+                Civilization.ReseachingAdvance = res.Values[0] switch
+                {
+                    Tech tech => tech.id,
+                    Advance advance => advance.Index,
+                    int index and >= 0 when index < researchPossibilities.Count => researchPossibilities[index].Index,
+                    _ => game.Random.ChooseFrom(researchPossibilities).Index
+                };
+            }
         }
 
         public void CantProduce(City city, IProductionOrder? newItem)
@@ -81,11 +84,11 @@ namespace Civ2engine
         public void CityProductionComplete(City city)
         {
             var productionOrders = ProductionPossibilities.GetAllowedProductionOrders(city);
-            AI.Call(AiEvent.CityProductionComplete, new LuaTable { { "city", city }, { "productionOrders", productionOrders } });
+            Ai.Call(AiEvent.CityProductionComplete, new LuaTable { { "city", city }, { "productionOrders", productionOrders } });
         }
 
         public IInterfaceCommands Ui { get; } = null;
-        public string AIScript { get; set; }
+        public string AIScript { get; set; } = civilization.PlayerType == PlayerType.Barbarians ? "barbarian.ai" : "default.ai";
 
         public void NotifyImprovementEnabled(TerrainImprovement improvement, int level)
         {
@@ -97,10 +100,10 @@ namespace Civ2engine
             //Does the AI care?
         }
 
-        public void WaitingAtEndOfTurn(IGame game)
+        public void WaitingAtEndOfTurn()
         {
             //Call out to AI script to finalize turn
-            AI.Call(AiEvent.TurnEnd, new LuaTable());
+            Ai.Call(AiEvent.TurnEnd, new LuaTable());
             
             //End turn
             game.ChoseNextCiv();
@@ -124,7 +127,7 @@ namespace Civ2engine
         public void TurnStart(int turnNumber)
         {
             WaitingList.Clear();
-            AI.Call(AiEvent.TurnStart, new LuaTable { { "Turn", turnNumber } });
+            Ai.Call(AiEvent.TurnStart, new LuaTable { { "Turn", turnNumber } });
         }
 
         public void SetUnitActive(Unit? unit, bool move)
@@ -138,21 +141,21 @@ namespace Civ2engine
             UnitAction? action = null;
             while (unit.MovePoints > 0)
             {
-                var result = AI.Call(AiEvent.UnitOrdersNeeded, new LuaTable { { "Unit", new UnitApi(unit, _game) } });
+                var result = Ai.Call(AiEvent.UnitOrdersNeeded, new LuaTable { { "Unit", new UnitApi(unit, game) } });
                 if (result is LuaResult { Count: > 0 } luaResult)
                 {
                     action = luaResult[0] switch
                     {
                         UnitAction luaAction => luaAction,
                         TileApi tile => TileToAction(tile.BaseTile, unit),
-                        "B" or "b" => new BuildCityAction(unit, _game),
-                        "F" or "f" => new FortifyAction(unit, _game),
-                        "W" or "w" => new WaitAction(unit, _game, this),
+                        "B" or "b" => new BuildCityAction(unit, game),
+                        "F" or "f" => new FortifyAction(unit, game),
+                        "W" or "w" => new WaitAction(unit, game, this),
                         _ => action
                     };
                 }
 
-                action ??= new NothingAction(unit, _game);
+                action ??= new NothingAction(unit, game);
                 action.Execute();
             }
         }
@@ -162,15 +165,15 @@ namespace Civ2engine
             var args = new LuaTable { { "Units", units } };
             if (by != null)
             {
-                args.Add("By", new UnitApi(by, _game));
+                args.Add("By", new UnitApi(by, game));
             }
 
-            AI.Call(AiEvent.UnitsLost, args);
+            Ai.Call(AiEvent.UnitsLost, args);
         }
 
         public void UnitLost(Unit unit, Unit? killedBy)
         {
-            var units = new LuaTable { new UnitApi(unit, _game) };
+            var units = new LuaTable { new UnitApi(unit, game) };
             CallUnitsLost(units, killedBy);
         }
 
@@ -179,14 +182,14 @@ namespace Civ2engine
             var units = new LuaTable();
             foreach (var u in deadUnits)
             {
-                units.Add(new UnitApi(u, _game));
+                units.Add(new UnitApi(u, game));
             }
             CallUnitsLost(units, killedBy);
         }
 
         public void UnitMoved(Unit unit, Tile tileTo, Tile tileFrom)
         {
-            AI.Call(AiEvent.UnitMoved, new LuaTable { { "Unit", new UnitApi(unit, _game) }, { "TileTo", new TileApi(tileTo, _game)}, { "TileFrom", new TileApi(tileFrom, _game)} });
+            Ai.Call(AiEvent.UnitMoved, new LuaTable { { "Unit", new UnitApi(unit, game) }, { "TileTo", new TileApi(tileTo, game)}, { "TileFrom", new TileApi(tileFrom, game)} });
         }
 
         public void CombatHappened(CombatEventArgs combatEventArgs)
@@ -207,19 +210,19 @@ namespace Civ2engine
         {
             if (tile == unit.CurrentLocation)
             {
-                return new NothingAction(unit, _game);
+                return new NothingAction(unit, game);
             }
 
             if (!unit.CurrentLocation.Neighbours().Contains(tile))
             {
-                return new GotoAction(unit, tile, _game);
+                return new GotoAction(unit, tile, game);
             }
             
             if (tile.UnitsHere.Count > 0 && tile.UnitsHere[0].Owner.Id != unit.Owner.Id)
             {
-                return new AttackAction(unit, tile, _game);
+                return new AttackAction(unit, tile, game);
             }
-            return new MoveAction(unit, tile, _game);
+            return new MoveAction(unit, tile, game);
         }
     }
 }

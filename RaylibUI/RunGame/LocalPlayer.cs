@@ -6,13 +6,13 @@ using Civ2engine.MapObjects;
 using Civ2engine.Production;
 using Civ2engine.Units;
 using Model.Controls;
-using Model.Core;
 using Model.Core.Advances;
 using Model.Core.GoodyHuts.Outcomes;
 using Model.Core.Units;
 using Model.Events;
 using Model.Interface;
 using System;
+using Model.Core.Player;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace RaylibUI.RunGame;
@@ -82,7 +82,7 @@ public class LocalPlayer : IPlayer
             [cityImprovement.Cost]);
     }
 
-    public void SelectNewAdvance(IGame game, List<Advance> researchPossibilities)
+    public void SelectNewAdvance(List<Advance> researchPossibilities)
     {
         var activeInterface = _gameScreen.Main.ActiveInterface;
         _gameScreen.ShowPopup("RESEARCH", (s, i, arg3, arg4) =>
@@ -141,7 +141,7 @@ public class LocalPlayer : IPlayer
         _gameScreen.ForceRedraw();
     }
 
-    public void WaitingAtEndOfTurn(IGame game)
+    public void WaitingAtEndOfTurn()
     {
         _gameScreen.ActiveMode = _gameScreen.ViewPiece;
     }

@@ -2,6 +2,7 @@ using Civ2engine;
 using Civ2engine.IO;
 using Civ2engine.MapObjects;
 using Civ2engine.SaveLoad.SavFile;
+using Civ2engine.Scripting.ScriptObjects;
 using Core.Tests.TestFiles;
 using Model.Core.Units;
 
@@ -26,7 +27,8 @@ public static class ApiTestHarness
         // Ensure the player is an AiPlayer
         if (game.Players[civ.Id] is not AiPlayer aiPlayer)
         {
-            aiPlayer = new AiPlayer(0, civ, game.Maps[0].Tile[0, 0], game);
+            var aiInterface = new AiInterface(game, civ, 0, game.Script);
+            aiPlayer = new AiPlayer(0, civ, game.Maps[0].Tile[0, 0], game, aiInterface);
             game.Players[civ.Id] = aiPlayer;
         }
 

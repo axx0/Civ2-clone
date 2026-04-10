@@ -72,17 +72,22 @@ namespace Model.Core.Units
         public int Order { get; set; }
         public bool MadeFirstMove { get; set; }
         public bool Veteran { get; set; }
+        public bool WaitOrder { get; set; }
         public Civilization Owner { get; set; }
         public int CaravanCommodity { get; set; }
         public City? HomeCity { get; set; }
         public int GoToX { get; set; }
         public int GoToY { get; set; }
+        public int GoToMapIndex { get; set; }
         public int LinkOtherUnitsOnTop { get; set; }
         public int LinkOtherUnitsUnder { get; set; }
         public int Counter { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
         public int MapIndex { get; set; }
+        public bool[] VisibilityByCiv { get; set; }
+        public int Animation { get; set; }
+        public int Orientation { get; set; }
 
         public int[] PrevXy { get; set; }   // XY position of unit before it moved
 

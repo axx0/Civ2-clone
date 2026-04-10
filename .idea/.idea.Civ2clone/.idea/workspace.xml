@@ -15,10 +15,18 @@
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
+  <component name="CMakeProjectFlavorService">
+    <option name="flavorId" value="CMakePlainProjectFlavor" />
+  </component>
+  <component name="CMakeSettings">
+    <configurations />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="38862fe7-8760-4eef-9f9f-5fdba728b888" name="Changes" comment="Barbarians working a little better">
+    <list default="true" id="38862fe7-8760-4eef-9f9f-5fdba728b888" name="Changes" comment="Added tests">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Civ2clone.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2clone.sln.DotSettings.user" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core.Tests/SaveLoad/GameLoaderTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core.Tests/SaveLoad/GameLoaderTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core.Tests/SaveLoad/LoadGameTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core.Tests/SaveLoad/LoadGameTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/IO/Labels.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/IO/Labels.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,6 +35,10 @@
   </component>
   <component name="DpaMonitoringSettings">
     <option name="firstShow" value="false" />
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="109" />
+    <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -38,7 +50,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="lua-csharp" />
+        <entry key="$PROJECT_DIR$" value="ax-master" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -56,25 +68,8 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/285675a6903d43ca89ed13e37e2bfe3c2d4d0/e7/1f5647d0/Assert.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/35679f8d5c7a44edbd723c1017c1db6850800/d4/b00e204a/LuaTable.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/1c3f7d5c03bf77051eb8a758fb3549c4e2d4cb3dc6f6d567a94a315044961e/List.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/42d5e9d0d54843a23887036cb9c33c9ce48bbc6f7c35ed3759154a95456c796/RuntimeHandles.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/435e33f714ea13f9b99b88b164c6d0b91fd8b28f78435bddc31db2cb2981e2de/ToCollection.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/4743f513c7ddc8411223a46f0ca426ed929391acebcff993721dff2f0c6b34/ThrowHelper.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/5094e71058416d72278f32a6913f67a9c664bd46c296c5cce3ee63993dde3f/Type.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/59e69cdfed13efa8a6d7821335c5f5d1dd7e4dc2d09a23eec71b142e6f9967/Dictionary.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/652a134cecabdc4e69e36fe213a0866499e1fff09f3821bfb173e6f588b0574e/AnyAll.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/7e333a9f3297ba553cccfd3b7c3f1f96125b23d09f883e4d6e66d531559a4c/Type.CoreCLR.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/8874fa6fbc50b05ba8332188d36141eb4bba81fb1f92189ba9d7a25f545/ThrowHelper.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/9ee76fb4aded5e9da6e66cc2dcb127fac08d3ec5ac84fc6db9d4ee1d2e38/Monitor.CoreCLR.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/af2458e7257b5b828a3a5f22d9533d9ed4c80a93bc0c707a319d91b5a4ba76/Contains.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/baf2eef7c7bbea3742b74ee71fe7168c3a8c2269a1ce22d51333175656840/RuntimeType.CoreCLR.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/bfff78ecaa39c818519fc918bb2d4bbdca6ad93d7170f5cf325f67ccd0b97d43/BooleanAsserts.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/d1f2e4f6ccefb370a4a4a3c83e7934fabe9dd3e179625b382fbe5368e13dc8/LambdaExpression.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/d87f2bfadfb6fc1a7b25db06f4f86aa8ad19c1ad89551d92a1e46761215c/CallSiteBinder.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/d89a846232fe82cda12166589bc1d39e48ca8819a15feac340c16b13e545c7d8/UpdateDelegates.Generated.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/db4201f9bc9b51d63752f4912cefbd3a7c01d1a49431b6f406e2eb59ad97b96/DynamicILGenerator.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/.ai/mcp/mcp.json" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/.junie/memory/language.json" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/appsettings.json" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/AiPlayer.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/Cities/CityExtensions.cs" root0="FORCE_HIGHLIGHTING" />
@@ -103,7 +98,10 @@
     <setting file="file://$PROJECT_DIR$/Engine/src/UnitActions/MovementFunctions.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/Units/Path.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Templates/Civ2dialog.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Tests/Engine.Tests/Units/MovementFunctionsTests.cs" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="false" />
   <component name="ProblemsViewState">
@@ -120,35 +118,49 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Project.RaylibUI.executor&quot;: &quot;Debug&quot;,
-    &quot;490432ee-e9fc-4580-a25d-f8a101659179.executor&quot;: &quot;Debug&quot;,
-    &quot;Lua Application.Test_test.lua.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode.C#&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Project.RaylibUI.executor": "Run",
+    "490432ee-e9fc-4580-a25d-f8a101659179.executor": "Debug",
+    "Lua Application.Test_test.lua.executor": "Run",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "cidr.known.project.marker": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "junie.onboarding.icon.badge.shown": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.sourceCode.C#",
+    "to.speed.mode.migration.done": "true",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
+  <component name="RecapSpentCounter">
+    <option name="endsOfQuotaMs" value="1771146035679" />
+    <option name="spentUsd" value="0.15281096" />
+  </component>
+  <component name="RecapUselessUpdatesCounter">
+    <option name="suspendCountdown" value="0" />
+  </component>
   <component name="RunManager" selected=".NET Project.RaylibUI">
     <configuration name="RaylibUI" type="DotNetProject" factoryName=".NET Project" temporary="true">
       <option name="EXE_PATH" value="$PROJECT_DIR$/RaylibUI/bin/Debug/net8.0/RaylibUI.exe" />
       <option name="PROGRAM_PARAMETERS" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/RaylibUI/bin/Debug/net8.0" />
       <option name="PASS_PARENT_ENVS" value="1" />
-      <option name="USE_EXTERNAL_CONSOLE" value="0" />
       <option name="ENV_FILE_PATHS" value="" />
       <option name="REDIRECT_INPUT_PATH" value="" />
-      <option name="PTY_MODE" value="Auto" />
       <option name="MIXED_MODE_DEBUG" value="0" />
       <option name="USE_MONO" value="0" />
       <option name="RUNTIME_ARGUMENTS" value="" />
@@ -185,11 +197,10 @@
     </configuration>
     <list>
       <item itemvalue=".NET Project.RaylibUI" />
-      <item itemvalue="Lua Application.Test_test.lua" />
-      <item itemvalue="Lua Application.barbarian.ai.lua" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue=".NET Project.RaylibUI" />
         <item itemvalue=".NET Project.RaylibUI" />
         <item itemvalue=".NET Project.RaylibUI" />
       </list>
@@ -225,6 +236,14 @@
       <workItem from="1762247966603" duration="14805000" />
       <workItem from="1762677235409" duration="319000" />
       <workItem from="1762766612414" duration="374000" />
+      <workItem from="1769375901881" duration="45354000" />
+      <workItem from="1770000304562" duration="5554000" />
+      <workItem from="1772494685616" duration="3353000" />
+      <workItem from="1772678426067" duration="30974000" />
+      <workItem from="1772833174830" duration="23239000" />
+      <workItem from="1775782662182" duration="17000" />
+      <workItem from="1775782687724" duration="22000" />
+      <workItem from="1775782871012" duration="7422000" />
     </task>
     <task id="LOCAL-00001" summary="Reveal map working">
       <option name="closed" value="true" />
@@ -266,7 +285,87 @@
       <option name="project" value="LOCAL" />
       <updated>1762766985125</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Add `KeyboardKeyExtensions` utility for mapping Raylib keys to `Key` model and clean up unused imports">
+      <option name="closed" value="true" />
+      <created>1769394916838</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1769394916838</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Make start locacation claculations non destructive and bias towards larger landmass. &#10;&#10;AI now settles cities again">
+      <option name="closed" value="true" />
+      <created>1769676602114</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1769676602114</updated>
+    </task>
+    <task id="LOCAL-00008" summary="AI now correctly fortifies defenders in cities">
+      <option name="closed" value="true" />
+      <created>1769803448988</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1769803448988</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Fixed a bug where TileApi.units returned raw Unit objects instead of UnitApi wrappers, causing &quot;object is nil&quot; errors in Lua scripts.&#10;&#10;Optimized the return type of TileApi.units to IEnumerable for better compatibility with Lua iterators.&#10;&#10;Created a comprehensive suite of API tests for all script objects in the Engine/src/Scripting/ScriptObjects/ directory.&#10;&#10;Fixed several bugs discovered during test implementation to ensure correct behavior and Lua compatibility.">
+      <option name="closed" value="true" />
+      <created>1772703872124</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1772703872124</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Fix test namespaces and unify tests into a single project">
+      <option name="closed" value="true" />
+      <created>1772747164623</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1772747164623</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Cleanup AI interface and remove some duplication">
+      <option name="closed" value="true" />
+      <created>1772754198225</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1772754198225</updated>
+    </task>
+    <task id="LOCAL-00012" summary="AI now selects research based on AIValue">
+      <option name="closed" value="true" />
+      <created>1772759946797</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1772759946797</updated>
+    </task>
+    <task id="LOCAL-00013" summary="AI now selects research based on AIValue modified for epoch">
+      <option name="closed" value="true" />
+      <created>1773223884622</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1773223884622</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Added tests">
+      <option name="closed" value="true" />
+      <created>1775790351704</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1775790351704</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Added tests">
+      <option name="closed" value="true" />
+      <created>1775792238526</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1775792238526</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -292,46 +391,55 @@
     <MESSAGE value="Merge axx/master into master" />
     <MESSAGE value="Barbarians working (not well but working)" />
     <MESSAGE value="Barbarians working a little better" />
-    <option name="LAST_COMMIT_MESSAGE" value="Barbarians working a little better" />
+    <MESSAGE value="Add `KeyboardKeyExtensions` utility for mapping Raylib keys to `Key` model and clean up unused imports" />
+    <MESSAGE value="Make start locacation claculations non destructive and bias towards larger landmass. &#10;&#10;AI now settles cities again" />
+    <MESSAGE value="AI now correctly fortifies defenders in cities" />
+    <MESSAGE value="Fixed a bug where TileApi.units returned raw Unit objects instead of UnitApi wrappers, causing &quot;object is nil&quot; errors in Lua scripts.&#10;&#10;Optimized the return type of TileApi.units to IEnumerable for better compatibility with Lua iterators.&#10;&#10;Created a comprehensive suite of API tests for all script objects in the Engine/src/Scripting/ScriptObjects/ directory.&#10;&#10;Fixed several bugs discovered during test implementation to ensure correct behavior and Lua compatibility." />
+    <MESSAGE value="Fix test namespaces and unify tests into a single project" />
+    <MESSAGE value="Cleanup AI interface and remove some duplication" />
+    <MESSAGE value="AI now selects research based on AIValue" />
+    <MESSAGE value="AI now selects research based on AIValue modified for epoch" />
+    <MESSAGE value="Added tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added tests" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Engine/src/Scripting/ScriptEngine.cs</url>
-          <line>85</line>
+          <line>84</line>
           <properties documentPath="C:\Users\R-105\source\repos\Civ2-clone\Engine\src\Scripting\ScriptEngine.cs" containingFunctionPresentation="Method 'RunScript'">
             <startOffsets>
-              <option value="2538" />
+              <option value="2500" />
             </startOffsets>
             <endOffsets>
-              <option value="2539" />
+              <option value="2501" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="10" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Engine/src/Scripting/CivScripts.cs</url>
-          <line>139</line>
+          <line>140</line>
           <properties documentPath="C:\Users\R-105\source\repos\Civ2-clone\Engine\src\Scripting\CivScripts.cs" containingFunctionPresentation="Method 'createUnit'">
             <startOffsets>
-              <option value="5138" />
+              <option value="5163" />
             </startOffsets>
             <endOffsets>
-              <option value="5574" />
+              <option value="5599" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="33" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Engine/src/Scripting/CivScripts.cs</url>
-          <line>152</line>
+          <line>153</line>
           <properties documentPath="C:\Users\R-105\source\repos\Civ2-clone\Engine\src\Scripting\CivScripts.cs" containingFunctionPresentation="Method 'createUnit'">
             <startOffsets>
-              <option value="5587" />
+              <option value="5612" />
             </startOffsets>
             <endOffsets>
-              <option value="5607" />
+              <option value="5632" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="34" />
@@ -339,41 +447,33 @@
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Tests/Engine.Tests/Units/MovementFunctionsTests.cs</url>
           <line>81</line>
-          <properties documentPath="$PROJECT_DIR$/Tests/Engine.Tests/Units/MovementFunctionsTests.cs" containingFunctionPresentation="Method 'ActiveUnitCannotMove_HasMovePoints_ReturnsFalse'">
-            <startOffsets>
-              <option value="2020" />
-            </startOffsets>
-            <endOffsets>
-              <option value="2061" />
-            </endOffsets>
-          </properties>
+          <properties documentPath="$PROJECT_DIR$/Tests/Engine.Tests/Units/MovementFunctionsTests.cs" containingFunctionPresentation="Method 'ActiveUnitCannotMove_HasMovePoints_ReturnsFalse'" />
           <option name="timeStamp" value="52" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Tests/Engine.Tests/Units/MovementFunctionsTests.cs</url>
           <line>291</line>
-          <properties documentPath="$PROJECT_DIR$/Tests/Engine.Tests/Units/MovementFunctionsTests.cs" containingFunctionPresentation="Method 'IsNextToEnemy_EnemyOnAdjacentTile_ReturnsTrue'">
-            <startOffsets>
-              <option value="7371" />
-            </startOffsets>
-            <endOffsets>
-              <option value="7444" />
-            </endOffsets>
-          </properties>
+          <properties documentPath="$PROJECT_DIR$/Tests/Engine.Tests/Units/MovementFunctionsTests.cs" containingFunctionPresentation="Method 'IsNextToEnemy_EnemyOnAdjacentTile_ReturnsTrue'" />
           <option name="timeStamp" value="54" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Tests/Engine.Tests/Units/MovementFunctionsTests.cs</url>
           <line>328</line>
-          <properties documentPath="$PROJECT_DIR$/Tests/Engine.Tests/Units/MovementFunctionsTests.cs" containingFunctionPresentation="Method 'GetPossibleMoves_SeaUnit_OnlyReturnsOceanTiles'">
+          <properties documentPath="$PROJECT_DIR$/Tests/Engine.Tests/Units/MovementFunctionsTests.cs" containingFunctionPresentation="Method 'GetPossibleMoves_SeaUnit_OnlyReturnsOceanTiles'" />
+          <option name="timeStamp" value="59" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/AiInterface.cs</url>
+          <line>65</line>
+          <properties documentPath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/AiInterface.cs" containingFunctionPresentation="Method 'Call'">
             <startOffsets>
-              <option value="8371" />
+              <option value="2206" />
             </startOffsets>
             <endOffsets>
-              <option value="8447" />
+              <option value="2262" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="59" />
+          <option name="timeStamp" value="85" />
         </line-breakpoint>
         <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
           <properties exception="System.OperationCanceledException" breakIfHandledByOtherCode="false" displayValue="System.OperationCanceledException" />

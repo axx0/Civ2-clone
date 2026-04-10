@@ -957,7 +957,21 @@ public class Read
             var unhappyCitizens = bytes[ofsetC + multipl * i + 83 + totOffset];
 
             var tile = objects.Maps[mapIndex].TileC2(x, y);
-            var owner = objects.Civilizations[ownerIndex]; 
+            var owner = objects.Civilizations[ownerIndex];
+
+            for (int j = 0; j < whoKnowsAboutIt.Length; j++)
+            {
+                if (whoKnowsAboutIt[j])
+                {
+                    tile.PlayerKnowledge[j].CityHere = new CityInfo
+                    {
+                        Name = name,
+                        OwnerId = owner.Id,
+                        Size = lastSizeRevealedToCivs[j]
+                    };
+                }
+            }
+            
             var city = new City
             {
                 X = x,

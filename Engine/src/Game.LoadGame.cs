@@ -7,9 +7,11 @@ using Civ2engine.IO;
 using Civ2engine.MapObjects;
 using Civ2engine.OriginalSaves;
 using Civ2engine.Scripting;
+using Civ2engine.Scripting.ScriptObjects;
 using Civ2engine.Statistics;
 using Civ2engine.Terrains;
 using Model.Core;
+using Model.Core.Player;
 
 namespace Civ2engine
 {
@@ -33,7 +35,8 @@ namespace Civ2engine
 
             CityNames = NameLoader.LoadCityNames(gamePaths);
 
-            Players = civilizations.Select(c => new AiPlayer(_difficultyLevel, c, tile0, this)).Cast<IPlayer>().ToArray();
+            Players = civilizations.Select(c => new AiPlayer(_difficultyLevel, c, tile0, this, new AiInterface( this,c, _difficultyLevel, Script))).Cast<IPlayer>()
+                .ToArray();
 
             TerrainImprovements = TerrainImprovementFunctions.GetStandardImprovements(Rules); 
             

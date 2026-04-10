@@ -1,5 +1,6 @@
 ﻿using Civ2engine.Advances;
 using Civ2engine.Production;
+using Model.Core.Player;
 
 namespace Civ2engine
 {
@@ -153,7 +154,7 @@ namespace Civ2engine
                     if (activeCiv.ReseachingAdvance < 0)
                     {
                         var researchPossibilities = AdvanceFunctions.CalculateAvailableResearch(game, activeCiv);
-                        player.SelectNewAdvance(game, researchPossibilities);
+                        player.SelectNewAdvance(researchPossibilities);
                         currentScienceCost = AdvanceFunctions.CalculateScienceCost(game, activeCiv);
                     }
                     else if (currentScienceCost <= activeCiv.Science)

@@ -131,8 +131,15 @@ public class UnitApi
     /// </summary>
     public Tribe owner
     {
-        get => new(_unit.Owner);
-        set => _unit.Owner = value.Civ;
+        get => new(_unit.Owner, _game);
+        set
+        {
+            if (value == null || value.Civ == _unit.Owner) return;
+            
+            _unit.Owner.Units.Remove(_unit);
+            _unit.Owner = value.Civ;
+            value.Civ.Units.Add(_unit);
+        }
     }
 
     /// <summary>

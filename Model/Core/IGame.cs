@@ -4,6 +4,7 @@ using Civ2engine.MapObjects;
 using Civ2engine.Units;
 using Model.Core.Units;
 using System.Collections;
+using Model.Core.Player;
 
 namespace Model.Core;
 

@@ -78,23 +78,7 @@ namespace Civ2engine
         public bool[][] CivTreatyEmbassy { get; set; }
         public bool[][] CivTreatyWar { get; set; }
         public int[][] CivAttitudes { get; set; }
-        public bool[][] CivAdvances { get; set; }
-        public short[] CivNumberMilitaryUnits { get; set; }
-        public short[] CivNumberCities { get; set; }
-        public short[] CivSumCitySizes { get; set; }
-        public byte[][] CivActiveUnitsPerType { get; set; }
-        public byte[][] CivCasualtiesPerType { get; set; }
-        public byte[][] CivUnitsInProductionPerType { get; set; }
-        public int[][] CivLastContact { get; set; }
-        public bool[] CivHasSpaceship { get; set; }
-        public short[] CivSpaceshipEstimatedArrival { get; set; }
-        public short[] CivSpaceshipLaunchYear { get; set; }
-        public short[] CivSpaceshipStructural { get; set; }
-        public short[] CivSpaceshipComponentsPropulsion { get; set; }
-        public short[] CivSpaceshipComponentsFuel { get; set; }
-        public short[] CivSpaceshipModulesHabitation { get; set; }
-        public short[] CivSpaceshipModulesLifeSupport { get; set; }
-        public short[] CivSpaceshipModulesSolarPanel { get; set; }
+
 
         // @LEADERS2 table from rules.txt (TOT only)
         public byte[][] CivsRelationsToAdvancesGroups { get;set; }

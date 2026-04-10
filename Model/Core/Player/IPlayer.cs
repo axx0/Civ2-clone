@@ -1,17 +1,12 @@
-using System;
-using System.Collections.Generic;
-using Civ2engine.Advances;
+using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.Events;
 using Civ2engine.MapObjects;
-using Civ2engine.Production;
-using Civ2engine.Units;
-using Model.Core;
 using Model.Core.Advances;
 using Model.Core.GoodyHuts.Outcomes;
 using Model.Core.Units;
 
-namespace Civ2engine
+namespace Model.Core.Player
 {
     public interface IPlayer
     {
@@ -27,7 +22,7 @@ namespace Civ2engine
         void WeLoveTheKingStarted(City city);
         void WeLoveTheKingCanceled(City city);
         void CantMaintain(City city, Improvement cityImprovement);
-        void SelectNewAdvance(IGame game, List<Advance> researchPossibilities);
+        void SelectNewAdvance(List<Advance> researchPossibilities);
         
         void CantProduce(City city, IProductionOrder? newItem);
         
@@ -36,7 +31,7 @@ namespace Civ2engine
         
         void NotifyImprovementEnabled(TerrainImprovement improvement, int level);
         void MapChanged(List<Tile> tiles);
-        void WaitingAtEndOfTurn(IGame game);
+        void WaitingAtEndOfTurn();
         void NotifyAdvanceResearched(int advance);
         void FoodShortage(City city);
         void CityDecrease(City city);

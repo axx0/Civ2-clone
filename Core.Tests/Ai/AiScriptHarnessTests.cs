@@ -22,7 +22,7 @@ public class AiScriptHarnessTests
         var defenderType = game.Rules.UnitTypes.First(t => t.AIrole == AiRoleType.Defend);
         var unit = CreateUnit(civ, defenderType, tile, veteran: false);
 
-        var result = aiPlayer.AI.Call(AiEvent.UnitOrdersNeeded, new LuaTable { { "Unit", new UnitApi(unit, game) } });
+        var result = aiPlayer.Ai.Call(AiEvent.UnitOrdersNeeded, new LuaTable { { "Unit", new UnitApi(unit, game) } });
 
         Assert.Equal("F", UnwrapLuaResult(result));
     }
@@ -39,9 +39,58 @@ public class AiScriptHarnessTests
         CreateUnit(civ, defenderType, tile, veteran: false);
         var unit = CreateUnit(civ, defenderType, tile, veteran: true);
 
-        var result = aiPlayer.AI.Call(AiEvent.UnitOrdersNeeded, new LuaTable { { "Unit", new UnitApi(unit, game) } });
+        var result = aiPlayer.Ai.Call(AiEvent.UnitOrdersNeeded, new LuaTable { { "Unit", new UnitApi(unit, game) } });
 
         Assert.Equal("F", UnwrapLuaResult(result));
+    }
+
+    [Fact]
+    public void ResearchComplete_ReturnsBestTech()
+    {
+        var (game, aiPlayer, civ) = CreateGameAndAi();
+
+        var tech1 = new Tech(game.Rules.Advances, 0) { aiValue = 10, name = "Low Value", epoch = 0 };
+        var tech2 = new Tech(game.Rules.Advances, 1) { aiValue = 50, name = "High Value", epoch = 1 };
+        var tech3 = new Tech(game.Rules.Advances, 2) { aiValue = 30, name = "Medium Value", epoch = 0 };
+
+        var possibilities = new LuaTable
+        {
+            [1] = tech1,
+            [2] = tech2,
+            [3] = tech3
+        };
+
+        var result = aiPlayer.Ai.Call(AiEvent.ResearchComplete,
+            new LuaTable { { "researchPossibilities", possibilities } });
+
+        var selectedTech = Assert.IsType<Tech>(UnwrapLuaResult(result));
+        Assert.Equal(50, selectedTech.aiValue);
+        Assert.Equal("High Value", selectedTech.name);
+    }
+
+    [Fact]
+    public void ResearchComplete_BiasesTowardsLowerEpochs()
+    {
+        var (game, aiPlayer, civ) = CreateGameAndAi();
+
+        // tech1 has higher aiValue but higher epoch
+        // tech2 has lower aiValue but lower epoch
+        var tech1 = new Tech(game.Rules.Advances, 0) { aiValue = 100, name = "Modern Tech", epoch = 5 };
+        var tech2 = new Tech(game.Rules.Advances, 1) { aiValue = 60, name = "Ancient Tech", epoch = 0 };
+
+        var possibilities = new LuaTable
+        {
+            [1] = tech1,
+            [2] = tech2
+        };
+
+        var result = aiPlayer.Ai.Call(AiEvent.ResearchComplete,
+            new LuaTable { { "researchPossibilities", possibilities } });
+
+        var selectedTech = Assert.IsType<Tech>(UnwrapLuaResult(result));
+        
+        // With biasing towards lower epochs, Ancient Tech (epoch 0) should be preferred even with lower aiValue
+        Assert.Equal("Ancient Tech", selectedTech.name);
     }
 
     private static (Game game, AiPlayer aiPlayer, Civilization civ) CreateGameAndAi()
@@ -58,6 +107,9 @@ public class AiScriptHarnessTests
 
         var civ = game.AllCivilizations.First(c => c.PlayerType != PlayerType.Barbarians);
         var aiPlayer = (AiPlayer)game.Players[civ.Id];
+
+        // Ensure the tribe objects have access to the game if they are used in scripts
+        // But for these tests, we are mostly calling Ai.Call directly.
 
         return (game, aiPlayer, civ);
     }
