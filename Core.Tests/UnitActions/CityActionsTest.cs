@@ -1,6 +1,14 @@
 using Civ2engine;
+using Civ2engine.Advances;
+using Civ2engine.Enums;
+using Civ2engine.MapObjects;
+using Civ2engine.Production;
+using Civ2engine.Terrains;
 using Civ2engine.UnitActions;
 using Model.Core;
+using Model.Core.Advances;
+using Model.Core.Cities;
+using Model.Core.Units;
 using Moq;
 
 namespace Core.Tests.UnitActions;
@@ -9,61 +17,123 @@ public class CityActionsTest
 {
     private static Mock<IGame> SetupGame(int citiesToCreate, out Civilization civ)
     {
-        // Given a game
         var game = new Mock<IGame>();
-        // with a civilization named "TestCiv"
-        civ = new Civilization();
-        civ.TribeName = "TestCiv";
+        civ = new Civilization { TribeName = "TestCiv" };
         game.Setup(g => g.AllCivilizations).Returns([civ]);
-        // with a list of city names
-        Dictionary<string, List<string>> cityNames = new Dictionary<string, List<string>>();
-        cityNames["TESTCIV"] = ["City1", "City2", "City3"];
-        game.Setup(g => g.CityNames).Returns(cityNames);
-        // with N cities in the History
-        History history = new History(game.Object);
-        for (int cityCounter = 0; cityCounter < citiesToCreate; cityCounter++)
+        
+        var cityNames = new Dictionary<string, List<string>?>
         {
-            City c = new City();
-            c.Name = cityNames["TESTCIV"][cityCounter];
-            c.Owner = civ;
-            history.CityBuilt(c);
-        }
-
-        game.Setup(g => g.History).Returns(history);
-        // and N cities built by this civilization in the game data
-        Dictionary<Civilization, int> citiesBuiltCount = new Dictionary<Civilization, int>();
-        citiesBuiltCount[civ] = citiesToCreate;
+            ["TESTCIV"] = ["City1", "City2", "City3"]
+        };
+        game.Setup(g => g.CityNames).Returns(cityNames);
+        
+        var mockHistory = new Mock<IHistory>();
+        game.Setup(g => g.History).Returns(mockHistory.Object);
+        
+        var citiesBuiltCount = new Dictionary<Civilization, int>
+        {
+            [civ] = citiesToCreate
+        };
         game.Setup(g => g.CitiesBuiltSoFar).Returns(citiesBuiltCount);
         return game;
     }
 
     [Fact]
-    public void GetCityNameForFirstCity()
+    public void GetCityName_SuggestsNameInOrder()
     {
-        // Given a game with zero cities already created
         var game = SetupGame(0, out var civ);
-        // Then GetCityName should suggest the first city name
-        string suggested = CityActions.GetCityName(civ, game.Object);
-        Assert.Equal("City1", suggested);
+        Assert.Equal("City1", CityActions.GetCityName(civ, game.Object));
+        
+        game.Object.CitiesBuiltSoFar[civ] = 1;
+        Assert.Equal("City2", CityActions.GetCityName(civ, game.Object));
     }
 
     [Fact]
-    public void GetCityNameForSecondCity()
+    public void GetCityName_ReturnsDummyName_WhenListExhausted()
     {
-        // Given a game with one city already created
-        var game = SetupGame(1, out var civ);
-        // then GetCityName should suggest the second city name
-        string suggested = CityActions.GetCityName(civ, game.Object);
-        Assert.Equal("City2", suggested);
-    }
-
-    [Fact]
-    public void GetCityNameWhenCitiesListExhausted()
-    {
-        // Given a game with three cities already created
         var game = SetupGame(3, out var civ);
-        // then GetCityName should suggest Dummy Name
-        string suggested = CityActions.GetCityName(civ, game.Object);
-        Assert.Equal("Dummy Name", suggested);
+        Assert.Equal("Dummy Name", CityActions.GetCityName(civ, game.Object));
+    }
+
+    [Fact]
+    public void GetCityName_UsesExtra_WhenTribeNotFound()
+    {
+        var game = new Mock<IGame>();
+        var civ = new Civilization { TribeName = "UnknownTribe" };
+        var cityNames = new Dictionary<string, List<string>?>
+        {
+            ["EXTRA"] = ["ExtraCity1"]
+        };
+        game.Setup(g => g.CityNames).Returns(cityNames);
+        game.Setup(g => g.CitiesBuiltSoFar).Returns(new Dictionary<Civilization, int>());
+
+        Assert.Equal("ExtraCity1", CityActions.GetCityName(civ, game.Object));
+    }
+
+    [Fact]
+    public void BuildCity_InitializesCityCorrectly()
+    {
+        // Arrange
+        var game = new Mock<IGame>();
+        var civ = new Civilization { Id = 0, TribeName = "Romans", Government = 0, Advances = new bool[10] };
+        var unitDef = new UnitDefinition { Move = 10, Flags = new bool[20], Cost = 20 };
+        var unit = new Unit { Owner = civ, TypeDefinition = unitDef };
+        
+        var map = new Map(true, 0)
+        {
+            XDim = 10,
+            YDim = 10,
+            Tile = new Tile[10, 10]
+        };
+        for (int x = 0; x < 10; x++)
+        {
+            for (int y = 0; y < 10; y++)
+            {
+                map.Tile[x, y] = new Tile(x * 2, y, new Terrain { Name = "Plains", Type = TerrainType.Plains, Specials = Array.Empty<Special>() }, 0, map, x, new bool[2]);
+            }
+        }
+
+        var tile = map.Tile[0, 0];
+        unit.CurrentLocation = tile;
+
+        var rules = new Rules
+        {
+            Advances = [new Advance { Name = "None" }],
+            Improvements = [],
+            Cosmic =
+            {
+                FoodEatenPerTurn = 2
+            },
+            Governments = [new Government { Level = 0, SettlersConsumption = 1 }]
+        };
+
+        var mockProd = new Mock<IProductionOrder>();
+        mockProd.Setup(p => p.Cost).Returns(10);
+        mockProd.Setup(p => p.RequiredTech).Returns(AdvancesConstants.Nil);
+        mockProd.Setup(p => p.ExpiresTech).Returns(AdvancesConstants.Nil);
+        rules.ProductionOrders = [mockProd.Object];
+        ProductionPossibilities.InitializeProductionLists([civ], rules.ProductionOrders);
+        
+        game.Setup(g => g.Rules).Returns(rules);
+        game.Setup(g => g.AllCities).Returns(new List<City>());
+        game.Setup(g => g.CitiesBuiltSoFar).Returns(new Dictionary<Civilization, int>());
+        game.Setup(g => g.History).Returns(new Mock<IHistory>().Object);
+        game.Setup(g => g.Maps).Returns(new List<Map> { map });
+        game.Setup(g => g.MaxDistance).Returns(100.0);
+        game.Setup(g => g.TerrainImprovements).Returns(new Dictionary<int, TerrainImprovement>());
+
+        // Act
+        var city = CityActions.BuildCity(unit, game.Object, "Rome");
+
+        // Assert
+        Assert.Equal("Rome", city.Name);
+        Assert.Equal(tile, city.Location);
+        Assert.Equal(civ, city.Owner);
+        Assert.True(unit.Dead);
+        Assert.Contains(city, game.Object.AllCities);
+        Assert.Contains(city, civ.Cities);
+        Assert.Equal(1, game.Object.CitiesBuiltSoFar[civ]);
+        Assert.Equal(city, tile.CityHere);
+        Assert.Equal(city, tile.WorkedBy);
     }
 }

@@ -130,7 +130,7 @@ ai.RegisterEvent(AiEvent.Research_Complete, function(ai, data)
         local epoch = tech.epoch or 0
         local aiValue = tech.aiValue or 0
         -- Bias towards lower epochs by penalizing higher ones
-        local score = aiValue - (epoch * 2)
+        local score = aiValue - (epoch * 10)
         
         print("Considering tech: " .. name .. " (Epoch: " .. epoch .. ", Value: " .. aiValue .. ", Score: " .. score .. ")")
         if not bestTech or score > bestScore then

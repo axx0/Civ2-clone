@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Civ2engine.MapObjects;
+﻿using Civ2engine.MapObjects;
 using Civ2engine.Units;
 using Model.Core.Cities;
 using Model.Core.Units;

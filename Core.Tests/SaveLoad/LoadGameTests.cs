@@ -18,11 +18,13 @@ namespace Core.Tests.SaveLoad;
 public class LoadGameTests
 {
     private readonly IMain _mockMainApp;
+    private readonly MockInterface _mockUi;
 
     public LoadGameTests()
     {
         // We need to hard code the SearchPaths here for the LoadFrom() method to work properly under test.
-        _mockMainApp = new MockInterface.MockMainApp();
+        _mockUi = new MockInterface();
+        _mockMainApp = _mockUi.MainApp;
         var testFileDirectory = TestFileUtils.GetTestFileDirectory();
         Settings.SearchPaths = [testFileDirectory, testFileDirectory];
 
@@ -51,11 +53,23 @@ public class LoadGameTests
         var path = TestFileUtils.GetTestFilePath("test_classic.sav");
 
         // Act
-        var result = LoadGame.LoadFrom(path, _mockMainApp);
+        LoadGame.LoadFrom(path, _mockMainApp);
+        var result = (Game)_mockUi.LoadedGame!;
 
         // Assert
-        // TODO: Expand and validate the settings load properly from the file.
         Assert.NotNull(result);
+        
+        Assert.Equal(1, result.TurnNumber);
+        Assert.Equal(8, result.AllCivilizations.Count);
+        
+        var barbarians = result.AllCivilizations[0];
+        Assert.Equal("Barbarians", barbarians.TribeName);
+        Assert.Equal(PlayerType.Barbarians, barbarians.PlayerType);
+
+        var player = result.AllCivilizations[1];
+        Assert.Equal("Romans", player.TribeName);
+        Assert.Equal(PlayerType.Local, player.PlayerType);
+        Assert.Equal(0, player.Money);
     }
 
     [Fact]
@@ -64,14 +78,14 @@ public class LoadGameTests
         // Arrange
         // This is the json version of the "test_classic.sav" file
         var path = TestFileUtils.GetTestFilePath("test_json.sav");
-        var mainApp = new MockInterface.MockMainApp();
 
         // Act
-        var result = LoadGame.LoadFrom(path, _mockMainApp);
+        LoadGame.LoadFrom(path, _mockMainApp);
+        var result = (Game)_mockUi.LoadedGame!;
 
         // Assert
-        // TODO: Expand and validate the settings load properly from the file.
         Assert.NotNull(result);
+        Assert.Equal(1, result.TurnNumber);
     }
 
 
@@ -115,7 +129,9 @@ public class LoadGameTests
 
         public IList<ResourceImage> ResourceImages => throw new NotImplementedException();
 
-        public IMain MainApp => new MockMainApp();
+        public IMain MainApp => new MockMainApp(this);
+
+        public IGame? LoadedGame { get; private set; }
 
         public int InterfaceIndex
         {
@@ -212,6 +228,7 @@ public class LoadGameTests
         public IInterfaceAction HandleLoadGame(IGame game, Rules rules, Ruleset ruleset,
             Dictionary<string, string?> viewData)
         {
+            LoadedGame = game;
             return new MockAction();
         }
 
@@ -255,8 +272,11 @@ public class LoadGameTests
 
         internal class MockMainApp : IMain
         {
-            public MockMainApp()
+            private readonly MockInterface _ui;
+
+            public MockMainApp(MockInterface ui)
             {
+                _ui = ui;
             }
 
             public Ruleset[] AllRuleSets
@@ -278,7 +298,7 @@ public class LoadGameTests
             public IUserInterface SetActiveRulesetFromFile(string root, string subDirectory,
                 Dictionary<string, string> extendedMetadata)
             {
-                return new MockInterface();
+                return _ui;
             }
         }
     }

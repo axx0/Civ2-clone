@@ -64,6 +64,7 @@ public class MovementFunctionsTests
     {
         // Arrange
         var unit = CreateTestUnit(UnitGas.Ground, _civ);
+        unit.CurrentLocation = _map.TileC2(0, 0);
         unit.MovePointsLost = unit.MovePoints;
         unit.Dead = false;
 
@@ -455,6 +456,221 @@ public class MovementFunctionsTests
         Assert.Equal(tileTo, unit.CurrentLocation);
     }
 
+    #region Movement Direction Tests
+
+    [Fact]
+    public void TryMoveNorth_ValidMove_MovesUnit()
+    {
+        // Arrange
+        var unit = CreateTestUnit(UnitGas.Ground, _civ);
+        unit.CurrentLocation = _map.TileC2(2, 2);
+        unit.X = 2;
+        unit.Y = 2;
+        var player = (MockPlayer)_game.Players[0];
+        player.ActiveUnit = unit;
+
+        // Act
+        MovementFunctions.TryMoveNorth(_game);
+
+        // Assert
+        Assert.Equal(2, unit.X);
+        Assert.Equal(0, unit.Y);
+        Assert.Equal(_map.TileC2(2, 0), unit.CurrentLocation);
+    }
+
+    [Fact]
+    public void TryMoveNorth_EdgeOfMap_CallsMoveBlocked()
+    {
+        // Arrange
+        var unit = CreateTestUnit(UnitGas.Ground, _civ);
+        unit.CurrentLocation = _map.TileC2(2, 0);
+        unit.X = 2;
+        unit.Y = 0;
+        var player = (MockPlayer)_game.Players[0];
+        player.ActiveUnit = unit;
+
+        // Act
+        MovementFunctions.TryMoveNorth(_game);
+
+        // Assert
+        Assert.True(player.MoveBlockedCalled);
+        Assert.Equal(BlockedReason.EdgeOfMap, player.LastBlockedReason);
+    }
+
+    [Fact]
+    public void TryMoveNorthEast_ValidMove_MovesUnit()
+    {
+        // Arrange
+        var unit = CreateTestUnit(UnitGas.Ground, _civ);
+        unit.CurrentLocation = _map.TileC2(0, 2);
+        unit.X = 0;
+        unit.Y = 2;
+        var player = (MockPlayer)_game.Players[0];
+        player.ActiveUnit = unit;
+
+        // Act
+        MovementFunctions.TryMoveNorthEast(_game);
+
+        // Assert
+        Assert.Equal(1, unit.X);
+        Assert.Equal(1, unit.Y);
+        Assert.Equal(_map.TileC2(1, 1), unit.CurrentLocation);
+    }
+
+    [Fact]
+    public void TryMoveEast_ValidMove_MovesUnit()
+    {
+        // Arrange
+        var unit = CreateTestUnit(UnitGas.Ground, _civ);
+        unit.CurrentLocation = _map.TileC2(2, 0);
+        unit.X = 2;
+        unit.Y = 0;
+        var player = (MockPlayer)_game.Players[0];
+        player.ActiveUnit = unit;
+
+        // Act
+        MovementFunctions.TryMoveEast(_game);
+
+        // Assert
+        Assert.Equal(4, unit.X);
+        Assert.Equal(0, unit.Y);
+        Assert.Equal(_map.TileC2(4, 0), unit.CurrentLocation);
+    }
+
+    [Fact]
+    public void TryMoveSouthEast_ValidMove_MovesUnit()
+    {
+        // Arrange
+        var unit = CreateTestUnit(UnitGas.Ground, _civ);
+        unit.CurrentLocation = _map.TileC2(2, 0);
+        unit.X = 2;
+        unit.Y = 0;
+        var player = (MockPlayer)_game.Players[0];
+        player.ActiveUnit = unit;
+
+        // Act
+        MovementFunctions.TryMoveSouthEast(_game);
+
+        // Assert
+        Assert.Equal(3, unit.X);
+        Assert.Equal(1, unit.Y);
+        Assert.Equal(_map.TileC2(3, 1), unit.CurrentLocation);
+    }
+
+    [Fact]
+    public void TryMoveSouth_ValidMove_MovesUnit()
+    {
+        // Arrange
+        var unit = CreateTestUnit(UnitGas.Ground, _civ);
+        unit.CurrentLocation = _map.TileC2(2, 0);
+        unit.X = 2;
+        unit.Y = 0;
+        var player = (MockPlayer)_game.Players[0];
+        player.ActiveUnit = unit;
+
+        // Act
+        MovementFunctions.TryMoveSouth(_game);
+
+        // Assert
+        Assert.Equal(2, unit.X);
+        Assert.Equal(2, unit.Y);
+        Assert.Equal(_map.TileC2(2, 2), unit.CurrentLocation);
+    }
+
+    [Fact]
+    public void TryMoveSouthWest_ValidMove_MovesUnit()
+    {
+        // Arrange
+        var unit = CreateTestUnit(UnitGas.Ground, _civ);
+        unit.CurrentLocation = _map.TileC2(2, 0);
+        unit.X = 2;
+        unit.Y = 0;
+        var player = (MockPlayer)_game.Players[0];
+        player.ActiveUnit = unit;
+
+        // Act
+        MovementFunctions.TryMoveSouthWest(_game);
+
+        // Assert
+        Assert.Equal(1, unit.X);
+        Assert.Equal(1, unit.Y);
+        Assert.Equal(_map.TileC2(1, 1), unit.CurrentLocation);
+    }
+
+    [Fact]
+    public void TryMoveWest_ValidMove_MovesUnit()
+    {
+        // Arrange
+        var unit = CreateTestUnit(UnitGas.Ground, _civ);
+        unit.CurrentLocation = _map.TileC2(4, 0);
+        unit.X = 4;
+        unit.Y = 0;
+        var player = (MockPlayer)_game.Players[0];
+        player.ActiveUnit = unit;
+
+        // Act
+        MovementFunctions.TryMoveWest(_game);
+
+        // Assert
+        Assert.Equal(2, unit.X);
+        Assert.Equal(0, unit.Y);
+        Assert.Equal(_map.TileC2(2, 0), unit.CurrentLocation);
+    }
+
+    [Fact]
+    public void TryMoveNorthWest_ValidMove_MovesUnit()
+    {
+        // Arrange
+        var unit = CreateTestUnit(UnitGas.Ground, _civ);
+        unit.CurrentLocation = _map.TileC2(1, 1);
+        unit.X = 1;
+        unit.Y = 1;
+        var player = (MockPlayer)_game.Players[0];
+        player.ActiveUnit = unit;
+
+        // Act
+        MovementFunctions.TryMoveNorthWest(_game);
+
+        // Assert
+        Assert.Equal(0, unit.X);
+        Assert.Equal(0, unit.Y);
+        Assert.Equal(_map.TileC2(0, 0), unit.CurrentLocation);
+    }
+
+    #endregion
+
+    [Fact]
+    public void UnitMoved_WithCarriedUnits_UpdatesCarriedUnitsLocation()
+    {
+        // Arrange
+        var transport = CreateTestUnit(UnitGas.Sea, _civ);
+        transport.TypeDefinition.Hold = 2;
+        transport.X = 0;
+        transport.Y = 0;
+        var passenger = CreateTestUnit(UnitGas.Ground, _civ);
+        passenger.X = 0;
+        passenger.Y = 0;
+
+        var tileFrom = _map.TileC2(0, 0);
+        var tileTo = _map.TileC2(1, 0);
+        tileFrom.Terrain.Type = TerrainType.Ocean;
+        tileTo.Terrain.Type = TerrainType.Ocean;
+
+        transport.CurrentLocation = tileFrom;
+        passenger.CurrentLocation = tileFrom;
+        passenger.InShip = transport;
+        transport.CarriedUnits.Add(passenger);
+
+        // Act
+        MovementFunctions.UnitMoved(_game, transport, tileTo, tileFrom);
+
+        // Assert
+        Assert.Equal(tileTo, transport.CurrentLocation);
+        Assert.Equal(tileTo, passenger.CurrentLocation);
+        Assert.Equal(tileTo.X, passenger.X);
+        Assert.Equal(tileTo.Y, passenger.Y);
+    }
+
     private Tuple<Tile, Tile> GetOfTypeNextToLand(TerrainType type = TerrainType.Plains)
     {
         for (int i = 0; i < _map.Tile.GetLength(0); i++)
@@ -492,7 +708,6 @@ public class MovementFunctionsTests
 
     private Map CreateTestMap()
     {
-        var ran = new Random();
         var map = new Map(true, 0)
         {
             Tile = new Tile[10, 10],
@@ -502,17 +717,21 @@ public class MovementFunctionsTests
 
         var plains = new Terrain { Type = TerrainType.Plains, Specials = [] };
         var ocean = new Terrain { Type = TerrainType.Ocean, Specials = [] };
-
-        Terrain[] terrains = [plains, ocean];
-
         var seed = 1;
 
-        // Initialize all tiles
+        // Initialize all tiles with correct staggered Civ2 coordinates
         for (int x = 0; x < map.XDim; x++)
         {
             for (int y = 0; y < map.YDim; y++)
             {
-                map.Tile[x, y] = new Tile(x, y, terrains[ran.Next(terrains.Length)], seed, map, x, [])
+                int xC2 = x * 2 + (y % 2);
+                // Make the first row (y=0) and second column (x=1) Ocean for some variety, but most Plains
+                var terrain = (x == 5 && y == 5) ? ocean : plains; 
+                // Wait, existing tests need ocean next to land.
+                // Let's make y=0 Ocean.
+                if (y == 5) terrain = ocean;
+
+                map.Tile[x, y] = new Tile(xC2, y, terrain, seed, map, x, new bool[2])
                 {
                     Island = 1
                 };

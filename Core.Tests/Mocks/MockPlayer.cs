@@ -18,89 +18,77 @@ public class MockPlayer : IPlayer
 
     public Civilization Civilization { get; }
     public Tile ActiveTile { get; set; }
-    public Unit? ActiveUnit { get; }
-    public List<Unit> WaitingList { get; }
+    public Unit? ActiveUnit { get; set; }
+    public List<Unit> WaitingList { get; } = new();
+
+    public bool MoveBlockedCalled { get; private set; }
+    public BlockedReason LastBlockedReason { get; private set; }
 
     public void CivilDisorder(City city)
     {
-        throw new NotImplementedException();
     }
 
     public void OrderRestored(City city)
     {
-        throw new NotImplementedException();
     }
 
     public void WeLoveTheKingStarted(City city)
     {
-        throw new NotImplementedException();
     }
 
     public void WeLoveTheKingCanceled(City city)
     {
-        throw new NotImplementedException();
     }
 
     public void CantMaintain(City city, Improvement cityImprovement)
     {
-        throw new NotImplementedException();
     }
 
     public void SelectNewAdvance(List<Advance> researchPossibilities)
     {
-        throw new NotImplementedException();
     }
 
     public void CantProduce(City city, IProductionOrder? newItem)
     {
-        throw new NotImplementedException();
     }
 
     public void CityProductionComplete(City city)
     {
-        throw new NotImplementedException();
     }
 
-    public IInterfaceCommands Ui { get; }
+    public IInterfaceCommands Ui { get; set; }
 
     public void NotifyImprovementEnabled(TerrainImprovement improvement, int level)
     {
-        throw new NotImplementedException();
     }
 
     public void MapChanged(List<Tile> tiles)
     {
-        throw new NotImplementedException();
     }
 
     public void WaitingAtEndOfTurn()
     {
-        throw new NotImplementedException();
     }
 
     public void NotifyAdvanceResearched(int advance)
     {
-        throw new NotImplementedException();
     }
 
     public void FoodShortage(City city)
     {
-        throw new NotImplementedException();
     }
 
     public void CityDecrease(City city)
     {
-        throw new NotImplementedException();
     }
 
     public void TurnStart(int turnNumber)
     {
-        throw new NotImplementedException();
     }
 
     public void SetUnitActive(Unit? unit, bool move)
     {
-        throw new NotImplementedException();
+        ActiveUnit = unit;
     }
 
     public void UnitLost(Unit unit, Unit? killedBy)
@@ -117,12 +105,12 @@ public class MockPlayer : IPlayer
 
     public void CombatHappened(CombatEventArgs combatEventArgs)
     {
-        throw new NotImplementedException();
     }
 
     public void MoveBlocked(Unit unit, BlockedReason blockedReason)
     {
-        throw new NotImplementedException();
+        MoveBlockedCalled = true;
+        LastBlockedReason = blockedReason;
     }
 
     public void GoodyHutTriggered(Unit unit, GoodyHutOutcomeResult outcome)

@@ -67,7 +67,7 @@ namespace Civ2engine.UnitActions
 
         public static bool ActiveUnitCannotMove(Unit? activeUnit)
         {
-            return activeUnit == null || activeUnit.Dead || activeUnit.CurrentLocation == null;
+            return activeUnit == null || activeUnit.Dead || activeUnit.CurrentLocation == null || activeUnit.TurnEnded;
         }
 
         private static void CheckForUnitTurnEnded(IGame game, Unit activeUnit)
