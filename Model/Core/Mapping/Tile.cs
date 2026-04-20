@@ -47,6 +47,9 @@ namespace Civ2engine.MapObjects
 
         public TerrainType Type => Terrain.Type;
 
+        /// <summary>
+        /// The index of the special terrain type, if any. -1 for none, 0 for the first special, 1 for the second special, etc.
+        /// </summary>
         public int Special { get; }
 
         // Get special resource type based on map seed & tile location

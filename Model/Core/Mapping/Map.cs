@@ -49,7 +49,7 @@ namespace Civ2engine.MapObjects
         private int _xDim;
         
         public int[] StartingClickedXy { get; set; }    // Last tile clicked with your mouse on the map. Gives info where the map should be centered (further calculated in MapPanel).
-        public List<IslandDetails> Islands { get; set; }
+        public List<IslandDetails> Islands { get; set; } = new();
         public double ScaleFactor => XDim * YDim / 4000d;
     }
 }

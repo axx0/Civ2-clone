@@ -32,7 +32,15 @@ namespace Civ2engine.MapObjects
                     {
                         return -20;
                     }
-                    var value = fertilityValues[(int) nTile.Terrain.Type][nTile.Special + 1];
+                    var terrainType = (int)nTile.Terrain.Type;
+                    // Special can be -1, 0 or 1.
+                    // nTile.Terrain.Specials.Length can be 0, 1 or 2.
+                    // We want:
+                    // Special = -1 -> Index 0 (base)
+                    // Special = 0 -> Index 1 (if exists)
+                    // Special = 1 -> Index 2 (if exists)
+                    int specialIndex = (nTile.Special != -1 && nTile.Special < nTile.Terrain.Specials.Length) ? nTile.Special + 1 : 0;
+                    var value = fertilityValues[terrainType][specialIndex];
                     if (tile.River)
                     {
                         value += 1;

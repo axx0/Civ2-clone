@@ -22,11 +22,15 @@
     <configurations />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="38862fe7-8760-4eef-9f9f-5fdba728b888" name="Changes" comment="Added tests">
+    <list default="true" id="38862fe7-8760-4eef-9f9f-5fdba728b888" name="Changes" comment="Test fixes and cleanup for labels loading">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core.Tests/SaveLoad/GameLoaderTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core.Tests/SaveLoad/GameLoaderTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core.Tests/SaveLoad/LoadGameTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core.Tests/SaveLoad/LoadGameTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/IO/Labels.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/IO/Labels.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2clone.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2clone.sln.DotSettings.user" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Cities/CityExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Cities/CityExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/MapObjects/Fertility.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/MapObjects/Fertility.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/MapObjects/TileExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/MapObjects/TileExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/SaveLoad/GameSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/GameSerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Mapping/Map.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/Map.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Mapping/Tile.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/Tile.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,7 +41,7 @@
     <option name="firstShow" value="false" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="109" />
+    <option name="cachedIndexableFilesCount" value="50" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="FileTemplateManagerImpl">
@@ -68,6 +72,8 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/e31e5adc676d44c79a639a65fd4b8ed0cef08/56/3fe112d2/Lock.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/2dc853f5a17a81bc87d1117e71606e30bf759cf8aa2b235ca7082d58cadad9/DefaultIfEmpty.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/.ai/mcp/mcp.json" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/.junie/memory/language.json" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/appsettings.json" root0="FORCE_HIGHLIGHTING" />
@@ -118,34 +124,34 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Project.RaylibUI.executor": "Run",
-    "490432ee-e9fc-4580-a25d-f8a101659179.executor": "Debug",
-    "Lua Application.Test_test.lua.executor": "Run",
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.readMode.enableVisualFormatting": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "cidr.known.project.marker": "true",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "master",
-    "ignore.virus.scanning.warn.message": "true",
-    "junie.onboarding.icon.badge.shown": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.sourceCode.C#",
-    "to.speed.mode.migration.done": "true",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Project.RaylibUI.executor&quot;: &quot;Run&quot;,
+    &quot;490432ee-e9fc-4580-a25d-f8a101659179.executor&quot;: &quot;Debug&quot;,
+    &quot;Lua Application.Test_test.lua.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode.C#&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecapSpentCounter">
     <option name="endsOfQuotaMs" value="1771146035679" />
     <option name="spentUsd" value="0.15281096" />
@@ -243,7 +249,8 @@
       <workItem from="1772833174830" duration="23239000" />
       <workItem from="1775782662182" duration="17000" />
       <workItem from="1775782687724" duration="22000" />
-      <workItem from="1775782871012" duration="7422000" />
+      <workItem from="1775782871012" duration="10317000" />
+      <workItem from="1776505140532" duration="6036000" />
     </task>
     <task id="LOCAL-00001" summary="Reveal map working">
       <option name="closed" value="true" />
@@ -365,11 +372,34 @@
       <option name="project" value="LOCAL" />
       <updated>1775792238526</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="Test fixes and cleanup for labels loading">
+      <option name="closed" value="true" />
+      <created>1775795586949</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1775795586949</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="UnitTestsCoverage.Settings">
+    <option name="coveragePercentColumnWidth" value="150" />
+    <option name="sortOrder" value="ASCENDING" />
+    <option name="sortedColumn" value="1" />
+    <option name="symbolColumnWidth" value="256" />
+    <coverage-tree-state>
+      <expand>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="Total 0% 20687/20687" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+      </expand>
+      <select />
+    </coverage-tree-state>
   </component>
   <component name="UnityCheckinConfiguration" checkUnsavedScenes="false" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
@@ -400,7 +430,8 @@
     <MESSAGE value="AI now selects research based on AIValue" />
     <MESSAGE value="AI now selects research based on AIValue modified for epoch" />
     <MESSAGE value="Added tests" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added tests" />
+    <MESSAGE value="Test fixes and cleanup for labels loading" />
+    <option name="LAST_COMMIT_MESSAGE" value="Test fixes and cleanup for labels loading" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

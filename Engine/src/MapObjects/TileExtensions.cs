@@ -80,9 +80,9 @@ namespace Civ2engine.MapObjects
                 {
                     tile.EffectsList.RemoveAll(e => e.Source == imp.Improvement);
                     improvements.Remove(imp);
-                    
-                    if (civsVisibleTo == null) return;
-                    
+
+                    if (civsVisibleTo == null || civsVisibleTo.Count == 0) return;
+
                     foreach (var civId in civsVisibleTo)
                     {
                         var seenImprovement = tile.PlayerKnowledge?[civId]?.Improvements;
@@ -111,7 +111,9 @@ namespace Civ2engine.MapObjects
                 improvements.Add(new ConstructedImprovement
                     { Group = improvement.ExclusiveGroup, Improvement = improvement.Id, Level = levelToBuild });
             }
-            
+
+            if (civsVisibleTo == null) return;
+
             foreach (var civId in civsVisibleTo)
             {
                 var seenImprovement = tile.PlayerKnowledge![civId]!.Improvements;
@@ -126,6 +128,7 @@ namespace Civ2engine.MapObjects
                         { Group = improvement.ExclusiveGroup, Improvement = improvement.Id, Level = levelToBuild });
                 }
             }
+
         }
 
         public static void BuildEffects(this Tile tile, TerrainImprovement improvement, AllowedTerrain terrain, int levelToBuild)
