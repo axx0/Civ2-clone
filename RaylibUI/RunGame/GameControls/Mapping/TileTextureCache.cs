@@ -1,5 +1,6 @@
 using Civ2engine.IO;
 using Civ2engine.MapObjects;
+using Model.Core.Mapping;
 using Model.ImageSets;
 using RaylibUI.RunGame.Commands;
 

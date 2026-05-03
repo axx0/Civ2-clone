@@ -6,6 +6,9 @@ using Civ2engine.Enums;
 using Civ2engine.IO;
 using Civ2engine.MapObjects;
 using Model.Core;
+using Model.Core.Advances;
+using Model.Core.GameRules;
+using Model.Core.Mapping;
 
 namespace Civ2engine.Terrains
 {

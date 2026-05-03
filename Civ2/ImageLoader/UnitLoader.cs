@@ -2,6 +2,7 @@ using System.Numerics;
 using Civ2engine;
 using Civ2engine.IO;
 using Model;
+using Model.Core.GameRules;
 using Model.Images;
 using Model.ImageSets;
 using Raylib_CSharp.Transformations;

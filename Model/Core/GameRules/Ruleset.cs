@@ -1,7 +1,4 @@
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Civ2engine.IO
+namespace Model.Core.GameRules
 {
     public class Ruleset
     {

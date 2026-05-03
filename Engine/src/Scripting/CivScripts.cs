@@ -8,6 +8,8 @@ using Civ2engine.Scripting.ScriptObjects;
 using Civ2engine.Scripting.UI;
 using Civ2engine.UnitActions;
 using Civ2engine.Units;
+using Model.Core;
+using Model.Core.Mapping;
 using Model.Core.Player;
 using Model.Core.Units;
 using UnitType = Civ2engine.Scripting.ScriptObjects.UnitType;

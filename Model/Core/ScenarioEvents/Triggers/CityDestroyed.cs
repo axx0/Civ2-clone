@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Model;
+﻿namespace Model.Core.ScenarioEvents.Triggers;
 
 public class CityDestroyed : ITrigger
 {

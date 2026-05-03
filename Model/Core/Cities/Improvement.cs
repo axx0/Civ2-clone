@@ -1,7 +1,8 @@
-﻿using Model.Constants;
+﻿using Civ2engine;
+using Model.Constants;
 using Model.Images;
 
-namespace Civ2engine;
+namespace Model.Core.Cities;
 
 public class Improvement
 {

@@ -5,6 +5,8 @@ using Civ2engine.Enums;
 using Civ2engine.IO;
 using Model;
 using Model.Core;
+using Model.Core.Advances;
+using Model.Core.GameRules;
 using RaylibUtils;
 
 namespace Civ2.Rules;

@@ -1,4 +1,4 @@
-namespace Civ2engine.Advances
+namespace Model.Core.Advances
 {
     public enum AdvanceGroupAccess
     {

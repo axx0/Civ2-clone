@@ -2,6 +2,7 @@ using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.MapObjects;
 using Model.Core;
+using Model.Core.Mapping;
 using Model.Images;
 using Model.ImageSets;
 using RaylibUtils;

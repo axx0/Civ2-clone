@@ -3,6 +3,7 @@ using System.Linq;
 using Civ2engine.MapObjects;
 using Civ2engine.SaveLoad.SerializationUtils;
 using Model.Core;
+using Model.Core.Mapping;
 
 namespace Civ2engine.SaveLoad;
 

@@ -1,4 +1,4 @@
-﻿namespace Model.Core
+﻿namespace Model.Core.Mapping
 {
     public enum TerrainType
     {

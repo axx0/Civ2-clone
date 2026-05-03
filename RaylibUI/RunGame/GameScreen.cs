@@ -6,6 +6,8 @@ using Civ2engine.MapObjects;
 using Model;
 using Model.Core;
 using Model.Controls;
+using Model.Core.Cities;
+using Model.Core.Mapping;
 using Raylib_CSharp.Windowing;
 using Raylib_CSharp.Transformations;
 using RaylibUI.RunGame.Commands.Orders;

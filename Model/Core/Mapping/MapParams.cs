@@ -1,6 +1,6 @@
 using Civ2engine.Enums;
 
-namespace Civ2engine
+namespace Model.Core.Mapping
 {
     public class MapParams
     {

@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
 using Civ2engine.Enums;
-using Civ2engine.Terrains;
 using Civ2engine.Units;
 using Model.Constants;
+using Model.Core;
+using Model.Core.GameRules;
+using Model.Core.Mapping;
 using Neo.IronLua;
 
 // ReSharper disable UnusedMember.Global

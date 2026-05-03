@@ -1,19 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Xml.Linq;
-using Civ2engine.Advances;
 using Civ2engine.Enums;
-using Civ2engine.Terrains;
-using Civ2engine.Units;
 using Model.Constants;
-using Model.Core;
 using Model.Core.Advances;
 using Model.Core.Cities;
+using Model.Core.GameRules;
+using Model.Core.Mapping;
 using Model.Core.Units;
-using Raylib_CSharp;
 using Path = System.IO.Path;
 
 namespace Civ2engine.IO
@@ -100,8 +94,12 @@ namespace Civ2engine.IO
 
         private void LocateSoundFile(string soundFile)
         {
-            _soundPaths.Add(soundFile, Utils.GetFilePath(soundFile,
-                _rulesetPaths.SelectMany(p => new[] {p + Path.DirectorySeparatorChar + "Sound", p})));
+            var filePath = Utils.GetFilePath(soundFile,
+                _rulesetPaths.SelectMany(p => new[] {p + Path.DirectorySeparatorChar + "Sound", p}));
+            if (filePath != null)
+            {
+                _soundPaths.Add(soundFile, filePath);
+            }
         }
 
         private void SecondaryMaps(string[] values)
@@ -255,7 +253,7 @@ namespace Civ2engine.IO
 
         private void ProcessGovernments(string[] values)
         {
-            _freeSupports = new [] { Rules.Cosmic.MonarchyPaysSupport, Rules.Cosmic.CommunismPaysSupport, Rules.Cosmic.FundamentalismPaysSupport };
+            _freeSupports = [Rules.Cosmic.MonarchyPaysSupport, Rules.Cosmic.CommunismPaysSupport, Rules.Cosmic.FundamentalismPaysSupport];
             
             Rules.Governments = values.Select((value, idx) =>
             {
@@ -311,7 +309,7 @@ namespace Civ2engine.IO
             }
         }
 
-        private void ProcessTerrain(IEnumerable<string>? values)
+        private void ProcessTerrain(IList<string> values)
         {
             var terrains = new List<string>();
             var bonus = new List<string>();
@@ -380,16 +378,19 @@ namespace Civ2engine.IO
         }
 
 
-        private static string[] _rulesetPaths;
+        private static string[] _rulesetPaths = [];
 
         private void ProcessUnits(string[] values)
         {
             LocateSoundFile("CATAPULT.WAV");
             LocateSoundFile("ELEPHANT.WAV");
-            
+
+            _soundPaths.TryGetValue("CATAPULT.WAV", out var catapultSound);
+            _soundPaths.TryGetValue("ELEPHANT.WAV", out var elephantSound);
+
             var defaultAttackSounds = new[] {
-                Tuple.Create((int)UnitType.Catapult, _soundPaths["CATAPULT.WAV"]),
-                Tuple.Create((int)UnitType.Elephant, _soundPaths["ELEPHANT.WAV"])
+                Tuple.Create((int)UnitType.Catapult, catapultSound),
+                Tuple.Create((int)UnitType.Elephant, elephantSound)
             };
             
             Rules.UnitTypes = values.Select((line, type) =>
@@ -588,10 +589,12 @@ namespace Civ2engine.IO
 
         public void ProcessSection(string section, List<string>? contents)
         {
+            if (contents == null) return;
             if (section.StartsWith("TERRAIN"))
             {
                 ProcessTerrain(contents);
-            }else if (_sectionHandlers.TryGetValue(section, out var handler))
+            }
+            else if (_sectionHandlers.TryGetValue(section, out var handler))
             {
                 handler(contents.ToArray());
             }

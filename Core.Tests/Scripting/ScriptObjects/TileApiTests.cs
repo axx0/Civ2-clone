@@ -1,5 +1,6 @@
 using Civ2engine.Scripting;
 using Civ2engine.Scripting.ScriptObjects;
+using Model.Core.Mapping;
 using Neo.IronLua;
 
 namespace Core.Tests.Scripting.ScriptObjects;
@@ -16,7 +17,7 @@ public class TileApiTests
         Assert.Equal(tile.X, api.x);
         Assert.Equal(tile.Y, api.y);
         Assert.Equal(tile.Z, api.z);
-        Assert.Equal(tile.Terrain.Type == Model.Core.TerrainType.Ocean, api.terrain.isOcean);
+        Assert.Equal(tile.Terrain.Type == TerrainType.Ocean, api.terrain.isOcean);
     }
 
     [Fact]

@@ -1,6 +1,6 @@
 using RaylibUI.BasicTypes.Controls;
 
-namespace RaylibUI.RunGame.GameControls;
+namespace RaylibUI.RunGame.GameControls.Civilopedia;
 
 public class PediaLabel : LabelControl
 {

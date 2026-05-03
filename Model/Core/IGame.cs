@@ -1,9 +1,8 @@
 using Civ2engine;
 using Civ2engine.Enums;
-using Civ2engine.MapObjects;
-using Civ2engine.Units;
-using Model.Core.Units;
-using System.Collections;
+using Model.Core.Cities;
+using Model.Core.GameRules;
+using Model.Core.Mapping;
 using Model.Core.Player;
 
 namespace Model.Core;

@@ -1,6 +1,3 @@
-using Civ2engine.MapObjects;
-using Civ2engine.Terrains;
-
 namespace Model.Core.Mapping;
 
 

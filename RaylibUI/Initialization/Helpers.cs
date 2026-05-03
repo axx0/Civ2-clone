@@ -2,6 +2,7 @@ using System.Reflection;
 using Civ2engine;
 using Civ2engine.IO;
 using Model;
+using Model.Core.GameRules;
 using Model.Interface;
 using Raylib_CSharp.Fonts;
 

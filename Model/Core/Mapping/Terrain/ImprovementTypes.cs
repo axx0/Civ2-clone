@@ -1,4 +1,4 @@
-namespace Civ2engine.Terrains
+namespace Model.Core.Mapping
 {
     /// <summary>
     /// Not exhaustive list of possible improvements used for compatibility with older code

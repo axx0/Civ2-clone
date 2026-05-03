@@ -2,6 +2,7 @@ using Civ2.Rules;
 using Civ2engine;
 using Civ2engine.IO;
 using Model.Controls;
+using Model.Core;
 using Model.Interface;
 using Model.InterfaceActions;
 using RaylibUtils;

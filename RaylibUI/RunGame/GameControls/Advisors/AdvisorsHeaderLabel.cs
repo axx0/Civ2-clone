@@ -2,7 +2,7 @@ using Model.Controls;
 using Raylib_CSharp.Colors;
 using RaylibUI.BasicTypes.Controls;
 
-namespace RaylibUI.RunGame.GameControls;
+namespace RaylibUI.RunGame.GameControls.Advisors;
 
 public class AdvisorsHeaderLabel(
     IControlLayout layout,

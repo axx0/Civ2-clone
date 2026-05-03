@@ -1,5 +1,5 @@
 ﻿using Civ2engine;
-using Civ2engine.MapObjects;
+using Model.Core.Mapping;
 
 namespace Model.Core.Units
 {

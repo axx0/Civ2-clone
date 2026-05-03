@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Model.Constants;
+using Model.Core.Cities;
 using Neo.IronLua;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable InconsistentNaming

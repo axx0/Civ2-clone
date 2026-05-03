@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Civ2engine.Enums;
-using Civ2engine.MapObjects;
+using Model.Core.Mapping;
 
 namespace Civ2engine.Events
 {

@@ -1,6 +1,4 @@
-using System.Collections.Generic;
-
-namespace Civ2engine
+namespace Model.Core.Mapping
 {
     public class ImprovementLevel
     {

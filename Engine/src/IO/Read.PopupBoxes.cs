@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Model.Core;
 
 namespace Civ2engine.IO
 {

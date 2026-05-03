@@ -1,4 +1,4 @@
-﻿namespace Civ2engine.Enums
+﻿namespace Model.Core.Events
 {
     public enum PlayerEventType
     {

@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using Model.Controls;
 using Model.Input;
 using RaylibUI.RunGame.GameControls;
+using RaylibUI.RunGame.GameControls.Civilopedia;
 
 namespace RaylibUI.RunGame.Commands;
 

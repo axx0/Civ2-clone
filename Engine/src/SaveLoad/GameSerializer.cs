@@ -1,17 +1,18 @@
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
-using System.Reflection;
 using System.Text.Json;
 using Civ2engine.Advances;
 using Civ2engine.IO;
 using Civ2engine.MapObjects;
 using Civ2engine.Production;
 using Civ2engine.SaveLoad.SerializationUtils;
-using Civ2engine.Units;
 using Model.Core;
+using Model.Core.Advances;
 using Model.Core.Cities;
+using Model.Core.GameRules;
+using Model.Core.Mapping;
+using Model.Core.Production;
 using Model.Core.Units;
 
 namespace Civ2engine.SaveLoad;
@@ -21,7 +22,7 @@ public class GameSerializer
     
     public static readonly CityInfo? DummyCityHere = new();
     
-    public void Write(FileStream saveFile, IGame game, Ruleset ruleset, Dictionary<string, string> viewData)
+    public void Write(Stream saveFile, IGame game, Ruleset ruleset, Dictionary<string, string> viewData)
     {
         //For debug purposes we write out formatted json, once we're satisfied it works we can minify and gzip it
         // using var compressor = new GZipStream(saveFile, CompressionMode.Compress);
@@ -205,7 +206,7 @@ public class GameSerializer
             FoodInStorage = cityData.FoodStorage,
             ShieldsProgress = cityData.SheildsProgress,
             Name = cityData.Name,
-            ItemInProduction = productionOrders[cityData.ProductionOrder],
+            ItemInProduction = cityData.ProductionOrder != -1 ? productionOrders[cityData.ProductionOrder] : null,
             CommoditySupplied = cityData.CommoditySupplied?.Where(c => c < rules.CaravanCommoditie.Length)
                 .Select(c => rules.CaravanCommoditie[c]).ToArray(),
             CommodityDemanded = cityData.CommodityDemanded?.Where(c => c < rules.CaravanCommoditie.Length)
@@ -243,11 +244,14 @@ public class GameSerializer
                 })).ToArray();
         }
 
-        foreach (var (first, second) in maps[mapNo].CityRadius(tile,true).Zip(cityData.Workers))
+        if (cityData.Workers != null)
         {
-            if (first != null && second)
+            foreach (var (first, second) in maps[mapNo].CityRadius(tile, true).Zip(cityData.Workers))
             {
-                first.WorkedBy = city;
+                if (first != null && second)
+                {
+                    first.WorkedBy = city;
+                }
             }
         }
         

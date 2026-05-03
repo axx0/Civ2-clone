@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.Enums;
 using Civ2engine.MapObjects;
-using Civ2engine.Units;
 using Model.Constants;
 using Model.Core;
+using Model.Core.Cities;
+using Model.Core.GameRules;
+using Model.Core.Mapping;
 using Model.Core.Units;
 
 namespace Civ2engine
@@ -139,7 +141,7 @@ namespace Civ2engine
             var supportFreeTypes = government.UnitTypesAlwaysFree;
             city.SupportedUnits.ForEach(unit =>
             {
-                unit.NeedsSupport = !unit.FreeSupport(supportFreeTypes) && freeSupport > 0;
+                unit.NeedsSupport = !unit.FreeSupport(supportFreeTypes) && freeSupport <= 0;
                 freeSupport--;
             });
         }
@@ -160,16 +162,16 @@ namespace Civ2engine
                 return distance; // if distance is fixed for govt (Communism, Fundamentalism or Democracy)
 
 
+            Func<City, double> calculateDistance = government.Level < 1
+                ? c => Utilities.DistanceTo(c.Location, city.Location) + game.DifficultyLevel // TODO: work out the actual distance modifier based on difficulty
+                : c => Utilities.DistanceTo(c.Location, city.Location);
+
             distance =
                 city.Owner.Cities.Where(c => c.ImprovementExists(Effects.Capital))
-                    .Select(c => Utilities.DistanceTo(c.Location, city.Location)).OrderBy(v => v)
-                    .FirstOrDefault(game.MaxDistance);
-
-            if (government.Level < 1)
-            {
-                distance += (int)game.DifficultyLevel;
-            }
-
+                    .Select(calculateDistance)
+                    .Where(d => d <= game.MaxDistance)
+                    .DefaultIfEmpty(game.MaxDistance)
+                    .Min();
 
             return distance;
         }
@@ -196,7 +198,7 @@ namespace Civ2engine
         public static bool ImprovementExists(this City city, Effects improvement) =>
             city.OrderedImprovements.Values.Any(i => i.Effects.ContainsKey(improvement));
 
-        public static void ShrinkCity(this City city, Game game)
+        public static void ShrinkCity(this City city, IGame game)
         {
             city.Size -= 1;
             city.AutoRemoveWorkersDistribution(game.Rules);

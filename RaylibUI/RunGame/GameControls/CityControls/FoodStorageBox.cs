@@ -1,6 +1,7 @@
 using System.Numerics;
 using Civ2engine;
 using Model;
+using Model.Core.Cities;
 using Raylib_CSharp.Colors;
 using Raylib_CSharp.Rendering;
 using Raylib_CSharp.Textures;

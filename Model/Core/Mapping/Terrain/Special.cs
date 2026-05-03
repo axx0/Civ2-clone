@@ -1,4 +1,4 @@
-namespace Civ2engine.Terrains
+namespace Model.Core.Mapping
 {
     public class Special : ITerrain
     {

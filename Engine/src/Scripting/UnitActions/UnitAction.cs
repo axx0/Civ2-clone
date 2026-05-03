@@ -1,5 +1,6 @@
 using Civ2engine.MapObjects;
 using Civ2engine.Scripting.ScriptObjects;
+using Model.Core.Mapping;
 using Model.Core.Units;
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedMember.Global

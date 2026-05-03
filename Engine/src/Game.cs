@@ -11,6 +11,9 @@ using Civ2engine.Scripting;
 using Civ2engine.Units;
 using Model;
 using Model.Core;
+using Model.Core.Cities;
+using Model.Core.GameRules;
+using Model.Core.Mapping;
 using Model.Core.Player;
 using Model.Core.Units;
 

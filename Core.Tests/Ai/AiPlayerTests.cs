@@ -2,7 +2,7 @@ using Civ2engine;
 using Civ2engine.Scripting.ScriptObjects;
 using Model.Core;
 using Model.Core.Advances;
-using Model.Core.Player;
+using Model.Core.GameRules;
 using Moq;
 using Neo.IronLua;
 

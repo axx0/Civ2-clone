@@ -4,6 +4,7 @@ using Civ2engine.IO;
 using JetBrains.Annotations;
 using Model;
 using Model.Controls;
+using Model.Core.GameRules;
 using Model.Images;
 using Model.ImageSets;
 using Model.Input;

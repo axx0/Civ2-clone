@@ -10,6 +10,8 @@ using Raylib_CSharp.Transformations;
 using RaylibUI;
 using RaylibUtils;
 using System.Numerics;
+using Model.Core.GameRules;
+using Model.Core.Mapping;
 
 namespace Civ2.ImageLoader
 {

@@ -1,14 +1,15 @@
 ﻿using Civ2engine;
 using Model.Controls;
+using Model.Controls.Civilopedia;
 using Raylib_CSharp.Fonts;
 using RaylibUI.BasicTypes;
 using RaylibUI.BasicTypes.Controls;
 
-namespace RaylibUI.RunGame.GameControls;
+namespace RaylibUI.RunGame.GameControls.Civilopedia;
 
 public class CivilopediaDescription : Listbox
 {
-    public CivilopediaDescription(CivilopediaWindow window, GameScreen gameScreen, Civilopedia pedia, int id) : base(window)
+    public CivilopediaDescription(CivilopediaWindow window, GameScreen gameScreen, CivilopediaEntry pedia, int id) : base(window)
     {
         Width = window.Width - window.LayoutPadding.Left - window.LayoutPadding.Right - 4;
         Height = window.Height - window.LayoutPadding.Top - window.LayoutPadding.Bottom - 4;

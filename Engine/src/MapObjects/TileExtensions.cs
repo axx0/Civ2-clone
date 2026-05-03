@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.Enums;
-using Civ2engine.Terrains;
-using Civ2engine.Units;
 using Model.Core;
 using Model.Core.Mapping;
 using Model.Core.Units;
@@ -80,9 +78,9 @@ namespace Civ2engine.MapObjects
                 {
                     tile.EffectsList.RemoveAll(e => e.Source == imp.Improvement);
                     improvements.Remove(imp);
-                    
-                    if (civsVisibleTo == null) return;
-                    
+
+                    if (civsVisibleTo == null || civsVisibleTo.Count == 0) return;
+
                     foreach (var civId in civsVisibleTo)
                     {
                         var seenImprovement = tile.PlayerKnowledge?[civId]?.Improvements;
@@ -111,7 +109,9 @@ namespace Civ2engine.MapObjects
                 improvements.Add(new ConstructedImprovement
                     { Group = improvement.ExclusiveGroup, Improvement = improvement.Id, Level = levelToBuild });
             }
-            
+
+            if (civsVisibleTo == null) return;
+
             foreach (var civId in civsVisibleTo)
             {
                 var seenImprovement = tile.PlayerKnowledge![civId]!.Improvements;
@@ -126,6 +126,7 @@ namespace Civ2engine.MapObjects
                         { Group = improvement.ExclusiveGroup, Improvement = improvement.Id, Level = levelToBuild });
                 }
             }
+
         }
 
         public static void BuildEffects(this Tile tile, TerrainImprovement improvement, AllowedTerrain terrain, int levelToBuild)

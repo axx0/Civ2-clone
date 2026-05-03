@@ -1,4 +1,5 @@
 using System;
+using Model.Core.Mapping;
 
 namespace Civ2engine.MapObjects
 {

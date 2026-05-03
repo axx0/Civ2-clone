@@ -1,10 +1,10 @@
 using Civ2engine;
-using Civ2engine.Advances;
-using Civ2engine.Enums;
 using Civ2engine.IO;
-using Civ2engine.MapObjects;
 using Civ2engine.Terrains;
 using Model.Core;
+using Model.Core.Advances;
+using Model.Core.Cities;
+using Model.Core.Mapping;
 using Moq;
 
 namespace Core.Tests.Terrains;

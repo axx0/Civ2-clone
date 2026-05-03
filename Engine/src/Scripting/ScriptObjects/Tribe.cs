@@ -1,6 +1,7 @@
 using System.Linq;
 using Civ2engine.Advances;
 using Civ2engine.Scripting.ScriptObjects;
+using Model.Core;
 
 // ReSharper disable UnusedMember.Global
 // ReSharper disable InconsistentNaming

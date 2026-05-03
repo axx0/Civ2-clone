@@ -10,6 +10,8 @@ using RaylibUI.BasicTypes.Controls;
 using RaylibUtils;
 using System.Numerics;
 using Civ2engine.IO;
+using Model.Core.Cities;
+using Model.Core.Mapping;
 
 namespace RaylibUI.RunGame.GameControls.CityControls;
 

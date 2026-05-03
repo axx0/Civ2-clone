@@ -3,6 +3,7 @@ using Civ2engine;
 using Civ2engine.IO;
 using Civ2engine.OriginalSaves;
 using Model;
+using Model.Core;
 using Model.InterfaceActions;
 
 namespace Civ2.Dialogs.FileDialogs;

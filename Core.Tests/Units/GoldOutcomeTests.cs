@@ -1,4 +1,5 @@
 using Civ2engine;
+using Model.Core;
 using Model.Core.GoodyHuts.Outcomes;
 using Model.Core.Units;
 

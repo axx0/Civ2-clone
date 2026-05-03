@@ -1,10 +1,8 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Civ2engine.IO;
-using Civ2engine.MapObjects;
+using Civ2engine;
+using Model.Core.GameRules;
+using Model.Core.Mapping;
 
-namespace Civ2engine
+namespace Model.Core
 {
     public class GameInitializationConfig
     {

@@ -17,6 +17,7 @@ using Raylib_CSharp.Transformations;
 using RaylibUI.RunGame.GameControls.Mapping.Views.ViewElements;
 using RaylibUtils;
 using ExtensionMethods;
+using Model.Core.Mapping;
 
 namespace RaylibUI.RunGame.GameControls.Mapping.Views;
 

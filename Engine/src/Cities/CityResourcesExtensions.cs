@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Security.AccessControl;
 using Model.Constants;
+using Model.Core.Cities;
 
 namespace Civ2engine;
 

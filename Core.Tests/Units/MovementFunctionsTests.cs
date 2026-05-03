@@ -1,11 +1,11 @@
-
-using Civ2engine;
-using Civ2engine.Advances;
 using Civ2engine.Enums;
 using Civ2engine.MapObjects;
-using Civ2engine.Terrains;
 using Civ2engine.UnitActions;
 using Model.Core;
+using Model.Core.Advances;
+using Model.Core.Cities;
+using Model.Core.GameRules;
+using Model.Core.Mapping;
 using Model.Core.Units;
 
 namespace Core.Tests.Units;

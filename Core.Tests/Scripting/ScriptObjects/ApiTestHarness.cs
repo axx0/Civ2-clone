@@ -4,6 +4,10 @@ using Civ2engine.MapObjects;
 using Civ2engine.SaveLoad.SavFile;
 using Civ2engine.Scripting.ScriptObjects;
 using Core.Tests.TestFiles;
+using Model.Core;
+using Model.Core.Cities;
+using Model.Core.GameRules;
+using Model.Core.Mapping;
 using Model.Core.Units;
 
 namespace Core.Tests.Scripting.ScriptObjects;

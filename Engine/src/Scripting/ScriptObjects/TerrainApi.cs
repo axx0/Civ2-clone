@@ -1,5 +1,6 @@
 using Civ2engine.MapObjects;
 using Model.Core;
+using Model.Core.Mapping;
 
 namespace Civ2engine.Scripting;
 

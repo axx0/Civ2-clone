@@ -9,6 +9,8 @@ using Civ2engine.UnitActions;
 using Civ2engine.Units;
 using Model.Constants;
 using Model.Core;
+using Model.Core.Cities;
+using Model.Core.Mapping;
 using Model.Core.Units;
 using Neo.IronLua;
 // ReSharper disable InconsistentNaming

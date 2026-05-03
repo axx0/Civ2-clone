@@ -1,9 +1,10 @@
-using Civ2engine.Production;
-using Model;
+using Civ2engine;
 using Model.Controls;
+using Model.Core.Cities;
+using Model.Core.GameRules;
 using Model.Images;
 
-namespace Civ2engine;
+namespace Model.Core.Production;
 
 public interface IProductionOrder
 {

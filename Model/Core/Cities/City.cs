@@ -1,9 +1,9 @@
-﻿using Civ2engine.MapObjects;
-using Civ2engine.Units;
-using Model.Core.Cities;
+﻿using Civ2engine;
+using Model.Core.Mapping;
+using Model.Core.Production;
 using Model.Core.Units;
 
-namespace Civ2engine
+namespace Model.Core.Cities
 {
     public class City : IMapItem
     {

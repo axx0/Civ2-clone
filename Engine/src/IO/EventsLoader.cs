@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.OriginalSaves;
 using Model;
+using Model.Core.GameRules;
+using Model.Core.ScenarioEvents;
+using Model.Core.ScenarioEvents.Actions;
+using Model.Core.ScenarioEvents.Triggers;
 
 namespace Civ2engine.IO
 {

@@ -1,4 +1,4 @@
-namespace Civ2engine.Production
+namespace Model.Core.Production
 {
     public enum ItemType
     {

@@ -4,6 +4,7 @@ using Civ2engine;
 using Civ2engine.Enums;
 using Model;
 using Model.Controls;
+using Model.Core;
 using Model.InterfaceActions;
 
 namespace Civ2.Dialogs;

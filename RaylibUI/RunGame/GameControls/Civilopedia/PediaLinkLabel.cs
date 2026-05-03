@@ -2,7 +2,7 @@ using Raylib_CSharp.Colors;
 using Raylib_CSharp.Rendering;
 using RaylibUI.BasicTypes.Controls;
 
-namespace RaylibUI.RunGame.GameControls;
+namespace RaylibUI.RunGame.GameControls.Civilopedia;
 
 public class PediaLinkLabel : LabelControl
 {

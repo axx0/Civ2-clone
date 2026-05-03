@@ -1,4 +1,6 @@
 using Civ2engine.SaveLoad.SerializationUtils;
+using Model.Core;
+using Model.Core.GameRules;
 
 namespace Civ2engine.SaveLoad;
 

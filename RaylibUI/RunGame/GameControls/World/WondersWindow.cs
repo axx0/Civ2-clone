@@ -4,6 +4,7 @@ using Civ2engine.IO;
 using Civ2engine.Production;
 using Model;
 using Model.Controls;
+using Model.Core;
 using Raylib_CSharp.Colors;
 using Raylib_CSharp.Interact;
 using RaylibUI.BasicTypes;

@@ -4,6 +4,7 @@ using Civ2engine.IO;
 using JetBrains.Annotations;
 using Model;
 using Model.Controls;
+using Model.Core;
 
 namespace RaylibUI.RunGame.Commands;
 

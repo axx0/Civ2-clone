@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Model.Controls.Civilopedia;
+using Model.Core.GameRules;
 
 namespace Civ2engine;
 
@@ -80,7 +82,7 @@ public class CivilopediaLoader
         }
     }
 
-    public static string GetDescription(Civilopedia pedia, int id)
+    public static string GetDescription(CivilopediaEntry pedia, int id)
     {
         var mappingIndex = pedia.InfoType switch
         {

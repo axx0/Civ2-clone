@@ -3,8 +3,11 @@ using Civ2engine.IO;
 using Core.Tests.TestFiles;
 using Model;
 using Model.Controls;
+using Model.Controls.Civilopedia;
 using Model.Core;
 using Model.Core.Advances;
+using Model.Core.Cities;
+using Model.Core.GameRules;
 using Model.Images;
 using Model.ImageSets;
 using Model.InterfaceActions;
@@ -133,7 +136,7 @@ internal class MockInterface : IUserInterface
         throw new NotImplementedException();
     }
 
-    public CivilopediaProperties GetCivilopediaProperties(Civilopedia civilopedia)
+    public CivilopediaProperties GetCivilopediaProperties(CivilopediaEntry civilopediaEntry)
     {
         throw new NotImplementedException();
     }

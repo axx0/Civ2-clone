@@ -6,6 +6,7 @@ using Civ2engine.MapObjects;
 using Civ2engine.Production;
 using Civ2engine.Terrains;
 using Model.Constants;
+using Model.Core;
 using Model.Core.Advances;
 
 namespace Civ2engine.Advances

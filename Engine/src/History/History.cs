@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.Advances;
 using Model.Core;
+using Model.Core.Cities;
 
 namespace Civ2engine
 {

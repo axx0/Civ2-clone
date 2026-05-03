@@ -2,6 +2,7 @@
 using Civ2engine.IO;
 using Model;
 using Model.Controls;
+using Model.Core;
 using Model.Images;
 using Raylib_CSharp.Colors;
 using Raylib_CSharp.Interact;
