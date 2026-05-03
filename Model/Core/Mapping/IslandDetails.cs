@@ -1,5 +1,3 @@
-using Civ2engine.MapObjects;
-
 namespace Model.Core.Mapping;
 
 public class IslandDetails

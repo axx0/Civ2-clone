@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Model.Core.ScenarioEvents.Actions;
+using Model.Core.ScenarioEvents.Triggers;
 
-namespace Model;
+namespace Model.Core.ScenarioEvents;
 
 public class ScenarioEvent
 {

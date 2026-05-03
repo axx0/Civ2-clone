@@ -1,6 +1,6 @@
 using System.Collections;
 using Civ2engine;
-using Civ2engine.Terrains;
+using Model.Core.Cities;
 using Model.Core.Mapping;
 
 namespace Model.Core;

@@ -1,8 +1,6 @@
-﻿using Civ2engine;
-using Civ2engine.Enums;
-using System.Collections.Generic;
+﻿using Model.Core.Cities;
 
-namespace Model;
+namespace Model.Core.ScenarioEvents.Actions;
 
 public class CreateUnit : IScenarioAction
 {

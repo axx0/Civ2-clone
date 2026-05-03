@@ -18,6 +18,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Model.Constants;
+using Model.Core.GameRules;
+using Model.Core.ScenarioEvents;
+using Model.Core.ScenarioEvents.Actions;
+using Model.Core.ScenarioEvents.Triggers;
 using Model.Core.Units;
 
 namespace Civ2engine.OriginalSaves;

@@ -1,9 +1,9 @@
 using Civ2engine;
-using Civ2engine.Enums;
-using Civ2engine.MapObjects;
-using Civ2engine.Terrains;
 using Model.Constants;
 using Model.Core;
+using Model.Core.Cities;
+using Model.Core.GameRules;
+using Model.Core.Mapping;
 using Model.Core.Units;
 using Moq;
 

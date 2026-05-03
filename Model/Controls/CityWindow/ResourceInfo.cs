@@ -1,4 +1,5 @@
 using Civ2engine;
+using Model.Core.Cities;
 using Model.Images;
 
 namespace Model.Controls;

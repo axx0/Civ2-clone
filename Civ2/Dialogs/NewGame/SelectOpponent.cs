@@ -1,6 +1,7 @@
 using Civ2.Rules;
 using Civ2engine;
 using Model.Controls;
+using Model.Core.GameRules;
 using Model.InterfaceActions;
 
 namespace Civ2.Dialogs.NewGame;

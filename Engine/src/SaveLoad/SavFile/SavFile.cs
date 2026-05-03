@@ -3,6 +3,7 @@ using System.Text.Json;
 using Civ2engine.IO;
 using Civ2engine.OriginalSaves;
 using Model.Core;
+using Model.Core.GameRules;
 
 namespace Civ2engine.SaveLoad.SavFile;
 

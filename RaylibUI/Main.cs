@@ -3,6 +3,7 @@ using Civ2engine;
 using Civ2engine.IO;
 using Civ2engine.MapObjects;
 using Model;
+using Model.Core.Mapping;
 using RaylibUI.Initialization;
 using Raylib_CSharp;
 using Raylib_CSharp.Windowing;

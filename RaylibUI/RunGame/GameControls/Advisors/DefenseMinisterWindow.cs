@@ -1,18 +1,15 @@
 ﻿using Civ2engine;
 using Civ2engine.IO;
-using Civ2engine.Production;
 using Model;
 using Model.Controls;
-using Model.Core.Units;
+using Model.Core;
 using Raylib_CSharp.Colors;
 using Raylib_CSharp.Interact;
 using RaylibUI.BasicTypes;
-using RaylibUI.BasicTypes.Controls;
 using RaylibUI.Controls;
-using RaylibUI.RunGame.GameControls.CityControls;
 using RaylibUtils;
 
-namespace RaylibUI.RunGame.GameControls;
+namespace RaylibUI.RunGame.GameControls.Advisors;
 
 public class DefenseMinisterWindow : BaseDialog
 {

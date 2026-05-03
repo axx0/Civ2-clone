@@ -1,4 +1,4 @@
-namespace Civ2engine
+namespace Model.Core.GameRules
 {
     public interface IGovernmentTitles
     {

@@ -13,6 +13,7 @@ using Raylib_CSharp.Transformations;
 using RaylibUI.RunGame.GameControls.Mapping;
 using RaylibUtils;
 using System.Numerics;
+using Model.Core.Mapping;
 
 namespace RaylibUI.RunGame.GameControls.CityControls;
 

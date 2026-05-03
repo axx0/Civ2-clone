@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Civ2engine;
 using Civ2engine.MapObjects;
 using Model.Controls;
+using Model.Core.Mapping;
 using Raylib_CSharp.Interact;
 using Raylib_CSharp.Transformations;
 using RaylibUI.RunGame.GameControls;

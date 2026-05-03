@@ -1,8 +1,7 @@
-using Civ2engine;
 using Civ2engine.IO;
-using Civ2engine.SaveLoad;
 using Civ2engine.SaveLoad.SavFile;
 using Model.Core;
+using Model.Core.GameRules;
 
 namespace Core.Tests.Mocks;
 

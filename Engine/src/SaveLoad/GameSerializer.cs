@@ -1,17 +1,18 @@
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
-using System.Reflection;
 using System.Text.Json;
 using Civ2engine.Advances;
 using Civ2engine.IO;
 using Civ2engine.MapObjects;
 using Civ2engine.Production;
 using Civ2engine.SaveLoad.SerializationUtils;
-using Civ2engine.Units;
 using Model.Core;
+using Model.Core.Advances;
 using Model.Core.Cities;
+using Model.Core.GameRules;
+using Model.Core.Mapping;
+using Model.Core.Production;
 using Model.Core.Units;
 
 namespace Civ2engine.SaveLoad;

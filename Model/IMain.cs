@@ -1,4 +1,4 @@
-using Civ2engine.IO;
+using Model.Core.GameRules;
 
 namespace Model;
 

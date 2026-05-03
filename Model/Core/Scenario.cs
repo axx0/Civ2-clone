@@ -1,4 +1,6 @@
-﻿namespace Model.Core;
+﻿using Model.Core.ScenarioEvents;
+
+namespace Model.Core;
 
 public class Scenario
 {

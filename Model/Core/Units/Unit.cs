@@ -1,8 +1,9 @@
 ﻿using Civ2engine;
 using Civ2engine.Enums;
-using Civ2engine.MapObjects;
 using Civ2engine.Units;
 using Model.Constants;
+using Model.Core.Cities;
+using Model.Core.Mapping;
 
 namespace Model.Core.Units
 {

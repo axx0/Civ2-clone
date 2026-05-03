@@ -1,6 +1,4 @@
-using Civ2engine.Enums;
-
-namespace Civ2engine
+namespace Model.Core.GameRules
 {
     public class Orders
     {

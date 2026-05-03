@@ -1,7 +1,4 @@
-﻿using System;
-using Civ2engine.Enums;
-
-namespace Civ2engine.Events
+﻿namespace Model.Core.Events
 {
     public class PlayerEventArgs : EventArgs
     {

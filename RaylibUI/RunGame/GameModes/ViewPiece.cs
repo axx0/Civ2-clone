@@ -5,6 +5,7 @@ using Civ2engine.IO;
 using Civ2engine.MapObjects;
 using Civ2engine.Terrains;
 using Model.Controls;
+using Model.Core.Mapping;
 using Raylib_CSharp.Interact;
 using Raylib_CSharp.Transformations;
 using RaylibUI.BasicTypes.Controls;

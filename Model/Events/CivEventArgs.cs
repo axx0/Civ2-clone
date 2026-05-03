@@ -1,4 +1,5 @@
 using System;
+using Model.Core;
 
 namespace Civ2engine
 {

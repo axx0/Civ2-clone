@@ -11,6 +11,8 @@ using Civ2engine.Scripting.ScriptObjects;
 using Civ2engine.Statistics;
 using Civ2engine.Terrains;
 using Model.Core;
+using Model.Core.GameRules;
+using Model.Core.Mapping;
 using Model.Core.Player;
 
 namespace Civ2engine

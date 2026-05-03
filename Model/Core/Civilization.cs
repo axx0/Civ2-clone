@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Civ2engine.Advances;
-using Civ2engine.Units;
-using Model.Constants;
-using Model.Core;
+﻿using Model.Constants;
+using Model.Core.Advances;
+using Model.Core.Cities;
 using Model.Core.Units;
 
-namespace Civ2engine
+namespace Model.Core
 {
     public class Civilization
     {

@@ -10,6 +10,7 @@ using Raylib_CSharp.Rendering;
 using Raylib_CSharp.Transformations;
 using RaylibUtils;
 using System.Numerics;
+using Model.Core.Cities;
 
 namespace RaylibUI.RunGame.GameControls.CityControls;
 

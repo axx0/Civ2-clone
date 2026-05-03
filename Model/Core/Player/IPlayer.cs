@@ -1,9 +1,11 @@
 using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.Events;
-using Civ2engine.MapObjects;
 using Model.Core.Advances;
+using Model.Core.Cities;
 using Model.Core.GoodyHuts.Outcomes;
+using Model.Core.Mapping;
+using Model.Core.Production;
 using Model.Core.Units;
 
 namespace Model.Core.Player

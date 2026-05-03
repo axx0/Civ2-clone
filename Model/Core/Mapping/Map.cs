@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Model.Core.Mapping;
-
-namespace Civ2engine.MapObjects
+namespace Model.Core.Mapping
 {
     public class Map
     {

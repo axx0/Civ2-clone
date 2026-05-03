@@ -1,27 +1,28 @@
-using Civ2engine;
+using System.Numerics;
 using Model;
 using Model.Controls;
+using Model.Controls.Civilopedia;
 using Model.Core.Advances;
+using Model.Core.GameRules;
 using Raylib_CSharp.Colors;
 using Raylib_CSharp.Rendering;
 using RaylibUI.BasicTypes.Controls;
 using RaylibUtils;
-using System.Numerics;
 
-namespace RaylibUI.RunGame.GameControls.CityControls;
+namespace RaylibUI.RunGame.GameControls.Civilopedia;
 
 public class CivilopediaTree : BaseControl
 {
     private readonly CivilopediaWindow _window;
     private readonly IUserInterface _active;
-    private readonly Civilopedia _pedia;
+    private readonly CivilopediaEntry _pedia;
     private readonly List<Advance> _advances;
     private readonly Advance? _prereq1, _prereq2, _prereq3;
     private readonly int _mainLabelW, _mainLabelH, _imgW, _imgH;
     private readonly Rules _rules;
     private readonly Color _color = new(225, 223, 79, 255);
 
-    public CivilopediaTree(CivilopediaWindow window, GameScreen gameScreen, List<Advance> advances, Civilopedia pedia) : base(window)
+    public CivilopediaTree(CivilopediaWindow window, GameScreen gameScreen, List<Advance> advances, CivilopediaEntry pedia) : base(window)
     {
         _window = window;
         _pedia = pedia;

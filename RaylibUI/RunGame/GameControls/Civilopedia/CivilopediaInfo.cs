@@ -1,20 +1,22 @@
 using Civ2engine;
+using Civ2engine.IO;
 using Civ2engine.Terrains;
 using Model.Controls;
+using Model.Controls.Civilopedia;
 using Model.Core.Advances;
+using Model.Core.Cities;
+using Model.Core.Mapping;
 using Model.Core.Units;
 using Model.Images;
 using RaylibUI.BasicTypes.Controls;
-using System.Data;
-using Civ2engine.IO;
 
-namespace RaylibUI.RunGame.GameControls.CityControls;
+namespace RaylibUI.RunGame.GameControls.Civilopedia;
 
 public class CivilopediaInfo : BaseControl
 {
     public CivilopediaInfo(CivilopediaWindow window, GameScreen gameScreen, List<Advance> advances,
         List<Improvement> improvements, List<Improvement> wonders, List<UnitDefinition> units,
-        List<ITerrain> terrains, Civilopedia pedia) : base(window)
+        List<ITerrain> terrains, CivilopediaEntry pedia) : base(window)
     {
         var active = gameScreen.MainWindow.ActiveInterface;
         var rules = gameScreen.Game.Rules;

@@ -2,6 +2,7 @@ using Civ2.Rules;
 using Civ2engine;
 using Model;
 using Model.Controls;
+using Model.Core;
 using Model.InterfaceActions;
 
 namespace Civ2.Dialogs;

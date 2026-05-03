@@ -1,7 +1,4 @@
-using Civ2engine.Enums;
-using Model.Core;
-
-namespace Civ2engine
+namespace Model.Core.Mapping
 {
     public class TerrainParams
     {

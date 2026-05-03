@@ -7,6 +7,7 @@ using Model;
 using Model.InterfaceActions;
 using System.Text.RegularExpressions;
 using Civ2engine.OriginalSaves;
+using Model.Core;
 
 namespace Civ2.Dialogs.FileDialogs;
 

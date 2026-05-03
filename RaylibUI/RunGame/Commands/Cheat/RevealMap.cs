@@ -4,6 +4,8 @@ using Civ2engine.IO;
 using Civ2engine.MapObjects;
 using Model.Controls;
 using JetBrains.Annotations;
+using Model.Core;
+using Model.Core.Mapping;
 
 namespace RaylibUI.RunGame.Commands.Cheat;
 

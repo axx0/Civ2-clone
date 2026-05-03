@@ -5,6 +5,8 @@ using Civ2engine.Enums;
 using Civ2engine.IO;
 using Civ2engine.Terrains;
 using Model;
+using Model.Core.GameRules;
+using Model.Core.Mapping;
 using Model.ImageSets;
 using Raylib_CSharp.Transformations;
 using RaylibUI;

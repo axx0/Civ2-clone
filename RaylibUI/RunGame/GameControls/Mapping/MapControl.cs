@@ -10,6 +10,7 @@ using RaylibUI.BasicTypes.Controls;
 using RaylibUI.RunGame.GameControls.Mapping.Views;
 using Model;
 using Model.Core;
+using Model.Core.Mapping;
 using Model.Interface;
 using Raylib_CSharp.Rendering;
 using Raylib_CSharp.Colors;

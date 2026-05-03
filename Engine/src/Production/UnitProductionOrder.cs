@@ -1,38 +1,32 @@
-using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.Enums;
-using Civ2engine.Statistics;
-using Civ2engine.Units;
 using Model;
 using Model.Constants;
 using Model.Controls;
+using Model.Core.Cities;
+using Model.Core.GameRules;
+using Model.Core.Production;
 using Model.Core.Units;
 using Model.Images;
 
 namespace Civ2engine.Production
 {
-    public class UnitProductionOrder : ProductionOrder
+    public class UnitProductionOrder(UnitDefinition unitDefinition, int index) : ProductionOrder(unitDefinition.Cost,
+        ItemType.Unit,
+        index, unitDefinition.Prereq, unitDefinition.CivCanBuild, unitDefinition.Until)
     {
-        private readonly UnitDefinition _unitDefinition;
-
-        public UnitProductionOrder(UnitDefinition unitDefinition, int index) : base(unitDefinition.Cost, ItemType.Unit,
-            index, unitDefinition.Prereq, unitDefinition.CivCanBuild,  unitDefinition.Until)
-        {
-            _unitDefinition = unitDefinition;
-        }
-
-        public override string Title => _unitDefinition.Name;
+        public override string Title => unitDefinition.Name;
 
         public override bool CompleteProduction(City city, Rules rules)
         {
-            if (_unitDefinition.AIrole == AiRoleType.Settle && city.Size == 1)
+            if (unitDefinition.AIrole == AiRoleType.Settle && city.Size == 1)
             {
                 return false;
             }
 
             var veteran = city.Improvements.Any(i =>
                 i.Effects.ContainsKey(Effects.Veteran) &&
-                i.Effects[Effects.Veteran] == (int)_unitDefinition.Domain);
+                i.Effects[Effects.Veteran] == (int)unitDefinition.Domain);
 
             var unit = new Unit
             {
@@ -42,13 +36,13 @@ namespace Civ2engine.Production
                 HomeCity = city,
                 CurrentLocation = city.Location,
                 Owner = city.Owner,
-                TypeDefinition = _unitDefinition,
+                TypeDefinition = unitDefinition,
                 Veteran = veteran,
                 Order = (int)OrderType.NoOrders
             };
             unit.Owner.Units.Add(unit);
 
-            if (_unitDefinition.AIrole == AiRoleType.Settle)
+            if (unitDefinition.AIrole == AiRoleType.Settle)
             {
                 city.Size -= 1;
             }
@@ -64,17 +58,17 @@ namespace Civ2engine.Production
 
         public override IImageSource? GetIcon(IUserInterface activeInterface)
         {
-            return activeInterface.UnitImages.Units[_unitDefinition.Type].Image;
+            return activeInterface.UnitImages.Units[unitDefinition.Type].Image;
         }
 
         public override bool IsValidBuild(City city)
         {
-            return _unitDefinition.Domain != UnitGas.Sea || city.IsNextToOcean();
+            return unitDefinition.Domain != UnitGas.Sea || city.IsNextToOcean();
         }
 
         public override string GetDescription()
         {
-            return _unitDefinition.Name;
+            return unitDefinition.Name;
         }
 
         public override ListboxGroup GetBuildListEntry(IUserInterface active, City city)
@@ -82,10 +76,10 @@ namespace Civ2engine.Production
             return new ListboxGroup
             {
                 Elements = [ new() { Icon = GetIcon(active), Width = 2 * 36 + 2, ScaleIcon = 0.75f },
-                             new() { Text = _unitDefinition.Name, Width = 200 },
-                             new() { Text = $"({(10 * _unitDefinition.Cost - city.ShieldsProgress) / city.Production} Turns, ADM: " +
-                             $"{_unitDefinition.Attack}/{_unitDefinition.Defense}/{_unitDefinition.Move / 3} " +
-                             $"HP: {_unitDefinition.Hitp / 10}/{_unitDefinition.Firepwr})", HorizontalAlignment = HorizontalAlignment.Right } ],
+                             new() { Text = unitDefinition.Name, Width = 200 },
+                             new() { Text = $"({(10 * unitDefinition.Cost - city.ShieldsProgress) / city.Production} Turns, ADM: " +
+                             $"{unitDefinition.Attack}/{unitDefinition.Defense}/{unitDefinition.Move / 3} " +
+                             $"HP: {unitDefinition.Hitp / 10}/{unitDefinition.Firepwr})", HorizontalAlignment = HorizontalAlignment.Right } ],
                 Height = 24,
             };
         }

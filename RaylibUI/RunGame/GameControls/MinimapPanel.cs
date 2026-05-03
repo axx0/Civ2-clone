@@ -14,6 +14,7 @@ using Raylib_CSharp.Colors;
 using Raylib_CSharp.Rendering;
 using Civ2engine.MapObjects;
 using ExtensionMethods;
+using Model.Core.Mapping;
 using Raylib_CSharp.Collision;
 using Raylib_CSharp.Interact;
 

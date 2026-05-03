@@ -5,7 +5,6 @@ using Civ2.Rules;
 using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.IO;
-using Civ2engine.MapObjects;
 using Model;
 using Model.Constants;
 using Model.Controls;
@@ -22,6 +21,9 @@ using Raylib_CSharp.Textures;
 using Raylib_CSharp.Transformations;
 using System.Numerics;
 using System.Text.RegularExpressions;
+using Model.Controls.Civilopedia;
+using Model.Core.Cities;
+using Model.Core.GameRules;
 
 namespace Civ2;
 
@@ -500,7 +502,7 @@ public abstract class Civ2Interface(IMain main) : IUserInterface
         return DialogHandlers[ScenarioLoadedDialog.Title].Show(this);
     }
 
-    public IInterfaceAction HandleLoadGame(IGame game, Civ2engine.Rules rules, Ruleset ruleset,
+    public IInterfaceAction HandleLoadGame(IGame game, Model.Core.GameRules.Rules rules, Ruleset ruleset,
         Dictionary<string, string?> viewData)
     {
         ExpectedMaps = game.NoMaps;
@@ -566,7 +568,7 @@ public abstract class Civ2Interface(IMain main) : IUserInterface
         return Labels.For(epoch < 3 ? LabelIndex.wisemen : LabelIndex.scientists);
     }
 
-    public CivilopediaProperties GetCivilopediaProperties(Civilopedia civilopedia)
+    public CivilopediaProperties GetCivilopediaProperties(CivilopediaEntry civilopediaEntry)
     {
         return new()
         {
@@ -576,13 +578,13 @@ public abstract class Civ2Interface(IMain main) : IUserInterface
                 Columns = 2,
                 RowHeight = 33,
                 VerticalScrollbar = false,
-                IconScale = civilopedia.InfoType switch
+                IconScale = civilopediaEntry.InfoType switch
                 {
                     CivilopediaInfoType.Advances or CivilopediaInfoType.Improvements or CivilopediaInfoType.Wonders => 1.5f,
                     _ => 1.0f
                 },
             },
-            Buttons = civilopedia switch
+            Buttons = civilopediaEntry switch
             {
                 var c when c.WindowType == CivilopediaWindowType.Description || c.WindowType == CivilopediaWindowType.Tree 
                     => ["Go Back", "Close"],

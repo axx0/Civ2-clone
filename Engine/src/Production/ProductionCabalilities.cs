@@ -2,6 +2,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.Advances;
 using Model.Constants;
+using Model.Core;
+using Model.Core.Advances;
+using Model.Core.Cities;
+using Model.Core.Production;
 
 namespace Civ2engine.Production
 {

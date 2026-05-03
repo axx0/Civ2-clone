@@ -1,6 +1,6 @@
-using Civ2engine.Advances;
+using Model.Core.Advances;
 
-namespace Civ2engine
+namespace Model.Core.GameRules
 {
     public class LeaderDefaults
     {

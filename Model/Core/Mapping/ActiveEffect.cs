@@ -1,21 +1,12 @@
-namespace Civ2engine.MapObjects
+namespace Model.Core.Mapping
 {
-    public class ActiveEffect
+    public class ActiveEffect(TerrainImprovementAction action, int source, int levelNo = 0)
     {
-        public ActiveEffect(TerrainImprovementAction action, int source, int levelNo = 0)
-        {
-            Target = action.Target;
-            Action = action.Action;
-            Value = action.Value;
-            Source = source;
-            Level = levelNo;
-        }
+        public int Target { get; set; } = action.Target;
+        public int Action { get; set; } = action.Action;
+        public int Value { get; set; } = action.Value;
+        public int Source { get; set; } = source;
 
-        public int Target { get; set; }
-        public int Action { get; set; }
-        public int Value { get; set; }
-        public int Source { get; set; }
-        
-        public int Level { get; set; }
+        public int Level { get; set; } = levelNo;
     }
 }

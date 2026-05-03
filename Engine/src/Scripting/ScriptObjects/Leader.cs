@@ -1,4 +1,7 @@
 // ReSharper disable InconsistentNaming
+
+using Model.Core;
+
 namespace Civ2engine.Scripting.ScriptObjects;
 
 public class Leader(Civilization civ)

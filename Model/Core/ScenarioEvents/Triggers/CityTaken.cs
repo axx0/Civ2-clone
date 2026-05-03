@@ -1,7 +1,6 @@
-﻿using Civ2engine;
-using System.Collections.Generic;
+﻿using Model.Core.Cities;
 
-namespace Model;
+namespace Model.Core.ScenarioEvents.Triggers;
 
 public class CityTaken : ITrigger
 {

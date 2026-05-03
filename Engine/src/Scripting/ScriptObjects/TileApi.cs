@@ -5,6 +5,8 @@ using System.Linq;
 using Civ2engine.MapObjects;
 using Civ2engine.Scripting.ScriptObjects;
 using Civ2engine.Units;
+using Model.Core.Cities;
+using Model.Core.Mapping;
 using Model.Core.Units;
 using Neo.IronLua;
 

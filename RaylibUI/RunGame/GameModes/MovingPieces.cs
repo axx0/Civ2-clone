@@ -8,6 +8,7 @@ using Civ2engine.Terrains;
 using Civ2engine.UnitActions;
 using Model.Core;
 using Model.Controls;
+using Model.Core.Mapping;
 using Raylib_CSharp.Interact;
 using Raylib_CSharp.Transformations;
 using RaylibUI.BasicTypes.Controls;

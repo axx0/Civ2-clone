@@ -2,13 +2,15 @@
 using Civ2engine.IO;
 using Model;
 using Model.Controls;
+using Model.Core;
+using Model.Core.Cities;
 using Raylib_CSharp.Colors;
 using Raylib_CSharp.Interact;
 using RaylibUI.BasicTypes;
 using RaylibUI.Controls;
 using RaylibUtils;
 
-namespace RaylibUI.RunGame.GameControls;
+namespace RaylibUI.RunGame.GameControls.Advisors;
 
 public class TradeAdvisorWindow : BaseDialog
 {

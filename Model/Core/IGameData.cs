@@ -1,4 +1,4 @@
-namespace Civ2engine;
+namespace Model.Core;
 
 public interface IGameData
 {

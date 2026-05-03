@@ -1,19 +1,17 @@
 using Civ2engine;
-using Civ2engine.Advances;
 using Civ2engine.Enums;
 using Civ2engine.Events;
 using Civ2engine.MapObjects;
-using Civ2engine.Production;
-using Civ2engine.Units;
 using Model.Controls;
+using Model.Core;
 using Model.Core.Advances;
+using Model.Core.Cities;
 using Model.Core.GoodyHuts.Outcomes;
+using Model.Core.Mapping;
 using Model.Core.Units;
 using Model.Events;
-using Model.Interface;
-using System;
 using Model.Core.Player;
-using static System.Net.Mime.MediaTypeNames;
+using Model.Core.Production;
 
 namespace RaylibUI.RunGame;
 

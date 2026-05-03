@@ -1,12 +1,11 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-using Civ2engine.IO;
 using Civ2engine.MapObjects;
 using Civ2engine.SaveLoad.SerializationUtils;
 using Civ2engine.Terrains;
 using Model.Core;
+using Model.Core.GameRules;
 using Model.Core.Mapping;
 
 namespace Civ2engine.SaveLoad;

@@ -1,6 +1,7 @@
 using System.Numerics;
 using Civ2engine.MapObjects;
 using Model;
+using Model.Core.Mapping;
 using Model.ImageSets;
 
 namespace RaylibUI.RunGame.GameControls.Mapping;

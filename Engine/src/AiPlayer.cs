@@ -10,9 +10,13 @@ using Civ2engine.Scripting.ScriptObjects;
 using Civ2engine.Scripting.UnitActions;
 using Civ2engine.UnitActions;
 using Civ2engine.Units;
+using Model.Core;
 using Model.Core.Advances;
+using Model.Core.Cities;
 using Model.Core.GoodyHuts.Outcomes;
+using Model.Core.Mapping;
 using Model.Core.Player;
+using Model.Core.Production;
 using Model.Core.Units;
 using Neo.IronLua;
 

@@ -1,20 +1,23 @@
-﻿using Civ2engine;
+﻿using System.Numerics;
+using Civ2engine;
+using Civ2engine.IO;
 using Civ2engine.Terrains;
 using Model;
 using Model.Controls;
+using Model.Controls.Civilopedia;
 using Model.Core.Advances;
+using Model.Core.Cities;
+using Model.Core.GameRules;
+using Model.Core.Mapping;
 using Model.Core.Units;
 using Model.Images;
 using Raylib_CSharp.Interact;
 using RaylibUI.BasicTypes;
 using RaylibUI.BasicTypes.Controls;
 using RaylibUI.Controls;
-using RaylibUI.RunGame.GameControls.CityControls;
 using RaylibUtils;
-using System.Numerics;
-using Civ2engine.IO;
 
-namespace RaylibUI.RunGame.GameControls;
+namespace RaylibUI.RunGame.GameControls.Civilopedia;
 
 public class CivilopediaWindow : BaseDialog
 {
@@ -22,7 +25,7 @@ public class CivilopediaWindow : BaseDialog
     private readonly GameScreen _gameScreen;
     private const int InnerWidth = 624;
     private const int InnerHeight = 318;
-    private Civilopedia _pedia;
+    private CivilopediaEntry _pedia;
     private readonly Button _exitIcon;
     private readonly Rules _rules;
     private readonly List<Advance> _advances;
@@ -30,14 +33,14 @@ public class CivilopediaWindow : BaseDialog
     private readonly List<UnitDefinition> _units;
     private readonly List<Government> _govs;
     private readonly List<ITerrain> _terrains = [];
-    private List<Civilopedia> _ctrlHistory = [];
+    private readonly List<CivilopediaEntry> _ctrlHistory = [];
     private readonly List<string> _concepts;
 
-    public CivilopediaWindow(GameScreen gameScreen, Civilopedia civilopedia) : base(gameScreen.Main)
+    public CivilopediaWindow(GameScreen gameScreen, CivilopediaEntry civilopediaEntry) : base(gameScreen.Main)
     {
         _gameScreen = gameScreen;
         _active = gameScreen.MainWindow.ActiveInterface;
-        _pedia = civilopedia;
+        _pedia = civilopediaEntry;
         _rules = _gameScreen.Game.Rules;
 
         _advances = _rules.Advances.Take(89).OrderBy(x => x.Name).ToList();

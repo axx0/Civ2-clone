@@ -1,5 +1,6 @@
 using Civ2engine;
 using Model.Controls;
+using Model.Core;
 using Model.InterfaceActions;
 
 namespace Civ2.Dialogs;

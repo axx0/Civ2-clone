@@ -1,6 +1,7 @@
 using Civ2engine;
 using Model;
 using Model.Controls;
+using Model.Core.Cities;
 using RaylibUI.BasicTypes.Controls;
 using RaylibUtils;
 

@@ -2,17 +2,14 @@ using Civ2engine;
 using Civ2engine.Production;
 using Model;
 using Model.Controls;
-using Model.Images;
-using Raylib_CSharp.Audio;
 using Raylib_CSharp.Colors;
-using Raylib_CSharp.Fonts;
 using Raylib_CSharp.Rendering;
 using Raylib_CSharp.Textures;
-using Raylib_CSharp.Transformations;
 using RaylibUI.BasicTypes.Controls;
-using RaylibUI.Controls;
 using System.Numerics;
 using Civ2engine.IO;
+using Model.Core.Cities;
+using Model.Core.Production;
 
 namespace RaylibUI.RunGame.GameControls.CityControls;
 

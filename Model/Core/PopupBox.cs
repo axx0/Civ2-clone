@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using Model.Core;
-
-namespace Civ2engine
+﻿namespace Model.Core
 {
     /// <summary>
     /// Varios dialog properties read from GAME.TXT.

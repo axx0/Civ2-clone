@@ -9,6 +9,7 @@ using Model.Core.Units;
 using Model.Input;
 using Model.Interface;
 using Model.Controls;
+using Model.Core.Cities;
 using Path = Civ2engine.Units.Path;
 
 namespace RaylibUI.RunGame.Commands.Orders;

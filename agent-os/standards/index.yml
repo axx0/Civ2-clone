@@ -1,0 +1,10 @@
+# Agent OS Standards Index
+
+backend:
+  iplayer-event-sink:
+    description: Decoupling engine logic from player implementations using IPlayer as an event sink
+
+global:
+  extended-data:
+    description: Pattern for storing script/mod metadata on core objects via ExtendedData
+

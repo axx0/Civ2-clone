@@ -1,7 +1,10 @@
-using System.Collections.Generic;
 using System.Linq;
 using Model;
 using Model.Controls;
+using Model.Core;
+using Model.Core.Cities;
+using Model.Core.GameRules;
+using Model.Core.Production;
 using Model.Images;
 
 namespace Civ2engine.Production

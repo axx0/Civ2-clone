@@ -22,15 +22,293 @@
     <configurations />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="38862fe7-8760-4eef-9f9f-5fdba728b888" name="Changes" comment="Test fixes and cleanup for labels loading">
+    <list default="true" id="38862fe7-8760-4eef-9f9f-5fdba728b888" name="Changes" comment="More tests">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/Civ2Interface.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Civ2Interface.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/BaseDialogHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/BaseDialogHandler.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/FileDialogHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/FileDialogHandler.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/FileDialogs/LoadGame.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/FileDialogs/LoadGame.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/FileDialogs/LoadMap.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/FileDialogs/LoadMap.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/FileDialogs/LoadScenario.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/FileDialogs/LoadScenario.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/ICivDialogHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/ICivDialogHandler.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/LoadOk.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/LoadOk.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/NewGame/AdvancedRules.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/NewGame/AdvancedRules.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/NewGame/CustomWorldSize.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/NewGame/CustomWorldSize.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/NewGame/SelectCityStyle.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/NewGame/SelectCityStyle.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/NewGame/SelectGameVersion.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/NewGame/SelectGameVersion.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/NewGame/SelectOpponent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/NewGame/SelectOpponent.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/NewGame/SelectStartingYear.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/NewGame/SelectStartingYear.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/NewGame/SelectTribe.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/NewGame/SelectTribe.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/Scenario/ScenChoseCiv.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/Scenario/ScenChoseCiv.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/Scenario/ScenCustomIntro.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/Scenario/ScenCustomIntro.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/Scenario/ScenIntro.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/Scenario/ScenIntro.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/Scenario/ScenarioLoaded.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/Scenario/ScenarioLoaded.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/ImageLoader/CityLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/ImageLoader/CityLoader.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/ImageLoader/IconLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/ImageLoader/IconLoader.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/ImageLoader/TerrainLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/ImageLoader/TerrainLoader.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/ImageLoader/UnitLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/ImageLoader/UnitLoader.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/Menu/MenuLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Menu/MenuLoader.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/Rules/Initialization.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Rules/Initialization.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2Gold/Civ2GoldInterface.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2Gold/Civ2GoldInterface.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2TOT/TestOfTimeInterface.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2TOT/TestOfTimeInterface.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Civ2clone.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2clone.sln.DotSettings.user" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core.Tests/Ai/AiPlayerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core.Tests/Ai/AiPlayerTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core.Tests/Ai/AiScriptHarnessTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core.Tests/Ai/AiScriptHarnessTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core.Tests/Cities/CityExtensionsTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core.Tests/Cities/CityExtensionsTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core.Tests/GameTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core.Tests/GameTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core.Tests/Mocks/MockGame.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core.Tests/Mocks/MockGame.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core.Tests/Mocks/MockInterface.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core.Tests/Mocks/MockInterface.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core.Tests/Mocks/MockPlayer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core.Tests/Mocks/MockPlayer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core.Tests/Mocks/MockSavFile.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core.Tests/Mocks/MockSavFile.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core.Tests/SaveLoad/GameLoaderTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core.Tests/SaveLoad/GameLoaderTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core.Tests/SaveLoad/GameSerializerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core.Tests/SaveLoad/GameSerializerTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core.Tests/Scripting/ScriptObjects/ApiTestHarness.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core.Tests/Scripting/ScriptObjects/ApiTestHarness.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core.Tests/Scripting/ScriptObjects/TerrainTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core.Tests/Scripting/ScriptObjects/TerrainTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core.Tests/Scripting/ScriptObjects/TileApiTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core.Tests/Scripting/ScriptObjects/TileApiTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core.Tests/Scripting/ScriptObjects/TribeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core.Tests/Scripting/ScriptObjects/TribeTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core.Tests/Terrains/TerrainImprovementTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core.Tests/Terrains/TerrainImprovementTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core.Tests/UnitActions/CityActionsTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core.Tests/UnitActions/CityActionsTest.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core.Tests/Units/GoldOutcomeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core.Tests/Units/GoldOutcomeTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core.Tests/Units/MovementFunctionsTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core.Tests/Units/MovementFunctionsTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core.Tests/Units/UnitExtensionsCombatTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core.Tests/Units/UnitExtensionsCombatTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core.Tests/Units/UnitExtensionsTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core.Tests/Units/UnitExtensionsTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/AdvanceFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/AdvanceFunctions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/AiPlayer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/AiPlayer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Barbarians.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Barbarians.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Engine/src/Cities/CityExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Cities/CityExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Cities/CityResourcesExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Cities/CityResourcesExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Events/CivEventArgs.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Events/CivEventArgs.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Events/UnitInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Events/UnitInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Game.Actions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Game.Actions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Game.LoadGame.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Game.LoadGame.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Game.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Game.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/GameExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/GameExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/History/History.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/History/History.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/IO/CivilopediaLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/IO/CivilopediaLoader.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/IO/EventsLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/IO/EventsLoader.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/IO/Labels.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/IO/Labels.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/IO/Read.PopupBoxes.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/IO/Read.PopupBoxes.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/IO/RulesParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/IO/RulesParser.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/IO/ScenarioIntroLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/IO/ScenarioIntroLoader.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Engine/src/MapObjects/Fertility.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/MapObjects/Fertility.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/MapObjects/MapNavigationFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/MapObjects/MapNavigationFunctions.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Engine/src/MapObjects/TileExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/MapObjects/TileExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/MapObjects/TileResourceExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/MapObjects/TileResourceExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/MapObjects/Utilities.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/MapObjects/Utilities.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/NewGame/NewGameInitialisation.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/NewGame/NewGameInitialisation.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/OriginalSaves/ClassicSaveObjects.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/OriginalSaves/ClassicSaveObjects.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/OriginalSaves/Read.ClassicSav.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/OriginalSaves/Read.ClassicSav.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Production/BuildingProductionOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Production/BuildingProductionOrder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Production/ProductionCabalilities.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Production/ProductionCabalilities.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Production/ProductionOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Production/ProductionOrder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Production/UnitProductionOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Production/UnitProductionOrder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/SaveLoad/GameLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/GameLoader.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Engine/src/SaveLoad/GameSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/GameSerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/SaveLoad/ILoadedGameObjects.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/ILoadedGameObjects.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/SaveLoad/ImorovementEncoder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/ImorovementEncoder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/SaveLoad/JsonSaveObjects.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/JsonSaveObjects.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/SaveLoad/MapSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/MapSerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/SaveLoad/Objects/v1/JsonCityData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/Objects/v1/JsonCityData.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/SaveLoad/Objects/v1/JsonCivData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/Objects/v1/JsonCivData.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/SaveLoad/Objects/v1/JsonMapData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/Objects/v1/JsonMapData.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/SaveLoad/Objects/v1/JsonUnitData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/Objects/v1/JsonUnitData.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/SaveLoad/SavFile/SavFile.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/SavFile/SavFile.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/AxxExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/AxxExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/CivScripts.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/CivScripts.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/AiInterface.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/AiInterface.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/AttitudeProxy.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/AttitudeProxy.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/BaseTerrain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/BaseTerrain.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/CityApi.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/CityApi.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/CityImprovement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/CityImprovement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/Leader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/Leader.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/ReputationProxy.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/ReputationProxy.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/TerrainApi.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/TerrainApi.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/TileApi.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/TileApi.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/TreatiesProxy.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/TreatiesProxy.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/Tribe.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/Tribe.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/UnitType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/UnitType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/UI/Dialog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/UI/Dialog.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/UnitActions/AttackAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/UnitActions/AttackAction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/UnitActions/CaptureAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/UnitActions/CaptureAction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/UnitActions/GotoAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/UnitActions/GotoAction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/UnitActions/InvasionAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/UnitActions/InvasionAction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/UnitActions/MoveAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/UnitActions/MoveAction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/UnitActions/TileAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/UnitActions/TileAction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/UnitActions/UnitAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/UnitActions/UnitAction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/UnitActions/UnloadAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/UnitActions/UnloadAction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Terrains/TerrainImprovementFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Terrains/TerrainImprovementFunctions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/UnitActions/CityActions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/UnitActions/CityActions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/UnitActions/MovementFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/UnitActions/MovementFunctions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/UnitActions/UnitFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/UnitActions/UnitFunctions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Units/Path.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Units/Path.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Units/UnitExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Units/UnitExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Classic/GameData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Classic/GameData.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Controls/CityWindow/ResourceInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Controls/CityWindow/ResourceInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Controls/Civilopedia/Civilopedia.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Controls/Civilopedia/CivilopediaEntry.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Advances/AdvanceGroupAccess.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Advances/AdvanceGroupAccess.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Advances/AdvanceResearch.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Advances/AdvanceResearch.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Advances/AdvancesConstants.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Advances/AdvancesConstants.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Cities/City.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Cities/City.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Cities/Improvement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Cities/Improvement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Civilization.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Civilization.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Events/PlayerEventArgs.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Events/PlayerEventArgs.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Events/PlayerEventType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Events/PlayerEventType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/GameInitializationConfig.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/GameInitializationConfig.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/GameRules/CosmicRules.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/GameRules/CosmicRules.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/GameRules/Government.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/GameRules/Government.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/GameRules/IGovernmentTitles.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/GameRules/IGovernmentTitles.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/GameRules/LeaderDefaults.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/GameRules/LeaderDefaults.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/GameRules/LeaderTitle.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/GameRules/LeaderTitle.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/GameRules/Orders.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/GameRules/Orders.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/GameRules/Rules.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/GameRules/Rules.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/GameRules/Ruleset.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/GameRules/Ruleset.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/IGame.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/IGame.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/IGameData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/IGameData.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/IHistory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/IHistory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/IImprovementEncoder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/IImprovementEncoder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Mapping/ActiveEffect.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/ActiveEffect.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Mapping/CityInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/CityInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Mapping/IslandDetails.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/IslandDetails.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Model/Core/Mapping/Map.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/Map.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Mapping/MapParams.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/MapParams.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Mapping/PlayerTile.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/PlayerTile.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Mapping/Terrain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/Terrain/Terrain.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Mapping/Terrain/AllowedTerrain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/Terrain/AllowedTerrain.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Mapping/Terrain/ConstructedImprovement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/Terrain/ConstructedImprovement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Mapping/Terrain/ITerrain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/Terrain/ITerrain.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Mapping/Terrain/ImprovementActions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/Terrain/ImprovementActions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Mapping/Terrain/ImprovementConstants.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/Terrain/ImprovementConstants.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Mapping/Terrain/ImprovementLevel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/Terrain/ImprovementLevel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Mapping/Terrain/ImprovementTypes.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/Terrain/ImprovementTypes.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Mapping/Terrain/Special.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/Terrain/Special.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Mapping/Terrain/TerrainConstants.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/Terrain/TerrainConstants.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Mapping/Terrain/TerrainImprovement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/Terrain/TerrainImprovement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Mapping/Terrain/TerrainImprovementAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/Terrain/TerrainImprovementAction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Mapping/TerrainParams.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/TerrainParams.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Mapping/TerrainType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/TerrainType.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Model/Core/Mapping/Tile.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/Tile.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Options.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Options.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Player/IPlayer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Player/IPlayer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/PlayerType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/PlayerType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/PopupBox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/PopupBox.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Production/IProductionOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Production/IProductionOrder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Production/ItemType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Production/ItemType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Scenario.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Scenario.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/BestowImprovement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/BestowImprovement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/ChangeMoney.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/ChangeMoney.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/ChangeTerrain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/ChangeTerrain.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/CreateUnit.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/CreateUnit.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/DestroyCiv.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/DestroyCiv.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/DontplayWonders.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/DontplayWonders.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/EnableTechnology.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/EnableTechnology.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/EndGame.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/EndGame.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/EndGameOverride.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/EndGameOverride.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/FlagAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/FlagAction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/GiveTech.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/GiveTech.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/IScenarioAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/IScenarioAction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/MakeAggression.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/MakeAggression.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/ModifyReputation.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/ModifyReputation.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/MoveUnit.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/MoveUnit.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/Negotiator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/Negotiator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/PlayAvi.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/PlayAvi.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/PlayCDtrack.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/PlayCDtrack.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/PlayWav.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/PlayWav.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/TakeTechnology.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/TakeTechnology.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/TextAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/TextAction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/TransportAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Actions/TransportAction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/ScenarioEvents/ScenarioEvent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/ScenarioEvents/ScenarioEvent.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Triggers/AlphaCentauriArrival.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Triggers/AlphaCentauriArrival.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Triggers/BribeUnit.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Triggers/BribeUnit.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Triggers/CheckFlag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Triggers/CheckFlag.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Triggers/CityDestroyed.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Triggers/CityDestroyed.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Triggers/CityProduction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Triggers/CityProduction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Triggers/CityTaken.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Triggers/CityTaken.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Triggers/ITrigger.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Triggers/ITrigger.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Triggers/Negotiation1.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Triggers/Negotiation1.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Triggers/Negotiation2.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Triggers/Negotiation2.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Triggers/NoSchism.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Triggers/NoSchism.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Triggers/RandomTurn.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Triggers/RandomTurn.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Triggers/ReceivedTechnology.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Triggers/ReceivedTechnology.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Triggers/ScenarioLoaded.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Triggers/ScenarioLoaded.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Triggers/TurnInterval.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Triggers/TurnInterval.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Triggers/TurnTrigger.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Triggers/TurnTrigger.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Triggers/UnitKilled.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/ScenarioEvents/Triggers/UnitKilled.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Units/IUnit.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Units/IUnit.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Units/Unit.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Units/Unit.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Events/CivEventArgs.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Events/CivEventArgs.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Events/GoodyHutOutcomeEventArgs.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Events/GoodyHutOutcomeEventArgs.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Events/MapEventArgs.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Events/MapEventArgs.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Events/MovementEventArgs.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Events/MovementEventArgs.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Events/UnitEventArgs.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Events/UnitEventArgs.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Events/UnitInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Events/UnitInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/IMain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/IMain.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/IUserInterface.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/IUserInterface.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/ImageSets/TerrainSet.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/ImageSets/TerrainSet.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Utils/FileUtilities.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Utils/FileUtilities.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/Initialization/Helpers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Initialization/Helpers.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/Main.LoadGame.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Main.LoadGame.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/Main.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Main.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/AttitudeAdvisor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/AttitudeAdvisor.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Cheat/RevealMap.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Cheat/RevealMap.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/CityStatus.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/CityStatus.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Civilopedia/CivilopediaAdvances.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Civilopedia/CivilopediaAdvances.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Civilopedia/CivilopediaConcepts.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Civilopedia/CivilopediaConcepts.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Civilopedia/CivilopediaGovernments.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Civilopedia/CivilopediaGovernments.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Civilopedia/CivilopediaImprovements.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Civilopedia/CivilopediaImprovements.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Civilopedia/CivilopediaTerrain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Civilopedia/CivilopediaTerrain.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Civilopedia/CivilopediaUnits.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Civilopedia/CivilopediaUnits.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Civilopedia/CivilopediaWonders.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Civilopedia/CivilopediaWonders.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/DefenseMinister.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/DefenseMinister.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/GameOptions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/GameOptions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/GraphicOptions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/GraphicOptions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/BuildCity.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/BuildCity.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/GotoOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/GotoOrder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/ImprovementOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/ImprovementOrder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/PillageOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/PillageOrder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/ScienceAdvisor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/ScienceAdvisor.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/TradeAdvisor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/TradeAdvisor.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Advisors/AdvisorsHeaderLabel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Advisors/AdvisorsHeaderLabel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Advisors/AttitudeAdvisorWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Advisors/AttitudeAdvisorWindow.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Advisors/CityStatusWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Advisors/CityStatusWindow.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Advisors/DefenseMinisterWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Advisors/DefenseMinisterWindow.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Advisors/ScienceAdvisorWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Advisors/ScienceAdvisorWindow.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Advisors/TradeAdvisorWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Advisors/TradeAdvisorWindow.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/CityCitizensBox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/CityCitizensBox.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/CityInfoArea.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/CityInfoArea.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/CityTileMap.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/CityTileMap.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/CityView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/CityView.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/CityWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/CityWindow.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/FoodStorageBox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/FoodStorageBox.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/ProductionBox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/ProductionBox.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/UnitsPresentBox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/UnitsPresentBox.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Civilopedia/CivilopediaDescription.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Civilopedia/CivilopediaDescription.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Civilopedia/CivilopediaInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Civilopedia/CivilopediaInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Civilopedia/CivilopediaTree.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Civilopedia/CivilopediaTree.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Civilopedia/CivilopediaWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Civilopedia/CivilopediaWindow.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Civilopedia/PediaLabel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Civilopedia/PediaLabel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Civilopedia/PediaLinkLabel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Civilopedia/PediaLinkLabel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/MapControl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/MapControl.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/MapImage.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/MapImage.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/TileTextureCache.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/TileTextureCache.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/BaseGameView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/BaseGameView.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/IGameView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/IGameView.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/StaticView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/StaticView.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/CityData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/CityData.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/HealthBar.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/HealthBar.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/IViewElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/IViewElement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/RectangleElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/RectangleElement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/TextElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/TextElement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/TextureElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/TextureElement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/WaitingView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/WaitingView.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/MinimapPanel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/MinimapPanel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/TaxRateWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/TaxRateWindow.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/World/WondersWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/World/WondersWindow.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameModes/IGameMode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameModes/IGameMode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameModes/MovingPieces.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameModes/MovingPieces.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameModes/ProcessingMode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameModes/ProcessingMode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameModes/ViewPiece.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameModes/ViewPiece.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameScreen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameScreen.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/LocalPlayer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/LocalPlayer.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -250,7 +528,8 @@
       <workItem from="1775782662182" duration="17000" />
       <workItem from="1775782687724" duration="22000" />
       <workItem from="1775782871012" duration="10317000" />
-      <workItem from="1776505140532" duration="6036000" />
+      <workItem from="1776505140532" duration="21899000" />
+      <workItem from="1777753500111" duration="4735000" />
     </task>
     <task id="LOCAL-00001" summary="Reveal map working">
       <option name="closed" value="true" />
@@ -380,7 +659,15 @@
       <option name="project" value="LOCAL" />
       <updated>1775795586949</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="More tests">
+      <option name="closed" value="true" />
+      <created>1776677476993</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1776677476993</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -390,12 +677,38 @@
     <option name="coveragePercentColumnWidth" value="150" />
     <option name="sortOrder" value="ASCENDING" />
     <option name="sortedColumn" value="1" />
-    <option name="symbolColumnWidth" value="256" />
+    <option name="symbolColumnWidth" value="288" />
     <coverage-tree-state>
       <expand>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 0% 20687/20687" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 12% 19500/22209" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="Total 12% 19500/22209" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Tests 78% 381/1733" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="Total 12% 19500/22209" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Tests 78% 381/1733" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Core.Tests 78% 381/1733" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="Total 12% 19500/22209" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Tests 78% 381/1733" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Core.Tests 78% 381/1733" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Core.Tests 78% 379/1731" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="Total 12% 19500/22209" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Tests 78% 381/1733" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Core.Tests 78% 381/1733" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Core.Tests 78% 379/1731" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Mocks 8% 164/179" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
       </expand>
       <select />
@@ -431,7 +744,8 @@
     <MESSAGE value="AI now selects research based on AIValue modified for epoch" />
     <MESSAGE value="Added tests" />
     <MESSAGE value="Test fixes and cleanup for labels loading" />
-    <option name="LAST_COMMIT_MESSAGE" value="Test fixes and cleanup for labels loading" />
+    <MESSAGE value="More tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="More tests" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -451,26 +765,26 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Engine/src/Scripting/CivScripts.cs</url>
-          <line>140</line>
+          <line>142</line>
           <properties documentPath="C:\Users\R-105\source\repos\Civ2-clone\Engine\src\Scripting\CivScripts.cs" containingFunctionPresentation="Method 'createUnit'">
             <startOffsets>
-              <option value="5163" />
+              <option value="5207" />
             </startOffsets>
             <endOffsets>
-              <option value="5599" />
+              <option value="5643" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="33" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Engine/src/Scripting/CivScripts.cs</url>
-          <line>153</line>
+          <line>155</line>
           <properties documentPath="C:\Users\R-105\source\repos\Civ2-clone\Engine\src\Scripting\CivScripts.cs" containingFunctionPresentation="Method 'createUnit'">
             <startOffsets>
-              <option value="5612" />
+              <option value="5656" />
             </startOffsets>
             <endOffsets>
-              <option value="5632" />
+              <option value="5676" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="34" />
@@ -495,13 +809,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/AiInterface.cs</url>
-          <line>65</line>
+          <line>67</line>
           <properties documentPath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/AiInterface.cs" containingFunctionPresentation="Method 'Call'">
             <startOffsets>
-              <option value="2206" />
+              <option value="2257" />
             </startOffsets>
             <endOffsets>
-              <option value="2262" />
+              <option value="2313" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="85" />

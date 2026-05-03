@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
 using Model.Controls;
 using Model.Input;
-using RaylibUI.RunGame.GameControls;
+using RaylibUI.RunGame.GameControls.Advisors;
 
 namespace RaylibUI.RunGame.Commands;
 
@@ -11,7 +11,6 @@ public class ScienceAdvisor(GameScreen gameScreen)
 {
     public override void Action()
     {
-        // ReSharper disable once StringLiteralTypo
-        GameScreen.ShowDialog(new ScienceAdvisorWindow(gameScreen));
+        GameScreen.ShowDialog(new ScienceAdvisorWindow(GameScreen));
     }
 }

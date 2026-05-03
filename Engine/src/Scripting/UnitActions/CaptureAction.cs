@@ -1,4 +1,5 @@
 using Civ2engine.UnitActions;
+using Model.Core.Cities;
 using Model.Core.Units;
 
 namespace Civ2engine.Scripting.UnitActions;

@@ -1,11 +1,10 @@
-using Civ2engine.Terrains;
-using Model.Core;
+using Civ2engine;
+using Model.Core.Cities;
 using Model.Core.GoodyHuts;
 using Model.Core.GoodyHuts.Outcomes;
-using Model.Core.Mapping;
 using Model.Core.Units;
 
-namespace Civ2engine.MapObjects
+namespace Model.Core.Mapping
 {
     public class Tile : IMapItem
     {

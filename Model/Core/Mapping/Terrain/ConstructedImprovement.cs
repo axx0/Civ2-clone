@@ -1,6 +1,4 @@
-using System;
-
-namespace Civ2engine.Terrains
+namespace Model.Core.Mapping
 {
     public class ConstructedImprovement
     {

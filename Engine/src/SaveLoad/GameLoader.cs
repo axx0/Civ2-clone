@@ -4,8 +4,8 @@ using Civ2engine.IO;
 using Civ2engine.SaveLoad.SavFile;
 using Model;
 using Model.Core;
+using Model.Core.GameRules;
 using Model.InterfaceActions;
-using Model.Utils;
 
 namespace Civ2engine.SaveLoad;
 

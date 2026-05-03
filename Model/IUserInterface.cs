@@ -1,5 +1,4 @@
 ﻿using Civ2engine;
-using Civ2engine.IO;
 using Model.Images;
 using Model.ImageSets;
 using Model.InterfaceActions;
@@ -9,6 +8,9 @@ using Model.Core;
 using Model.Core.Advances;
 using Raylib_CSharp.Transformations;
 using Model.Controls;
+using Model.Controls.Civilopedia;
+using Model.Core.Cities;
+using Model.Core.GameRules;
 
 namespace Model;
 
@@ -69,5 +71,5 @@ public interface IUserInterface
     IImageSource? GetImprovementImage(Improvement improvement, int firstWonderIndex);
     IImageSource? GetAdvanceImage(Advance advance);
     string GetScientistName(int civilizationEpoch);
-    CivilopediaProperties GetCivilopediaProperties(Civilopedia civilopedia);
+    CivilopediaProperties GetCivilopediaProperties(CivilopediaEntry civilopediaEntry);
 }

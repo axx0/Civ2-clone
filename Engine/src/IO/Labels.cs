@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using Model.Core.GameRules;
 
 namespace Civ2engine.IO
 {

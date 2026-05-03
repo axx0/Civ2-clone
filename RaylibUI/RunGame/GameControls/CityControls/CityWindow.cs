@@ -15,6 +15,7 @@ using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using Civ2engine.IO;
+using Model.Core.Cities;
 
 namespace RaylibUI.RunGame.GameControls.CityControls;
 

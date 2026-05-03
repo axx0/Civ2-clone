@@ -2,6 +2,7 @@ using Civ2engine;
 using Model.Controls;
 using RaylibUI.BasicTypes;
 using System.Drawing;
+using Model.Core.Cities;
 
 namespace RaylibUI.RunGame.GameControls.CityControls;
 

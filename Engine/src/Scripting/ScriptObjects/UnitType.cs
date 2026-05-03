@@ -5,6 +5,8 @@ using Civ2engine.MapObjects;
 using Civ2engine.UnitActions;
 using Civ2engine.Units;
 using Model.Constants;
+using Model.Core.Advances;
+using Model.Core.Mapping;
 using Model.Core.Units;
 
 // ReSharper disable UnusedMember.Global

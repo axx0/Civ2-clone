@@ -1,15 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Civ2engine.Advances;
-using Civ2engine.Enums;
-using Civ2engine.Production;
-using Civ2engine.Terrains;
-using Civ2engine.Units;
+﻿using Civ2engine.Enums;
 using Model.Core.Advances;
 using Model.Core.Cities;
+using Model.Core.Mapping;
+using Model.Core.Production;
 using Model.Core.Units;
 
-namespace Civ2engine
+namespace Model.Core.GameRules
 {
     public class Rules
     {
