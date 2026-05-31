@@ -1,7 +1,6 @@
 using Model.Input;
 using Civ2engine;
 using Civ2engine.IO;
-using Civ2engine.MapObjects;
 using Model.Controls;
 using JetBrains.Annotations;
 using Model.Core;
