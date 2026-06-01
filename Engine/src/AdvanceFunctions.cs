@@ -86,7 +86,7 @@ namespace Civ2engine.Advances
                 .DefaultIfEmpty(0).Max();
         }
 
-        public static void GiveAdvance(this Game game, int advanceIndex, Civilization civilization)
+        public static void GiveAdvance(this IGame game, int advanceIndex, Civilization civilization)
         {
             var research = _researched[advanceIndex];
             if(civilization.Advances[advanceIndex]) return;
@@ -95,7 +95,7 @@ namespace Civ2engine.Advances
             ApplyCivAdvance(game, advanceIndex, civilization, research, civilization.Id);
         }
 
-        private static void ApplyCivAdvance(Game game, int advanceIndex, Civilization civilization, AdvanceResearch research,
+        private static void ApplyCivAdvance(IGame game, int advanceIndex, Civilization civilization, AdvanceResearch research,
             int targetCiv)
         {
             if (!research.Discovered)
@@ -153,7 +153,7 @@ namespace Civ2engine.Advances
                                 game.Rules.Terrains[loc.tile.Z], loc.tile.GetCivsVisibleTo(game));
                             return loc.tile;
                         }).ToList();
-                    game.TriggerMapEvent(MapEventType.UpdateMap, improvement.HasMultiTile ? locations.Concat(locations.SelectMany(l=> l.Neighbours())).ToList() : locations );
+                    game.UpdateTiles(improvement.HasMultiTile ? locations.Concat(locations.SelectMany(l=> l.Neighbours())).ToList() : locations );
                 }
             }
 
@@ -218,6 +218,22 @@ namespace Civ2engine.Advances
             
             //TODO: cull list based on difficulty
             return allAvailable.ToList();
+        }
+        
+        /// <summary>
+        /// Get a list of advances that can be taken by the active civilization from another civilization.
+        ///
+        ///     This could be used for diplomat/spy steals or gaining tech on city capture
+        /// </summary>
+        /// <param name="game">The game object</param>
+        /// <param name="activeCiv">Civ gaining tech</param>
+        /// <param name="fromCiv">Civ that has tech</param>
+        /// <returns>List of takable techs</returns>
+        public static List<Advance> CalculateResearchTheft(IGame game, Civilization activeCiv, Civilization fromCiv)
+        {
+            return game.Rules.Advances.Where(a =>
+                activeCiv.AllowedAdvanceGroups[a.AdvanceGroup] == AdvanceGroupAccess.CanResearch &&
+                HasTech(fromCiv, a.Index) && !HasTech(activeCiv, a.Index)).ToList();
         }
     }
 }

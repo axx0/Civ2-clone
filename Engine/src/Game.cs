@@ -75,22 +75,19 @@ namespace Civ2engine
         public Civilization GetPlayerCiv => AllCivilizations.FirstOrDefault(c => c.PlayerType == PlayerType.Local);
 
         public IPlayer[] Players { get; }
-        
 
-        public void TriggerMapEvent(MapEventType eventType, List<Tile> tilesChanged)
+
+        public void UpdateTiles(IList<Tile> tilesChanged)
         {
             foreach (var player in Players)
             {
-                //var tiles = tilesChanged.Where(t => t.Map.IsCurrentlyVisible(t, player.Civilization.Id)).ToList();
-                var tiles = tilesChanged;
+                var tiles = tilesChanged.Where(t => t.Map.IsCurrentlyVisible(t, player.Civilization.Id)).ToList();
                 if (tiles.Count > 0)
                 {
                     tiles.ForEach(t => t.UpdatePlayer(player.Civilization.Id));
                     player.MapChanged(tiles);
                 }
             }
-            OnMapEvent?.Invoke(this, new MapEventArgs(eventType)
-            { TilesChanged = tilesChanged });
         }
 
         private double? _maxDistance;

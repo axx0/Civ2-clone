@@ -1,4 +1,5 @@
 using Civ2engine;
+using Civ2engine.Advances;
 using Civ2engine.Enums;
 using Civ2engine.Events;
 using Civ2engine.MapObjects;
@@ -223,5 +224,23 @@ public class LocalPlayer : IPlayer
         };
 
         _gameScreen.ShowPopup(popupName, replaceNumbers: [50]);
+    }
+
+    public void SelectTechFromConquest(List<Advance> techs)
+    {
+        var advance = _gameScreen.Game.Random.ChooseFrom(techs);
+        _gameScreen.Game.GiveAdvance(advance.Index, Civilization);
+        
+        //TODO: Show popup
+    }
+
+    public void CityLost(City city)
+    {
+        //TODO: Show info ? is game over?
+    }
+
+    public void CityCaptured(City city)
+    {
+       //TODO: Show popup?? what does the game do here? 
     }
 }

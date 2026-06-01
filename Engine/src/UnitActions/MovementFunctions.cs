@@ -8,6 +8,8 @@ using Model.Core.Units;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Civ2engine.Advances;
+using Model.Constants;
 using Model.Core.GameRules;
 using Model.Core.Mapping;
 
@@ -413,10 +415,17 @@ namespace Civ2engine.UnitActions
             {
                 attacker.MovePointsLost += game.Rules.Cosmic.MovementMultiplier;
                 // Defender loses - kill all units on the tile (except if on city & if in fortress/airbase)
-                if (tile.CityHere != null || tile.EffectsList.Any(e=>e.Target == ImprovementConstants.NoStackElimination))
+                if (tile.CityHere != null ||
+                    tile.EffectsList.Any(e => e.Target == ImprovementConstants.NoStackElimination))
                 {
                     game.Players[defender.Owner.Id].UnitLost(defender, attacker);
                     defender.Dead = true;
+                    if (tile.CityHere != null &&
+                        !tile.CityHere.Improvements.Any(i => i.Effects.ContainsKey(Effects.Walled)))
+                    {
+                        tile.CityHere.ShrinkCity(game);
+                        game.UpdateTiles([tile]);
+                    }
                     //_casualties.Add(defender);
                     //_units.Remove(defender);
                 }
@@ -455,26 +464,10 @@ namespace Civ2engine.UnitActions
                 return;
             }
 
-            if (UnitMoved(game, unit, tileTo, tileFrom))
-            {
-                game.ActivePlayer.ActiveTile = tileTo;
-                var neighbours = map.Neighbours(tileTo, unit.TwoSpaceVisibility).Where(n => !n.IsVisible(unit.Owner.Id)).ToList();
-                if (neighbours.Count > 0)
-                {
-                    neighbours.ForEach(n => n.SetVisible(unit.Owner.Id));
-                    game.TriggerMapEvent(MapEventType.UpdateMap, neighbours);
-                }
-
-                if(tileTo.HasGoodyHut)
-                {
-                    var outcome = tileTo.ConsumeGoodyHut(unit);
-                    game.TriggerMapEvent(MapEventType.UpdateMap, new List<Tile> { tileTo });
-                    game.Players[unit.Owner.Id].GoodyHutTriggered(unit, outcome);
-                }
-            }
+            ExecuteUnitMove(game, unit, tileTo, tileFrom);
         }
 
-        internal static bool UnitMoved(IGame game, Unit unit, Tile tileTo, Tile tileFrom)
+        internal static void ExecuteUnitMove(IGame game, Unit unit, Tile tileTo, Tile tileFrom)
         {
             var isCity = tileTo.IsCityPresent;
             var unitMoved = isCity;
@@ -519,17 +512,18 @@ namespace Civ2engine.UnitActions
                     {
                         if (!isCity && unit.CarriedUnits.Count > 0)
                         {
-                            //Make landfall must capture the list since we want to modify it while we loop over it
+                            //Make landfall. We must capture the list since we want to modify it while we loop over it
                             var units = unit.CarriedUnits.ToList();
                             foreach (var u in units)
                             {
                                 u.Order = (int)OrderType.NoOrders;
-                                UnitMoved(game, u, tileTo, tileFrom);
+                                ExecuteUnitMove(game, u, tileTo, tileFrom);
                                 u.InShip = null;
                             }
 
                             unit.CarriedUnits.Clear();
-                            return true;
+                            // It's okay to exit early here since the unit moved for the carried units will trigger the appropriate actions
+                            return; 
                         }
 
                         break;
@@ -649,16 +643,54 @@ namespace Civ2engine.UnitActions
                 }
                 
                 game.ActivePlayer.ActiveTile = tileTo;
-                var neighbours = tileTo.Map.Neighbours(tileTo, unit.TwoSpaceVisibility).Where(n => !n.IsVisible(unit.Owner.Id)).ToList();
-                if (neighbours.Count > 0)
+                var mapUpdates = new List<Tile>();
+                foreach (var neighbourTile in tileTo.Neighbours(unit.TwoSpaceVisibility))
                 {
-                    neighbours.ForEach(n => n.SetVisible(unit.Owner.Id));
-                    game.TriggerMapEvent(MapEventType.UpdateMap, neighbours);
+                    if(!neighbourTile.IsVisible(unit.Owner.Id))
+                    {
+                        neighbourTile.SetVisible(unit.Owner.Id);
+                        mapUpdates.Add(neighbourTile);
+                    }
+                }
+                
+                if(tileTo.CityHere != null && tileTo.CityHere.Owner.Id != unit.Owner.Id)
+                {
+                    var loser = tileTo.CityHere.Owner;
+                    tileTo.CityHere.ShrinkCity(game);
+                    if (tileTo.CityHere != null)
+                    {
+                        tileTo.CityHere.EliminateCityUnits(game);
+                        tileTo.CityHere.Owner.Cities.Remove(tileTo.CityHere);
+                        tileTo.CityHere.Owner = unit.Owner;
+                        unit.Owner.Cities.Add(tileTo.CityHere);
+                        
+                        game.Players[loser.Id].CityLost(tileTo.CityHere);
+
+                        if (!game.ScenarioData.ForbidTechFromConquests)
+                        {
+                            var techs = AdvanceFunctions.CalculateResearchTheft(game, unit.Owner, loser);
+                            if (techs.Count > 0)
+                            {
+                                game.Players[unit.Owner.Id].SelectTechFromConquest(techs);
+                            }
+                        }
+                        game.Players[unit.Owner.Id].CityCaptured(tileTo.CityHere);
+                        
+                    }
+                    mapUpdates.Add(tileTo);
+                }else if (tileTo.HasGoodyHut)
+                {
+                    var outcome = tileTo.ConsumeGoodyHut(unit);
+                    game.Players[unit.Owner.Id].GoodyHutTriggered(unit, outcome);
+
+                    mapUpdates.Add(tileTo);
                 }
 
+                if (mapUpdates.Count > 0)
+                {
+                    game.UpdateTiles(mapUpdates);
+                }
             }
-
-            return unitMoved;
         }
 
         internal static int MoveCost(Tile tileTo, Tile tileFrom, int moveCost, CosmicRules cosmicRules)

@@ -154,9 +154,9 @@ namespace Civ2engine.MapObjects
             return tile.Map.SecondRing(tile, nullForInvalid);
         }
 
-        public static IEnumerable<Tile> Neighbours(this Tile tile)
+        public static IEnumerable<Tile> Neighbours(this Tile tile, bool twoSpaces = false)
         {
-            return tile.Map.Neighbours(tile);
+            return tile.Map.Neighbours(tile, twoSpaces);
         }
         
         public static void UpdatePlayer(this Tile tile,int civilizationId)

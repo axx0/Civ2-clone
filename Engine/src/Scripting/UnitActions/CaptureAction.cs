@@ -8,6 +8,6 @@ public class CaptureAction(Unit baseUnit, City city, Game game) : TileAction(bas
 {
     public override void Execute()
     {
-        MovementFunctions.UnitMoved(game, BaseUnit, Tile, BaseUnit.CurrentLocation);
+        MovementFunctions.ExecuteUnitMove(game, BaseUnit, Tile, BaseUnit.CurrentLocation);
     }
 }

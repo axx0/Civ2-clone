@@ -9,6 +9,6 @@ public class MoveAction(Unit baseUnit, Tile possibleMove, Game game) : TileActio
 {
     public override void Execute()
     {
-        MovementFunctions.UnitMoved(game, BaseUnit, Tile, BaseUnit.CurrentLocation);
+        MovementFunctions.ExecuteUnitMove(game, BaseUnit, Tile, BaseUnit.CurrentLocation);
     }
 }

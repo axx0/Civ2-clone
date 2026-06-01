@@ -47,6 +47,8 @@ namespace Civ2engine
                 {
                     city.FoodInStorage = 0;
                     city.ShrinkCity(game);
+
+                    game.UpdateTiles([city.Location]);
                     player.CityDecrease(city);
                 }
                 else if (city.SurplusHunger < 0 && city.FoodInStorage + city.SurplusHunger < 0)

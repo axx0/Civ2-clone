@@ -12,4 +12,9 @@ public static class AiEvent
     
     public const string CityProductionComplete = "City_Production_Complete";
     public const string CityProductionInvalid = "City_Production_Invalid";
+    
+    public const string CityLost = "City_Lost";
+    public const string CityCaptured = "City_Captured";
+    
+    public const string SelectTechFromConquest = "Select_Tech_From_Conquest";
 }

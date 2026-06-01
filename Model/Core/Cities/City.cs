@@ -71,7 +71,7 @@ namespace Model.Core.Cities
         public int Waste { get; set; }
         
         public Tile Location { get; set; }
-        public List<Tile> WorkedTiles { get; } = new();
+        public List<Tile> WorkedTiles { get; } = [];
         public int Pollution { get; set; }
         
     }

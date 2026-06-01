@@ -439,7 +439,7 @@ public class MovementFunctionsTests
     #region UnitMoved Tests
 
     [Fact]
-    public void UnitMoved_ValidMove_ReturnsTrue()
+    public void ExecuteUnitMove_ValidMove_ReturnsTrue()
     {
         // Arrange
         var unit = CreateTestUnit(UnitGas.Ground, _civ);
@@ -449,10 +449,9 @@ public class MovementFunctionsTests
         tileFrom.UnitsHere.Add(unit);
 
         // Act
-        var result = MovementFunctions.UnitMoved(_game, unit, tileTo, tileFrom);
+        MovementFunctions.ExecuteUnitMove(_game, unit, tileTo, tileFrom);
 
         // Assert
-        Assert.True(result);
         Assert.Equal(tileTo, unit.CurrentLocation);
     }
 
@@ -640,7 +639,7 @@ public class MovementFunctionsTests
     #endregion
 
     [Fact]
-    public void UnitMoved_WithCarriedUnits_UpdatesCarriedUnitsLocation()
+    public void ExecuteUnitMove_WithCarriedUnits_UpdatesCarriedUnitsLocation()
     {
         // Arrange
         var transport = CreateTestUnit(UnitGas.Sea, _civ);
@@ -662,7 +661,7 @@ public class MovementFunctionsTests
         transport.CarriedUnits.Add(passenger);
 
         // Act
-        MovementFunctions.UnitMoved(_game, transport, tileTo, tileFrom);
+        MovementFunctions.ExecuteUnitMove(_game, transport, tileTo, tileFrom);
 
         // Assert
         Assert.Equal(tileTo, transport.CurrentLocation);

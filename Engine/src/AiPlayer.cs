@@ -210,6 +210,47 @@ namespace Civ2engine
         {
         }
 
+        /// <summary>
+        /// Determines and assigns a technology from the provided list of advances, based on AI logic or random selection.
+        ///
+        ///  Note: if the AI has no specific logic, it will randomly select a technology from the provided list.
+        ///         if the AI logic returns a number it will first be treated as an index into the provided list of advances, and then a general advance index
+        ///          if it returns an Advance or Tech it will be given even if not in the provided techs list
+        /// 
+        /// </summary>
+        /// <param name="techs">A list of potential technological advances gained from conquest.</param>
+        public void SelectTechFromConquest(List<Advance> techs)
+        {
+            int result;
+            var luaResult = Ai.Call(AiEvent.SelectTechFromConquest, new LuaTable { { "Techs", techs.Select(t => new Tech(game.Rules.Advances, t.Index)).ToList() } });
+            if(luaResult is { Count: > 0})
+            {
+                result = luaResult[0] switch
+                {
+                    int index and >= 0 when index < techs.Count => techs[index].Index,
+                    int index when index > techs.Count => index % game.Rules.Advances.Length,
+                    Advance advance => advance.Index,
+                    Tech tech => tech.id,
+                    _ => ai.Random.ChooseFrom(techs).Index
+                };
+            }
+            else
+            {
+                result = ai.Random.ChooseFrom(techs).Index;
+            }
+            game.GiveAdvance(result, Civilization);
+        }
+
+        public void CityLost(City city)
+        {
+            Ai.Call(AiEvent.CityLost, new LuaTable {{ "city", new CityApi(city, game)}});
+        }
+
+        public void CityCaptured(City city)
+        {
+            Ai.Call(AiEvent.CityCaptured, new LuaTable {{ "city", new CityApi(city, game)}});
+        }
+
         private UnitAction? TileToAction(Tile tile, Unit unit)
         {
             if (tile == unit.CurrentLocation)

@@ -69,7 +69,8 @@ public static class MapNavigationFunctions
         return TilesAround(map, candidate, offsets, nullForInvalid);
     }
 
-    public static IEnumerable<Tile> Neighbours(this Map map, Tile candidate, bool twoSpaces = false,
+    public static IEnumerable<Tile> 
+        Neighbours(this Map map, Tile candidate, bool twoSpaces = false,
         bool nullForInvalid = false)
     {
         var odd = candidate.Odd;
@@ -190,15 +191,17 @@ public static class MapNavigationFunctions
 
         foreach (var radiusTile in CityRadius(map,tile))
         {
-            radiusTile.SetVisible(ownerId);
+            radiusTile!.SetVisible(ownerId);
         }
     }
 
     public static bool IsCurrentlyVisible(this Map map, Tile tile, int toWho)
     {
-        return map.MapRevealed || tile.UnitsHere.Any(u => u.Owner.Id == toWho) ||
-               Neighbours(map,tile).Any(l => l.UnitsHere.Any(u => u.Owner.Id == toWho)) ||
-               CityRadius(map,tile)
-                   .Any(t => t.CityHere != null && t.CityHere.Owner.Id == toWho);
+        return map.MapRevealed 
+               || tile.UnitsHere.Any(u => u.Owner.Id == toWho)
+               || map.Neighbours(tile).Any(l => l.UnitsHere.Any(u => u.Owner.Id == toWho)) 
+               || map.SecondRing(tile)
+                   .Any(t => t.CityHere != null && t.CityHere.Owner.Id == toWho ||
+                             t.UnitsHere.Any(u => u.Owner.Id == toWho && u.TwoSpaceVisibility));
     }
 }

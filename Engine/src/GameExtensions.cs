@@ -140,7 +140,7 @@ public static class GameExtensions
             tiles.AddRange(tile.Map.Neighbours(tile));
         }
 
-        game.TriggerMapEvent(MapEventType.UpdateMap, tiles);
+        game.UpdateTiles(tiles);
 
         return units;
     }

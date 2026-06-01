@@ -82,7 +82,7 @@ namespace Model.Core.Mapping
                 Special = (d & a) == (d & b) ? 1 : 0;
             }
 
-            if(terrain.Type != TerrainType.Ocean && CalculateGoodyHut(seed))
+            if(terrain.Type != TerrainType.Ocean && !terrain.Impassable && CalculateGoodyHut(seed))
             {
                 IsGoodyHutTile = true;
                 _goodyHut = new GoodyHut();
@@ -177,9 +177,17 @@ namespace Model.Core.Mapping
             {
                 if (value != _workedBy)
                 {
-                    _workedBy?.WorkedTiles.Remove(this);
-                    _workedBy = CityHere ??
-                                value; //If there is a city here then that's to only city that can work this tile 
+                    if (CityHere != null)
+                    {
+                        //Tile with a city on it can only be worked by that city.
+                        value?.WorkedTiles.Remove(this);
+                        _workedBy = CityHere;
+                    }
+                    else
+                    {
+                        _workedBy?.WorkedTiles.Remove(this);
+                        _workedBy = value;
+                    }
                 }
 
                 if (_workedBy?.WorkedTiles.Contains(this) == false)

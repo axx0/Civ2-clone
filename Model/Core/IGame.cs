@@ -31,7 +31,7 @@ public interface IGame
     void ChooseNextUnit();
     bool ProcessEndOfTurn();
     void ChoseNextCiv();
-    void TriggerMapEvent(MapEventType updateMap, List<Tile> tiles);
+    void UpdateTiles(IList<Tile> tiles);
     double MaxDistance { get; }
     int DifficultyLevel { get; set; }
     IGameDate Date { get; }

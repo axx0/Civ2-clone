@@ -201,10 +201,28 @@ namespace Civ2engine
         public static void ShrinkCity(this City city, IGame game)
         {
             city.Size -= 1;
-            city.AutoRemoveWorkersDistribution(game.Rules);
-            city.CalculateOutput(city.Owner.Government, game);
+            if (city.Size <= 0)
+            {
+                //Destroy city
+                city.Location.CityHere = null;
+                city.Owner.Cities.Remove(city);
+                city.WorkedTiles.ForEach(t => t.WorkedBy = null);
+                city.EliminateCityUnits(game);
+            }
+            else
+            {
+                city.AutoRemoveWorkersDistribution(game.Rules);
+                city.CalculateOutput(city.Owner.Government, game);
+            }
+        }
 
-            game.TriggerMapEvent(MapEventType.UpdateMap, new List<Tile> { city.Location });
+        internal static void EliminateCityUnits(this City city, IGame game)
+        {
+            var unitsEliminated = city.SupportedUnits;
+            if (unitsEliminated.Count <= 0) return;
+            
+            unitsEliminated.ForEach(u=>u.Dead = true);
+            game.Players[city.OwnerId].UnitsLost(unitsEliminated);
         }
 
         public static void GrowCity(this City city, IGame game)
@@ -214,7 +232,7 @@ namespace Civ2engine
             city.AutoAddDistributionWorkers(game.Rules); // Automatically add a workers on a tile
             city.CalculateOutput(city.Owner.Government, game);
 
-            game.TriggerMapEvent(MapEventType.UpdateMap, new List<Tile> { city.Location });
+            game.UpdateTiles(new List<Tile> { city.Location });
         }
 
         public static void ResetFoodStorage(this City city, int foodRows)
@@ -258,7 +276,7 @@ namespace Civ2engine
                 t.GetFood(organization == 0) + t.GetShields(organization == 0) +
                 t.GetTrade(organization)).First();
 
-            city.WorkedTiles.Remove(unworked);
+            unworked.WorkedBy = null;
         }
 
         public static void AutoAddDistributionWorkers(this City city, Rules gameRules)
