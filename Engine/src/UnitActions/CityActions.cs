@@ -80,7 +80,7 @@ namespace Civ2engine.UnitActions
                 tile.Map.AdjustFertilityForCity(tile);
             }
 
-            game.TriggerMapEvent(MapEventType.UpdateMap, new List<Tile> {tile});
+            game.UpdateTiles(new List<Tile> {tile});
 
             return city;
         }

@@ -145,3 +145,10 @@ ai.RegisterEvent(AiEvent.Research_Complete, function(ai, data)
     end
     return bestTech
 end)
+
+ai.RegisterEvent(AiEvent.Unit_Moved, function(a, data)
+    local unit = data.Unit
+    local tileFrom = data.TileFrom;
+    local tileTo = data.TileTo;
+    print("Unit moved " .. unit.name)
+    end)

@@ -175,17 +175,11 @@ public class Path
 
     public void Follow(IGame game, Unit unit)
     {
-        int pos = 0;
+        var pos = 0;
         do
         {
             var tileTo = Tiles[pos++];
-            MovementFunctions.UnitMoved(game, unit, tileTo, unit.CurrentLocation);
-            if (tileTo.HasGoodyHut)
-            {
-                var outcome = tileTo.ConsumeGoodyHut(unit);
-                game.TriggerMapEvent(MapEventType.UpdateMap, new List<Tile> { tileTo });
-                game.Players[unit.Owner.Id].GoodyHutTriggered(unit, outcome);
-            }
+            MovementFunctions.ExecuteUnitMove(game, unit, tileTo, unit.CurrentLocation);
         } while (unit.MovePoints > 0 && pos < Tiles.Length &&
                  !MovementFunctions.IsNextToEnemy(unit.CurrentLocation!, unit.Owner, unit.Domain));
 

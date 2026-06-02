@@ -123,7 +123,7 @@ public class GameTests
         var tile = new Tile(0, 0, new Terrain { Specials = [] }, 0, map, 0, new bool[2]);
         var tiles = new List<Tile> { tile };
         
-        game.TriggerMapEvent(MapEventType.UpdateMap, tiles);
+        game.UpdateTiles(tiles);
         
         player1.Verify(p => p.MapChanged(tiles), Times.Once);
         player2.Verify(p => p.MapChanged(tiles), Times.Once);

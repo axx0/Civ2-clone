@@ -13,8 +13,6 @@ namespace Civ2engine
 {
     public partial class Game
     {
-        public event EventHandler<MapEventArgs> OnMapEvent;
-        
         /// <summary>
         /// This is now only used for lua script integration for other events raise them on the player version
         /// </summary>

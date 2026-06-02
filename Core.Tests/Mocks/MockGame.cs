@@ -37,7 +37,7 @@ internal class MockGame : IGame
     public bool ProcessEndOfTurn() => throw new NotImplementedException();
     public void ChoseNextCiv() => throw new NotImplementedException();
 
-    public void TriggerMapEvent(MapEventType updateMap, List<Tile> tiles)
+    public void UpdateTiles(IList<Tile> tiles)
     {
 
     }

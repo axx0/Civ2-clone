@@ -1,3 +1,4 @@
+using System.Numerics;
 using Civ2engine;
 using Civ2engine.IO;
 using Civ2engine.Terrains;
@@ -12,7 +13,7 @@ using RaylibUI.BasicTypes.Controls;
 
 namespace RaylibUI.RunGame.GameControls.Civilopedia;
 
-public class CivilopediaInfo : BaseControl
+public sealed class CivilopediaInfo : BaseControl
 {
     public CivilopediaInfo(CivilopediaWindow window, GameScreen gameScreen, List<Advance> advances,
         List<Improvement> improvements, List<Improvement> wonders, List<UnitDefinition> units,
@@ -23,24 +24,24 @@ public class CivilopediaInfo : BaseControl
 
         Width = window.Width - window.LayoutPadding.Left - window.LayoutPadding.Right;
         Height = window.Height - window.LayoutPadding.Top - window.LayoutPadding.Bottom;
-        Location = new(window.LayoutPadding.Left, window.LayoutPadding.Top);
+        Location = new Vector2(window.LayoutPadding.Left, window.LayoutPadding.Top);
 
         switch (pedia.InfoType)
         {
             case CivilopediaInfoType.Advances:
                 var advance = advances[pedia.Id];
-                Advance? preq1 = advance.Prereq1 != -1 ? rules.Advances[advance.Prereq1] : null;
-                Advance? preq2 = advance.Prereq2 != -1 ? rules.Advances[advance.Prereq2] : null;
+                var preq1 = advance.Prereq1 != AdvancesConstants.Nil ? rules.Advances[advance.Prereq1] : null;
+                Advance? preq2 = advance.Prereq2 != AdvancesConstants.Nil ? rules.Advances[advance.Prereq2] : null;
                 var advanceId = Array.FindIndex(rules.Advances, row => row == advance);
                 var allowed = rules.Advances.Where(a => a.Prereq1 == advanceId || a.Prereq2 == advanceId).ToArray();
                 Advance?[] allowedWith = new Advance[allowed.Length];
                 for (int i = 0; i < allowed.Length; i++)
                 {
-                    if (allowed[i].Prereq1 == advanceId && allowed[i].Prereq2 != -1)
+                    if (allowed[i].Prereq1 == advanceId && allowed[i].Prereq2 != AdvancesConstants.Nil)
                     {
                         allowedWith[i] = rules.Advances[allowed[i].Prereq2];
                     }
-                    else if (allowed[i].Prereq2 == advanceId && allowed[i].Prereq1 != -1)
+                    else if (allowed[i].Prereq2 == advanceId && allowed[i].Prereq1 != AdvancesConstants.Nil)
                     {
                         allowedWith[i] = rules.Advances[allowed[i].Prereq1];
                     }
@@ -185,7 +186,7 @@ public class CivilopediaInfo : BaseControl
 
                     var unitLabel = new PediaLinkLabel(window, unt.Name,
                         (int)untImg.Location.X + untImg.Width, (int)offsetY);
-                    unitLabel.Location = new(unitLabel.Location.X, unitLabel.Location.Y + (untImg.Height - unitLabel.Height) / 2);
+                    unitLabel.Location = unitLabel.Location with { Y = unitLabel.Location.Y + (untImg.Height - unitLabel.Height) / 2f };
                     Controls.Add(unitLabel);
                     unitLabel.Click += (_, _) =>
                     {
@@ -261,7 +262,7 @@ public class CivilopediaInfo : BaseControl
                 Controls.Add(costLabel);
 
                 var shieldImg = new ImageBox(window, new(active.ResourceImages.First(i => i.Name == "Shields").LargeImage), true);
-                shieldImg.Location = new((int)costLabel.Location.X + costLabel.Width, (int)offsetY + (costLabel.Height - shieldImg.Height) / 2);
+                shieldImg.Location = new((int)costLabel.Location.X + costLabel.Width, (int)offsetY + (costLabel.Height - shieldImg.Height) / 2f);
                 Controls.Add(shieldImg);
 
                 offsetY += prereqLabel.Height + 1;
@@ -272,7 +273,7 @@ public class CivilopediaInfo : BaseControl
                 Controls.Add(maintLabel);
 
                 var goldImg = new ImageBox(window, new(active.PicSources["gold,large"][0]), true);
-                goldImg.Location = new((int)maintLabel.Location.X + maintLabel.Width, (int)offsetY + (maintLabel.Height - goldImg.Height) / 2);
+                goldImg.Location = new((int)maintLabel.Location.X + maintLabel.Width, (int)offsetY + (maintLabel.Height - goldImg.Height) / 2f);
                 Controls.Add(goldImg);
 
                 offsetY += 2 * (prereqLabel.Height + 1);
@@ -328,7 +329,7 @@ public class CivilopediaInfo : BaseControl
                 Controls.Add(costLabel);
 
                 shieldImg = new ImageBox(window, new(active.ResourceImages.First(i => i.Name == "Shields").LargeImage), true);
-                shieldImg.Location = new((int)costLabel.Location.X + costLabel.Width, (int)offsetY + (costLabel.Height - shieldImg.Height) / 2);
+                shieldImg.Location = new((int)costLabel.Location.X + costLabel.Width, (int)offsetY + (costLabel.Height - shieldImg.Height) / 2f);
                 Controls.Add(shieldImg);
 
                 offsetY += prereqLabel.Height + 1;
@@ -379,7 +380,7 @@ public class CivilopediaInfo : BaseControl
 
                 prereqLabel = new PediaLabel(window, Labels.For(LabelIndex.Prerequisites) + ":  ",
                     (int)icon.Location.X + icon.Width + 54, 0);
-                prereqLabel.Location = new(prereqLabel.Location.X, icon.Location.Y + (icon.Height - prereqLabel.Height) / 2);
+                prereqLabel.Location = new(prereqLabel.Location.X, icon.Location.Y + (icon.Height - prereqLabel.Height) / 2f);
                 Controls.Add(prereqLabel);
 
                 if (preq == null)
@@ -409,7 +410,7 @@ public class CivilopediaInfo : BaseControl
                     (int)icon.Location.X + 210, (int)offsetY);
                 Controls.Add(costvLabel);
                 shieldImg = new ImageBox(window, new(active.ResourceImages.First(i => i.Name == "Shields").LargeImage), true);
-                shieldImg.Location = new((int)costvLabel.Location.X + costvLabel.Width, (int)offsetY + (costvLabel.Height - shieldImg.Height) / 2);
+                shieldImg.Location = new((int)costvLabel.Location.X + costvLabel.Width, (int)offsetY + (costvLabel.Height - shieldImg.Height) / 2f);
                 Controls.Add(shieldImg);
                 offsetY += costLabel.Height + 1;
 
@@ -468,7 +469,7 @@ public class CivilopediaInfo : BaseControl
 
             case CivilopediaInfoType.Terrains:
                 var terrain = terrains[pedia.Id];
-                var names = terrains.Select(t => t.Name).ToArray();
+                var names = terrains.Select(tr => tr.Name).ToArray();
 
                 if (terrain is Terrain t)
                 {
@@ -506,7 +507,7 @@ public class CivilopediaInfo : BaseControl
                     Controls.Add(food);
                     var foodIcon = new ImageBox(window, new(active.ResourceImages.First(i => i.Name == "Food").LargeImage), true);
                     foodIcon.Location = new((int)food.Location.X + food.Width,
-                        (int)offsetY + (food.Height - foodIcon.Height) / 2);
+                        (int)offsetY + (food.Height - foodIcon.Height) / 2f);
                     Controls.Add(foodIcon);
 
                     offsetY += foodLabel.Height + 1;
@@ -516,7 +517,7 @@ public class CivilopediaInfo : BaseControl
                     Controls.Add(shields);
                     var shldIcon = new ImageBox(window, new(active.ResourceImages.First(i => i.Name == "Shields").LargeImage), true);
                     shldIcon.Location = new((int)shields.Location.X + shields.Width,
-                        (int)offsetY + (shields.Height - shldIcon.Height) / 2);
+                        (int)offsetY + (shields.Height - shldIcon.Height) / 2f);
                     Controls.Add(shldIcon);
 
                     offsetY += shieldsLabel.Height + 1;
@@ -526,24 +527,23 @@ public class CivilopediaInfo : BaseControl
                     Controls.Add(trade);
                     var trdIcon = new ImageBox(window, new(active.ResourceImages.First(i => i.Name == "Trade").LargeImage), true);
                     trdIcon.Location = new((int)trade.Location.X + trade.Width,
-                        (int)offsetY + (trade.Height - trdIcon.Height) / 2);
+                        (int)offsetY + (trade.Height - trdIcon.Height) / 2f);
                     Controls.Add(trdIcon);
 
                     offsetY += tradeLabel.Height + 1;
-                    var irrigLabel = new PediaLabel(window, $"{Labels.For(LabelIndex.EffectsofIrrigation)}:",
+                    var irrigate = new PediaLabel(window, $"{Labels.For(LabelIndex.EffectsofIrrigation)}:",
                         11, (int)offsetY);
-                    Controls.Add(irrigLabel);
+                    Controls.Add(irrigate);
                     var irrig = new PediaLabel(window, "TO-DO", 200, (int)offsetY);
                     Controls.Add(irrig);
 
-                    offsetY += irrigLabel.Height + 1;
-                    var irrigtLabel = new PediaLabel(window, $"{Labels.For(LabelIndex.TurnstoIrrigate)}:",
+                    offsetY += irrigate.Height + 1;
+                    var irrigateTimeLabel = new PediaLabel(window, $"{Labels.For(LabelIndex.TurnstoIrrigate)}:",
                         11, (int)offsetY);
-                    Controls.Add(irrigtLabel);
-                    var irrigt = new PediaLabel(window, "TO-DO", 200, (int)offsetY);
-                    Controls.Add(irrigt);
+                    Controls.Add(irrigateTimeLabel);
+                    Controls.Add(new PediaLabel(window, "TO-DO", 200, (int)offsetY));
 
-                    offsetY += irrigtLabel.Height + 1;
+                    offsetY += irrigateTimeLabel.Height + 1;
                     var mineLabel = new PediaLabel(window, $"{Labels.For(LabelIndex.EffectsofMining)}:",
                         11, (int)offsetY);
                     Controls.Add(mineLabel);
@@ -551,11 +551,10 @@ public class CivilopediaInfo : BaseControl
                     Controls.Add(mine);
 
                     offsetY += mineLabel.Height + 1;
-                    var minetLabel = new PediaLabel(window, $"{Labels.For(LabelIndex.TurnstoMine)}:",
+                    var mineTimeLabel = new PediaLabel(window, $"{Labels.For(LabelIndex.TurnstoMine)}:",
                         11, (int)offsetY);
-                    Controls.Add(minetLabel);
-                    var minet = new PediaLabel(window, "TO-DO", 200, (int)offsetY);
-                    Controls.Add(minet);
+                    Controls.Add(mineTimeLabel);
+                    Controls.Add(new PediaLabel(window, "TO-DO", 200, (int)offsetY));
 
                     // Transformation effects
                     offsetX = Width / 2;
@@ -625,7 +624,7 @@ public class CivilopediaInfo : BaseControl
                 {
                     var icons = new IImageSource[2];
                     var s = (Special)terrain;
-                    var baseTerrain = rules.Terrains[0].FirstOrDefault(t => t.Specials[0] == s);
+                    var baseTerrain = rules.Terrains[0].FirstOrDefault(tr => tr.Specials[0] == s);
                     if (baseTerrain != null)
                     {
                         icons[0] = active.PicSources["base1"][(int)baseTerrain.Type];
@@ -654,7 +653,7 @@ public class CivilopediaInfo : BaseControl
 
                     prereqLabel = new PediaLabel(window, Labels.For(LabelIndex.TerrainType) + ":  ",
                         (int)icon.Location.X + icon.Width + 54, 0);
-                    prereqLabel.Location = new(prereqLabel.Location.X, icon.Location.Y + (icon.Height - prereqLabel.Height) / 2);
+                    prereqLabel.Location = new(prereqLabel.Location.X, icon.Location.Y + (icon.Height - prereqLabel.Height) / 2f);
                     Controls.Add(prereqLabel);
 
                     var preqLabel = new PediaLinkLabel(window, baseTerrain.Name, (int)prereqLabel.Location.X + prereqLabel.Width,
@@ -669,7 +668,7 @@ public class CivilopediaInfo : BaseControl
                     Controls.Add(food);
                     var foodIcon = new ImageBox(window, new(active.ResourceImages.First(i => i.Name == "Food").LargeImage), true);
                     foodIcon.Location = new((int)food.Location.X + food.Width,
-                        (int)offsetY + (food.Height - foodIcon.Height) / 2);
+                        (int)offsetY + (food.Height - foodIcon.Height) / 2f);
                     Controls.Add(foodIcon);
 
                     offsetY += foodLabel.Height + 1;
@@ -679,7 +678,7 @@ public class CivilopediaInfo : BaseControl
                     Controls.Add(shields);
                     var shldIcon = new ImageBox(window, new(active.ResourceImages.First(i => i.Name == "Shields").LargeImage), true);
                     shldIcon.Location = new((int)shields.Location.X + shields.Width,
-                        (int)offsetY + (shields.Height - shldIcon.Height) / 2);
+                        (int)offsetY + (shields.Height - shldIcon.Height) / 2f);
                     Controls.Add(shldIcon);
 
                     offsetY += shieldsLabel.Height + 1;
@@ -689,7 +688,7 @@ public class CivilopediaInfo : BaseControl
                     Controls.Add(trade);
                     var trdIcon = new ImageBox(window, new(active.ResourceImages.First(i => i.Name == "Trade").LargeImage), true);
                     trdIcon.Location = new((int)trade.Location.X + trade.Width,
-                        (int)offsetY + (trade.Height - trdIcon.Height) / 2);
+                        (int)offsetY + (trade.Height - trdIcon.Height) / 2f);
                     Controls.Add(trdIcon);
 
                     // Bottom texts

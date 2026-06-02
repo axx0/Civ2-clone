@@ -49,7 +49,7 @@ namespace Model.Core.Player
         void SetUnitActive(Unit? unit, bool move);
         void UnitLost(Unit unit, Unit? killedBy);
         
-        void UnitsLost(List<Unit> deadUnits, Unit? killedBy);
+        void UnitsLost(List<Unit> deadUnits, Unit? killedBy = null);
         
         /// <summary>
         /// Called to notify the player that a unit has moved.
@@ -76,6 +76,29 @@ namespace Model.Core.Player
         /// Called when a unit triggers a goody hut on the tile it moved to.
         /// </summary>
         void GoodyHutTriggered(Unit unit, GoodyHutOutcomeResult outcome);
+
+        /// <summary>
+        /// Called when there is a tech theft from a conquered city
+        /// </summary>
+        /// <param name="techs">The options to steal</param>
+        void SelectTechFromConquest(List<Advance> techs);
+
+        /// <summary>
+        /// Notifies the player that the specified city has been lost. This method is invoked when control of the city is transferred to another player
+        ///
+        /// The city will already have been removed from the player's city list and ownership transferred.
+        ///  Called before SelectTechFromConquest and CityCaptured
+        /// </summary>
+        /// <param name="city">The city that is lost.</param>
+        void CityLost(City city);
+
+        /// <summary>
+        /// Notifies the player that they have captured a city.
+        ///  Ownership will already have been transferred.
+        ///   Called after CityLost and SelectTechFromConquest
+        /// </summary>
+        /// <param name="city">The city that has been captured.</param>
+        void CityCaptured(City city);
     }
 
     public interface IInterfaceCommands

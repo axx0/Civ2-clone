@@ -80,7 +80,7 @@ public class PillageOrder : Order
         {
             tiles.AddRange(player.ActiveTile.Neighbours());
         }
-        _game.TriggerMapEvent(MapEventType.UpdateMap, tiles);
+        _game.UpdateTiles(tiles);
         if (player.ActiveUnit.MovePoints <= 0)
         {
             _game.ChooseNextUnit();

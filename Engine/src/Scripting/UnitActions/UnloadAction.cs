@@ -11,6 +11,6 @@ public class UnloadAction(Unit baseUnit, Tile possibleMove, Game game) : TileAct
     public override void Execute()
     {
         var unitToMove = BaseUnit.CarriedUnits.First();
-        MovementFunctions.UnitMoved(game, unitToMove, Tile, BaseUnit.CurrentLocation);
+        MovementFunctions.ExecuteUnitMove(game, unitToMove, Tile, BaseUnit.CurrentLocation);
     }
 }
