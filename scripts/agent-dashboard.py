@@ -61,6 +61,42 @@ def git_summary():
     return status or "Working tree clean", log
 
 
+def current_activity():
+    logs = recent_logs()
+    lines = [line for line in logs.splitlines() if line.strip()]
+    last = lines[-1] if lines else "No logs yet."
+
+    phase = "Idle / unknown"
+    for line in reversed(lines):
+        if "Starting task:" in line:
+            phase = line.split("Starting task:", 1)[1].strip()
+            break
+        if "No tasks found. Sleeping." in line:
+            phase = "Idle: no pending tasks"
+            break
+        if "opencode run" in line:
+            phase = "OpenCode is running"
+            break
+        if "Determining projects to restore" in line:
+            phase = "Running dotnet restore/build"
+            break
+        if "Test run for" in line or "Starting test execution" in line:
+            phase = "Running tests"
+            break
+        if "Passed!" in line:
+            phase = "Tests passed"
+            break
+        if "failed" in line.lower() or "error" in line.lower():
+            phase = "Possible failure; check logs"
+            break
+
+    ollama = run(["ollama", "ps"]).stdout.strip()
+    if not ollama:
+        ollama = "No active Ollama model shown by ollama ps."
+
+    return phase, last, ollama
+
+
 def list_files(path):
     files = sorted(path.glob("*.md"))
     return files
@@ -78,6 +114,7 @@ def safe_task_filename(title):
 def page(message=""):
     active, enabled = service_status()
     status, log = git_summary()
+    phase, last_log_line, ollama_status = current_activity()
 
     pending = list_files(TASKS)
     done = list_files(DONE)
@@ -98,6 +135,7 @@ def page(message=""):
 <head>
   <meta charset="utf-8">
   <title>Civ2 Agent Dashboard</title>
+  <meta http-equiv="refresh" content="2">
   <style>
     body {{
       font-family: system-ui, sans-serif;
@@ -159,7 +197,7 @@ def page(message=""):
     pre {{
       padding: 14px;
       overflow: auto;
-      max-height: 420px;
+      max-height: 680px;
       white-space: pre-wrap;
     }}
     textarea, input {{
@@ -201,7 +239,7 @@ def page(message=""):
 <body>
 <header>
   <h1>Civ2 OpenCode Agent Dashboard</h1>
-  <p class="muted">Local only: <code>http://127.0.0.1:{PORT}</code></p>
+  <p class="muted">Local only: <code>http://127.0.0.1:{PORT}</code> · Auto-refreshes every 2 seconds</p>
 </header>
 
 <main>
@@ -215,6 +253,15 @@ def page(message=""):
       <button class="secondary" name="action" value="restart">Restart</button>
     </form>
     <p class="message">{html.escape(message)}</p>
+  </section>
+
+  <section>
+    <h2>Current Activity</h2>
+    <p><strong>Phase:</strong> <code>{html.escape(phase)}</code></p>
+    <p><strong>Latest log line:</strong></p>
+    <pre>{html.escape(last_log_line)}</pre>
+    <h3>Ollama</h3>
+    <pre>{html.escape(ollama_status)}</pre>
   </section>
 
   <section>
