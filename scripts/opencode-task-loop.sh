@@ -22,7 +22,11 @@ while true; do
 
   echo "Starting task: $task_file"
 
-  if [ -n "$(git status --porcelain)" ]; then
+  if [ -n "$(git status --porcelain -- . \
+    ':(exclude)agent/tasks' \
+    ':(exclude)agent/done' \
+    ':(exclude)agent/failed' \
+    ':(exclude)agent/logs')" ]; then
     echo "Working tree is dirty. Refusing to run." | tee "$log_file"
     sleep 300
     continue
