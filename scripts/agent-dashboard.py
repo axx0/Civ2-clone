@@ -49,7 +49,7 @@ def recent_logs():
         "-u",
         SERVICE,
         "-n",
-        "80",
+        "20",
         "--no-pager",
     ])
     return result.stdout or result.stderr
@@ -111,11 +111,71 @@ def safe_task_filename(title):
     return f"{stamp}-{slug[:48]}.md"
 
 
+def activity_fragment():
+    active, enabled = service_status()
+    phase, last_log_line, ollama_status = current_activity()
+    logs = recent_logs()
+    service_class = "good" if active == "active" else "bad"
+
+    return f"""<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="refresh" content="2">
+  <style>
+    body {{
+      margin: 0;
+      background: #171d24;
+      color: #e8eef5;
+      font-family: system-ui, sans-serif;
+    }}
+    .pill {{
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 13px;
+    }}
+    .good {{
+      background: #123d2a;
+      color: #77f0ad;
+    }}
+    .bad {{
+      background: #4b1f24;
+      color: #ff9aa8;
+    }}
+    code, pre {{
+      background: #0d1117;
+      border: 1px solid #2c3744;
+      border-radius: 8px;
+    }}
+    code {{
+      padding: 2px 5px;
+    }}
+    pre {{
+      padding: 10px;
+      overflow: auto;
+      max-height: 220px;
+      white-space: pre-wrap;
+    }}
+  </style>
+</head>
+<body>
+  <p>Status: <span class="pill {service_class}">{html.escape(active)}</span> Enabled: <code>{html.escape(enabled)}</code></p>
+  <p><strong>Phase:</strong> <code>{html.escape(phase)}</code></p>
+  <p><strong>Latest log line:</strong></p>
+  <pre>{html.escape(last_log_line)}</pre>
+  <h3>Ollama</h3>
+  <pre>{html.escape(ollama_status)}</pre>
+  <h3>Last 20 journal lines</h3>
+  <pre>{html.escape(logs)}</pre>
+</body>
+</html>"""
+
+
 def page(message=""):
     active, enabled = service_status()
     status, log = git_summary()
-    phase, last_log_line, ollama_status = current_activity()
-
     pending = list_files(TASKS)
     done = list_files(DONE)
     failed = list_files(FAILED)
@@ -135,7 +195,6 @@ def page(message=""):
 <head>
   <meta charset="utf-8">
   <title>Civ2 Agent Dashboard</title>
-  <meta http-equiv="refresh" content="2">
   <style>
     body {{
       font-family: system-ui, sans-serif;
@@ -197,7 +256,7 @@ def page(message=""):
     pre {{
       padding: 14px;
       overflow: auto;
-      max-height: 680px;
+      max-height: 260px;
       white-space: pre-wrap;
     }}
     textarea, input {{
@@ -239,7 +298,7 @@ def page(message=""):
 <body>
 <header>
   <h1>Civ2 OpenCode Agent Dashboard</h1>
-  <p class="muted">Local only: <code>http://127.0.0.1:{PORT}</code> · Auto-refreshes every 2 seconds</p>
+  <p class="muted">Local only: <code>http://127.0.0.1:{PORT}</code> · Activity panel updates every 2 seconds</p>
 </header>
 
 <main>
@@ -257,11 +316,7 @@ def page(message=""):
 
   <section>
     <h2>Current Activity</h2>
-    <p><strong>Phase:</strong> <code>{html.escape(phase)}</code></p>
-    <p><strong>Latest log line:</strong></p>
-    <pre>{html.escape(last_log_line)}</pre>
-    <h3>Ollama</h3>
-    <pre>{html.escape(ollama_status)}</pre>
+    <iframe src="/activity" style="width:100%; height:520px; border:0; border-radius:8px;"></iframe>
   </section>
 
   <section>
@@ -310,6 +365,9 @@ def page(message=""):
 
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
+        if self.path == "/activity":
+            self.respond(activity_fragment())
+            return
         self.respond(page())
 
     def do_POST(self):
