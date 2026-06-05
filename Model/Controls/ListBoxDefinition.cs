@@ -2,46 +2,41 @@ namespace Model.Controls;
 
 public class ListboxDefinition
 {
-    public List<ListboxGroup> Groups { get; set; } = [];
+    public List<ListboxGroup>? Groups { get; set; }
 
-    public bool VerticalScrollbar { get; set; } = true;
+    public bool? VerticalScrollbar { get; set; }
 
     /// <summary>
     /// No of rows visible in the box.
     /// </summary>
-    public int Rows { get; set; } = 10;
+    public int? Rows { get; set; }
 
     /// <summary>
     /// Max no of columns that will be visible in the box.
     /// </summary>
-    public int Columns { get; set; } = 1;
+    public int? Columns { get; set; }
 
     /// <summary>
     /// If true, controls are stacked left-to-right.
     /// </summary>
-    public bool HorizontalStacking { get; set; } = false;
+    public bool? HorizontalStacking { get; set; }
 
     /// <summary>
     /// Selected control id.
     /// </summary>
-    public int SelectedId { get; set; } = 0;
+    public int? SelectedId { get; set; }
 
     /// <summary>
     /// Meaning you can also move through the controls with keys.
     /// </summary>
-    public bool Selectable { get; set; } = true;
-
-    /// <summary>
-    /// Shift icons left<->right.
-    /// </summary>
-    public bool ImageShift { get; set; } = false;
+    public bool? Selectable { get; set; }
 
     /// <summary>
     /// Defines looks of listbox.
     /// </summary>
-    public ListboxType? Type { get; set; } = null;
+    public ListboxType? Type { get; set; }
 
-    public ListboxLooks Looks { get; set; } = new();
+    public ListboxLooks? Looks { get; set; }
 
     public void Update(IList<string> initialEntries)
     {

@@ -53,9 +53,8 @@ public class ProductionBox : BaseControl
                 "PRODUCTION", handleButtonClick: BuildDialogClosed, replaceStrings: [_city.Name], listBox: new ListboxDefinition
                 {
                     Type = ListboxType.Default,
-                    ImageShift = true,
                     Rows = 13,
-                    Groups = _canProduce.Select(p => p.GetBuildListEntry(_active, _city)).ToList(),
+                    Groups = _canProduce.Select((p, ind) => p.GetBuildListEntry(_active, _city, ind)).ToList(),
                     SelectedId = _canProduce.IndexOf(_city.ItemInProduction)
                 });
         };

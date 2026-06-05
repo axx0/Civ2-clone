@@ -20,5 +20,5 @@ public interface IProductionOrder
     IImageSource? GetIcon(IUserInterface activeInterface);
 
     string GetDescription();
-    ListboxGroup GetBuildListEntry(IUserInterface active, City city);
+    ListboxGroup GetBuildListEntry(IUserInterface active, City city, int index);
 }

@@ -72,8 +72,11 @@ public class ScienceAdvisorWindow : BaseDialog
             groups.Add(group);
         }
 
-        var def = new ListboxDefinition()
+        var listbox = new Listbox(this)
         {
+            Width = 596,
+            Height = 240,
+            Location = new(LayoutPadding.Left + 2, LayoutPadding.Top + 130),
             Rows = 10,
             Columns = 3,
             VerticalScrollbar = false,
@@ -85,13 +88,6 @@ public class ScienceAdvisorWindow : BaseDialog
                 TextColorShadow = new Color(67, 67, 67, 255)
             },
             Groups = groups
-        };
-
-        var listbox = new Listbox(this, def)
-        {
-            Width = 596,
-            Height = 240,
-            Location = new(LayoutPadding.Left + 2, LayoutPadding.Top + 130)
         };
         listbox.ItemSelected += (_, i) => 
         {

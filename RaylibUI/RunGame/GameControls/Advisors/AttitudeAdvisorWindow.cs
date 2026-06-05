@@ -73,8 +73,11 @@ public class AttitudeAdvisorWindow : BaseDialog
             });
         }
 
-        var def = new ListboxDefinition()
+        var listbox = new Listbox(this)
         {
+            Width = 595,
+            Height = 305,
+            Location = new(LayoutPadding.Left + 2, LayoutPadding.Top + 80),
             Rows = 9,
             Selectable = false,
             Looks = new ListboxLooks()
@@ -84,13 +87,6 @@ public class AttitudeAdvisorWindow : BaseDialog
                 TextColorShadow = new Color(67, 67, 67, 255)
             },
             Groups = groups
-        };
-
-        var listbox = new Listbox(this, def)
-        {
-            Width = 595,
-            Height = 305,
-            Location = new(LayoutPadding.Left + 2, LayoutPadding.Top + 80)
         };
         listbox.ItemSelected += (_, i) => _gameScreen.ShowDialog(new CityWindow(_gameScreen, _civ.Cities[i.Index]));
         Controls.Add(listbox);

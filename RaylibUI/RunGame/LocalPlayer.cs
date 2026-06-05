@@ -92,7 +92,6 @@ public class LocalPlayer : IPlayer
             {
                 VerticalScrollbar = false,
                 Type = ListboxType.Default,
-                ImageShift = true,
                 Rows = 16,
                 Groups = researchPossibilities.Select(a => new ListboxGroup
                 {

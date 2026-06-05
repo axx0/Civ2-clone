@@ -75,7 +75,6 @@ namespace Civ2engine.IO
                             popupBox.Checkbox = true;
                             break;
                         case "listbox":
-                            popupBox.Listbox = true;
                             popupBox.ListboxLines = parts.Length > 1 ? int.Parse(parts[1]) : 16;
                             break;
                         case "button":

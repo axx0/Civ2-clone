@@ -32,7 +32,6 @@ public class FileDialog : DynamicSizingDialog
     private bool _isRoot;
     private readonly IUserInterface? _active;
     private Dictionary<string, GameVersionType?> _fileList;
-    private ListboxDefinition _listboxDef;
 
     public FileDialog(Main host, string title, string baseDirectory, Func<string, bool> isValidSelectionCallback,
         Func<string?, bool> onSelectionCallback, string? initialFileName = null, bool selectionMode = true) : base(host, title, requestedWidth: 950)
@@ -50,17 +49,13 @@ public class FileDialog : DynamicSizingDialog
 
         SetDirectoryLocation(baseDirectory);
         BuildFileList(false);
-        _listboxDef = new ListboxDefinition() 
-        { 
-            Groups = MakeListboxEntries(),
-            Columns = 5,
-            VerticalScrollbar = false
-        };
-        if (_active != null)
+        _listbox = new Listbox(this)
         {
-            _listboxDef.Looks = _active.GetListboxLooks(ListboxType.Default);
-        }
-        _listbox = new Listbox(this, _listboxDef);
+            Looks = _active?.GetListboxLooks(ListboxType.Default) ?? new(),
+            Columns = 5,
+            VerticalScrollbar = false,
+            Groups = MakeListboxEntries()
+        };
         _listbox.ItemSelected += ItemSelected;
         innerLayout.Add(_listbox, 1, 0, new Padding(2, 2, 2, 2));
 
@@ -174,8 +169,7 @@ public class FileDialog : DynamicSizingDialog
                     SetDirectoryLocation(parent);
                     BuildFileList(true);
                     text = "";
-                    _listboxDef.Groups = MakeListboxEntries();
-                    _listbox.Update();
+                    _listbox.Groups = MakeListboxEntries();
                     _listbox.OnResize();
                 }
             }
@@ -187,8 +181,7 @@ public class FileDialog : DynamicSizingDialog
                     SetDirectoryLocation(canPath);
                     BuildFileList(true);
                     text = "";
-                    _listboxDef.Groups = MakeListboxEntries();
-                    _listbox.Update(true);
+                    _listbox.Groups = MakeListboxEntries();
                     _listbox.OnResize();
                 }
             }

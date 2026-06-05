@@ -14,14 +14,16 @@ public class CivilopediaDescription : Listbox
         Width = window.Width - window.LayoutPadding.Left - window.LayoutPadding.Right - 4;
         Height = window.Height - window.LayoutPadding.Top - window.LayoutPadding.Bottom - 4;
         Location = new System.Numerics.Vector2(window.LayoutPadding.Left + 2, window.LayoutPadding.Top + 2);
-        
+        Selectable = false;
+        Type = ListboxType.Civilopedia;
+
         var active = gameScreen.MainWindow.ActiveInterface;
 
         string text = CivilopediaLoader.GetDescription(pedia, id);
         var wrappedTexts = DialogUtils.GetWrappedTexts(text, Width, active.Look.LabelFont, active.Look.CivilopediaFontSize);
         var textHeight = (int)TextManager.MeasureTextEx(active.Look.LabelFont, text, active.Look.CivilopediaFontSize, 0.0f).Y;
-        var rows = Height / textHeight;
-        if (wrappedTexts.Count > rows)
+        Rows = Height / textHeight;
+        if (wrappedTexts.Count > Rows)
         {
             wrappedTexts = DialogUtils.GetWrappedTexts(text, Width - ScrollBar.ScrollbarDimDefault, 
                 active.Look.LabelFont, active.Look.CivilopediaFontSize);
@@ -32,13 +34,6 @@ public class CivilopediaDescription : Listbox
         {
             groups.Add(new ListboxGroup(txt));
         }
-
-        Definition = new ListboxDefinition
-        {
-            Groups = groups,
-            Rows = rows,
-            Selectable = false,
-            Type = ListboxType.Civilopedia
-        };
+        Groups = groups;
     }
 }

@@ -15,14 +15,30 @@ public class ImprovementsBox : Listbox
     public ImprovementsBox(CityWindow cityWindow) : base(cityWindow)
     {
         _cityWindow = cityWindow;
+
+        Selectable = false;
+
         ItemSelected += SellSelectedImprovement;
     }
 
     public override void OnResize()
     {
+        var active = _cityWindow.MainWindow.ActiveInterface;
+        var properties = _cityWindow.CityWindowProps.Improvements;
+
+        Rows = properties.Rows;
+        Looks = new ListboxLooks()
+        {
+            Font = active.Look.CityWindowFont,
+            FontSize = active.Look.CityWindowFontSize + (int)(12 * (_cityWindow.Scale - 1)),
+            TextColorFront = properties.LabelColor,
+            TextColorShadow = properties.LabelColorShadow,
+            TextShadowOffset = properties.ShadowOffset
+        };
+
         if (_oldScale != _cityWindow.Scale)
         {
-            Definition = MakeListbox(_cityWindow);
+            Groups = MakeEntries(_cityWindow);
             _oldScale = _cityWindow.Scale;
         }
 
@@ -35,14 +51,13 @@ public class ImprovementsBox : Listbox
         base.OnResize();
     }
 
-    static ListboxDefinition MakeListbox(CityWindow cityWindow)
+    static List<ListboxGroup> MakeEntries(CityWindow cityWindow)
     {
         var active = cityWindow.MainWindow.ActiveInterface;
         var improvements = cityWindow.City.Improvements;
-        var properties = cityWindow.CityWindowProps.Improvements;
         var firstWonderIndex = cityWindow.CurrentGameScreen.Game.Rules.FirstWonderIndex;
 
-        List<ListboxGroup> groups = new();
+        List<ListboxGroup> groups = [];
         foreach (var improvement in improvements)
         {
             var icon = improvement.Icon ?? active.GetImprovementImage(improvement, firstWonderIndex);
@@ -59,21 +74,7 @@ public class ImprovementsBox : Listbox
             };
             groups.Add(group);
         }
-
-        return new ListboxDefinition()
-        {
-            Rows = properties.Rows,
-            Selectable = false,
-            Looks = new ListboxLooks()
-            {
-                Font = active.Look.CityWindowFont,
-                FontSize = active.Look.CityWindowFontSize + (int)(12 * (cityWindow.Scale - 1)),
-                TextColorFront = properties.LabelColor,
-                TextColorShadow = properties.LabelColorShadow,
-                TextShadowOffset = properties.ShadowOffset
-            },
-            Groups = groups
-        };
+        return groups;
     }
 
     private void SellSelectedImprovement(object? sender, ListboxSelectionEventArgs args)
@@ -100,7 +101,7 @@ public class ImprovementsBox : Listbox
                     if (i == 0 && button == Labels.Ok)
                     {
                         city.SellImprovement(improvement);
-                        Definition = MakeListbox(_cityWindow);
+                        Groups = MakeEntries(_cityWindow);
                         OnResize();
                     }
                 },

@@ -7,12 +7,9 @@ namespace RaylibUI.RunGame.GameControls;
 public class StatusLabel(
     IControlLayout layout,
     string text,
-    HorizontalAlignment alignment = HorizontalAlignment.Left,
-    Color[]? switchColors = null,
-    int switchTime = 0,
-    int fontSize = 18)
+    HorizontalAlignment alignment = HorizontalAlignment.Left, int fontSize = 18)
     : LabelControl(layout, text, true, horizontalAlignment: alignment, defaultHeight: 18,
         font: layout.MainWindow.ActiveInterface.Look.StatusPanelLabelFont, fontSize: fontSize, spacing: 0f,
         colorFront: layout.MainWindow.ActiveInterface.Look.StatusPanelLabelColor,
         colorShadow: layout.MainWindow.ActiveInterface.Look.StatusPanelLabelColorShadow,
-        shadowOffset: new System.Numerics.Vector2(1, 1), switchColors: switchColors, switchTime: switchTime);
+        shadowOffset: new System.Numerics.Vector2(1, 1));
