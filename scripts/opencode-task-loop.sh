@@ -4,6 +4,7 @@ set -euo pipefail
 REPO_DIR="/home/rhy/Projects/Civ2-clone"
 MODEL="${MODEL:-ollama/qwen3:14b}"
 AGENT="${AGENT:-build}"
+OPENCODE_BIN="${OPENCODE_BIN:-/home/rhy/.opencode/bin/opencode}"
 
 cd "$REPO_DIR"
 
@@ -47,7 +48,7 @@ Instructions:
 - At the end, summarize files changed and checks run."
 
   set +e
-  opencode run \
+  "$OPENCODE_BIN" run \
     --model "$MODEL" \
     --agent "$AGENT" \
     --title "agent:${task_name}" \
