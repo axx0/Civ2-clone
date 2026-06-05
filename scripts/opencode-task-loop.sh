@@ -59,6 +59,8 @@ Instructions:
     if git diff --quiet && git diff --cached --quiet; then
       echo "No changes produced." > "agent/failed/${task_name}.report.txt"
       mv "$task_file" "agent/failed/${task_name}.md"
+      git add agent/failed agent/tasks || true
+      git commit -m "agent: record no-change task ${task_name}" || true
       continue
     fi
 
