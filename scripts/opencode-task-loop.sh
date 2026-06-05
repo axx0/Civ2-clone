@@ -22,7 +22,7 @@ while true; do
 
   echo "Starting task: $task_file"
 
-  if ! git diff --quiet || ! git diff --cached --quiet; then
+  if [ -n "$(git status --porcelain)" ]; then
     echo "Working tree is dirty. Refusing to run." | tee "$log_file"
     sleep 300
     continue
