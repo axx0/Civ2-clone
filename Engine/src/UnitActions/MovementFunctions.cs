@@ -547,7 +547,7 @@ namespace Civ2engine.UnitActions
                         {
                             foreach (var unaccountedUnit in tileFrom.UnitsHere
                                 .Where(u => u.InShip == null &&
-                                            u.Domain == UnitGas.Ground && u.Order == (int)OrderType.Sleep)
+                                            u is { Domain: UnitGas.Ground, Order: (int)OrderType.Sleep })
                                 .Take(unit.ShipHold - unit.CarriedUnits.Count))
                             {
                                 unaccountedUnit.InShip = unit;
@@ -646,10 +646,10 @@ namespace Civ2engine.UnitActions
                 var mapUpdates = new List<Tile>();
                 foreach (var neighbourTile in tileTo.Neighbours(unit.TwoSpaceVisibility))
                 {
+                    mapUpdates.Add(neighbourTile);
                     if(!neighbourTile.IsVisible(unit.Owner.Id))
                     {
                         neighbourTile.SetVisible(unit.Owner.Id);
-                        mapUpdates.Add(neighbourTile);
                     }
                 }
                 
