@@ -11,5 +11,5 @@ public class AlphaCentauriArrival : ITrigger
     /// 0xFE = ANYSIZE
     /// </summary>
     public int Size { get; set; }
-    public List<string> Strings { get; set; }
+    public List<string> Strings { get; set; } = [];
 }

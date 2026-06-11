@@ -3,7 +3,7 @@ using Model.Input;
 
 public class DropdownMenuContents
 {
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
     
     public Key HotKey { get; set; }
     

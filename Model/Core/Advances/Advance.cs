@@ -4,7 +4,7 @@ namespace Model.Core.Advances
 {
     public class Advance
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         public int AIvalue { get; set; }
         public int Modifier { get; set; }
         public int Prereq1 { get; set; }

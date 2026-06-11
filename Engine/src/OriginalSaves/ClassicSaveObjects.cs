@@ -13,12 +13,12 @@ namespace Civ2engine.OriginalSaves
     public class ClassicSaveObjects : ILoadedGameObjects
     {
         public Unit ActiveUnit { get; set; } = null!;
-        public Scenario Scenario { get; set; }
-        public List<City> Cities { get; set; }
-        public List<Transporter> Transporters { get; set; }
-        public List<Civilization> Civilizations { get; set; }
-        public List<Map> Maps { get; set; }
-        public IGameData GameData { get; set; }
-        public Options Options { get; set; }
+        public Scenario Scenario { get; set; } = null!;
+        public List<City> Cities { get; set; } = [];
+        public List<Transporter> Transporters { get; set; } = [];
+        public List<Civilization> Civilizations { get; set; } = [];
+        public List<Map> Maps { get; set; } = [];
+        public IGameData GameData { get; set; } = null!;
+        public Options Options { get; set; } = null!;
     }
 }

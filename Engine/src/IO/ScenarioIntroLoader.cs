@@ -18,12 +18,21 @@ namespace Civ2engine.IO
         {
             var filePath = Utils.GetFilePath(fileName, paths);
             var loader = new ScenarioIntroLoader();
+            if (filePath is null)
+            {
+                return loader._box;
+            }
             TextFileParser.ParseFile(filePath, loader);
             return loader._box;
         }
 
         public void ProcessSection(string section, List<string>? contents)
         {
+            if (contents is null)
+            {
+                return;
+            }
+
             var str = contents.FirstOrDefault(s => s.Contains("@width", StringComparison.OrdinalIgnoreCase));
             if (str != null)
             {

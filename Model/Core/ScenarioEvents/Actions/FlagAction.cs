@@ -22,5 +22,5 @@ public class FlagAction : IScenarioAction
     /// 0xFA=OMITTED, 0xFC=TRIGGERDEFENDER/TRIGGERRECEIVER, 0xFD=TRIGGERATTACKER
     /// </summary>
     public int WhoId { get; set; }
-    public List<string> Strings { get; set; }
+    public List<string> Strings { get; set; } = [];
 }

@@ -9,6 +9,11 @@ public class CityWindowLayout
     public CityWindowLayout(IImageSource image)
     {
         Image = image;
+        InfoPanel = new InfoPanel();
+        Resources = new ResourceProduction();
+        Production = new ShieldProduction();
+        UnitSupport = new UnitBox();
+        Improvements = new ImprovementsBox();
     }
 
     public IImageSource Image { get; init; }

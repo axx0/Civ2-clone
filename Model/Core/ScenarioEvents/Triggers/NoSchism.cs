@@ -6,5 +6,5 @@ public class NoSchism : ITrigger
     /// 0xFE = ANYBODY
     /// </summary>
     public int CivId { get; set; }
-    public List<string> Strings { get; set; }
+    public List<string> Strings { get; set; } = [];
 }

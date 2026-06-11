@@ -9,6 +9,6 @@ namespace Model.Core.Mapping
         public int NumberOfBlobs { get; set; }
         public int BridgeLength { get; set; }
         public int BridgesPerBlob { get; set; }
-        public TerrainParams[] TerrainParams { get; set; }
+        public TerrainParams[] TerrainParams { get; set; } = [];
     }
 }

@@ -6,7 +6,7 @@ namespace Model.Controls;
 
 public class ResourceInfo
 {
-    public string Name { get; set; }
-    public Func<int, City, string> GetResourceLabel { get; set; }
-    public IImageSource Icon { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public Func<int, City, string> GetResourceLabel { get; set; } = (_, _) => string.Empty;
+    public IImageSource Icon { get; set; } = null!;
 }

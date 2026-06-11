@@ -12,6 +12,8 @@ namespace Model.Core.GoodyHuts.Outcomes
         public string Message { get; set; }
         public bool Success { get; set; }
         public string OutcomeType { get; set; }
+        public int? AdvanceIndex { get; set; }
+        public Unit? CreatedUnit { get; set; }
 
         public GoodyHutOutcomeResult(string message, bool success, string outcomeType = "Unknown")
         {

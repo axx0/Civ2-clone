@@ -5,7 +5,7 @@ namespace Model.Controls;
 
 public class ShieldProduction
 {
-    public string Type { get; set; }
+    public string Type { get; set; } = string.Empty;
     public Rectangle Box { get; set; }
     
     public Vector2 IconLocation;

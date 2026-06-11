@@ -23,23 +23,23 @@ namespace Model.ImageSets
 
         public int HalfWidth { get; }
 
-        public IImageSource[] BaseTiles { get; set; }
-        public IImageSource[][] Specials { get; set; }
-        public IImageSource Blank { get; set; }
-        public DitherMap[] DitherMaps { get; set; }
-        public IImageSource[] RiverMouth { get; set; }
-        public IImageSource[] River { get; set; }
-        public IImageSource[] Forest { get; set; }
-        public IImageSource[] Mountains { get; set; }
-        public IImageSource[] Hills { get; set; }
-        public IImageSource[,] Coast { get; set; }
-        public IImageSource Pollution { get; set; }
-        public IImageSource GrasslandShield { get; set; }
+        public IImageSource[] BaseTiles { get; set; } = [];
+        public IImageSource[][] Specials { get; set; } = [];
+        public IImageSource Blank { get; set; } = null!;
+        public DitherMap[] DitherMaps { get; set; } = [];
+        public IImageSource[] RiverMouth { get; set; } = [];
+        public IImageSource[] River { get; set; } = [];
+        public IImageSource[] Forest { get; set; } = [];
+        public IImageSource[] Mountains { get; set; } = [];
+        public IImageSource[] Hills { get; set; } = [];
+        public IImageSource[,] Coast { get; set; } = new IImageSource[0, 0];
+        public IImageSource Pollution { get; set; } = null!;
+        public IImageSource GrasslandShield { get; set; } = null!;
 
-        public IImageSource Huts { get; set; }
-        public Image[] DitherMask { get; set; }
+        public IImageSource Huts { get; set; } = null!;
+        public Image[] DitherMask { get; set; } = [];
         
-        public Dictionary<int, ImprovementGraphic> ImprovementsMap { get; set; }
+        public Dictionary<int, ImprovementGraphic> ImprovementsMap { get; set; } = new();
 
         public int TileWidth { get; }
 

@@ -2,6 +2,6 @@ namespace Model.InterfaceActions;
 
 public class OpenFileInfo
 {
-    public string Title { get; init; }
-    public IList<FileFilter> Filters { get; init; }
+    public string Title { get; init; } = string.Empty;
+    public IList<FileFilter> Filters { get; init; } = [];
 }

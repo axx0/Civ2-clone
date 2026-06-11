@@ -5,7 +5,7 @@
 /// </summary>
 public class ListboxGroup
 {
-    public List<ListboxGroupElement> Elements { get; set; }
+    public List<ListboxGroupElement> Elements { get; set; } = [];
 
     /// <summary>
     /// Enforce this height to all controls.

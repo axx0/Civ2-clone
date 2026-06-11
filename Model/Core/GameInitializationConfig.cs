@@ -8,7 +8,7 @@ namespace Model.Core
     {
         public FastRandom Random { get; set; } = new (4564234);
         
-        public Dictionary<string, PopupBox?> PopUps { get; set; }
+        public Dictionary<string, PopupBox?> PopUps { get; set; } = new();
         public int[] WorldSize { get; set; } = { 50, 80 };
         public int DifficultyLevel { get; set; }
         public int NumberOfCivs { get; set; }
@@ -20,13 +20,13 @@ namespace Model.Core
         public bool Bloodlust { get; set; }
         public bool DontRestartEliminatedPlayers { get; set; }
         public int Gender { get; set; }
-        public Rules Rules { get; set; }
+        public Rules Rules { get; set; } = new();
         public int? ResourceSeed { get; set; }
         
         public int[][]? StartPositions { get; set; }
         public byte[]? TerrainData { get; set; }
-        public Civilization PlayerCiv { get; set; }
-        public Task<Map[]> MapTask { get; set; }
+        public Civilization PlayerCiv { get; set; } = new();
+        public Task<Map[]> MapTask { get; set; } = Task.FromResult(Array.Empty<Map>());
         
         public bool Started { get; set; }
         public List<Tile> StartTiles { get; } = new();
@@ -36,20 +36,21 @@ namespace Model.Core
         public int Temperature { get; set; } = 1;
         public int Age { get; set; } = 1;
         public bool CustomizeWorld { get; set; }
-        public List<Civilization> Civilizations { get; set; }
-        public ILookup<int,LeaderDefaults> GroupedTribes { get; set; }
+        public List<Civilization> Civilizations { get; set; } = [];
+        public ILookup<int,LeaderDefaults> GroupedTribes { get; set; } =
+            Array.Empty<LeaderDefaults>().ToLookup(_ => 0);
         public bool QuickStart { get; set; }
 
         // For scenarios
         public bool IsScenario { get; set; } = false;
         public int TechParadigm { get; set; }
-        public string ScenarioName { get; set; }
+        public string ScenarioName { get; set; } = string.Empty;
         public int ScenPlayerCivId { get; set; }
-        public string[] CivNames { get; set; }
-        public int[] CivGenders { get; set; }
-        public string[] LeaderNames { get; set; }
-        public bool[] CivsInPlay { get; set; }
-        public string LeaderName { get; set; }
+        public string[] CivNames { get; set; } = [];
+        public int[] CivGenders { get; set; } = [];
+        public string[] LeaderNames { get; set; } = [];
+        public bool[] CivsInPlay { get; set; } = [];
+        public string LeaderName { get; set; } = string.Empty;
         public int StartingYear { get; set; }
         public int TurnYearIncrement { get; set; }
         public int MaxTurns { get; set; }

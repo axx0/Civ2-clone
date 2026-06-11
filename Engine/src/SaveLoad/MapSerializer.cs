@@ -68,7 +68,7 @@ public class MapSerializer
         return maps;
     }
 
-    public static void Write(Utf8JsonWriter writer, IList<Map> maps, IImprovementEncoder improvementEncoder = null)
+    public static void Write(Utf8JsonWriter writer, IList<Map> maps, IImprovementEncoder? improvementEncoder = null)
     {
         writer.WriteStartArray();
         foreach (var map in maps)

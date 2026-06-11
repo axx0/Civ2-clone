@@ -8,5 +8,5 @@ public class EnableTechnology : IScenarioAction
     public int WhomId { get; set; }
     public int TechnologyId { get; set; }
     public int Value { get; set; }
-    public List<string> Strings { get; set; }
+    public List<string> Strings { get; set; } = [];
 }

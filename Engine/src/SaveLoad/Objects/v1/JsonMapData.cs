@@ -13,7 +13,7 @@ public class JsonMapData
     {
         
     }
-    public JsonMapData(Map map, IImprovementEncoder encoder)
+    public JsonMapData(Map map, IImprovementEncoder? encoder)
     {
         FlatWorld = map.Flat;
         MapRevealed = map.MapRevealed;
@@ -51,11 +51,11 @@ public class JsonMapData
     public bool FlatWorld { get; set; }
     public bool MapRevealed { get; set; }
     public int WhichCivsMapShown { get; set; }
-    public int[] ClickedXy { get; set; }
+    public int[] ClickedXy { get; set; } = [];
     public int Xdim { get; set; }
     public int Ydim { get; set; }
     
-    public List<TileData> Tiles { get; set; }
+    public List<TileData> Tiles { get; set; } = [];
     public int ResourceSeed { get; set; }
     public int LocatorXdim { get; set; }
     public int LocatorYdim { get; set; }

@@ -9,7 +9,7 @@ namespace Model.Core.Units
 {
     public class Unit : IUnit
     {
-        private Tile _currentLocation;
+        private Tile? _currentLocation;
         private bool _dead;
 
         // From RULES.TXT
@@ -35,7 +35,7 @@ namespace Model.Core.Units
         public int AttackBase => TypeDefinition.Attack;
         public int DefenseBase => TypeDefinition.Defense;
         
-        public UnitDefinition TypeDefinition { get; set; }
+        public UnitDefinition TypeDefinition { get; set; } = new();
 
         public int FirepowerBase => TypeDefinition.Firepwr;
 
@@ -74,7 +74,7 @@ namespace Model.Core.Units
         public bool MadeFirstMove { get; set; }
         public bool Veteran { get; set; }
         public bool WaitOrder { get; set; }
-        public Civilization Owner { get; set; }
+        public Civilization Owner { get; set; } = new();
         public int CaravanCommodity { get; set; }
         public City? HomeCity { get; set; }
         public int GoToX { get; set; }
@@ -86,11 +86,11 @@ namespace Model.Core.Units
         public int X { get; set; }
         public int Y { get; set; }
         public int MapIndex { get; set; }
-        public bool[] VisibilityByCiv { get; set; }
+        public bool[] VisibilityByCiv { get; set; } = [];
         public int Animation { get; set; }
         public int Orientation { get; set; }
 
-        public int[] PrevXy { get; set; }   // XY position of unit before it moved
+        public int[] PrevXy { get; set; } = [];   // XY position of unit before it moved
 
         public bool TurnEnded => MovePoints <= 0 ||
                                  Order is (int)OrderType.Fortified or (int)OrderType.Transform or (int)OrderType.Fortify or
@@ -121,7 +121,7 @@ namespace Model.Core.Units
 
         public Tile CurrentLocation
         {
-            get => _currentLocation;
+            get => _currentLocation ?? throw new InvalidOperationException("Unit has no current location.");
             set
             {
                 if(_dead) return; //dead units can't move

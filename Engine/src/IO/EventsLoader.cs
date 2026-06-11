@@ -12,8 +12,8 @@ namespace Civ2engine.IO
 {
     public class EventsLoader : IFileHandler
     {
-        Rules _rules;
-        ILoadedGameObjects _gameObjects;
+        Rules _rules = null!;
+        ILoadedGameObjects _gameObjects = null!;
         List<ScenarioEvent> _scenarios = new ();
 
         private EventsLoader()
@@ -23,6 +23,10 @@ namespace Civ2engine.IO
         public static List<ScenarioEvent> LoadEvents(IEnumerable<string> paths, Rules rules, ILoadedGameObjects objects)
         {
             var filePath = Utils.GetFilePath("events.txt", paths);
+            if (filePath is null)
+            {
+                return [];
+            }
             var loader = new EventsLoader();
             loader._rules = rules;
             loader._gameObjects = objects;
@@ -32,6 +36,11 @@ namespace Civ2engine.IO
 
         public void ProcessSection(string section, List<string>? contents)
         {
+            if (contents is null)
+            {
+                return;
+            }
+
             contents = contents.Select(str => str.TrimEnd(' ')).ToList();  // remove whitespaces at end
 
             if (section != "IF") return;
@@ -365,7 +374,10 @@ namespace Civ2engine.IO
                         break;
                 }
 
-                actions.Add(action);
+                if (action is not null)
+                {
+                    actions.Add(action);
+                }
             }
 
             _scenarios.Add(new ScenarioEvent
@@ -375,7 +387,7 @@ namespace Civ2engine.IO
             });
         }
 
-        private static string ReadString(List<string>? strings, string keyword, int startIndex = 1)
+        private static string ReadString(List<string> strings, string keyword, int startIndex = 1)
         {
             foreach (string s in strings.Skip(startIndex))
             {

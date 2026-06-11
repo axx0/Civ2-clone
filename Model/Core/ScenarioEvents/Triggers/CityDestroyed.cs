@@ -8,5 +8,5 @@ public class CityDestroyed : ITrigger
     /// 0xFE = ANYBODY
     /// </summary>
     public int OwnerId { get; set; }
-    public List<string> Strings { get; set; }
+    public List<string> Strings { get; set; } = [];
 }

@@ -6,5 +6,5 @@ public class TurnTrigger : ITrigger
     /// 0xFFFF = every turn
     /// </summary>
     public int Turn { get; set; }
-    public List<string> Strings { get; set; }
+    public List<string> Strings { get; set; } = [];
 }

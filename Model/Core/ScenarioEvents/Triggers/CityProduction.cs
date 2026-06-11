@@ -11,5 +11,5 @@ public class CityProduction : ITrigger
     /// Improvements start @FF down
     /// </summary>
     public int ImprovementUnitId { get; set; }
-    public List<string> Strings { get; set; }
+    public List<string> Strings { get; set; } = [];
 }

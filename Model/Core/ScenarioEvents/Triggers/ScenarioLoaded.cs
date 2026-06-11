@@ -2,5 +2,5 @@
 
 public class ScenarioLoaded : ITrigger
 {
-    public List<string> Strings { get; set; }
+    public List<string> Strings { get; set; } = [];
 }

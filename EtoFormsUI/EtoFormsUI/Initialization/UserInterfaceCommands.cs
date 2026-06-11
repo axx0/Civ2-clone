@@ -21,7 +21,7 @@ namespace EtoFormsUI
             }
         }
 
-        public Tuple<string, int, List<bool>> ShowDialog(PopupBox popupBox, List<bool> checkBoxOptionStates = null)
+        public Tuple<string, int, List<bool>> ShowDialog(PopupBox popupBox, List<bool>? checkBoxOptionStates = null)
         {
             var popup = new Civ2dialog(_main, popupBox, checkboxOptionState: checkBoxOptionStates);
             popup.ShowModal(_main);

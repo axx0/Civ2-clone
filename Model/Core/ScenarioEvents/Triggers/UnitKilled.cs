@@ -18,5 +18,5 @@ public class UnitKilled : ITrigger
     public int DefenderCivId { get; set; }
     public bool DefenderOnly { get; set; }
     public int MapId { get; set; }
-    public List<string> Strings { get; set; }
+    public List<string> Strings { get; set; } = [];
 }

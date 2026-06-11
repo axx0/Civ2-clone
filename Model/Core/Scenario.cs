@@ -17,7 +17,7 @@ public class Scenario
     public bool ForbidTechFromConquests { get; set; }
     public bool ElliminatePollution { get; set; }
     public bool SpecialWwiIonlyAi { get; set; }
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
     public int TechParadigm { get; set; }
     public int TurnYearIncrement { get; set; }
     public int StartingYear { get; set; }

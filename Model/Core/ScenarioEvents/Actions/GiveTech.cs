@@ -7,5 +7,5 @@ public class GiveTech : IScenarioAction
     /// </summary>
     public int CivId { get; set; }
     public int TechId { get; set; }
-	public List<string> Strings { get; set; }
+	public List<string> Strings { get; set; } = [];
 }

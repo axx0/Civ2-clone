@@ -18,7 +18,7 @@ namespace Model.Core.Mapping
         /// <summary>
         /// Error message shown when civ lacks tech to build on this terrain
         /// </summary>
-        public string MissingRequiredTechMessage { get; set; }
-        public List<TerrainImprovementAction> Effects { get; set; }
+        public string MissingRequiredTechMessage { get; set; } = string.Empty;
+        public List<TerrainImprovementAction> Effects { get; set; } = [];
     }
 }

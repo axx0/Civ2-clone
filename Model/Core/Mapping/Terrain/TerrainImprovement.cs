@@ -5,14 +5,14 @@ namespace Model.Core.Mapping
         /// <summary>
         /// The name of the improvement class
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// Improvements have multiple levels
         ///     Irrigation -> Farmland
         ///     Road -> Railroad
         /// </summary>
-        public IList<ImprovementLevel> Levels { get; set; }
+        public IList<ImprovementLevel> Levels { get; set; } = [];
 
         /// <summary>
         /// True if all cities are considered to have this improvement (once researched)
@@ -22,26 +22,26 @@ namespace Model.Core.Mapping
         /// <summary>
         /// List of list to accomodate multiple maps first list is map second is terrains for map
         /// </summary>
-        public List<List<AllowedTerrain>> AllowedTerrains { get; set; }
+        public List<List<AllowedTerrain>> AllowedTerrains { get; set; } = [];
         
         /// <summary>
         /// Key to build improvement if captial required format like Shift|D
         /// </summary>
-        public string Shortcut { get; set; }
+        public string Shortcut { get; set; } = string.Empty;
 
         public int Id { get; set; }
         
-        public List<int> AdjacencyRules { get; set; }
+        public List<int> AdjacencyRules { get; set; } = [];
         
         /// <summary>
         /// Popup message key to show when max level of improvement has been built
         /// </summary>
-        public string MaxLevelReachedMessage { get; set; }
+        public string MaxLevelReachedMessage { get; set; } = string.Empty;
 
         /// <summary>
         /// Error popup to show when the Adjacency rules are not met
         /// </summary>
-        public string NoAdjacencyMessage { get; set; }
+        public string NoAdjacencyMessage { get; set; } = string.Empty;
 
         /// <summary>
         /// Multiple improvements in the same non zero exclusive group cannot be built in the same square completing one will destroy all others

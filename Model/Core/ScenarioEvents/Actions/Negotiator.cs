@@ -9,5 +9,5 @@ public class Negotiator : IScenarioAction
     /// 0xFC=TRIGGERDEFENDER/TRIGGERRECEIVER, 0xFD=TRIGGERATTACKER
     /// </summary>
     public int WhoId { get; set; }
-    public List<string> Strings { get; set; }
+    public List<string> Strings { get; set; } = [];
 }

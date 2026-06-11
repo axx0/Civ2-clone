@@ -10,5 +10,5 @@ public class BestowImprovement : IScenarioAction
     public bool Randomize { get; set; }
     public bool Capital { get; set; }
     public bool Wonders { get; set; }
-    public List<string> Strings { get; set; }
+    public List<string> Strings { get; set; } = [];
 }

@@ -19,11 +19,10 @@ public class TileData
     /// <summary>
     /// The players that can see the tile and what they see A means all
     /// </summary>
-    public IList<string> P { get; set; }
+    public IList<string> P { get; set; } = [];
     
     /// <summary>
     /// True if the tile has a river
     /// </summary>
     public bool R { get; set; }
 }
-

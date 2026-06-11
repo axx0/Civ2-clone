@@ -9,7 +9,7 @@ public class Improvement
     public int Type { get; set; }
 
     //From RULES.TXT
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     public int Cost { get; set; }
     public int Upkeep { get; set; }

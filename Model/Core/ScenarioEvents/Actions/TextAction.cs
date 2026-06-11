@@ -3,5 +3,5 @@
 public class TextAction : IScenarioAction
 {
     public bool NoBroadcast { get; set; }
-    public List<string> Strings { get; set; }
+    public List<string> Strings { get; set; } = [];
 }

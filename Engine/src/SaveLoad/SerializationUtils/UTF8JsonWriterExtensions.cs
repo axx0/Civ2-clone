@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -8,10 +9,10 @@ namespace Civ2engine.SaveLoad.SerializationUtils;
 
 public static class Utf8JsonWriterExtensions
 {
-    public static T[] Clamp<T>(this T[] array, T ignoreValue = default)
+    public static T[] Clamp<T>(this T[] array, T ignoreValue = default!)
     {
         int i = array.Length - 1;
-        for (; i >= 0 && array[i].Equals(ignoreValue); i--)
+        for (; i >= 0 && EqualityComparer<T>.Default.Equals(array[i], ignoreValue); i--)
         {
         }
 
@@ -23,13 +24,13 @@ public static class Utf8JsonWriterExtensions
         Array.Copy(array, 0, res, 0, i +1);
         return res;
     }
-    public static void WriteNonDefaultFields<T>(this Utf8JsonWriter writer, string objectName, T instance)
+    public static void WriteNonDefaultFields(this Utf8JsonWriter writer, string objectName, object instance)
     {
         writer.WriteStartObject(objectName);
         WriteObjectContents(writer, instance);
     }
 
-    public static void WriteNonDefaultFields<T>(this Utf8JsonWriter writer, T instance)
+    public static void WriteNonDefaultFields(this Utf8JsonWriter writer, object instance)
     {
         writer.WriteStartObject();
         WriteObjectContents(writer, instance);
@@ -53,6 +54,11 @@ public static class Utf8JsonWriterExtensions
 
     private static void WriteValue(string name, Utf8JsonWriter writer, TypeCode typeCode, object? value)
     {
+        if (value is null)
+        {
+            return;
+        }
+
         switch (typeCode)
         {
             case TypeCode.Empty:
@@ -101,7 +107,7 @@ public static class Utf8JsonWriterExtensions
                 {
                     writer.WritePropertyName(name);
                 }
-                writer.WriteBooleanValue((bool)value);
+                writer.WriteBooleanValue(Convert.ToBoolean(value));
                 break;
             case TypeCode.Char:
                 if (!string.IsNullOrWhiteSpace(name))

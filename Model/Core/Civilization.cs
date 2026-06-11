@@ -13,16 +13,16 @@ namespace Model.Core
         public int CityStyle { get; set; }
 
         public int Epoch { get; set; }
-        public string LeaderName { get; set; }
+        public string LeaderName { get; set; } = string.Empty;
         public int LeaderGender { get; set; }
-        public string LeaderTitle { get; set; }
-        public string TribeName { get; set; }
-        public string Adjective { get; set; }
+        public string LeaderTitle { get; set; } = string.Empty;
+        public string TribeName { get; set; } = string.Empty;
+        public string Adjective { get; set; } = string.Empty;
         public int Money { get; set; }
         
         public int Science { get; set; }
         public int ReseachingAdvance { get; set; } = -1;
-        public bool[] Advances { get; set; }
+        public bool[] Advances { get; set; } = [];
         public int ScienceRate { get; set; }
         public int TaxRate { get; set; }
 
@@ -32,11 +32,11 @@ namespace Model.Core
         
         public int LuxRate => 100 - TaxRate - ScienceRate;
 
-        public string[] Titles { get; set; }
+        public string[] Titles { get; set; } = [];
 
         public List<Unit> Units { get; } = new();
         
-        public int[] CasualtiesPerUnitType { get; set; }
+        public int[] CasualtiesPerUnitType { get; set; } = [];
 
         public List<City> Cities { get; } = new();
 
@@ -49,7 +49,7 @@ namespace Model.Core
         public int PowerRank { get; set; }
         public int NormalColour { get; set; }
         
-        public AdvanceGroupAccess[] AllowedAdvanceGroups { get; set; }
+        public AdvanceGroupAccess[] AllowedAdvanceGroups { get; set; } = [];
         public Dictionary<Effects, int> GlobalEffects { get; } = new();
         public ThroneRoom ThroneRoom { get; set; } = new();
         public int Betrayals { get; set; }

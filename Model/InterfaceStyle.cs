@@ -27,10 +27,10 @@ public class InterfaceStyle
     public IImageSource[]? Button { get; init; }   // TOT
     public IImageSource[]? ButtonClicked { get; init; }   // TOT
 
-    public IImageSource[] RadioButtons { get; init; }
-    public IImageSource[] CheckBoxes { get; init; }
-    public IImageSource[] DiskIcons { get; init; }
-    public IImageSource[] FolderIcons { get; init; }
+    public IImageSource[] RadioButtons { get; init; } = [];
+    public IImageSource[] CheckBoxes { get; init; } = [];
+    public IImageSource[] DiskIcons { get; init; } = [];
+    public IImageSource[] FolderIcons { get; init; } = [];
 
     public Font DefaultFont { get; init; }
     public Font ButtonFont { get; init; }
@@ -58,5 +58,5 @@ public class InterfaceStyle
     public Color StatusPanelLabelColorShadow { get; init; }
     public Color MovingUnitsViewingPiecesLabelColor { get; init; }
     public Color MovingUnitsViewingPiecesLabelColorShadow { get; init; }
-    public Color[] EndOfTurnColors { get; init; }
+    public Color[] EndOfTurnColors { get; init; } = [];
 }

@@ -104,7 +104,7 @@ namespace Model.Core.Player
     public interface IInterfaceCommands
     {
         void ShowDialog(string dialogKey);
-        Tuple<string, int, List<bool>> ShowDialog(PopupBox popupBox, List<bool> checkBoxOptionStates = null);
+        Tuple<string, int, List<bool>> ShowDialog(PopupBox popupBox, List<bool>? checkBoxOptionStates = null);
         void SavePopup(string key, PopupBox popup);
     }
 }

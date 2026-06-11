@@ -16,5 +16,5 @@ public class BribeUnit : ITrigger
     /// 0xFE = ANYUNIT
     /// </summary>
     public int UnitTypeId { get; set; }
-    public List<string> Strings { get; set; }
+    public List<string> Strings { get; set; } = [];
 }

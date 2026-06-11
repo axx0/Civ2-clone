@@ -11,5 +11,5 @@ public class MakeAggression : IScenarioAction
     /// 0xFC=TRIGGERRECEIVER/TRIGGERDEFENDER, 0xFD=TRIGGERATTACKER
     /// </summary>
     public int WhoCivId { get; set; }
-    public List<string> Strings { get; set; }
+    public List<string> Strings { get; set; } = [];
 }

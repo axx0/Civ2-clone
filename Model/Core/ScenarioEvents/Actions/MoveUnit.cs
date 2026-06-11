@@ -12,12 +12,12 @@ public class MoveUnit : IScenarioAction
     /// </summary>
     public int UnitMovedId { get; set; }
     public int MapId { get; set; }
-    public int[,] MapCoords { get; set; }
-    public int[] MapDest { get; set; }
+    public int[,] MapCoords { get; set; } = new int[0, 0];
+    public int[] MapDest { get; set; } = [];
 
     /// <summary>
     /// 0xFE=ALLUNITS
     /// </summary>
     public int NumberToMove { get; set; }
-    public List<string> Strings { get; set; }
+    public List<string> Strings { get; set; } = [];
 }

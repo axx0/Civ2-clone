@@ -1916,7 +1916,7 @@ public class Read
                 case 4:
                     actions.Add(new PlayWav
                     {
-                        File = strings.GetRange(0, 1).FirstOrDefault(),
+                        File = strings.GetRange(0, 1).FirstOrDefault() ?? string.Empty,
                         Strings = strings.GetRange(0, 1)
                     });
                     strings.RemoveRange(0, 1);
@@ -1993,7 +1993,7 @@ public class Read
                 case 12:
                     actions.Add(new PlayAvi
                     {
-                        File = strings.GetRange(0, 1).FirstOrDefault(),
+                        File = strings.GetRange(0, 1).FirstOrDefault() ?? string.Empty,
                         Strings = strings.GetRange(0, 1)
                     });
                     strings.RemoveRange(0, 1);

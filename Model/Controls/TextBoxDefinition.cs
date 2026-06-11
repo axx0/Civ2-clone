@@ -10,14 +10,14 @@ public class TextBoxDefinition
     /// <summary>
     /// Name to identify the value
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
         
-    public string InitialValue { get; set; }
+    public string InitialValue { get; set; } = string.Empty;
 
     /// <summary>
     /// Text to the left of textbox
     /// </summary>
-    public string Description { get; set; }
+    public string Description { get; set; } = string.Empty;
 
     /// <summary>
     /// Minimum numeric value

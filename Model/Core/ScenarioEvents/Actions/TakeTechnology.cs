@@ -9,5 +9,5 @@ public class TakeTechnology : IScenarioAction
 	/// </summary>
 	public int WhomId { get; set; }
 	public bool Collapse { get; set; }
-	public List<string> Strings { get; set; }
+	public List<string> Strings { get; set; } = [];
 }

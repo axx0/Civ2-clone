@@ -9,5 +9,5 @@ public class ReceivedTechnology : ITrigger
     /// 0xFE = ANYBODY
     /// </summary>
     public int ReceiverCivId { get; set; }
-    public List<string> Strings { get; set; }
+    public List<string> Strings { get; set; } = [];
 }

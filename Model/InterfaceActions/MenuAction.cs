@@ -7,7 +7,7 @@ public class MenuAction : IInterfaceAction
     public MenuAction(DialogElements dialog)
     {
         DialogElement = dialog;
-        Name = dialog.Name;
+        Name = dialog.Name ?? string.Empty;
     }
 
     public string Name { get; }

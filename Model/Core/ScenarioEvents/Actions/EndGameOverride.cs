@@ -2,5 +2,5 @@
 
 public class EndGameOverride : IScenarioAction
 {
-    public List<string> Strings { get; set; }
+    public List<string> Strings { get; set; } = [];
 }

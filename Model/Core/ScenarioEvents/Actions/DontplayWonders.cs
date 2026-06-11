@@ -2,5 +2,5 @@
 
 public class DontplayWonders : IScenarioAction
 {
-    public List<string> Strings { get; set; }
+    public List<string> Strings { get; set; } = [];
 }

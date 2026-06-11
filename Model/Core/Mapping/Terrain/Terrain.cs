@@ -5,7 +5,7 @@
         public TerrainType Type { get; set; }
 
         // From RULES.TXT
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         
         public int MoveCost { get; set; }
         public int Defense { get; set; }
@@ -28,7 +28,7 @@
         public int CanIrrigate { get; set; }
         public int CanMine { get; set; }
         public int Transform { get; set; }
-        public Special[] Specials { get; set; }
+        public Special[] Specials { get; set; } = [];
         public bool Impassable { get; set; }
         public bool CanHaveCity => !Impassable && TerrainType.Ocean != Type;
     }

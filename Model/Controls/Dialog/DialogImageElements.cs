@@ -16,8 +16,8 @@ public class DialogImageElements
         Coords = coords ?? new int[image?.GetLength(0) ?? 1, 2];
     }
 
-    public DialogImageElements(IImageSource? image, float scale = 1f) : 
-        this([image], scale: scale, coords: new int[,] { { 0, 0 } })
+    public DialogImageElements(IImageSource? image, float scale = 1f) :
+        this(image is null ? null : [image], scale: scale, coords: new int[,] { { 0, 0 } })
     {
     }
 

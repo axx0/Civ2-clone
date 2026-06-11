@@ -24,5 +24,5 @@ public class CheckFlag : ITrigger
     public int CountThreshold { get; set; }
     public int TechnologyId { get; set; }
     public int Treshold { get; set; }
-    public List<string> Strings { get; set; }
+    public List<string> Strings { get; set; } = [];
 }

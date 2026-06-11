@@ -54,7 +54,7 @@ namespace Civ2engine.IO
         public bool FlatWorld { get; set; }
         public int ResourceSeed { get; set; }
         
-        public (short First, short Second)[] StartPositions { get; set; }
-        public byte[] TerrainData { get; set; }
+        public (short First, short Second)[] StartPositions { get; set; } = [];
+        public byte[] TerrainData { get; set; } = [];
     }
 }

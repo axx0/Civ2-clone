@@ -9,5 +9,5 @@ public class TransportAction : IScenarioAction
     /// 0x48=native, 0x50=build, 0x60=use
     /// </summary>
     public int TransportMode { get; set; }
-	public List<string> Strings { get; set; }
+	public List<string> Strings { get; set; } = [];
 }

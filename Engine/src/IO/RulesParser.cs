@@ -69,6 +69,10 @@ namespace Civ2engine.IO
             var rules = new Rules();
             _rulesetPaths = ruleset.Paths;
             var filePath = Utils.GetFilePath("RULES.txt", _rulesetPaths);
+            if (filePath is null)
+            {
+                return rules;
+            }
             TextFileParser.ParseFile(filePath, new RulesParser(rules));
             return rules;
         }
@@ -249,7 +253,7 @@ namespace Civ2engine.IO
         }
 
         private int _nextGov;
-        private int[] _freeSupports;
+        private int[] _freeSupports = [];
 
         private void ProcessGovernments(string[] values)
         {
@@ -617,4 +621,3 @@ namespace Civ2engine.IO
     }
 }
 
-    

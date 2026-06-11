@@ -16,5 +16,5 @@ public class CityTaken : ITrigger
     /// </summary>
     public int DefenderCivId { get; set; }
     public bool IsUnitSpy { get; set; }
-    public List<string> Strings { get; set; }
+    public List<string> Strings { get; set; } = [];
 }

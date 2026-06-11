@@ -2,6 +2,6 @@
 
 public class CivilopediaProperties
 {
-    public CivilopediaListbox Listbox { get; set; }
-    public string[] Buttons { get; set; }
+    public CivilopediaListbox Listbox { get; set; } = new();
+    public string[] Buttons { get; set; } = [];
 }

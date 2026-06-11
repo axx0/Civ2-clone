@@ -6,7 +6,7 @@ namespace Model.Core.Units
 {
     public class UnitDefinition
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         public int Until { get; set; }
         public UnitGas Domain { get; set; }
         public int Move { get; set; }
@@ -19,16 +19,16 @@ namespace Model.Core.Units
         public int Hold { get; set; }
         public AiRoleType AIrole { get; set; }
         public int Prereq { get; set; }
-        public bool[] Flags { get; set; }
+        public bool[] Flags { get; set; } = new bool[20];
         public int Type { get; set; }
-        public string AttackSound { get; set; }
+        public string AttackSound { get; set; } = string.Empty;
         
         public bool IsSettler { get; set; }
         
         public int WorkRate { get; set; }
         public bool IsEngineer { get; set; }
-        public bool[] CivCanBuild { get; set; }
-        public bool[] CanBeOnMap { get; set; }
+        public bool[] CivCanBuild { get; set; } = [];
+        public bool[] CanBeOnMap { get; set; } = [];
         public int MinBribe { get; set; }
         public bool Invisible { get; set; }
         public bool NonDispandable { get; set; }
@@ -38,8 +38,8 @@ namespace Model.Core.Units
 
         public Dictionary<UnitEffect, int> Effects { get; } = new();
         public int AttackPerTurn { get; set; }
-        public bool[] CanBuildMapLink { get; set; }
-        public bool[] CanUseMapLink { get; set; }
-        public bool[] CanMoveWithoutLink { get; set; }
+        public bool[] CanBuildMapLink { get; set; } = [];
+        public bool[] CanUseMapLink { get; set; } = [];
+        public bool[] CanMoveWithoutLink { get; set; } = [];
     }
 }

@@ -13,7 +13,7 @@ namespace Civ2engine.IO
         public static string Help { get; set; } = "Help";
         public static string Custom { get; set; } = "Custom";
 
-        public static string[] Items { get; set; }
+        public static string[] Items { get; set; } = [];
 
         public static string For(LabelIndex index)
         {

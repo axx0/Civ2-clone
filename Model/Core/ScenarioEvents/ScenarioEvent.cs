@@ -6,7 +6,7 @@ namespace Model.Core.ScenarioEvents;
 public class ScenarioEvent
 {
     public ITrigger? Trigger { get; set; }
-    public List<IScenarioAction> Actions { get; set; }
+    public List<IScenarioAction> Actions { get; set; } = [];
 
     /// <summary>
     /// Second trigger, only present if @AND modifier is present
@@ -28,5 +28,5 @@ public class ScenarioEvent
     /// </summary>
     public bool JustOnce { get; set; }
 
-    public CheckFlag FlagTrigger { get; set; }
+    public CheckFlag FlagTrigger { get; set; } = new();
 }

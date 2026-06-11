@@ -7,5 +7,5 @@ namespace Model.Controls;
 public class InfoPanel
 {
     public Rectangle Box { get; set; }
-    public UnitBox UnitsPresent { get; set; }
+    public UnitBox UnitsPresent { get; set; } = new();
 }

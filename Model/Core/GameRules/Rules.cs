@@ -15,10 +15,10 @@ namespace Model.Core.GameRules
         public CosmicRules Cosmic { get; } = new();
 
         // Units
-        public UnitDefinition[] UnitTypes { get; set; }
+        public UnitDefinition[] UnitTypes { get; set; } = [];
 
         // Advances
-        public Advance[] Advances { get; set; }
+        public Advance[] Advances { get; set; } = [];
 
         public readonly Dictionary<string, int> AdvanceMappings = new()
         {
@@ -27,21 +27,21 @@ namespace Model.Core.GameRules
         };
 
         // Trading commodities
-        public Commodity[] CaravanCommoditie { get; set; }
+        public Commodity[] CaravanCommoditie { get; set; } = [];
 
         // Difficulty
-        public string[] Difficulty { get; set; }
+        public string[] Difficulty { get; set; } = [];
 
         // Attitudes
-        public string[] Attitude { get; set; }
+        public string[] Attitude { get; set; } = [];
 
-        public Improvement[] Improvements { get; set; }
+        public Improvement[] Improvements { get; set; } = [];
 
 
-        public IList<Terrain[]> Terrains { get; set; }
-        public Government[] Governments { get; set; }
-        public LeaderDefaults[] Leaders { get; set; }
-        public Orders[] Orders { get; set; }
+        public IList<Terrain[]> Terrains { get; set; } = [];
+        public Government[] Governments { get; set; } = [];
+        public LeaderDefaults[] Leaders { get; set; } = [];
+        public Orders[] Orders { get; set; } = [];
 
         public MapParams[] Maps { get; set; } = {new() {Type = MapType.Standard}};
 
@@ -56,6 +56,6 @@ namespace Model.Core.GameRules
         }
 
         public int FirstWonderIndex { get; set; }
-        public List<int[]> MapLinks { get; set; }
+        public List<int[]> MapLinks { get; set; } = [];
     }
 }

@@ -7,5 +7,5 @@ public class ChangeMoney : IScenarioAction
     /// </summary>
     public int ReceiverCivId { get; set; }
     public int Amount { get; set; }
-    public List<string> Strings { get; set; }
+    public List<string> Strings { get; set; } = [];
 }

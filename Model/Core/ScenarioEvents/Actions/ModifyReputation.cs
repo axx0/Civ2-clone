@@ -13,5 +13,5 @@ public class ModifyReputation : IScenarioAction
     public int WhomId { get; set; }
     public int Betray { get; set; }
     public int Modifier { get; set; }
-    public List<string> Strings { get; set; }
+    public List<string> Strings { get; set; } = [];
 }

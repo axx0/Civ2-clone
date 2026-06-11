@@ -7,6 +7,11 @@ namespace Civ2engine
     {
         public void ProcessSection(string section, List<string>? contents)
         {
+            if (contents is null)
+            {
+                return;
+            }
+
             switch (section)
             {
                 case "POPUPS":

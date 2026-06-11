@@ -13,5 +13,5 @@ public class Negotiation1 : ITrigger
     public int ListenerCivId { get; set; }
     public int TalkerType { get; set; }
     public int ListenerType { get; set; }
-    public List<string> Strings { get; set; }
+    public List<string> Strings { get; set; } = [];
 }

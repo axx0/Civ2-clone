@@ -12,7 +12,7 @@ namespace Model.Core.Mapping
 
         public int Owner { get; set; } = -1;
         
-        private Terrain _terrain;
+        private Terrain _terrain = null!;
 
         public int X { get; }
         public int Y { get; }
@@ -42,7 +42,7 @@ namespace Model.Core.Mapping
         public Map Map { get; }
         public int XIndex { get; }
 
-        public ITerrain EffectiveTerrain { get; private set; }
+        public ITerrain EffectiveTerrain { get; private set; } = null!;
 
         public TerrainType Type => Terrain.Type;
 
@@ -123,7 +123,7 @@ namespace Model.Core.Mapping
         {
             var outcome = _goodyHut?.Trigger(unit);
             _goodyHut = null; // Consume / remove the goody hut from the game.
-            return outcome;
+            return outcome!;
         }
 
         private bool HasSheild()

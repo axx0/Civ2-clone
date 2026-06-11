@@ -4,6 +4,6 @@ namespace RaylibUI;
 
 public class ImprovementGraphic
 {
-    public IImageSource[,] Levels { get; set; }
-    public IImageSource[,] UnitLevels { get; set; }
+    public IImageSource[,] Levels { get; set; } = new IImageSource[0, 0];
+    public IImageSource[,] UnitLevels { get; set; } = new IImageSource[0, 0];
 }
