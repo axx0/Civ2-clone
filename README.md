@@ -1,6 +1,6 @@
 ## FOSS Art Assets
 - The Main point of this fork is to add the FOSS Art Assets so the game can be a completely Open Source standalone game at some point.
-![Espionage](RaylibUI/FOSS%20art/Advances/espionage.jpg)
+![Espionage](RaylibUI/FOSS%20art/Advances/fusionpower.jpg)
 
 
 ## Local validation
