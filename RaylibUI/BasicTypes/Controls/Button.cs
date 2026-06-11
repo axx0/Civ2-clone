@@ -28,7 +28,7 @@ public class Button : BaseControl
     {
         _active = controller.MainWindow.ActiveInterface;
         _font = _active == null ? font ?? Fonts.Tnr : font ?? _active.Look.ButtonFont;        
-        _fontSize = fontSize ?? _active?.Look.ButtonFontSize ?? 20;
+        _fontSize = TextRendering.LegibleUiFontSize(fontSize ?? _active?.Look.ButtonFontSize ?? 20);
         Text = text;
         _textColour = _active?.Look.ButtonColour ?? Color.Black;
         _backgroundImage = backgroundImage;
@@ -42,7 +42,7 @@ public class Button : BaseControl
         set
         {
             _text = value;
-            _textSize = TextManager.MeasureTextEx(_font, _text, _fontSize, 0f);
+            _textSize = TextRendering.Measure(_font, _text, _fontSize, 0f);
         }
     }
 
@@ -102,7 +102,7 @@ public class Button : BaseControl
                 new Vector2(Bounds.X, Bounds.Y), 0.0f, Scale, Color.White);
         }
 
-        Graphics.DrawTextEx(_font, Text, new Vector2(Bounds.X + Width / 2 - (int)_textSize.X / 2, Bounds.Y + Height / 2 - (int)_textSize.Y / 2), _fontSize, 0f, Enabled ? _textColour : Color.Gray);
+        TextRendering.Draw(_font, Text, new Vector2(Bounds.X + Width / 2 - (int)_textSize.X / 2, Bounds.Y + Height / 2 - (int)_textSize.Y / 2), _fontSize, 0f, Enabled ? _textColour : Color.Gray);
 
         base.Draw(pulse);
     }
@@ -112,8 +112,8 @@ public class Button : BaseControl
         get { return _fontSize; }
         set
         { 
-            _fontSize = value;
-            _textSize = TextManager.MeasureTextEx(_font, _text, _fontSize, 0f);
+            _fontSize = TextRendering.LegibleUiFontSize(value);
+            _textSize = TextRendering.Measure(_font, _text, _fontSize, 0f);
         }
     }
 

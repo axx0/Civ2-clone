@@ -342,13 +342,13 @@ public class MapControl : BaseControl
                 cityDetails.Add(data);
 
                 var size = data.Size.ToString();
-                var fontSize = 14.ZoomScale(zoom);
-                var textSize = TextManager.MeasureTextEx(Fonts.TnRbold, size, fontSize, 0);
+                var fontSize = TextRendering.LegibleMapFontSize(14.ZoomScale(zoom));
+                var textSize = TextRendering.Measure(Fonts.TnRbold, size, fontSize, 0);
                 var citySizeRectLoc = paddedLoc + data.Location + data.SizeRectLoc.ZoomScale(zoom);
                 var textPosition = citySizeRectLoc;
                 Graphics.DrawRectangle((int)citySizeRectLoc.X, (int)citySizeRectLoc.Y, (int)textSize.X, (int)textSize.Y, data.Color.TextColour);
                 Graphics.DrawRectangleLines((int)citySizeRectLoc.X - 1, (int)citySizeRectLoc.Y, (int)textSize.X + 2, (int)textSize.Y, Color.Black);
-                Graphics.DrawTextEx(Fonts.TnRbold, size, textPosition, fontSize, 0, Color.Black);
+                TextRendering.Draw(Fonts.TnRbold, size, textPosition, fontSize, 0, Color.Black);
             }
             else if (element.IsTerrain || !_currentView.ActionTiles.Contains(element.Tile) || element.Tile.IsCityPresent)
             {
@@ -359,12 +359,11 @@ public class MapControl : BaseControl
         foreach (var cityData in cityDetails)
         {
             var name = cityData.Name;
-            var fontSize = 20.ZoomScale(zoom);
-            var textSize = TextManager.MeasureTextEx(_active.Look.DefaultFont, name, fontSize, 1);
+            var fontSize = TextRendering.LegibleMapFontSize(20.ZoomScale(zoom));
+            var textSize = TextRendering.Measure(_active.Look.DefaultFont, name, fontSize, 1);
             var textPosition = paddedLoc + cityData.Location + new Vector2(cityData.Texture.Width.ZoomScale(zoom) / 2f , cityData.Texture.Height.ZoomScale(zoom)) - textSize /2f;
 
-            Graphics.DrawTextEx(_active.Look.DefaultFont, name, textPosition + new Vector2(1,1), fontSize, 1, Color.Black);
-            Graphics.DrawTextEx(_active.Look.DefaultFont, name, textPosition, fontSize, 1, cityData.Color.TextColour);
+            TextRendering.DrawOutlined(_active.Look.DefaultFont, name, textPosition, fontSize, 1, cityData.Color.TextColour, Color.Black);
         }
 
         foreach (var animation in _currentView.CurrentAnimations)

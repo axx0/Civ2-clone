@@ -19,7 +19,8 @@ public class GameMenu : ControlGroup
         _gameScreen = gameScreen;
         var look = gameScreen.MainWindow.ActiveInterface.Look;
 
-        var textHeight = (int)TextManager.MeasureTextEx(look.MenuFont, "sample", look.MenuFontSize, 0f).Y;
+        var menuFontSize = TextRendering.LegibleUiFontSize(look.MenuFontSize);
+        var textHeight = (int)TextRendering.Measure(look.MenuFont, "sample", menuFontSize, 0f).Y + 4;
         _labels = menus.Select((menu, index) =>
                               {
                                   var menuLabel = new MenuLabel(gameScreen, look, this, menu, index, textHeight);

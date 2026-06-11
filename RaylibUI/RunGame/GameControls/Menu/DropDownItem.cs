@@ -28,7 +28,8 @@ internal class DropDownItem : ControlGroup
         _dropdownMenu = dropdownMenu;
         _index = index;
         var texts = command.MenuText.Split("|");
-        var textHeight = (int)TextManager.MeasureTextEx(look.MenuFont, texts[0], look.MenuFontSize, 0f).Y;
+        var menuFontSize = TextRendering.LegibleUiFontSize(look.MenuFontSize);
+        var textHeight = (int)TextRendering.Measure(look.MenuFont, texts[0], menuFontSize, 0f).Y + 4;
         Controls.Add(new LabelControl(dropdownMenu, texts[0].Replace("&", ""), true, defaultHeight: textHeight, font: look.MenuFont, fontSize: look.MenuFontSize, padding: new Padding(0, _paddingLeft, 0, 0)));
         Controls.Add(new LabelControl(dropdownMenu, texts.Length > 1 ? texts[1] : string.Empty, true, defaultHeight: textHeight, font: look.MenuFont, fontSize: look.MenuFontSize, horizontalAlignment: HorizontalAlignment.Right, padding: new Padding(0, 0, 0, _paddingRight)));
         Click += (_, _) => Activate();

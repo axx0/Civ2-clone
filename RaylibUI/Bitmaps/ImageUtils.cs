@@ -142,7 +142,12 @@ public static class ImageUtils
     public static Texture2D PaintButtonBase(int width, int height)
     {
         var rnd = new Random();
-        var btn = Wallpaper?.Button ?? new[] { Image.GenColor(width, height, new Color(192, 192, 192, 255)) };
+        var btn = Wallpaper?.Button;
+        if (btn is not { Length: >= 3 } || btn.Any(part => part.Width <= 0 || part.Height <= 0))
+        {
+            return PaintFallbackButtonBase(width, height);
+        }
+
         var len = btn.Length - 2;  // variations of inner texture
         var cols = Math.Ceiling(width / (double)btn[0].Width);
 
@@ -153,6 +158,23 @@ public static class ImageUtils
             image.Draw(btn[rnd.Next(1, len + 1)], new Rectangle(0, 0, btn[0].Width, btn[0].Height), new Rectangle(btn[0].Width * col, 0, btn[0].Width, btn[0].Height), Color.White);
         }
         image.Draw(btn[^1], new Rectangle(0, 0, btn[0].Width, btn[0].Height), new Rectangle(width - btn[0].Width, 0, btn[0].Width, btn[0].Height), Color.White);
+        return Texture2D.LoadFromImage(image);
+    }
+
+    private static Texture2D PaintFallbackButtonBase(int width, int height)
+    {
+        var image = Image.GenColor(width, height, new Color(192, 192, 192, 255));
+
+        image.DrawLine(0, 0, width - 1, 0, Color.White);
+        image.DrawLine(0, 0, 0, height - 1, Color.White);
+        image.DrawLine(1, 1, width - 2, 1, new Color(224, 224, 224, 255));
+        image.DrawLine(1, 1, 1, height - 2, new Color(224, 224, 224, 255));
+
+        image.DrawLine(0, height - 1, width - 1, height - 1, new Color(64, 64, 64, 255));
+        image.DrawLine(width - 1, 0, width - 1, height - 1, new Color(64, 64, 64, 255));
+        image.DrawLine(1, height - 2, width - 2, height - 2, new Color(128, 128, 128, 255));
+        image.DrawLine(width - 2, 1, width - 2, height - 2, new Color(128, 128, 128, 255));
+
         return Texture2D.LoadFromImage(image);
     }
 

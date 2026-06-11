@@ -10,7 +10,7 @@ public class StatusLabel(
     HorizontalAlignment alignment = HorizontalAlignment.Left,
     Color[]? switchColors = null,
     int switchTime = 0,
-    int fontSize = 18)
+    int fontSize = 20)
     : LabelControl(layout, text, true, horizontalAlignment: alignment, defaultHeight: 18,
         font: layout.MainWindow.ActiveInterface.Look.StatusPanelLabelFont, fontSize: fontSize, spacing: 0f,
         colorFront: layout.MainWindow.ActiveInterface.Look.StatusPanelLabelColor,

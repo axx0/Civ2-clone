@@ -51,7 +51,7 @@ public static class Helpers
     public static void LoadFonts()
     {
         var tnr = Utils.GetFilePath("times-new-roman.ttf");
-        Fonts.SetTnr(Font.Load(tnr));
+        Fonts.SetTnr(Font.LoadEx(tnr, 112, null));
         var bold = Utils.GetFilePath("times-new-roman-bold.ttf");
         Fonts.SetBold(Font.LoadEx(bold, 104, null));
         var alternative = Utils.GetFilePath("ARIAL.ttf");

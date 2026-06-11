@@ -76,6 +76,11 @@ public class ListboxControlGroup : ControlGroup
             }
         }
 
+        if (Controls.Count > 0)
+        {
+            Height = Math.Max(Height, Controls.Max(c => c.GetPreferredHeight()));
+        }
+
         _softSelection = true;
 
         Click += OnClick;

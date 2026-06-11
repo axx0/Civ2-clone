@@ -34,9 +34,9 @@ public class TextElement : IViewElement
     {
         var loc = adjustedLocation + Offset * scale;
         
-        var size = TextManager.MeasureTextEx(Fonts.Arial, _text, _height * scale, 1);
-        Graphics.DrawTextEx(Fonts.Arial, _text, loc - new Vector2(size.X / 2, 0), _height * scale, 1,
-            Color.Black);
+        var fontSize = TextRendering.LegibleMapFontSize((int)MathF.Round(_height * scale));
+        var size = TextRendering.Measure(Fonts.Arial, _text, fontSize, 1);
+        TextRendering.Draw(Fonts.Arial, _text, loc - new Vector2(size.X / 2, 0), fontSize, 1, Color.Black);
     }
 
     public IViewElement CloneForLocation(Vector2 newLocation)

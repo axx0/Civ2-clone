@@ -32,7 +32,7 @@ namespace RaylibUI
             //========= RAYLIB WINDOW SETTINGS
             Raylib.SetConfigFlags(ConfigFlags.Msaa4XHint| ConfigFlags.VSyncHint |
                                   ConfigFlags.ResizableWindow);
-            Window.Init(1280, 800, "raylib - civ2");
+            Window.Init(1600, 900, "raylib - civ2");
             //Raylib.SetTargetFPS(60);
             AudioDevice.Init();
 

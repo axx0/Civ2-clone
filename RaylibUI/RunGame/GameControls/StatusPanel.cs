@@ -138,7 +138,10 @@ public class StatusPanel : BaseControl
     public override void Draw(bool pulse)
     {
         Graphics.DrawRectangle((int)Location.X, (int)Location.Y, Width, Height, Color.Black);
-        Graphics.DrawTexture(_backgroundImage.Value,(int)Location.X, (int)Location.Y, Color.White);
+        if (_backgroundImage.HasValue)
+        {
+            Graphics.DrawTexture(_backgroundImage.Value, (int)Location.X, (int)Location.Y, Color.White);
+        }
 
         base.Draw(pulse);
 

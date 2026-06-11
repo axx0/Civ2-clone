@@ -44,7 +44,7 @@ public class LabelControl : BaseControl
         VerticalAlignment = verticalAlignment;
         _minWidth = minWidth;
         _defaultHeight = defaultHeight;
-        _fontSize = fontSize;
+        _fontSize = TextRendering.LegibleUiFontSize(fontSize);
         _spacing = spacing;
         _font = font ?? controller.MainWindow.ActiveInterface?.Look.LabelFont ?? Fonts.Tnr;
         ColorFront = colorFront ?? Color.Black;
@@ -55,7 +55,7 @@ public class LabelControl : BaseControl
         _timer = new Timer(_ => _switch = !_switch, null, 0, switchTime);
         _switchColors = switchColors;
         BackgroundColor = colorBack;
-        _textSize = TextManager.MeasureTextEx(_font, _text, _fontSize, _spacing);
+        _textSize = TextRendering.Measure(_font, _text, _fontSize, _spacing);
     }
 
     private Vector2 _textSize;
@@ -68,7 +68,7 @@ public class LabelControl : BaseControl
         set
         {
             _text = value;
-            _textSize = TextManager.MeasureTextEx(_font, _text, _fontSize, _spacing);
+            _textSize = TextRendering.Measure(_font, _text, _fontSize, _spacing);
         }
     }
 
@@ -79,7 +79,7 @@ public class LabelControl : BaseControl
         set 
         {
             _font = value;
-            _textSize = TextManager.MeasureTextEx(_font, _text, _fontSize, _spacing);
+            _textSize = TextRendering.Measure(_font, _text, _fontSize, _spacing);
         }
     }
 
@@ -89,8 +89,8 @@ public class LabelControl : BaseControl
         get => _fontSize;
         set
         {
-            _fontSize = value;
-            _textSize = TextManager.MeasureTextEx(_font, _text, _fontSize, _spacing);
+            _fontSize = TextRendering.LegibleUiFontSize(value);
+            _textSize = TextRendering.Measure(_font, _text, _fontSize, _spacing);
         }
     }
 
@@ -182,8 +182,7 @@ public class LabelControl : BaseControl
             colorFront = ColorFront;
             colorShadow = ColorShadow;
         }
-        Graphics.DrawTextEx(_font, _text, textPosition + ShadowOffset, _fontSize, _spacing, colorShadow);
-        Graphics.DrawTextEx(_font, _text, textPosition, _fontSize, _spacing, colorFront);
+        TextRendering.DrawWithShadow(_font, _text, textPosition, _fontSize, _spacing, colorFront, colorShadow, ShadowOffset);
 
         // Draw control's bounds
         //Graphics.DrawRectangleLinesEx(Bounds, 1f, Color.Blue);

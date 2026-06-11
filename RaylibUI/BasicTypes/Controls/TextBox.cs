@@ -49,7 +49,8 @@ public class TextBox : BaseControl
         if(_text == initialValue) return;
         _text = initialValue;
         _editPosition = _text.Length;
-        var size = TextManager.MeasureTextEx(_active?.Look.DefaultFont ?? Fonts.Tnr, _text, Styles.BaseFontSize, 1.0f);
+        var fontSize = TextRendering.LegibleUiFontSize(Styles.BaseFontSize);
+        var size = TextRendering.Measure(_active?.Look.DefaultFont ?? Fonts.Tnr, _text, fontSize, 1.0f);
         _editWidth = (int)size.X;
         Height = (int)(size.Y + TextMargin * 2);
         TextChanged?.Invoke(this, EventArgs.Empty);
@@ -59,7 +60,7 @@ public class TextBox : BaseControl
     {
         Graphics.DrawRectangleRec(Bounds, Color.White);
         Graphics.DrawRectangleLinesEx(Bounds, 1f, Color.Black);
-        Graphics.DrawTextEx(_active?.Look.DefaultFont ?? Fonts.Tnr, _text, new Vector2(Bounds.X, Bounds.Y) + _textOffsetV, Styles.BaseFontSize,1.0f, Color.Black);
+        TextRendering.Draw(_active?.Look.DefaultFont ?? Fonts.Tnr, _text, new Vector2(Bounds.X, Bounds.Y) + _textOffsetV, TextRendering.LegibleUiFontSize(Styles.BaseFontSize),1.0f, Color.Black);
         
         if (_editMode)
         {
@@ -177,6 +178,6 @@ public class TextBox : BaseControl
     private void SetEditPosition(int newEditPosition)
     {
         _editPosition = newEditPosition;
-        _editWidth = (int)TextManager.MeasureTextEx(_active?.Look.DefaultFont ?? Fonts.Tnr, _text.Substring(0,_editPosition), Styles.BaseFontSize, 1).X;
+        _editWidth = (int)TextRendering.Measure(_active?.Look.DefaultFont ?? Fonts.Tnr, _text.Substring(0, _editPosition), TextRendering.LegibleUiFontSize(Styles.BaseFontSize), 1).X;
     }
 }
