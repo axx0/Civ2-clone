@@ -66,7 +66,7 @@ public class UnitSupportBox : Listbox
             Looks = new ListboxLooks()
             {
                 Font = active.Look.CityWindowFont,
-                FontSize = active.Look.CityWindowFontSize + (int)(12 * (cityWindow.Scale - 1)),
+                FontSize = Math.Max(10, (int)Math.Round(active.Look.CityWindowFontSize * cityWindow.Scale * 0.72f)),
                 TextColorFront = Color.Black,
                 TextColorShadow = Color.Gray
             },

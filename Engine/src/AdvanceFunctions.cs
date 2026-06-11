@@ -13,7 +13,7 @@ namespace Civ2engine.Advances
 {
     public static class AdvanceFunctions
     {
-        private static AdvanceResearch[] _researched = [];
+        private static AdvanceResearch[] _researched;
 
         private static int _mapSizeAdjustment;
         
@@ -45,7 +45,7 @@ namespace Civ2engine.Advances
         public static bool HasAdvanceBeenDiscovered(this Game game, int advanceIndex, int byCiv = -1)
         {
             return HasAdvanceBeenDiscovered(advanceIndex) &&
-                   (byCiv == -1 || game.AllCivilizations[byCiv].Advances[advanceIndex]);
+                   (byCiv == -1 || HasTech(game.AllCivilizations[byCiv], advanceIndex));
         }
         
         public static bool HasAdvanceBeenDiscovered(int advanceIndex)
@@ -89,8 +89,8 @@ namespace Civ2engine.Advances
         public static void GiveAdvance(this IGame game, int advanceIndex, Civilization civilization)
         {
             var research = _researched[advanceIndex];
-            if(civilization.Advances[advanceIndex]) return;
-            if(civilization.AllowedAdvanceGroups[game.Rules.Advances[advanceIndex].AdvanceGroup] == AdvanceGroupAccess.Prohibited) return;
+            if (HasTech(civilization, advanceIndex)) return;
+            if (GetAdvanceGroupAccess(civilization, game.Rules.Advances[advanceIndex]) == AdvanceGroupAccess.Prohibited) return;
 
             ApplyCivAdvance(game, advanceIndex, civilization, research, civilization.Id);
         }
@@ -157,10 +157,10 @@ namespace Civ2engine.Advances
                 }
             }
 
-            if (civilization.Advances.Length < advanceIndex)
+            if (civilization.Advances.Length <= advanceIndex)
             {
                 var advances = new bool[game.Rules.Advances.Length];
-                Array.Copy(civilization.Advances, advances.Length, advances, 0, advances.Length);
+                Array.Copy(civilization.Advances, advances, civilization.Advances.Length);
                 civilization.Advances = advances;
             }
             civilization.Advances[advanceIndex] = true;
@@ -213,8 +213,9 @@ namespace Civ2engine.Advances
         public static List<Advance> CalculateAvailableResearch(Game game, Civilization activeCiv)
         {
             var allAvailable = game.Rules.Advances.Where(a =>
-                activeCiv.AllowedAdvanceGroups[a.AdvanceGroup] == AdvanceGroupAccess.CanResearch &&
-                HasTech(activeCiv, a.Prereq1) && HasTech(activeCiv, a.Prereq1) && (activeCiv.Advances.Length < a.Index || !activeCiv.Advances[a.Index])).ToList();
+                GetAdvanceGroupAccess(activeCiv, a) == AdvanceGroupAccess.CanResearch &&
+                HasTech(activeCiv, a.Prereq1) && HasTech(activeCiv, a.Prereq2) &&
+                (a.Index >= activeCiv.Advances.Length || !activeCiv.Advances[a.Index])).ToList();
             
             //TODO: cull list based on difficulty
             return allAvailable.ToList();
@@ -232,8 +233,15 @@ namespace Civ2engine.Advances
         public static List<Advance> CalculateResearchTheft(IGame game, Civilization activeCiv, Civilization fromCiv)
         {
             return game.Rules.Advances.Where(a =>
-                activeCiv.AllowedAdvanceGroups[a.AdvanceGroup] == AdvanceGroupAccess.CanResearch &&
+                GetAdvanceGroupAccess(activeCiv, a) == AdvanceGroupAccess.CanResearch &&
                 HasTech(fromCiv, a.Index) && !HasTech(activeCiv, a.Index)).ToList();
+        }
+
+        private static AdvanceGroupAccess GetAdvanceGroupAccess(Civilization civilization, Advance advance)
+        {
+            return advance.AdvanceGroup >= 0 && advance.AdvanceGroup < civilization.AllowedAdvanceGroups.Length
+                ? civilization.AllowedAdvanceGroups[advance.AdvanceGroup]
+                : AdvanceGroupAccess.CanResearch;
         }
     }
 }

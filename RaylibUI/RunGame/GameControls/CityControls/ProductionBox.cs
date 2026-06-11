@@ -112,7 +112,13 @@ public class ProductionBox : BaseControl
 
     private void BuildDialogClosed(string button, int selectedIndex, IList<bool>? chx, IDictionary<string, string>? txt)
     {
-        if (button == Labels.Ok && selectedIndex != -1 && _city.ItemInProduction != _canProduce[selectedIndex])
+        if (button != Labels.Ok || _canProduce.Count == 0)
+        {
+            return;
+        }
+
+        selectedIndex = Math.Clamp(selectedIndex, 0, _canProduce.Count - 1);
+        if (_city.ItemInProduction != _canProduce[selectedIndex])
         {
             _city.ItemInProduction = _canProduce[selectedIndex];
 

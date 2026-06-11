@@ -22,7 +22,7 @@ public class CityLabel : LabelControl
     public override void OnResize()
     {
         var scale = _cityWindow.Scale;
-        FontSize = _active.Look.CityWindowFontSize + (int)(12 * (scale - 1));
+        FontSize = Math.Max(10, (int)Math.Round(_active.Look.CityWindowFontSize * scale * 0.78f));
         if (Parent == _cityWindow)
         {
             Location = new(_cityWindow.LayoutPadding.Left + _properties.Box.X * scale,

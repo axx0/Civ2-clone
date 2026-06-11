@@ -71,8 +71,9 @@ public class GameScreen : BaseScreen
     private const int MiniMapGlobeHeight = 142;
     private IGameMode _activeMode;
     
-    private CivDialog _currentPopupDialog;
+    private CivDialog? _currentPopupDialog;
     private Action<string,int,IList<bool>?,IDictionary<string,string>?>? _popupClicked;
+    private readonly Queue<Action> _queuedPopups = new();
 
     private int _zoom, _width, _height;
 
@@ -210,6 +211,12 @@ public class GameScreen : BaseScreen
             , Input.IsKeyDown(KeyboardKey.LeftControl) ||
               Input.IsKeyDown(KeyboardKey.RightControl)
         );
+
+        if (key is KeyboardKey.Enter or KeyboardKey.KpEnter && GameCommands.ContainsKey(command))
+        {
+            TryExecuteCommand(GameCommands[command]);
+            return;
+        }
 
         if (!ActiveMode.HandleKeyPress(command) && GameCommands.ContainsKey(command))
         {
@@ -358,6 +365,13 @@ public class GameScreen : BaseScreen
         DialogImageElements? dialogImage = null,
         ListboxDefinition? listBox = null)
     {
+        if (_currentPopupDialog != null)
+        {
+            _queuedPopups.Enqueue(() => ShowPopup(dialogName, handleButtonClick, replaceNumbers, replaceStrings,
+                checkboxStates, options, textBoxes, dialogImage, listBox));
+            return;
+        }
+
         var popupBox = MainWindow.ActiveInterface.GetDialog(dialogName);
         if (popupBox != null)
         {
@@ -401,8 +415,23 @@ public class GameScreen : BaseScreen
 
     private void ClosePopup(string arg1, int arg2, IList<bool>? arg3, IDictionary<string, string>? arg4)
     {
-        CloseDialog(_currentPopupDialog);
-        _popupClicked?.Invoke(arg1, arg2, arg3, arg4);
+        var closedPopup = _currentPopupDialog;
+        var popupClicked = _popupClicked;
+
+        _currentPopupDialog = null;
+        _popupClicked = null;
+
+        if (closedPopup != null)
+        {
+            CloseDialog(closedPopup);
+        }
+
+        popupClicked?.Invoke(arg1, arg2, arg3, arg4);
+
+        if (_currentPopupDialog == null && _queuedPopups.TryDequeue(out var nextPopup))
+        {
+            nextPopup();
+        }
     }
 
     public void ToggleMapLayout()

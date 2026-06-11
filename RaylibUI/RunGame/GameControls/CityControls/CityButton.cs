@@ -22,7 +22,7 @@ public class CityButton : Button
     {
         Scale = _cityWindow.Scale;
 
-        FontSize = _active.Look.CityWindowFontSize + (int)(12 * (Scale - 1));
+        FontSize = Math.Max(10, (int)Math.Round(_active.Look.CityWindowFontSize * Scale * 0.78f));
 
         if (Parent == _cityWindow)
         {

@@ -28,7 +28,7 @@ public class Button : BaseControl
     {
         _active = controller.MainWindow.ActiveInterface;
         _font = _active == null ? font ?? Fonts.Tnr : font ?? _active.Look.ButtonFont;        
-        _fontSize = TextRendering.LegibleUiFontSize(fontSize ?? _active?.Look.ButtonFontSize ?? 20);
+        _fontSize = fontSize ?? _active?.Look.ButtonFontSize ?? 20;
         Text = text;
         _textColour = _active?.Look.ButtonColour ?? Color.Black;
         _backgroundImage = backgroundImage;
@@ -42,7 +42,7 @@ public class Button : BaseControl
         set
         {
             _text = value;
-            _textSize = TextRendering.Measure(_font, _text, _fontSize, 0f);
+            _textSize = TextManager.MeasureTextEx(_font, _text, _fontSize, 0f);
         }
     }
 
@@ -102,7 +102,9 @@ public class Button : BaseControl
                 new Vector2(Bounds.X, Bounds.Y), 0.0f, Scale, Color.White);
         }
 
-        TextRendering.Draw(_font, Text, new Vector2(Bounds.X + Width / 2 - (int)_textSize.X / 2, Bounds.Y + Height / 2 - (int)_textSize.Y / 2), _fontSize, 0f, Enabled ? _textColour : Color.Gray);
+        var drawFontSize = GetDrawFontSize();
+        var drawTextSize = drawFontSize == _fontSize ? _textSize : TextManager.MeasureTextEx(_font, Text, drawFontSize, 0f);
+        Graphics.DrawTextEx(_font, Text, new Vector2(Bounds.X + Width / 2 - drawTextSize.X / 2, Bounds.Y + Height / 2 - drawTextSize.Y / 2), drawFontSize, 0f, Enabled ? _textColour : Color.Gray);
 
         base.Draw(pulse);
     }
@@ -112,8 +114,8 @@ public class Button : BaseControl
         get { return _fontSize; }
         set
         { 
-            _fontSize = TextRendering.LegibleUiFontSize(value);
-            _textSize = TextRendering.Measure(_font, _text, _fontSize, 0f);
+            _fontSize = value;
+            _textSize = TextManager.MeasureTextEx(_font, _text, _fontSize, 0f);
         }
     }
 
@@ -133,6 +135,27 @@ public class Button : BaseControl
     public bool Enabled { get; set; } = true;
 
     public float Scale { get; set; }
+
+    private int GetDrawFontSize()
+    {
+        if (_backgroundImage != null)
+        {
+            return _fontSize;
+        }
+
+        var availableWidth = Math.Max(1, Width - 14);
+        var availableHeight = Math.Max(1, Height - 8);
+        var fontSize = _fontSize;
+        var textSize = _textSize;
+
+        while (fontSize > 8 && (textSize.X > availableWidth || textSize.Y > availableHeight))
+        {
+            fontSize--;
+            textSize = TextManager.MeasureTextEx(_font, Text, fontSize, 0f);
+        }
+
+        return fontSize;
+    }
 
     public override void OnMouseEnter()
     {

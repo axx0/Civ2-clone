@@ -1,4 +1,5 @@
 using Civ2engine;
+using Civ2engine.Advances;
 using Civ2engine.Enums;
 using Civ2engine.IO;
 using Civ2engine.MapObjects;
@@ -141,12 +142,31 @@ public class BuildCity(GameScreen gameScreen) : Order(gameScreen, new Shortcut(K
             _player.ActiveUnit != null)
         {
             var city = CityActions.BuildCity(_player.ActiveUnit, GameScreen.Game, name);
+            city.Location.SetVisible(_player.Civilization.Id);
+            city.Location.UpdatePlayer(_player.Civilization.Id);
+            GameScreen.ForceRedraw();
 
             GameScreen.ShowPopup("FOUNDED", handleButtonClick: (dialogButton, _, _, _) =>
                 {
                     if (dialogButton == Labels.Ok)
                     {
-                        GameScreen.ShowCityWindow(city); // TODO: chose next unit after handling button click
+                        if (_player.Civilization.ReseachingAdvance < 0)
+                        {
+                            var researchPossibilities = AdvanceFunctions.CalculateAvailableResearch((Game)GameScreen.Game, _player.Civilization);
+                            if (researchPossibilities.Count > 0)
+                            {
+                                _player.SelectNewAdvance(researchPossibilities);
+                            }
+                            else
+                            {
+                                GameScreen.ShowCityWindow(city);
+                            }
+                        }
+                        else
+                        {
+                            GameScreen.ShowCityWindow(city);
+                        }
+
                         GameScreen.Game.ChooseNextUnit();
                     }
                 },

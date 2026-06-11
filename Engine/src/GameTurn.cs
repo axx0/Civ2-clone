@@ -1,4 +1,5 @@
-﻿using Civ2engine.Advances;
+﻿using System;
+using Civ2engine.Advances;
 using Civ2engine.Production;
 using Model.Core.Player;
 
@@ -22,8 +23,6 @@ namespace Civ2engine
         public static void CitiesTurn(this Game game, IPlayer player)
         {
             var activeCiv = game.GetActiveCiv;
-            var currentScienceCost = AdvanceFunctions.CalculateScienceCost(game, activeCiv);
-
             var rules = game.Rules;
             
             var foodRows = rules.Cosmic.RowsFoodBox;
@@ -153,18 +152,37 @@ namespace Civ2engine
                 if (science > 0)
                 {
                     activeCiv.Science += science;
-                    if (activeCiv.ReseachingAdvance < 0)
-                    {
-                        var researchPossibilities = AdvanceFunctions.CalculateAvailableResearch(game, activeCiv);
-                        player.SelectNewAdvance(researchPossibilities);
-                        currentScienceCost = AdvanceFunctions.CalculateScienceCost(game, activeCiv);
-                    }
-                    else if (currentScienceCost <= activeCiv.Science)
-                    {
-                        player.NotifyAdvanceResearched(activeCiv.ReseachingAdvance);
-                        game.GiveAdvance(activeCiv.ReseachingAdvance, activeCiv);
-                        activeCiv.Science -= currentScienceCost;
-                    }
+                }
+            }
+
+            ResolveResearch(game, player);
+        }
+
+        private static void ResolveResearch(Game game, IPlayer player)
+        {
+            var activeCiv = game.GetActiveCiv;
+            if (activeCiv.ReseachingAdvance < 0)
+            {
+                var researchPossibilities = AdvanceFunctions.CalculateAvailableResearch(game, activeCiv);
+                if (researchPossibilities.Count > 0)
+                {
+                    player.SelectNewAdvance(researchPossibilities);
+                }
+                return;
+            }
+
+            var currentScienceCost = AdvanceFunctions.CalculateScienceCost(game, activeCiv);
+            if (currentScienceCost > 0 && activeCiv.Science >= currentScienceCost)
+            {
+                var completedAdvance = activeCiv.ReseachingAdvance;
+                player.NotifyAdvanceResearched(completedAdvance);
+                game.GiveAdvance(completedAdvance, activeCiv);
+                activeCiv.Science = Math.Max(0, activeCiv.Science - currentScienceCost);
+
+                var researchPossibilities = AdvanceFunctions.CalculateAvailableResearch(game, activeCiv);
+                if (researchPossibilities.Count > 0)
+                {
+                    player.SelectNewAdvance(researchPossibilities);
                 }
             }
         }

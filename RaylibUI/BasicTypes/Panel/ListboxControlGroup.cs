@@ -17,6 +17,8 @@ public class ListboxControlGroup : ControlGroup
     private readonly List<ListboxGroupElement> _elements;
     private bool _softSelection;    // true = don't make final selection based on this
     private readonly IUserInterface _active;
+    private readonly ListboxLooks _looks;
+    public bool IsSelected { get; set; }
 
     public ListboxControlGroup(IControlLayout controller, ListboxDefinition def, int index) :
         base(controller, eventTransparent: false)
@@ -24,6 +26,7 @@ public class ListboxControlGroup : ControlGroup
         _active = controller.MainWindow.ActiveInterface;
         var group = def.Groups[index];
         _elements = group.Elements;
+        _looks = def.Looks;
 
         if (group.Height != null)
         {
@@ -74,11 +77,6 @@ public class ListboxControlGroup : ControlGroup
             {
                 Controls.Add(new UnitDisplay(controller, element.Unit, element.Game, new(0, 0), _active, element.ScaleIcon, true));
             }
-        }
-
-        if (Controls.Count > 0)
-        {
-            Height = Math.Max(Height, Controls.Max(c => c.GetPreferredHeight()));
         }
 
         _softSelection = true;
@@ -152,6 +150,10 @@ public class ListboxControlGroup : ControlGroup
     public override void Draw(bool pulse)
     {
         //Graphics.DrawRectangleLinesEx(Bounds, 1f, Color.Magenta);
+        if (IsSelected)
+        {
+            Graphics.DrawRectangleRec(Bounds, _looks.SelectedTextBackgroundColor);
+        }
 
         base.Draw(pulse);
     }

@@ -12,6 +12,7 @@ using Raylib_CSharp.Textures;
 using Raylib_CSharp.Rendering;
 using Raylib_CSharp.Colors;
 using Model.Controls;
+using RaylibUI.Controls;
 
 namespace RaylibUI.RunGame.GameControls;
 
@@ -21,6 +22,7 @@ public class StatusPanel : BaseControl
     private readonly IGame _game;
     private readonly IUserInterface _active;
     private readonly HeaderLabel _headerLabel;
+    private readonly Button _endTurnButton;
     private Texture2D? _backgroundImage;
     private Rectangle _infoPanelRect, _unitPanelRect;
     private Padding _padding;
@@ -32,51 +34,55 @@ public class StatusPanel : BaseControl
         _active = gameScreen.MainWindow.ActiveInterface;
 
         _headerLabel = new HeaderLabel(gameScreen, _active.Look, Labels.For(LabelIndex.Status), fontSize: _active.Look.HeaderLabelFontSizeNormal);
+        _endTurnButton = new Button(gameScreen, Labels.For(LabelIndex.Turn), _active.Look.ButtonFont, 14);
+        _endTurnButton.Click += EndTurnButtonClicked;
         _padding = _active.GetPadding(_headerLabel.TextSize.Y, false);
         Click += OnClick;
     }
 
     public void Update()
     {
-        var yOffset = 1;
+        var statusFontSize = _gameScreen.ToTPanelLayout ? 16 : 18;
+        var statusPaddingTop = 0;
+        var yOffset = _gameScreen.ToTPanelLayout ? 2 : 1;
+        var labelHeight = Math.Max(16, statusFontSize + 1);
 
         var populText = _game.GetPlayerCiv.Cities.Count == 0 ? "0 " + Labels.For(LabelIndex.People) : 
             _game.GetPlayerCiv.Cities.Sum(c=>c.GetPopulation()).ToString("###,###,###", 
             new NumberFormatInfo() { NumberDecimalSeparator = "," }) + " " + Labels.For(LabelIndex.People);
         
-        var populLabel = new StatusLabel(_gameScreen, populText, alignment: HorizontalAlignment.Right);
-        populLabel.Padding = new(0, 8, 0, 0);
+        var populLabel = new StatusLabel(_gameScreen, populText, alignment: HorizontalAlignment.Right, fontSize: statusFontSize);
+        populLabel.Padding = new(0, statusPaddingTop, 0, 0);
         populLabel.Location = new(_infoPanelRect.X, _infoPanelRect.Y + yOffset);
         populLabel.Width = (int)_infoPanelRect.Width;
         populLabel.Height = populLabel.GetPreferredHeight();
 
-        var labelHeight = 18;
-
-        var yearLabel = new StatusLabel(_gameScreen, _game.Date.GameYearString(_game.TurnNumber));
-        yearLabel.Padding = new(0, 8, 0, 0);
+        var yearLabel = new StatusLabel(_gameScreen, _game.Date.GameYearString(_game.TurnNumber), fontSize: statusFontSize);
+        yearLabel.Padding = new(0, statusPaddingTop, 0, 0);
         yearLabel.Location = new(_infoPanelRect.X, _infoPanelRect.Y + yOffset + labelHeight);
         yearLabel.Width = (int)_infoPanelRect.Width;
         yearLabel.Height = yearLabel.GetPreferredHeight();
 
-        var goldLabel = new StatusLabel(_gameScreen, $"{_game.GetPlayerCiv.Money} {Labels.For(LabelIndex.Gold)}  {_game.GetPlayerCiv.TaxRate / 10}.{_game.GetPlayerCiv.LuxRate / 10}.{_game.GetPlayerCiv.ScienceRate / 10}");
-        goldLabel.Padding = new (0, 8, 0, 0);
+        var goldLabel = new StatusLabel(_gameScreen, $"{_game.GetPlayerCiv.Money} {Labels.For(LabelIndex.Gold)}  {_game.GetPlayerCiv.TaxRate / 10}.{_game.GetPlayerCiv.LuxRate / 10}.{_game.GetPlayerCiv.ScienceRate / 10}", fontSize: statusFontSize);
+        goldLabel.Padding = new (0, statusPaddingTop, 0, 0);
         goldLabel.Location = new(_infoPanelRect.X, _infoPanelRect.Y + yOffset + 2 * labelHeight);
-        goldLabel.Width = (int)_infoPanelRect.Width;
+        goldLabel.Width = (int)(_infoPanelRect.Width * 0.65f);
         goldLabel.Height = goldLabel.GetPreferredHeight();
 
-        var turnsLabel = new StatusLabel(_gameScreen, $"{Labels.For(LabelIndex.Turn)} {_game.TurnNumber}", HorizontalAlignment.Right);
-        turnsLabel.Padding = new (0, 8, 0, 0);
+        var turnsLabel = new StatusLabel(_gameScreen, $"{Labels.For(LabelIndex.Turn)} {_game.TurnNumber}", HorizontalAlignment.Right, fontSize: statusFontSize);
+        turnsLabel.Padding = new (0, statusPaddingTop, 0, 0);
         turnsLabel.Location = new(_infoPanelRect.X, _infoPanelRect.Y + yOffset + 2 * labelHeight);
         turnsLabel.Width = (int)_infoPanelRect.Width;
         turnsLabel.Height = turnsLabel.GetPreferredHeight();
 
         var iconNo = 0; // TODO: determine one of 4 icons based on current research progress (0...25%, 25...50%, 50...75%, 75...100%)
-        var researchIconLoc = new Vector2(_infoPanelRect.X + 119, _infoPanelRect.Y + 20);
+        var researchIconLoc = new Vector2(_infoPanelRect.X + 119, _infoPanelRect.Y + labelHeight);
         if (_gameScreen.ToTPanelLayout)
             researchIconLoc = new Vector2(_infoPanelRect.X + 7, _infoPanelRect.Y + 72);
         var researchIcon = new TextureDisplay(_gameScreen, TextureCache.GetImage(_active.PicSources["researchProgress"][iconNo]), researchIconLoc, scale: 1.5f);
 
-        Controls = [_headerLabel, populLabel, yearLabel, goldLabel, turnsLabel, researchIcon];
+        _endTurnButton.Visible = _game.GetPlayerCiv == _game.GetActiveCiv;
+        Controls = [_headerLabel, populLabel, yearLabel, goldLabel, turnsLabel, researchIcon, _endTurnButton];
 
         // TODO: find out when global warming icon is shown (it's based on no of skull icons on map)
         if (true)
@@ -99,6 +105,14 @@ public class StatusPanel : BaseControl
     private void OnClick(object? sender, MouseEventArgs e)
     {
         _gameScreen.ActiveMode.PanelClick();
+    }
+
+    private void EndTurnButtonClicked(object? sender, MouseEventArgs e)
+    {
+        if (_game.ProcessEndOfTurn())
+        {
+            _game.ChoseNextCiv();
+        }
     }
 
     public override void OnResize()
@@ -130,6 +144,10 @@ public class StatusPanel : BaseControl
             _infoPanelRect = new Rectangle(_padding.Left, _padding.Top, Width - _padding.Left - _padding.Right, 60);
             _unitPanelRect = new Rectangle(_padding.Left, _padding.Top + 68, Width - _padding.Left - _padding.Right, Height - 68 - _padding.Top - _padding.Bottom);
         }
+
+        _endTurnButton.Width = 64;
+        _endTurnButton.Height = 26;
+        _endTurnButton.Location = new(Width - _padding.Right - _endTurnButton.Width - 6, Height - _padding.Bottom - _endTurnButton.Height - 6);
 
         base.OnResize();
         Update();

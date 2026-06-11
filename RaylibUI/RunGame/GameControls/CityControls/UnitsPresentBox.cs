@@ -74,7 +74,7 @@ public class UnitsPresentBox : Listbox
             Looks = new()
             {
                 Font = active.Look.CityWindowFont,
-                FontSize = active.Look.CityWindowFontSize + (int)(12 * (cityWindow.Scale - 1)),
+                FontSize = Math.Max(10, (int)Math.Round(active.Look.CityWindowFontSize * cityWindow.Scale * 0.72f)),
                 TextColorFront = Raylib_CSharp.Colors.Color.Black,
                 TextColorShadow = new Raylib_CSharp.Colors.Color(135, 135, 135, 255)
             }

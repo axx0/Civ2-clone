@@ -86,19 +86,40 @@ public class LocalPlayer : IPlayer
         var activeInterface = _gameScreen.Main.ActiveInterface;
         _gameScreen.ShowPopup("RESEARCH", (s, i, arg3, arg4) =>
             {
-                Civilization.ReseachingAdvance = researchPossibilities[i].Index;
+                if (researchPossibilities.Count == 0)
+                {
+                    return;
+                }
+
+                var selectedIndex = Math.Clamp(i, 0, researchPossibilities.Count - 1);
+                Civilization.ReseachingAdvance = researchPossibilities[selectedIndex].Index;
+                if (Civilization.ScienceRate <= 0)
+                {
+                    Civilization.ScienceRate = 60;
+                    Civilization.TaxRate = Math.Min(Civilization.TaxRate, 40);
+                }
             }, replaceStrings: [activeInterface.GetScientistName(Civilization.Epoch)],
             listBox: new ListboxDefinition
             {
                 VerticalScrollbar = false,
-                Type = ListboxType.Default,
                 ImageShift = true,
-                Rows = 16,
+                Rows = Math.Min(10, researchPossibilities.Count),
+                Looks = new ListboxLooks
+                {
+                    Font = activeInterface.Look.DefaultFont,
+                    FontSize = 20,
+                    TextColorFront = Raylib_CSharp.Colors.Color.Black,
+                    TextColorShadow = Raylib_CSharp.Colors.Color.Blank,
+                    SelectedTextFont = activeInterface.Look.DefaultFont,
+                    SelectedTextBackgroundColor = new Raylib_CSharp.Colors.Color(107, 107, 107, 255),
+                    SelectedTextColorFront = Raylib_CSharp.Colors.Color.White,
+                    SelectedTextColorShadow = Raylib_CSharp.Colors.Color.Black
+                },
                 Groups = researchPossibilities.Select(a => new ListboxGroup
                 {
                     Elements = [new() { Icon = activeInterface.GetAdvanceImage(a), Width = 2 * 36 + 2 },
-                                new() { Text = a.Name } ],
-                    Height = 23
+                                new() { Text = a.Name, VerticalAlignment = VerticalAlignment.Center } ],
+                    Height = 36
                 }).ToList()
             });
     }

@@ -226,10 +226,11 @@ public class Listbox : BaseControl
         {
             foreach (var groupElement in _controls)
             {
+                groupElement.IsSelected = groupElement == control;
                 foreach (var text in groupElement.Controls.Where(c => c is LabelControl))
                 {
                     var label = (LabelControl)text;
-                    label.BackgroundColor = groupElement == control ? _def.Looks.SelectedTextBackgroundColor : null;
+                    label.BackgroundColor = null;
                     label.Font = groupElement == control ? _def.Looks.SelectedTextFont : _def.Looks.Font;
                     label.ColorFront = groupElement == control ? _def.Looks.SelectedTextColorFront : _def.Looks.TextColorFront;
                     label.ColorShadow = groupElement == control ? _def.Looks.SelectedTextColorShadow : _def.Looks.TextColorShadow;

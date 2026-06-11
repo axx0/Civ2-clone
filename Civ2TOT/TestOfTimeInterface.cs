@@ -422,7 +422,7 @@ public class TestOfTimeInterface(IMain main) : Civ2Interface(main)
                 new("Build &Airbase|e", new Shortcut(Key.E), Key.A),
                 new("Build &Teleporter|j", new Shortcut(Key.J), Key.T),
                 new("Build &Fortress|f", new Shortcut(Key.F), Key.F),
-                new("Automate Settler|k", new Shortcut(Key.K), Key.None),
+                new("Automate Settler|k", new Shortcut(Key.K), Key.None, AutomateSettlerOrder),
                 new("Clean Up &Pollution|p", new Shortcut(Key.P), Key.P),
                 new("&Pillage|Shift+P", new Shortcut(Key.P, shift: true), Key.P),
                 new("&Unload|u", new Shortcut(Key.U), Key.U),

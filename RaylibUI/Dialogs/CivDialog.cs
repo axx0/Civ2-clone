@@ -195,7 +195,7 @@ public class CivDialog : DynamicSizingDialog
     {
         switch (key)
         {
-            case KeyboardKey.Enter when ButtonExists(Labels.Ok):
+            case KeyboardKey.Enter or KeyboardKey.KpEnter when ButtonExists(Labels.Ok):
                 CloseDialog(Labels.Ok);
                 return;
             case KeyboardKey.Escape when ButtonExists(Labels.Cancel):

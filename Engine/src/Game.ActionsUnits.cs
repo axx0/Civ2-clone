@@ -6,6 +6,9 @@ using Civ2engine.Enums;
 using Civ2engine.Events;
 using Civ2engine.MapObjects;
 using Civ2engine.Terrains;
+using Civ2engine.UnitActions;
+using Model.Constants;
+using Model.Core.Mapping;
 using Model.Core.Player;
 using Model.Core.Units;
 
@@ -122,14 +125,24 @@ namespace Civ2engine
                             }
 
                             break;
+                        case OrderType.Automate:
+                            ProcessAutomatedSettler(unit);
+                            break;
                         default:
                         {
                             unit.ProcessOrder();
 
                             if (TerrainImprovements.TryGetValue(unit.Building, out var improvement))
                             {
-                                var activeUnit = this.CheckConstruction(unit.CurrentLocation, improvement)
-                                    .FirstOrDefault(u => u.MovePoints > 0);
+                                var completedUnits = this.CheckConstruction(unit.CurrentLocation, improvement);
+                                foreach (var completedUnit in completedUnits.Where(u => u.WaitOrder && u.AiRole == AiRoleType.Settle))
+                                {
+                                    completedUnit.Order = (int)OrderType.Automate;
+                                    completedUnit.Building = 0;
+                                    completedUnit.SkipTurn();
+                                }
+
+                                var activeUnit = completedUnits.FirstOrDefault(u => u.MovePoints > 0 && !u.WaitOrder);
                                 if (activeUnit != null)
                                 {
                                     player.SetUnitActive(activeUnit, true);
@@ -144,6 +157,75 @@ namespace Civ2engine
             }
 
             return true;
+        }
+
+        private void ProcessAutomatedSettler(Unit unit)
+        {
+            if (unit.AiRole != AiRoleType.Settle || unit.CurrentLocation == null)
+            {
+                unit.SkipTurn();
+                return;
+            }
+
+            var currentTile = unit.CurrentLocation;
+            if (TryAssignAutomatedSettlerJob(unit, currentTile))
+            {
+                return;
+            }
+
+            var nearbyCity = currentTile.CityRadius().FirstOrDefault(t => t.CityHere != null)?.CityHere;
+            if (nearbyCity == null && currentTile.Type != TerrainType.Ocean)
+            {
+                var moreFertile = MovementFunctions.GetPossibleMoves(currentTile, unit)
+                    .Where(t => t.Fertility > currentTile.Fertility && t.Type != TerrainType.Ocean)
+                    .OrderByDescending(t => t.Fertility)
+                    .FirstOrDefault();
+
+                if (moreFertile != null)
+                {
+                    MovementFunctions.MoveC2(this, unit, moreFertile.X - currentTile.X, moreFertile.Y - currentTile.Y);
+                    if (!unit.Dead)
+                    {
+                        unit.Order = (int)OrderType.Automate;
+                    }
+                }
+                else
+                {
+                    CityActions.BuildCity(unit, this, CityActions.GetCityName(unit.Owner, this));
+                }
+                return;
+            }
+
+            unit.SkipTurn();
+        }
+
+        private bool TryAssignAutomatedSettlerJob(Unit unit, Tile currentTile)
+        {
+            var preferredImprovements = new[]
+            {
+                ImprovementTypes.Road,
+                ImprovementTypes.Irrigation,
+                ImprovementTypes.Mining
+            };
+
+            foreach (var improvementId in preferredImprovements)
+            {
+                if (!TerrainImprovements.TryGetValue(improvementId, out var improvement))
+                {
+                    continue;
+                }
+
+                if (!TerrainImprovementFunctions.CanImprovementBeBuiltHere(currentTile, improvement, unit.Owner).Enabled)
+                {
+                    continue;
+                }
+
+                unit.WaitOrder = true;
+                unit.Build(improvement);
+                return true;
+            }
+
+            return false;
         }
     }
 }

@@ -14,6 +14,8 @@ namespace RaylibUI.RunGame.GameControls.CityControls;
 
 public class ResourceProductionBar : BaseControl
 {
+    private const int LabelFontSize = 11;
+    private const int LabelSpacing = 0;
     private readonly CityWindow _cityWindow;
     private readonly ResourceArea _resource;
     private int _spacing;
@@ -117,11 +119,10 @@ public class ResourceProductionBar : BaseControl
     {
         base.Draw(pulse);
         
-        var fontSize = TextRendering.LegibleUiFontSize(14);
-        var textDim = TextRendering.Measure(Fonts.Arial, _sections[0].Label, fontSize, 1);
+        var textDim = TextManager.MeasureTextEx(Fonts.Arial, _sections[0].Label, LabelFontSize, LabelSpacing);
         var labely = Bounds.Y + (_resource.LabelBelow ? Bounds.Height : 1-textDim.Y);
             
-        TextRendering.DrawOutlined(Fonts.Arial, _sections[0].Label, new Vector2(Bounds.X + 1, labely), fontSize, 1, Color.White, Color.Black);
+        Graphics.DrawTextEx(Fonts.Arial, _sections[0].Label, new Vector2(Bounds.X + 1, labely), LabelFontSize, LabelSpacing, Color.White);
         var pos = new Vector2(Bounds.X, Bounds.Y) + Vector2.One;
         for (int i = 0; i < _sections[0].Value; i++)
         {
@@ -140,8 +141,8 @@ public class ResourceProductionBar : BaseControl
                 pos.X += _spacing;
             }
             var midText = _sections[1].Label;
-            var midSize = TextRendering.Measure(Fonts.Arial, midText, fontSize, 1);
-            TextRendering.DrawOutlined(Fonts.Arial, midText, new Vector2(Bounds.X + Width/2f - midSize.X/2, labely), fontSize, 1, Color.White, Color.Black);
+            var midSize = TextManager.MeasureTextEx(Fonts.Arial, midText, LabelFontSize, LabelSpacing);
+            Graphics.DrawTextEx(Fonts.Arial, midText, new Vector2(Bounds.X + Width/2f - midSize.X/2, labely), LabelFontSize, LabelSpacing, Color.White);
 
             final = 2;
         }
@@ -154,8 +155,8 @@ public class ResourceProductionBar : BaseControl
         }
 
         var finalText = _sections[final].Label;
-        var finalSize = TextRendering.Measure(Fonts.Arial, finalText, fontSize, 1);
-        TextRendering.DrawOutlined(Fonts.Arial, finalText, new Vector2(Bounds.X + Width - finalSize.X -1, labely), fontSize, 1, Color.White, Color.Black);
+        var finalSize = TextManager.MeasureTextEx(Fonts.Arial, finalText, LabelFontSize, LabelSpacing);
+        Graphics.DrawTextEx(Fonts.Arial, finalText, new Vector2(Bounds.X + Width - finalSize.X -1, labely), LabelFontSize, LabelSpacing, Color.White);
 
     }
 }

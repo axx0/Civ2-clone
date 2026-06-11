@@ -17,7 +17,8 @@ public static class CityResourcesExtensions
 
     private static int GetBaseScience(this City city)
     {
-        return city.Trade * city.Owner.ScienceRate / 100;
+        var science = city.Trade * city.Owner.ScienceRate / 100;
+        return science == 0 && city.Trade > 0 && city.Owner.ScienceRate > 0 ? 1 : science;
     }
 
     public static int GetScience(this City city)
