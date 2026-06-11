@@ -218,7 +218,7 @@ namespace Civ2engine
 
         internal static void EliminateCityUnits(this City city, IGame game)
         {
-            var unitsEliminated = city.SupportedUnits;
+            var unitsEliminated = city.SupportedUnits.ToList();
             if (unitsEliminated.Count <= 0) return;
             
             unitsEliminated.ForEach(u=>u.Dead = true);

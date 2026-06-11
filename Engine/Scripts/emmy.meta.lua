@@ -76,9 +76,45 @@
 ---@field CityHere boolean
 
 ---@class Tribe
----@field Id number
----@field Civ Civilization
----@field TribeName string
+---@field active boolean
+---@field adjective string
+---@field attitude AttitudeProxy
+---@field betrayals number
+---@field futureTechs number
+---@field government number
+---@field id number
+---@field isHuman boolean
+---@field leader Leader
+---@field money number
+---@field name string
+---@field numCities number
+---@field numTechs number
+---@field numUnits number
+---@field patience number
+---@field reputation ReputationProxy
+---@field researchCost number
+---@field researchProgress number
+---@field researching Tech|nil
+---@field scienceRate number
+---@field spaceship Spaceship
+---@field taxRate number
+---@field treaties TreatiesProxy
+
+---@class AttitudeProxy
+---@field Get fun(other: Tribe|number): number
+
+---@class Leader
+---@field name string
+---@field title string
+---@field gender number
+
+---@class ReputationProxy
+---@field Get fun(other: Tribe|number): number
+
+---@class Spaceship
+
+---@class TreatiesProxy
+---@field Get fun(other: Tribe|number): number
 
 ---@class Civilization
 ---@field Id number

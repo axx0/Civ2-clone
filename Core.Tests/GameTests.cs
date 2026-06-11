@@ -119,7 +119,7 @@ public class GameTests
         player1.Setup(p => p.Civilization).Returns(civ1);
         player2.Setup(p => p.Civilization).Returns(civ2);
         
-        var map = new Map(true, 0);
+        var map = new Map(true, 0) { MapRevealed = true };
         var tile = new Tile(0, 0, new Terrain { Specials = [] }, 0, map, 0, new bool[2]);
         var tiles = new List<Tile> { tile };
         

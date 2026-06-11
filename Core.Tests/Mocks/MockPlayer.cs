@@ -120,4 +120,16 @@ public class MockPlayer : IPlayer
     public void GoodyHutTriggered(Unit unit, GoodyHutOutcomeResult outcome)
     {
     }
+
+    public void SelectTechFromConquest(List<Advance> techs)
+    {
+    }
+
+    public void CityLost(City city)
+    {
+    }
+
+    public void CityCaptured(City city)
+    {
+    }
 }

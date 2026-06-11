@@ -150,5 +150,5 @@ ai.RegisterEvent(AiEvent.Unit_Moved, function(a, data)
     local unit = data.Unit
     local tileFrom = data.TileFrom;
     local tileTo = data.TileTo;
-    print("Unit moved " .. unit.name)
+    print("Unit moved " .. unit.name .. " " .. unit.owner.name)
     end)
