@@ -28,7 +28,7 @@ namespace Model.Core.Mapping
         public int LocatorYdim { get; set; }
         public bool MapRevealed { get; set; }
         public int WhichCivsMapShown { get; set; }
-        public Tile[,] Tile { get; set; }
+        public Tile[,] Tile { get; set; } = new Tile[0, 0];
         public bool IsValidTileC2(int xC2, int yC2)
         {
             var maxX = XDimMax;
@@ -43,7 +43,7 @@ namespace Model.Core.Mapping
 
         private int _xDim;
         
-        public int[] StartingClickedXy { get; set; }    // Last tile clicked with your mouse on the map. Gives info where the map should be centered (further calculated in MapPanel).
+        public int[] StartingClickedXy { get; set; } = [];    // Last tile clicked with your mouse on the map. Gives info where the map should be centered (further calculated in MapPanel).
         public List<IslandDetails> Islands { get; set; } = new();
         public double ScaleFactor => XDim * YDim / 4000d;
     }

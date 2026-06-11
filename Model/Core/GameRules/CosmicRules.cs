@@ -55,7 +55,7 @@ namespace Model.Core.GameRules
         /// <summary>
         /// bitmask for goodie huts, right bit =map0, 0=no goodie huts
         /// </summary>
-        public bool[] MapHasGoddyHuts { get; set; }
+        public bool[] MapHasGoddyHuts { get; set; } = [];
 
         /// Helicopters pick up huts 0=no 1=yes
         public bool HelicoptersCanCollectHuts { get; set; } = false;

@@ -91,7 +91,7 @@ namespace Civ2engine
                 }
                 bitArray[i] = true;
             }
-            return bitArray;
+            return bitArray ?? [];
         }
     }
 }

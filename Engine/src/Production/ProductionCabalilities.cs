@@ -11,7 +11,7 @@ namespace Civ2engine.Production
 {
     public static class ProductionPossibilities
     {
-        private static List<IProductionOrder>[] _availableProducts;
+        private static List<IProductionOrder>[] _availableProducts = [];
 
         public static void InitializeProductionLists(IEnumerable<Civilization> civs, IProductionOrder[] possibleOrders)
         {

@@ -25,7 +25,7 @@ namespace Civ2engine.MapObjects
             var lands = new List<IslandDetails>();
             while (allTiles.Count > 0)
             {
-                var aTile = allTiles.FirstOrDefault();
+                var aTile = allTiles.First();
                 var island = new IslandDetails
                 {
                     Tiles = {aTile}

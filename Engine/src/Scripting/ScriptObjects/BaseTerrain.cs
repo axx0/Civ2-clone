@@ -8,5 +8,5 @@ public class BaseTerrain(Terrain terrain, int map)
 
     public Terrain Terrain { get; } = terrain;
 
-    public bool isOcean => terrain.Type == TerrainType.Ocean;
+    public bool isOcean => Terrain.Type == TerrainType.Ocean;
 }

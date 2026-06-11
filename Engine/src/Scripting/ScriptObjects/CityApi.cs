@@ -1,7 +1,13 @@
 using Civ2engine;
 using Model.Core.Cities;
 
-public class CityApi(City city, Game game)
+public class CityApi
 {
-    public City BaseCity { get; } = city;
+    public CityApi(City city, Game game)
+    {
+        BaseCity = city;
+        _ = game;
+    }
+
+    public City BaseCity { get; }
 }

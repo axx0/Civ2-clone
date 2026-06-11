@@ -8,9 +8,10 @@ namespace Civ2engine.Events
     public class MapEventArgs : EventArgs
     {
         public MapEventType EventType { get; }
-        public List<Tile> TilesChanged { get; set; }
+        public List<Tile> TilesChanged { get; set; } = [];
 
-        public int[] MapStartXy, MapDrawSq;
+        public int[] MapStartXy = [];
+        public int[] MapDrawSq = [];
         public int Zoom, Xshift;
 
         public MapEventArgs(MapEventType eventType)

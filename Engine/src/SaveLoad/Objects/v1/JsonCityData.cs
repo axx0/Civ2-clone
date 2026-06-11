@@ -50,7 +50,7 @@ public class JsonCityData
     public int Objective { get; set; }
     public int Size { get; set; }
     public int Builder { get; set; }
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
     public int ProductionOrder { get; set; }
     public int FoodStorage { get; set; }
     public int SheildsProgress { get; set; }
@@ -59,6 +59,6 @@ public class JsonCityData
     public int[]? CommodityDemanded { get; set; }
     public int[]? TradeRoutePartnerCity { get; set; }
     public int[]? CommodityInRoute { get; set; }
-    public bool[] Workers { get; set; }
-    public bool[] Improvements { get; set; }
+    public bool[] Workers { get; set; } = [];
+    public bool[] Improvements { get; set; } = [];
 }

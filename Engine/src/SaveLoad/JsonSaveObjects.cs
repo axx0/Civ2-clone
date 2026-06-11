@@ -12,13 +12,13 @@ namespace Civ2engine.SaveLoad;
 
 public class JsonSaveObjects : ILoadedGameObjects
 {
-    public Unit ActiveUnit { get; set; }
-    public Scenario Scenario { get; }
-    public List<City> Cities { get; set; }
+    public Unit ActiveUnit { get; set; } = null!;
+    public Scenario Scenario { get; } = null!;
+    public List<City> Cities { get; set; } = [];
     
-    public List<Transporter> Transporters { get; set; }
-    public List<Civilization> Civilizations { get; set; }
-    public List<Map> Maps { get; set; }
-    public IGameData GameData { get; set; }
-    public Options Options { get; set; }
+    public List<Transporter> Transporters { get; set; } = [];
+    public List<Civilization> Civilizations { get; set; } = [];
+    public List<Map> Maps { get; set; } = [];
+    public IGameData GameData { get; set; } = null!;
+    public Options Options { get; set; } = null!;
 }

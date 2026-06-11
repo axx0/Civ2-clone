@@ -17,9 +17,9 @@ namespace Civ2engine
         private const string SettingsFileName = "appsettings.json";
 
         // Game settings from App.config
-        public static string Civ2Path { get; private set; }
+        public static string Civ2Path { get; private set; } = string.Empty;
         
-        public static string[] SearchPaths { get; internal set; }
+        public static string[] SearchPaths { get; internal set; } = [BasePath];
 
         public static int TextureFilter { get; private set; }
 
@@ -103,7 +103,7 @@ namespace Civ2engine
             if (!IsValidRoot(path))
             {
                 var dir = Path.GetDirectoryName(path);
-                if (!IsValidRoot(dir)) return false;
+                if (dir is null || !IsValidRoot(dir)) return false;
                 path = dir;
             }
 
@@ -142,15 +142,16 @@ namespace Civ2engine
         private static string GetLocalAppDataFolder() {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                return Environment.GetEnvironmentVariable("LOCALAPPDATA");
+                return Environment.GetEnvironmentVariable("LOCALAPPDATA") ?? BasePath;
             }
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                return Environment.GetEnvironmentVariable("XDG_DATA_HOME") ?? Path.Combine(Environment.GetEnvironmentVariable("HOME"),".local","share");
+                return Environment.GetEnvironmentVariable("XDG_DATA_HOME")
+                    ?? Path.Combine(Environment.GetEnvironmentVariable("HOME") ?? BasePath, ".local", "share");
             } 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                return Path.Combine(Environment.GetEnvironmentVariable("HOME"), "Library", "Application Support");
+                return Path.Combine(Environment.GetEnvironmentVariable("HOME") ?? BasePath, "Library", "Application Support");
             }
             throw new NotImplementedException("Unknown OS Platform");
         }

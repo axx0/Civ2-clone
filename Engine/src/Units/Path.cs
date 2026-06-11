@@ -19,11 +19,11 @@ public class Path
     {
         RouteDebugData = routeDebugData;
         var tiles = new Tile[candidate.Steps];
-        var cur = candidate;
-        for (var i = tiles.Length - 1; i >= 0; i--)
-        {
-            tiles[i] = cur.Tile;
-            cur = cur.Previous;
+            var cur = candidate;
+            for (var i = tiles.Length - 1; i >= 0; i--)
+            {
+                tiles[i] = cur.Tile;
+                cur = cur.Previous!;
         }
         this.Tiles = tiles;
     }
@@ -196,8 +196,8 @@ public class Route
     
     public decimal Cost { get; init; }
     
-    public Route Previous { get; init; }
+    public Route? Previous { get; init; }
     
-    public Tile Tile { get; set; }
+    public Tile Tile { get; set; } = null!;
     public double Distance { get; set; }
 }

@@ -21,24 +21,24 @@ namespace Model.Core.Cities
         public int Objective { get; set; }
         public bool AutobuildDomesticAdvisor { get; set; }
         public bool AutobuildMilitaryAdvisor { get; set; }
-        public Civilization Owner { get; set; }
+        public Civilization Owner { get; set; } = null!;
         public int OwnerId => Owner.Id;
         public int Size { get; set; }
-        public Civilization WhoBuiltIt { get; set; }
-        public bool[] WhoKnowsAboutIt { get; set; }
-        public int[] LastSizeRevealedToCivs { get; set; }
+        public Civilization WhoBuiltIt { get; set; } = null!;
+        public bool[] WhoKnowsAboutIt { get; set; } = [];
+        public int[] LastSizeRevealedToCivs { get; set; } = [];
         public int FoodInStorage { get; set; }
         public int NetTrade { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         public int NoOfSpecialistsx4 { get; set; }
-        public IProductionOrder ItemInProduction { get; set; }
+        public IProductionOrder ItemInProduction { get; set; } = null!;
         public int ActiveTradeRoutes { get; set; }
         public Commodity[]? CommoditySupplied { get; set; }
         public Commodity[]? CommodityDemanded { get; set; }
         public Commodity[]? CommodityInRoute { get; set; }
         public int[]? TradeRoutePartnerCity { get; set; }
         
-        public TradeRoute[] TradeRoutes { get; set; }
+        public TradeRoute[] TradeRoutes { get; set; } = [];
         
         public int NoOfTradeIcons { get; set; }
 
@@ -70,7 +70,7 @@ namespace Model.Core.Cities
         public int Support { get; set; }
         public int Waste { get; set; }
         
-        public Tile Location { get; set; }
+        public Tile Location { get; set; } = null!;
         public List<Tile> WorkedTiles { get; } = [];
         public int Pollution { get; set; }
         

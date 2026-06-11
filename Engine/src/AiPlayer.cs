@@ -91,7 +91,7 @@ namespace Civ2engine
             Ai.Call(AiEvent.CityProductionComplete, new LuaTable { { "city", city }, { "productionOrders", productionOrders } });
         }
 
-        public IInterfaceCommands Ui { get; } = null;
+        public IInterfaceCommands Ui { get; } = null!;
         public string AIScript { get; set; } = civilization.PlayerType == PlayerType.Barbarians ? "barbarian.ai" : "default.ai";
 
         public void NotifyImprovementEnabled(TerrainImprovement improvement, int level)

@@ -13,7 +13,7 @@ namespace Civ2engine.Advances
 {
     public static class AdvanceFunctions
     {
-        private static AdvanceResearch[] _researched;
+        private static AdvanceResearch[] _researched = [];
 
         private static int _mapSizeAdjustment;
         
