@@ -48,12 +48,7 @@
         public bool Checkbox { get; set; }
 
         /// <summary>
-        /// Indicates whether popup has listbox.
-        /// </summary>
-        public bool Listbox { get; set; } = false;
-
-        /// <summary>
-        /// No of lines the listbox has.
+        /// No of lines the listbox has if it exists.
         /// </summary>
         public int? ListboxLines { get; set; }
 

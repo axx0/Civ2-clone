@@ -71,12 +71,12 @@ namespace Civ2engine.Production
             return unitDefinition.Name;
         }
 
-        public override ListboxGroup GetBuildListEntry(IUserInterface active, City city)
+        public override ListboxGroup GetBuildListEntry(IUserInterface active, City city, int index)
         {
             return new ListboxGroup
             {
-                Elements = [ new() { Icon = GetIcon(active), Width = 2 * 36 + 2, ScaleIcon = 0.75f },
-                             new() { Text = unitDefinition.Name, Width = 200 },
+                Elements = [ new() { Icon = GetIcon(active), Width = 2 * 36 + 2, ScaleIcon = 0.75f, Xoffset = 36 * (index % 2) },
+                             new() { Text = unitDefinition.Name, Width = 200, Xoffset = 2 * 36 + 2 },
                              new() { Text = $"({(10 * unitDefinition.Cost - city.ShieldsProgress) / city.Production} Turns, ADM: " +
                              $"{unitDefinition.Attack}/{unitDefinition.Defense}/{unitDefinition.Move / 3} " +
                              $"HP: {unitDefinition.Hitp / 10}/{unitDefinition.Firepwr})", HorizontalAlignment = HorizontalAlignment.Right } ],

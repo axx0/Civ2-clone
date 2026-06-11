@@ -92,8 +92,11 @@ public class DefenseMinisterWindow : BaseDialog
             }
         }
 
-        var defLive = new ListboxDefinition()
+        _liveListbox = new Listbox(this)
         {
+            Width = 595,
+            Height = 305,
+            Location = new(LayoutPadding.Left + 2, LayoutPadding.Top + 80),
             Rows = 12,
             Selectable = false,
             Looks = new ListboxLooks()
@@ -104,9 +107,13 @@ public class DefenseMinisterWindow : BaseDialog
             },
             Groups = liveGroups
         };
+        Controls.Add(_liveListbox);
 
-        var defDead = new ListboxDefinition()
+        _deadListbox = new Listbox(this)
         {
+            Width = 595,
+            Height = 305,
+            Location = new(LayoutPadding.Left + 2, LayoutPadding.Top + 80),
             Rows = 12,
             Selectable = false,
             Looks = new ListboxLooks()
@@ -114,23 +121,7 @@ public class DefenseMinisterWindow : BaseDialog
                 FontSize = 16,
                 TextColorFront = new Color(223, 223, 223, 255),
                 TextColorShadow = new Color(67, 67, 67, 255)
-            },
-            Groups = []
-        };
-
-        _liveListbox = new Listbox(this, defLive)
-        {
-            Width = 595,
-            Height = 305,
-            Location = new(LayoutPadding.Left + 2, LayoutPadding.Top + 80)
-        };
-        Controls.Add(_liveListbox);
-
-        _deadListbox = new Listbox(this, defDead)
-        {
-            Width = 595,
-            Height = 305,
-            Location = new(LayoutPadding.Left + 2, LayoutPadding.Top + 80)
+            }
         };
 
         var btnWidth = (_width - PaddingSide - 6) / 2;

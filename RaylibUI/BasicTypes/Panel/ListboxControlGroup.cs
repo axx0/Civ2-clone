@@ -1,12 +1,8 @@
 ﻿using Model;
 using Model.Controls;
-using Raylib_CSharp.Colors;
-using Raylib_CSharp.Rendering;
 using RaylibUI.BasicTypes.Controls;
 using RaylibUI.RunGame.GameControls;
-using RaylibUI.RunGame.GameControls.CityControls;
 using RaylibUtils;
-using System.Diagnostics;
 using System.Numerics;
 
 namespace RaylibUI.BasicTypes;
@@ -18,11 +14,10 @@ public class ListboxControlGroup : ControlGroup
     private bool _softSelection;    // true = don't make final selection based on this
     private readonly IUserInterface _active;
 
-    public ListboxControlGroup(IControlLayout controller, ListboxDefinition def, int index) :
+    public ListboxControlGroup(IControlLayout controller, ListboxGroup group, ListboxLooks looks) :
         base(controller, eventTransparent: false)
     {
         _active = controller.MainWindow.ActiveInterface;
-        var group = def.Groups[index];
         _elements = group.Elements;
 
         if (group.Height != null)
@@ -36,12 +31,12 @@ public class ListboxControlGroup : ControlGroup
             var element = _elements[i];
             if (element.Text != string.Empty)
             {
-                var fontSize = element.TextSizeOverride != null ? element.TextSizeOverride : def.Looks.FontSize;
-                var colorFront = element.FrontColorOverride != null ? element.FrontColorOverride : def.Looks.TextColorFront;
-                var colorShadow = element.ShadowColorOverride != null ? element.ShadowColorOverride : def.Looks.TextColorShadow;
+                var fontSize = element.TextSizeOverride != null ? element.TextSizeOverride : looks.FontSize;
+                var colorFront = element.FrontColorOverride != null ? element.FrontColorOverride : looks.TextColorFront;
+                var colorShadow = element.ShadowColorOverride != null ? element.ShadowColorOverride : looks.TextColorShadow;
 
-                var label = new LabelControl(controller, element.Text, true, font: def.Looks.Font, fontSize: (int)fontSize,
-                    colorFront: colorFront, colorShadow: colorShadow, shadowOffset: def.Looks.TextShadowOffset, 
+                var label = new LabelControl(controller, element.Text, true, font: looks.Font, fontSize: (int)fontSize,
+                    colorFront: colorFront, colorShadow: colorShadow, shadowOffset: looks.TextShadowOffset, 
                     horizontalAlignment: element.HorizontalAlignment, verticalAlignment: element.VerticalAlignment);
                 if (group.Height != null)
                 {
@@ -61,10 +56,10 @@ public class ListboxControlGroup : ControlGroup
                 {
                     imagebox.Height = (int)group.Height;
                 }
-                if (def.ImageShift && index % 2 == 1)
-                {
-                    coordX = imagebox.Width / 2 + 1;
-                }
+                //if (def.ImageShift && index % 2 == 1)
+                //{
+                //    coordX = imagebox.Width / 2 + 1;
+                //}
                 var imageHeight = Images.GetImageHeight(imagebox.Image[0], _active, imagebox.Scale);
                 int coordY = imagebox.Height / 2 - imageHeight / 2;
                 imagebox.Coords = new int[,] { { coordX, coordY } };

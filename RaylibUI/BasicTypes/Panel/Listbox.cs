@@ -1,36 +1,87 @@
 ﻿using Model;
 using Model.Controls;
-using Neo.IronLua;
-using Raylib_CSharp.Colors;
 using Raylib_CSharp.Interact;
 using Raylib_CSharp.Rendering;
-using Raylib_CSharp.Transformations;
 using RaylibUI.BasicTypes.Controls;
-using System.Diagnostics;
+using System.ComponentModel;
 
 namespace RaylibUI.BasicTypes;
 
 public class Listbox : BaseControl
 {
+    private bool _verticalScrollbar;
+    public bool VerticalScrollbar
+    {
+        get => _verticalScrollbar;
+        set
+        {
+            if (_verticalScrollbar != value)
+            {
+                _verticalScrollbar = value;
+                Update();
+            }
+        }
+    }
+
+    /// <summary>
+    /// No of rows visible in the box.
+    /// </summary>
+    public int Rows { get; set; } = 10;
+
+    /// <summary>
+    /// Max no of columns that will be visible in the box.
+    /// </summary>
+    public int Columns { get; set; } = 1;
+
+    /// <summary>
+    /// If true, controls are stacked left-to-right.
+    /// </summary>
+    public bool HorizontalStacking { get; set; } = false;
+
+    /// <summary>
+    /// Selected control id.
+    /// </summary>
+    public int SelectedId { get; set; } = 0;
+
+    /// <summary>
+    /// Meaning you can also move through the controls with keys.
+    /// </summary>
+    public bool Selectable { get; set; } = true;
+
+    private ListboxType? _type;
+    /// <summary>
+    /// Defines looks of listbox.
+    /// </summary>
+    public ListboxType? Type
+    {
+        get => _type;
+        set
+        {
+            _type = value;
+            Looks = _active.GetListboxLooks(_type);
+            Update();
+        }
+    }
+
+    public ListboxLooks Looks { get; set; } = new();
+
     private readonly IControlLayout _controller;
     private TableLayout _tableLayout;
-    private List<ListboxControlGroup> _controls;
+    private List<ListboxControlGroup> _entries = [];
     private int _totalColumns, _totalRows;   // visible & non-visible rows & columns
     private ScrollBar _VscrollBar, _HscrollBar;
     private int _viewStartingRow, _viewStartingCol;
     private readonly IUserInterface? _active;
 
-    private ListboxDefinition _def;
-    public ListboxDefinition Definition 
+    private List<ListboxGroup> _groups = [];
+    public List<ListboxGroup> Groups 
     {
-        get => _def;
+        get => _groups;
         set
         {
-            _def = value;
-            if (_def.Type != null)
-            {
-                _def.Looks = _active.GetListboxLooks(_def.Type);
-            }
+            if (value.Count == 0) return;
+
+            _groups = value;
             Update();
         }
     }
@@ -43,58 +94,35 @@ public class Listbox : BaseControl
     {
         _active = controller.MainWindow.ActiveInterface;
         _controller = controller;
-
-        Definition = new();
-        if (_def.Type != null)
-        {
-            _def.Looks = _active.GetListboxLooks(_def.Type);
-        }
+        _verticalScrollbar = true;
     }
 
-    public Listbox(IControlLayout controller, ListboxDefinition def) : base(controller)
-    {
-        _active = controller.MainWindow.ActiveInterface;
-        _controller = controller;
-
-        if (def.Type != null)
-        {
-            def.Looks = _active.GetListboxLooks(def.Type);
-        }
-
-        Definition = def;
-    }
-
-    public void Update(bool resetSelection = false)
+    public void Update()
     {
         Controls = [];
-        _controls = [];
 
-        if (resetSelection)
+        for (int i = 0; i < _groups.Count; i++)
         {
-            _def.SelectedId = 0;
+            Controls.Add(new ListboxControlGroup(_controller, _groups[i], Looks));
         }
-
-        for (int i = 0; i < _def.Groups.Count; i++)
-        {
-            _controls.Add(new ListboxControlGroup(_controller, _def, i));
-        }
+        _entries = Controls.OfType<ListboxControlGroup>().ToList();
 
         // Get total rows & columns (visible & non-visible)
-        if (_def.VerticalScrollbar)
+        if (_verticalScrollbar)
         {
-            _totalColumns = _def.Columns;
-            _totalRows = (int)Math.Ceiling((double)_controls.Count / (double)_totalColumns);
+            _totalColumns = Columns;
+            _totalRows = (int)Math.Ceiling((double)_entries.Count / (double)_totalColumns);
         }
         else
         {
-            _totalRows = _def.Rows;
-            _totalColumns = (int)Math.Ceiling((double)_controls.Count / (double)_totalRows);
+            _totalRows = Rows;
+            _totalColumns = (int)Math.Ceiling((double)_entries.Count / (double)_totalRows);
         }
 
         _viewStartingRow = 0;
         _viewStartingCol = 0;
 
-        if (_def.VerticalScrollbar)
+        if (_verticalScrollbar)
         {
             _VscrollBar = new ScrollBar(_controller, (position) =>
             {
@@ -113,96 +141,96 @@ public class Listbox : BaseControl
             Controls.Add(_HscrollBar);
         }
 
-        foreach (var control in _controls)
+        foreach (var control in _entries)
         {
             control.Selected = Selected;
             Controls.Add(control);
         }
 
         _tableLayout = new TableLayout();
-        for (var dir1 = 0; dir1 < (_def.HorizontalStacking ? _totalRows : _totalColumns); dir1++)
+        for (var dir1 = 0; dir1 < (HorizontalStacking ? _totalRows : _totalColumns); dir1++)
         {
-            for (var dir2 = 0; dir2 < (_def.HorizontalStacking ? _totalColumns : _totalRows); dir2++)
+            for (var dir2 = 0; dir2 < (HorizontalStacking ? _totalColumns : _totalRows); dir2++)
             {
-                var index = (_def.HorizontalStacking ? _totalColumns : _totalRows) * dir1 + dir2;
+                var index = (HorizontalStacking ? _totalColumns : _totalRows) * dir1 + dir2;
 
-                if (_controls.Count < index + 1)
+                if (_entries.Count < index + 1)
                 {
                     break;
                 }
 
-                _tableLayout.Add(_controls[index], _def.HorizontalStacking ? dir1 : dir2, _def.HorizontalStacking ? dir2 : dir1);
+                _tableLayout.Add(_entries[index], HorizontalStacking ? dir1 : dir2, HorizontalStacking ? dir2 : dir1);
             }
         }
 
         // Select control at start
-        if (_def.Groups.Count > 0 && _def.Selectable)
+        if (_entries.Count > 0 && Selectable)
         {
-            if (_def.SelectedId == -1)  // If this is true there's something wrong
+            if (SelectedId == -1)  // If this is true there's something wrong
             {
-                _def.SelectedId = 0;
+                SelectedId = 0;
             }
-            _controls[_def.SelectedId].SelectThis(true);
+            _entries[SelectedId].SelectThis(true);
         }
     }
 
     public override void OnResize()
     {
-        if (_controls.Count == 0) return;
+        if (_entries.Count == 0) return;
 
         int scrollBarWidth = 0;
-        if (_def.VerticalScrollbar && _controls.Count > _def.Rows * _def.Columns)
+        if (_verticalScrollbar && _entries.Count > Rows * Columns)
         {
             scrollBarWidth = _VscrollBar.Width;
         }
 
-        foreach (var control in _controls)
+        foreach (var control in _entries)
         {
-            control.Width = (Width - scrollBarWidth) / _def.Columns;
+            control.Width = (Width - scrollBarWidth) / Columns;
             control.OnResize();
         }
 
-        _tableLayout?.CalculateDimensions(_viewStartingRow, _viewStartingCol, _def.Rows, _def.Columns);
+        _tableLayout?.CalculateDimensions(_viewStartingRow, _viewStartingCol, Rows, Columns);
 
-        Height = _def.Rows * _controls[0].Height + (_def.VerticalScrollbar ? 0 : _HscrollBar.Height);
+        Height = Rows * _entries[0].Height + (_verticalScrollbar ? 0 : _HscrollBar.Height);
 
-        if (_def.VerticalScrollbar)
+        if (_verticalScrollbar)
         {
-            _VscrollBar.Maximum = _tableLayout.RowCount - _def.Rows;
+            _VscrollBar.Maximum = _tableLayout.RowCount - Rows;
             _VscrollBar.Location = new(Width - _VscrollBar.Width - 2, 2);
             _VscrollBar.Height = Height - 4;
-            _VscrollBar.Visible = _def.Rows < _tableLayout.RowCount;
+            _VscrollBar.Visible = Rows < _tableLayout.RowCount;
         }
         else
         {
             _HscrollBar.Location = new(2, Height - _HscrollBar.Height - 2);
-            _HscrollBar.Maximum = _tableLayout.ColumnCount - _def.Columns;
+            _HscrollBar.Maximum = _tableLayout.ColumnCount - Columns;
             _HscrollBar.Width = Width - 4;
-            _HscrollBar.Visible = _def.Columns < _tableLayout.ColumnCount;
+            _HscrollBar.Visible = Columns < _tableLayout.ColumnCount;
             _HscrollBar.Location = new(_HscrollBar.Location.X, Height - _HscrollBar.Height);
         }
     }
 
     private void Selected(ListboxControlGroup control, bool soft)
     {
-        _def.SelectedId = _controls.IndexOf(control);
+        SelectedId = _entries.IndexOf(control);
 
         // If the selected control is beyond the view
         int selectedRow, selectedCol;
-        if (_def.HorizontalStacking)
+        if (HorizontalStacking)
         {
-            selectedRow = _def.SelectedId / _totalColumns;
-            selectedCol = _def.SelectedId % _totalColumns;
+            selectedRow = SelectedId / _totalColumns;
+            selectedCol = SelectedId % _totalColumns;
         }
         else
         {
-            selectedRow = _def.SelectedId % _totalRows;
-            selectedCol = _def.SelectedId / _totalRows;
+            selectedRow = SelectedId % _totalRows;
+            selectedCol = SelectedId / _totalRows;
         }
 
-        if (_viewStartingRow + _def.Rows <= selectedRow)
+        if (_viewStartingRow + Rows <= selectedRow)
         {
-            _viewStartingRow = selectedRow - _def.Rows + 1;
+            _viewStartingRow = selectedRow - Rows + 1;
             _VscrollBar?.SetScrollPosition(_viewStartingRow);
         }
         else if (selectedRow < _viewStartingRow)
@@ -210,9 +238,9 @@ public class Listbox : BaseControl
             _viewStartingRow = selectedRow;
             _VscrollBar?.SetScrollPosition(_viewStartingRow);
         }
-        if (_viewStartingCol + _def.Columns <= selectedCol)
+        if (_viewStartingCol + Columns <= selectedCol)
         {
-            _viewStartingCol = selectedCol - _def.Columns + 1;
+            _viewStartingCol = selectedCol - Columns + 1;
             _HscrollBar?.SetScrollPosition(_viewStartingCol);
         }
         else if (selectedCol < _viewStartingCol)
@@ -222,83 +250,83 @@ public class Listbox : BaseControl
         }
 
         // If a control has been selected, change its appearance
-        if (_def.Selectable)
+        if (Selectable)
         {
-            foreach (var groupElement in _controls)
+            foreach (var groupElement in _entries)
             {
                 foreach (var text in groupElement.Controls.Where(c => c is LabelControl))
                 {
                     var label = (LabelControl)text;
-                    label.BackgroundColor = groupElement == control ? _def.Looks.SelectedTextBackgroundColor : null;
-                    label.Font = groupElement == control ? _def.Looks.SelectedTextFont : _def.Looks.Font;
-                    label.ColorFront = groupElement == control ? _def.Looks.SelectedTextColorFront : _def.Looks.TextColorFront;
-                    label.ColorShadow = groupElement == control ? _def.Looks.SelectedTextColorShadow : _def.Looks.TextColorShadow;
-                    label.ShadowOffset = groupElement == control ? _def.Looks.SelectedTextShadowOffset : _def.Looks.TextShadowOffset;
+                    label.BackgroundColor = groupElement == control ? Looks.SelectedTextBackgroundColor : null;
+                    label.Font = groupElement == control ? Looks.SelectedTextFont : Looks.Font;
+                    label.ColorFront = groupElement == control ? Looks.SelectedTextColorFront : Looks.TextColorFront;
+                    label.ColorShadow = groupElement == control ? Looks.SelectedTextColorShadow : Looks.TextColorShadow;
+                    label.ShadowOffset = groupElement == control ? Looks.SelectedTextShadowOffset : Looks.TextShadowOffset;
                 }
             }
         }
 
         ItemSelected?.Invoke(control,
-            new ListboxSelectionEventArgs(_def.SelectedId, soft));
+            new ListboxSelectionEventArgs(SelectedId, soft));
     }
 
     public void ScrollToEnd()
     {
-        _viewStartingRow = Math.Max(0, _totalRows - _def.Rows);
+        _viewStartingRow = Math.Max(0, _totalRows - Rows);
         _VscrollBar.SetScrollPosition(_viewStartingRow);
     }
 
     public void EnterPressed()
     {
-        _controls[_def.SelectedId].SelectThis(false);
+        _entries[SelectedId].SelectThis(false);
     }
 
     public override bool OnKeyPressed(KeyboardKey key)
     {
-        if (!_def.Selectable) return base.OnKeyPressed(key);
+        if (!Selectable) return base.OnKeyPressed(key);
 
         int selectedCol;
         switch (key)
         {
             case KeyboardKey.Down or KeyboardKey.Kp2:
-                _def.SelectedId = Math.Min(_def.SelectedId + 1, _controls.Count - 1);
-                _controls[_def.SelectedId].SelectThis(true);
+                SelectedId = Math.Min(SelectedId + 1, _entries.Count - 1);
+                _entries[SelectedId].SelectThis(true);
                 return true;
             case KeyboardKey.Up or KeyboardKey.Kp8:
-                _def.SelectedId = Math.Max(_def.SelectedId - 1, 0);
-                _controls[_def.SelectedId].SelectThis(true);
+                SelectedId = Math.Max(SelectedId - 1, 0);
+                _entries[SelectedId].SelectThis(true);
                 return true;
             case KeyboardKey.End:
-                _def.SelectedId = _controls.Count - 1;
-                _controls[_def.SelectedId].SelectThis(true);
+                SelectedId = _entries.Count - 1;
+                _entries[SelectedId].SelectThis(true);
                 return true;
             case KeyboardKey.Home:
-                _def.SelectedId = 0;
-                _controls[_def.SelectedId].SelectThis(true);
+                SelectedId = 0;
+                _entries[SelectedId].SelectThis(true);
                 return true;
             case KeyboardKey.Left or KeyboardKey.Kp4:
-                selectedCol = _def.SelectedId / _totalRows;
+                selectedCol = SelectedId / _totalRows;
                 if (selectedCol > 0)
                 {
-                    _def.SelectedId -= _def.Rows;
-                    _controls[_def.SelectedId].SelectThis(true);
+                    SelectedId -= Rows;
+                    _entries[SelectedId].SelectThis(true);
                 }
                 return true;
             case KeyboardKey.Right or KeyboardKey.Kp6:
-                selectedCol = _def.SelectedId / _totalRows;
-                if (selectedCol < _totalColumns - 1 && _def.SelectedId + _def.Rows <= _controls.Count - 1)
+                selectedCol = SelectedId / _totalRows;
+                if (selectedCol < _totalColumns - 1 && SelectedId + Rows <= _entries.Count - 1)
                 {
-                    _def.SelectedId += _def.Rows;
-                    _controls[_def.SelectedId].SelectThis(true);
+                    SelectedId += Rows;
+                    _entries[SelectedId].SelectThis(true);
                 }
                 return true;
             case KeyboardKey.PageDown:
-                _def.SelectedId = Math.Min(_def.SelectedId + _def.Rows, _controls.Count - 1);
-                _controls[_def.SelectedId].SelectThis(true);
+                SelectedId = Math.Min(SelectedId + Rows, _entries.Count - 1);
+                _entries[SelectedId].SelectThis(true);
                 return true;
             case KeyboardKey.PageUp:
-                _def.SelectedId = Math.Max(_def.SelectedId - _def.Rows, 0);
-                _controls[_def.SelectedId].SelectThis(true);
+                SelectedId = Math.Max(SelectedId - Rows, 0);
+                _entries[SelectedId].SelectThis(true);
                 return true;
         }
 
@@ -307,8 +335,8 @@ public class Listbox : BaseControl
 
     public override void Draw(bool pulse)
     {
-        Graphics.DrawRectangleRec(Bounds, _def.Looks.BoxBackgroundColor);
-        Graphics.DrawRectangleLinesEx(Bounds, 1f, _def.Looks.BoxLineColor);
+        Graphics.DrawRectangleRec(Bounds, Looks.BoxBackgroundColor);
+        Graphics.DrawRectangleLinesEx(Bounds, 1f, Looks.BoxLineColor);
         //Graphics.DrawRectangleLinesEx(Bounds, 1f, Color.Magenta);
 
         base.Draw(pulse);

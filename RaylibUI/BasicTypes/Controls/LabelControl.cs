@@ -15,7 +15,6 @@ public class LabelControl : BaseControl
     private readonly int _defaultHeight;
     private readonly float _spacing;
     private readonly IUserInterface _active;
-    private readonly Timer _timer;
     private bool _switch;
     private readonly Color[]? _switchColors;
 
@@ -33,10 +32,8 @@ public class LabelControl : BaseControl
         Color? colorFront = null,
         Color? colorShadow = null,
         Vector2? shadowOffset = null,
-        Color[]? switchColors = null,
-        Color? colorBack = null,
-        int switchTime = 0) : base(controller,
-        eventTransparent: eventTransparent)
+        Color? colorBack = null) : 
+        base(controller, eventTransparent: eventTransparent)
     {
         Padding = padding;
         _text = text;
@@ -52,8 +49,6 @@ public class LabelControl : BaseControl
         ShadowOffset = shadowOffset ?? Vector2.Zero;
 
         _active = controller.MainWindow.ActiveInterface;
-        _timer = new Timer(_ => _switch = !_switch, null, 0, switchTime);
-        _switchColors = switchColors;
         BackgroundColor = colorBack;
         _textSize = TextManager.MeasureTextEx(_font, _text, _fontSize, _spacing);
     }
@@ -172,16 +167,8 @@ public class LabelControl : BaseControl
         }
 
         Color colorFront, colorShadow;
-        if (_switchColors is not null)
-        {
-            colorFront = _switch ? _switchColors[0] : _switchColors[1];
-            colorShadow = Color.Black;
-        }
-        else
-        {
-            colorFront = ColorFront;
-            colorShadow = ColorShadow;
-        }
+        colorFront = ColorFront;
+        colorShadow = ColorShadow;
         Graphics.DrawTextEx(_font, _text, textPosition + ShadowOffset, _fontSize, _spacing, colorShadow);
         Graphics.DrawTextEx(_font, _text, textPosition, _fontSize, _spacing, colorFront);
 

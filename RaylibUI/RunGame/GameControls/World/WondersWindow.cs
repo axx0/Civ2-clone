@@ -53,8 +53,11 @@ public class WondersWindow : BaseDialog
             groups.Add(group);
         }
 
-        var def = new ListboxDefinition()
+        var listbox = new Listbox(this)
         {
+            Width = _width - PaddingSide - 2 * 2,
+            Height = 370,
+            Location = new(LayoutPadding.Left + 2, LayoutPadding.Top + 2),
             Rows = 9,
             Selectable = false,
             Looks = new ListboxLooks()
@@ -64,13 +67,6 @@ public class WondersWindow : BaseDialog
                 TextColorShadow = new Color(67, 67, 67, 255)
             },
             Groups = groups
-        };
-
-        var listbox = new Listbox(this, def)
-        {
-            Width = _width - PaddingSide - 2 * 2,
-            Height = 370,
-            Location = new(LayoutPadding.Left + 2, LayoutPadding.Top + 2)
         };
         Controls.Add(listbox);
 

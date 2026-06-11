@@ -1,8 +1,6 @@
-using Model;
 using Model.Controls;
 using Raylib_CSharp.Colors;
 using RaylibUI.BasicTypes;
-using System;
 
 namespace RaylibUI.RunGame.GameControls.CityControls;
 
@@ -14,14 +12,31 @@ public class UnitSupportBox : Listbox
     public UnitSupportBox(CityWindow cityWindow) : base(cityWindow)
     {
         _cityWindow = cityWindow;
+
+        HorizontalStacking = true;
+        Selectable = false;
+
         ItemSelected += OpenPopup;
     }
 
     public override void OnResize()
     {
+        var active = _cityWindow.MainWindow.ActiveInterface;
+        var properties = _cityWindow.CityWindowProps.UnitSupport;
+
+        Rows = properties.Rows;
+        Columns = properties.Columns;
+        Looks = new ListboxLooks()
+        {
+            Font = active.Look.CityWindowFont,
+            FontSize = active.Look.CityWindowFontSize + (int)(12 * (_cityWindow.Scale - 1)),
+            TextColorFront = Color.Black,
+            TextColorShadow = Color.Gray
+        };
+
         if (_oldScale != _cityWindow.Scale)
         {
-            Definition = MakeListbox(_cityWindow);
+            Groups = MakeEntries(_cityWindow);
             _oldScale = _cityWindow.Scale;
         }
 
@@ -31,7 +46,7 @@ public class UnitSupportBox : Listbox
         Width = (int)(pos.Width * _cityWindow.Scale);
         Height = (int)(pos.Height * _cityWindow.Scale);
 
-        if (Definition.Groups.Count <= Definition.Columns)
+        if (Groups.Count <= Columns)
         {
             Height = Height / 2;
             Location = new(Location.X, Location.Y + Height / 2);
@@ -40,10 +55,9 @@ public class UnitSupportBox : Listbox
         base.OnResize();
     }
 
-    static ListboxDefinition MakeListbox(CityWindow cityWindow)
+    static List<ListboxGroup> MakeEntries(CityWindow cityWindow)
     {
         var units = cityWindow.City.SupportedUnits;
-        var active = cityWindow.MainWindow.ActiveInterface;
         var properties = cityWindow.CityWindowProps.UnitSupport;
 
         List<ListboxGroup> groups = [];
@@ -57,21 +71,7 @@ public class UnitSupportBox : Listbox
             groups.Add(group);
         }
 
-        return new ListboxDefinition()
-        {
-            Rows = properties.Rows,
-            Columns = properties.Columns,
-            HorizontalStacking = true,
-            Selectable = false,
-            Looks = new ListboxLooks()
-            {
-                Font = active.Look.CityWindowFont,
-                FontSize = active.Look.CityWindowFontSize + (int)(12 * (cityWindow.Scale - 1)),
-                TextColorFront = Color.Black,
-                TextColorShadow = Color.Gray
-            },
-            Groups = groups
-        };
+        return groups;
     }
 
     private void OpenPopup(object? sender, ListboxSelectionEventArgs args)

@@ -166,7 +166,7 @@ public class CityWindow : BaseDialog
             control.OnResize();
         }
 
-        _supportLabel.Visible = _unitSupportBox.Definition.Groups.Count <= _unitSupportBox.Definition.Columns;
+        _supportLabel.Visible = _unitSupportBox.Groups.Count <= _unitSupportBox.Columns;
 
     }
 

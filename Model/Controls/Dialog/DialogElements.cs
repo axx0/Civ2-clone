@@ -55,7 +55,7 @@ public class DialogElements
     public IList<TextStyles>? LineStyles { get; set; }
 
     public List<TextBoxDefinition>? TextBoxes { get; set; }
-    public ListboxDefinition? Listbox { get; set; }
+    public ListboxDefinition? ListboxDef { get; set; }
     public OptionsDefinition? Options { get; set; }
     public IList<int>? ReplaceNumbers { get; set; }
     public IList<string>? ReplaceStrings { get; set; }
@@ -80,14 +80,12 @@ public class DialogElements
             Options.Texts = popupBox?.Options ?? [];
             Options.IsCheckbox = popupBox?.Checkbox ?? false;
         }
-        if (popupBox is not null && popupBox.Listbox)
-        {
-            Listbox = new();
-        }
         if (popupBox?.ListboxLines is not null)
         {
-            Listbox ??= new();
-            Listbox.Rows = (int)popupBox.ListboxLines;
+            ListboxDef = new()
+            {
+                Rows = (int)popupBox.ListboxLines
+            };
         }
         if (popupBox?.Text is not null)
         {

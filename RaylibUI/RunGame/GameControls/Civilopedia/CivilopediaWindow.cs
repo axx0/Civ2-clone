@@ -214,21 +214,17 @@ public class CivilopediaWindow : BaseDialog
                     groups.Add(group);
                 }
 
-                var def = new ListboxDefinition()
+                var listbox = new Listbox(this)
                 {
+                    Width = InnerWidth - 4,
+                    Height = InnerHeight - 4,
+                    Location = new(LayoutPadding.Left + 2, LayoutPadding.Top + 1),
                     Rows = props.Listbox.Rows,
                     Columns = props.Listbox.Columns,
                     Type = ListboxType.Default,
                     VerticalScrollbar = props.Listbox.VerticalScrollbar,
                     Groups = groups,
                     SelectedId = _pedia.Id
-                };
-
-                var listbox = new Listbox(this, def)
-                {
-                    Width = InnerWidth - 4,
-                    Height = InnerHeight - 4,
-                    Location = new(LayoutPadding.Left + 2, LayoutPadding.Top + 1)
                 };
                 listbox.ItemSelected += (_, i) =>
                 {

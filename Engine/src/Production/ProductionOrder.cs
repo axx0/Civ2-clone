@@ -53,13 +53,13 @@ namespace Civ2engine.Production
         public abstract bool IsValidBuild(City city);
 
         public abstract string GetDescription();
-        public abstract ListboxGroup GetBuildListEntry(IUserInterface active, City city);
+        public abstract ListboxGroup GetBuildListEntry(IUserInterface active, City city, int index);
 
         public static IProductionOrder[] GetAll(Rules rules)
         {
             return rules.ProductionOrders ??= rules.UnitTypes.Select((u, index) => new UnitProductionOrder(u, index))
                 .Cast<IProductionOrder>()
-                .Concat(rules.Improvements[1..].Select(((imp, i) => new BuildingProductionOrder(imp, i, rules.FirstWonderIndex)))).ToArray();
+                .Concat(rules.Improvements[1..].Select((imp, i) => new BuildingProductionOrder(imp, i, rules.FirstWonderIndex))).ToArray();
 
         }
 

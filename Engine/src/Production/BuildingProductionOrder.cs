@@ -63,12 +63,12 @@ namespace Civ2engine.Production
             return Improvement.Name;
         }
 
-        public override ListboxGroup GetBuildListEntry(IUserInterface active, City city)
+        public override ListboxGroup GetBuildListEntry(IUserInterface active, City city, int index)
         {
             return new ListboxGroup
             {
-                Elements = [ new() { Icon = GetIcon(active), Width = 2 * 36 + 2 },
-                             new() { Text = Improvement.Name, Width = 250 },
+                Elements = [ new() { Icon = GetIcon(active), Width = 2 * 36 + 2, Xoffset = 36 * (index % 2) },
+                             new() { Text = Improvement.Name, Width = 250, Xoffset = 2 * 36 + 2 },
                              new() { Text = $"({(10 * Improvement.Cost - city.ShieldsProgress) / city.Production} Turns)", 
                                  HorizontalAlignment = HorizontalAlignment.Right } ],
                 Height = 24,

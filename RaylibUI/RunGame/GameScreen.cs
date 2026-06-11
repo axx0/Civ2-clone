@@ -391,7 +391,7 @@ public class GameScreen : BaseScreen
             }
             if (listBox != null)
             {
-                dialog.Listbox = listBox;
+                dialog.ListboxDef = listBox;
             }
             _popupClicked = handleButtonClick;
             _currentPopupDialog = new CivDialog(MainWindow, dialog, ClosePopup);

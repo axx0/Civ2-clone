@@ -1,8 +1,10 @@
 using Civ2engine;
 using Model.Controls;
-using RaylibUI.BasicTypes;
-using System.Drawing;
 using Model.Core.Cities;
+using RaylibUI.BasicTypes;
+using System;
+using System.Drawing;
+using System.Text.RegularExpressions;
 
 namespace RaylibUI.RunGame.GameControls.CityControls;
 
@@ -16,14 +18,31 @@ public class UnitsPresentBox : Listbox
     {
         _cityWindow = cityWindow;
         _infoArea = infoArea;
+
+        HorizontalStacking = true;
+        Selectable = false;
+
         ItemSelected += OpenPopup;
     }
 
     public override void OnResize()
     {
+        var active = _cityWindow.MainWindow.ActiveInterface;
+        var properties = _cityWindow.CityWindowProps.InfoPanel.UnitsPresent;
+
+        Rows = properties.Rows;
+        Columns = properties.Columns;
+        Looks = new()
+        {
+            Font = active.Look.CityWindowFont,
+            FontSize = active.Look.CityWindowFontSize + (int)(12 * (_cityWindow.Scale - 1)),
+            TextColorFront = Raylib_CSharp.Colors.Color.Black,
+            TextColorShadow = new Raylib_CSharp.Colors.Color(135, 135, 135, 255)
+        };
+
         if (_oldScale != _cityWindow.Scale)
         {
-            Definition = MakeListbox(_cityWindow);
+            Groups = MakeEntries(_cityWindow);
             _oldScale = _cityWindow.Scale;
         }
 
@@ -32,7 +51,7 @@ public class UnitsPresentBox : Listbox
         Width = (int)(pos.Width * _cityWindow.Scale);
         Height = (int)(pos.Height * _cityWindow.Scale);
 
-        if (Definition.Groups.Count <= Definition.Columns)
+        if (Groups.Count <= Columns)
         {
             Height /= 2;
             Location = new(Location.X, Location.Y + Height / 2);
@@ -43,10 +62,9 @@ public class UnitsPresentBox : Listbox
         base.OnResize();
     }
 
-    static ListboxDefinition MakeListbox(CityWindow cityWindow)
+    static List<ListboxGroup> MakeEntries(CityWindow cityWindow)
     {
         var units = cityWindow.City.UnitsInCity;
-        var active = cityWindow.MainWindow.ActiveInterface;
         var properties = cityWindow.CityWindowProps.InfoPanel.UnitsPresent;
 
         List<ListboxGroup> groups = [];
@@ -63,22 +81,7 @@ public class UnitsPresentBox : Listbox
             };
             groups.Add(group);
         }
-
-        return new ListboxDefinition()
-        {
-            Rows = properties.Rows,
-            Columns = properties.Columns,
-            HorizontalStacking = true,
-            Selectable = false,
-            Groups = groups,
-            Looks = new()
-            {
-                Font = active.Look.CityWindowFont,
-                FontSize = active.Look.CityWindowFontSize + (int)(12 * (cityWindow.Scale - 1)),
-                TextColorFront = Raylib_CSharp.Colors.Color.Black,
-                TextColorShadow = new Raylib_CSharp.Colors.Color(135, 135, 135, 255)
-            }
-        };
+        return groups;
     }
 
     private void OpenPopup(object? sender, ListboxSelectionEventArgs args)

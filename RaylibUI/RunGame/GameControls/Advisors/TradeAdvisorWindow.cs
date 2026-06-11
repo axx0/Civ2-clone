@@ -153,9 +153,11 @@ public class TradeAdvisorWindow : BaseDialog
         groups.Add(new ListboxGroup() { Elements = [], Height = 24 });
         groups.Add(new ListboxGroup() { Elements = [], Height = 24 });
 
-
-        var def = new ListboxDefinition()
+        var listbox = new Listbox(this)
         {
+            Width = 595,
+            Height = 305,
+            Location = new(LayoutPadding.Left + 2, LayoutPadding.Top + 80),
             Rows = 12,
             Selectable = false,
             Looks = new ListboxLooks()
@@ -165,13 +167,6 @@ public class TradeAdvisorWindow : BaseDialog
                 TextColorShadow = new Color(67, 67, 67, 255)
             },
             Groups = groups
-        };
-
-        var listbox = new Listbox(this, def)
-        {
-            Width = 595,
-            Height = 305,
-            Location = new(LayoutPadding.Left + 2, LayoutPadding.Top + 80)
         };
         Controls.Add(listbox);
 

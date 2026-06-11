@@ -115,9 +115,19 @@ public class CivDialog : DynamicSizingDialog
             }
         }
 
-        if (dialog.Listbox != null)
+        if (dialog.ListboxDef != null)
         {
-            _listbox = new Listbox(this, dialog.Listbox);
+            _listbox = new Listbox(this);
+            _listbox.VerticalScrollbar = dialog.ListboxDef.VerticalScrollbar ?? _listbox.VerticalScrollbar;
+            _listbox.Rows = dialog.ListboxDef.Rows ?? _listbox.Rows;
+            _listbox.Columns = dialog.ListboxDef.Columns ?? _listbox.Columns;
+            _listbox.HorizontalStacking = dialog.ListboxDef.HorizontalStacking ?? _listbox.HorizontalStacking;
+            _listbox.SelectedId = dialog.ListboxDef.SelectedId ?? _listbox.SelectedId;
+            _listbox.Selectable = dialog.ListboxDef.Selectable ?? _listbox.Selectable;
+            _listbox.Type = dialog.ListboxDef.Type ?? _listbox.Type;
+            _listbox.Looks = dialog.ListboxDef.Looks ?? _listbox.Looks;
+            _listbox.Groups = dialog.ListboxDef.Groups ?? _listbox.Groups;
+
             innerLayout.Add(_listbox, layoutRow++, 1, new Padding(2, 2, 2, 2));
             _listbox.ItemSelected += ListboxOnItemSelected;
             _selectedIndex = 0;

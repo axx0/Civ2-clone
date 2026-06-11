@@ -17,15 +17,13 @@ public class LuaConsole : DynamicSizingDialog
     private readonly IScriptEngine _script;
     private readonly Listbox _listbox;
     private readonly TextBox _commandBox;
-    private readonly ListboxDefinition _def;
 
     private void ExecuteImmediate(string command)
     {
         if(string.IsNullOrWhiteSpace(command)) return;
         
         _script.Execute(command);
-        _def.Update(_script.Log.Split(Environment.NewLine));
-        _listbox.Update();
+        _listbox.Groups = _script.Log.Split(Environment.NewLine).Select(t => new ListboxGroup(t)).ToList();
         _listbox.OnResize();
         _listbox.ScrollToEnd();
         _commandBox.SetText(string.Empty);
@@ -37,13 +35,12 @@ public class LuaConsole : DynamicSizingDialog
         _script = host.Game.Script;
 
         var innerLayout = new TableLayout();
-        _def = new ListboxDefinition()
+        _listbox = new Listbox(this)
         {
             Type = ListboxType.Default,
-            Selectable = false
+            Selectable = false,
+            Groups = _script.Log.Split(Environment.NewLine).Select(t => new ListboxGroup(t)).ToList()
         };
-        _def.Update(_script.Log.Split(Environment.NewLine));
-        _listbox = new Listbox(this, _def);
         _listbox.ScrollToEnd();
         innerLayout.Add(_listbox, 0, 0, new Padding(2, 2, 2, 2));
 
