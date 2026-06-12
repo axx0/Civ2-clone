@@ -9,8 +9,8 @@ public static class Shaders
     public static void Load()
     {
         Grayscale = Shader.Load(
-            "Shaders//base.vs",
-            "Shaders//grayscale.fs"
+            AssetPaths.Resolve("Shaders", "base.vs"),
+            AssetPaths.Resolve("Shaders", "grayscale.fs")
         );
     }
 

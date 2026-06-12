@@ -1,0 +1,75 @@
+diff --git a/RaylibUI/AssetPaths.cs b/RaylibUI/AssetPaths.cs
+new file mode 100644
+index 00000000..015e264b
+--- /dev/null
++++ b/RaylibUI/AssetPaths.cs
+@@ -0,0 +1,17 @@
++namespace RaylibUI;
++
++internal static class AssetPaths
++{
++    public static string Resolve(params string[] pathParts)
++    {
++        var relativePath = Path.Combine(pathParts);
++        var candidates = new[]
++        {
++            Path.Combine(AppContext.BaseDirectory, relativePath),
++            Path.Combine(Environment.CurrentDirectory, relativePath),
++            Path.Combine(Environment.CurrentDirectory, "RaylibUI", relativePath)
++        };
++
++        return candidates.FirstOrDefault(File.Exists) ?? candidates[0];
++    }
++}
+diff --git a/RaylibUI/Initialization/GameFileLocatorScreen.cs b/RaylibUI/Initialization/GameFileLocatorScreen.cs
+index bbf66230..42f04858 100644
+--- a/RaylibUI/Initialization/GameFileLocatorScreen.cs
++++ b/RaylibUI/Initialization/GameFileLocatorScreen.cs
+@@ -11,8 +11,8 @@ public class GameFileLocatorScreen : BaseScreen
+ {
+     public GameFileLocatorScreen(Main host, Action onSelect, Action shutdownApp) : base(host)
+     {
+-        ImageUtils.InnerWallpaper = Image.Load("stripe.png");
+-        ImageUtils.OuterWallpaper = Image.Load("SteelGrey.png");
++        ImageUtils.InnerWallpaper = Image.Load(AssetPaths.Resolve("stripe.png"));
++        ImageUtils.OuterWallpaper = Image.Load(AssetPaths.Resolve("SteelGrey.png"));
+         ShowDialog(new FileDialog(host,"Please select Civ 2 data folder", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), Settings.IsValidRoot, (fileName) =>
+         {
+             if (fileName is null)
+@@ -30,4 +30,4 @@ public class GameFileLocatorScreen : BaseScreen
+     {
+         MainWindow.ReloadMain();
+     }
+-}
+\ No newline at end of file
++}
+diff --git a/RaylibUI/Shaders/Shaders.cs b/RaylibUI/Shaders/Shaders.cs
+index b4805004..760f7826 100644
+--- a/RaylibUI/Shaders/Shaders.cs
++++ b/RaylibUI/Shaders/Shaders.cs
+@@ -9,8 +9,8 @@ public static class Shaders
+     public static void Load()
+     {
+         Grayscale = Shader.Load(
+-            "Shaders//base.vs",
+-            "Shaders//grayscale.fs"
++            AssetPaths.Resolve("Shaders", "base.vs"),
++            AssetPaths.Resolve("Shaders", "grayscale.fs")
+         );
+     }
+ 
+diff --git a/RaylibUtils/DrawUtils.cs b/RaylibUtils/DrawUtils.cs
+index 71545ad3..8fb93de9 100644
+--- a/RaylibUtils/DrawUtils.cs
++++ b/RaylibUtils/DrawUtils.cs
+@@ -16,6 +16,10 @@ public static class DrawUtils
+     {
+         var rnd = new Random();
+         var len = tiles.Length;
++        if (len == 0 || tiles[0].Width <= 0 || tiles[0].Height <= 0)
++        {
++            return;
++        }
+ 
+         int rows = (int)rect.Height / tiles[0].Height + 1;
+         int columns = (int)rect.Width / tiles[0].Width + 1;

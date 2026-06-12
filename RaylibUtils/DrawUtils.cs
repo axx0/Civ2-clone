@@ -16,6 +16,10 @@ public static class DrawUtils
     {
         var rnd = new Random();
         var len = tiles.Length;
+        if (len == 0 || tiles[0].Width <= 0 || tiles[0].Height <= 0)
+        {
+            return;
+        }
 
         int rows = (int)rect.Height / tiles[0].Height + 1;
         int columns = (int)rect.Width / tiles[0].Width + 1;
