@@ -51,9 +51,9 @@ public class Civ2GoldInterface(IMain main) : Civ2Interface(main)
         HeaderLabelShadow = true,
         HeaderLabelColour = new Color(135, 135, 135, 255),
         LabelFont = Fonts.Tnr,
-        LabelFontSize = 27,
-        LabelColour = new Color(51, 51, 51, 255),
-        LabelShadowColour = new Color(191, 191, 191, 255),
+        LabelFontSize = 20,
+        LabelColour = Color.Black,
+        LabelShadowColour = new Color(210, 210, 210, 255),
         CityWindowFont = Fonts.Arial,
         CityWindowFontSize = 14,  // small=6, normal=14, large=20
         MenuFont = Fonts.Arial,

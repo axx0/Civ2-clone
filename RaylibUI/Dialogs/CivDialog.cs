@@ -25,6 +25,7 @@ public class CivDialog : DynamicSizingDialog
     private readonly Listbox? _listbox;
     private int _selectedIndex = -1;
     private readonly ImageBox _imageBox;
+    private bool _closed;
 
     public CivDialog(Main host, DialogElements dialog, Action<string, int, IList<bool>?, IDictionary<string, string>?> handleButtonClick) :
         base(host, DialogUtils.ReplacePlaceholders(dialog.Title, dialog.ReplaceStrings, dialog.ReplaceNumbers),
@@ -174,6 +175,10 @@ public class CivDialog : DynamicSizingDialog
             var actionButton = new Button(this, button);
 
             actionButton.Click += OnActionButtonOnClick;
+            if (dialog.Name == "MAINMENU" && button == Labels.Cancel)
+            {
+                actionButton.MouseDown += OnActionButtonOnClick;
+            }
             menuBar.AddChild(actionButton);
         }
 
@@ -220,6 +225,12 @@ public class CivDialog : DynamicSizingDialog
 
     private void CloseDialog(string buttonText)
     {
+        if (_closed)
+        {
+            return;
+        }
+
+        _closed = true;
         if (_optionsPanel != null)
         {
             _selectedIndex = _optionsPanel?.SelectedId ?? -1;

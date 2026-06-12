@@ -1,3 +1,4 @@
+using System;
 using Model;
 using Model.Constants;
 using Model.Controls;
@@ -65,13 +66,15 @@ namespace Civ2engine.Production
 
         public override ListboxGroup GetBuildListEntry(IUserInterface active, City city)
         {
+            var turns = Math.Max(1, (int)Math.Ceiling(Math.Max(0, 10 * Improvement.Cost - city.ShieldsProgress) /
+                                                      (decimal)Math.Max(1, city.Production)));
             return new ListboxGroup
             {
-                Elements = [ new() { Icon = GetIcon(active), Width = 2 * 36 + 2 },
-                             new() { Text = Improvement.Name, Width = 250 },
-                             new() { Text = $"({(10 * Improvement.Cost - city.ShieldsProgress) / city.Production} Turns)", 
-                                 HorizontalAlignment = HorizontalAlignment.Right } ],
-                Height = 24,
+                Elements = [ new() { Icon = GetIcon(active), Width = 70, ScaleIcon = 0.85f },
+                             new() { Text = Improvement.Name, Width = 260, TextSizeOverride = 18, VerticalAlignment = VerticalAlignment.Center },
+                             new() { Text = $"({turns} Turns)", TextSizeOverride = 16,
+                                 HorizontalAlignment = HorizontalAlignment.Right, VerticalAlignment = VerticalAlignment.Center } ],
+                Height = 38,
             };
         }
     }

@@ -28,9 +28,9 @@ public class CityWindow : BaseDialog
     private readonly Button _shrinkIcon, _expandIcon, _exitIcon;
     private readonly IUserInterface _active;
     private readonly int _iconW, _iconH;
-    private float _scale = 1.0f;  // scale city window size (0.5=small, 1=normal, 1.5=large)
+    private float _scale = 1.5f;  // scale city window size (1=normal, 1.5=large)
     private const float _scaleMax = 1.5f;
-    private const float _scaleMin = 0.5f;
+    private const float _scaleMin = 1.0f;
     private const float _scaleDelta = 0.5f;
     private readonly UnitSupportBox _unitSupportBox;
     private readonly CityLabel _supportLabel;
@@ -153,6 +153,8 @@ public class CityWindow : BaseDialog
         _exitIcon.Scale = _scale;
         _shrinkIcon.Scale = _scale;
         _expandIcon.Scale = _scale;
+        _shrinkIcon.Visible = _scale > _scaleMin;
+        _expandIcon.Visible = _scale < _scaleMax;
         
         SetLocation(width, Width, height, Height);
         var headerOffset = 11 + (3 * _iconW + 3 * 2) * _scale;
@@ -172,7 +174,7 @@ public class CityWindow : BaseDialog
 
     public override void OnKeyPress(KeyboardKey key)
     {
-        if (key == KeyboardKey.Escape)
+        if (key is KeyboardKey.Escape or KeyboardKey.Enter or KeyboardKey.KpEnter)
         {
             CurrentGameScreen.CloseDialog(this);
         }

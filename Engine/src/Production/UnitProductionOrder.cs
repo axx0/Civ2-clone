@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Civ2engine.Enums;
 using Model;
@@ -73,14 +74,17 @@ namespace Civ2engine.Production
 
         public override ListboxGroup GetBuildListEntry(IUserInterface active, City city)
         {
+            var turns = Math.Max(1, (int)Math.Ceiling(Math.Max(0, 10 * unitDefinition.Cost - city.ShieldsProgress) /
+                                                      (decimal)Math.Max(1, city.Production)));
             return new ListboxGroup
             {
-                Elements = [ new() { Icon = GetIcon(active), Width = 2 * 36 + 2, ScaleIcon = 0.75f },
-                             new() { Text = unitDefinition.Name, Width = 200 },
-                             new() { Text = $"({(10 * unitDefinition.Cost - city.ShieldsProgress) / city.Production} Turns, ADM: " +
+                Elements = [ new() { Icon = GetIcon(active), Width = 70, ScaleIcon = 0.6f },
+                             new() { Text = unitDefinition.Name, Width = 190, TextSizeOverride = 18, VerticalAlignment = VerticalAlignment.Center },
+                             new() { Text = $"({turns} Turns, ADM: " +
                              $"{unitDefinition.Attack}/{unitDefinition.Defense}/{unitDefinition.Move / 3} " +
-                             $"HP: {unitDefinition.Hitp / 10}/{unitDefinition.Firepwr})", HorizontalAlignment = HorizontalAlignment.Right } ],
-                Height = 24,
+                             $"HP: {unitDefinition.Hitp / 10}/{unitDefinition.Firepwr})", TextSizeOverride = 15,
+                                 HorizontalAlignment = HorizontalAlignment.Right, VerticalAlignment = VerticalAlignment.Center } ],
+                Height = 38,
             };
         }
     }

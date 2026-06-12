@@ -44,7 +44,7 @@ public class LabelControl : BaseControl
         VerticalAlignment = verticalAlignment;
         _minWidth = minWidth;
         _defaultHeight = defaultHeight;
-        _fontSize = TextRendering.LegibleUiFontSize(fontSize);
+        _fontSize = fontSize;
         _spacing = spacing;
         _font = font ?? controller.MainWindow.ActiveInterface?.Look.LabelFont ?? Fonts.Tnr;
         ColorFront = colorFront ?? Color.Black;
@@ -55,7 +55,7 @@ public class LabelControl : BaseControl
         _timer = new Timer(_ => _switch = !_switch, null, 0, switchTime);
         _switchColors = switchColors;
         BackgroundColor = colorBack;
-        _textSize = TextRendering.Measure(_font, _text, _fontSize, _spacing);
+        _textSize = TextManager.MeasureTextEx(_font, _text, _fontSize, _spacing);
     }
 
     private Vector2 _textSize;
@@ -68,7 +68,7 @@ public class LabelControl : BaseControl
         set
         {
             _text = value;
-            _textSize = TextRendering.Measure(_font, _text, _fontSize, _spacing);
+            _textSize = TextManager.MeasureTextEx(_font, _text, _fontSize, _spacing);
         }
     }
 
@@ -79,7 +79,7 @@ public class LabelControl : BaseControl
         set 
         {
             _font = value;
-            _textSize = TextRendering.Measure(_font, _text, _fontSize, _spacing);
+            _textSize = TextManager.MeasureTextEx(_font, _text, _fontSize, _spacing);
         }
     }
 
@@ -89,8 +89,8 @@ public class LabelControl : BaseControl
         get => _fontSize;
         set
         {
-            _fontSize = TextRendering.LegibleUiFontSize(value);
-            _textSize = TextRendering.Measure(_font, _text, _fontSize, _spacing);
+            _fontSize = value;
+            _textSize = TextManager.MeasureTextEx(_font, _text, _fontSize, _spacing);
         }
     }
 
@@ -151,24 +151,33 @@ public class LabelControl : BaseControl
             Graphics.DrawRectangleRec(Bounds, BackgroundColor.Value);
         }
         
+        var fontSize = _fontSize;
+        var textSize = _textSize;
+        var availableWidth = Width - Padding.Left - Padding.Right;
+        while (fontSize > 8 && availableWidth > 0 && textSize.X > availableWidth)
+        {
+            fontSize--;
+            textSize = TextManager.MeasureTextEx(_font, _text, fontSize, _spacing);
+        }
+
         var textPosition = new Vector2(Bounds.X + Padding.Left, Bounds.Y + Padding.Top);
 
         if (HorizontalAlignment == HorizontalAlignment.Center)
         {
-            textPosition.X += (Width - Padding.Left - Padding.Right) / 2f - _textSize.X / 2f;
+            textPosition.X += availableWidth / 2f - textSize.X / 2f;
         }
         else if (HorizontalAlignment == HorizontalAlignment.Right)
         {
-            textPosition.X += Width - Padding.Left - Padding.Right - _textSize.X;
+            textPosition.X += availableWidth - textSize.X;
         }
 
         if (VerticalAlignment == VerticalAlignment.Center)
         {
-            textPosition.Y += (Height - Padding.Top - Padding.Bottom) / 2f - _textSize.Y / 2f;
+            textPosition.Y += (Height - Padding.Top - Padding.Bottom) / 2f - textSize.Y / 2f;
         }
         else if (VerticalAlignment == VerticalAlignment.Bottom)
         {
-            textPosition.Y += Height - Padding.Top - Padding.Bottom - _textSize.Y;
+            textPosition.Y += Height - Padding.Top - Padding.Bottom - textSize.Y;
         }
 
         Color colorFront, colorShadow;
@@ -182,7 +191,10 @@ public class LabelControl : BaseControl
             colorFront = ColorFront;
             colorShadow = ColorShadow;
         }
-        TextRendering.DrawWithShadow(_font, _text, textPosition, _fontSize, _spacing, colorFront, colorShadow, ShadowOffset);
+        textPosition = new Vector2(MathF.Round(textPosition.X), MathF.Round(textPosition.Y));
+
+        Graphics.DrawTextEx(_font, _text, textPosition + ShadowOffset, fontSize, _spacing, colorShadow);
+        Graphics.DrawTextEx(_font, _text, textPosition, fontSize, _spacing, colorFront);
 
         // Draw control's bounds
         //Graphics.DrawRectangleLinesEx(Bounds, 1f, Color.Blue);

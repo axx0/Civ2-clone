@@ -31,12 +31,6 @@ public class UnitSupportBox : Listbox
         Width = (int)(pos.Width * _cityWindow.Scale);
         Height = (int)(pos.Height * _cityWindow.Scale);
 
-        if (Definition.Groups.Count <= Definition.Columns)
-        {
-            Height = Height / 2;
-            Location = new(Location.X, Location.Y + Height / 2);
-        }
-
         base.OnResize();
     }
 
@@ -51,7 +45,7 @@ public class UnitSupportBox : Listbox
         {
             var group = new ListboxGroup()
             {
-                Elements = [new ListboxGroupElement { Unit = unit, Game = cityWindow.CurrentGameScreen.Game, ScaleIcon = ImageUtils.ZoomScale(-3 + (int)(6 * (cityWindow.Scale - 1)))}],    // zoom = -6 / -3 / 0
+                Elements = [new ListboxGroupElement { Unit = unit, Game = cityWindow.CurrentGameScreen.Game, ScaleIcon = ImageUtils.ZoomScale(0)}],
                 Height = (int)Math.Ceiling(properties.Box.Height / properties.Rows * cityWindow.Scale)
             };
             groups.Add(group);

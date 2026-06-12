@@ -52,9 +52,19 @@ public class ProductionBox : BaseControl
             cityWindow.CurrentGameScreen.ShowPopup(
                 "PRODUCTION", handleButtonClick: BuildDialogClosed, replaceStrings: [_city.Name], listBox: new ListboxDefinition
                 {
-                    Type = ListboxType.Default,
                     ImageShift = true,
-                    Rows = 13,
+                    Rows = Math.Min(9, _canProduce.Count),
+                    Looks = new ListboxLooks
+                    {
+                        Font = _active.Look.DefaultFont,
+                        FontSize = 18,
+                        TextColorFront = Color.Black,
+                        TextColorShadow = Color.Blank,
+                        SelectedTextFont = _active.Look.DefaultFont,
+                        SelectedTextBackgroundColor = new Color(107, 107, 107, 255),
+                        SelectedTextColorFront = Color.White,
+                        SelectedTextColorShadow = Color.Black
+                    },
                     Groups = _canProduce.Select(p => p.GetBuildListEntry(_active, _city)).ToList(),
                     SelectedId = _canProduce.IndexOf(_city.ItemInProduction)
                 });
@@ -80,14 +90,14 @@ public class ProductionBox : BaseControl
         if (_city.ItemInProduction.Type == ItemType.Unit)
         {
             _label.Visible = false;
-            _icon.Scale = ImageUtils.ZoomScale(-1 + (int)(4 * (_cityWindow.Scale - 1)));
+            _icon.Scale = ImageUtils.ZoomScale(1);
             _icon.Location = new(_properties.IconLocation.X * _cityWindow.Scale - _icon.Width / 2, 0);
         }
         else
         {
             _label.Visible = true;
             _label.Text = _city.ItemInProduction.Title;
-            _icon.Scale = _cityWindow.Scale;
+            _icon.Scale = Math.Min(_cityWindow.Scale, 1.25f);
             _icon.Location = new(_properties.IconLocation.X * _cityWindow.Scale - _icon.Width / 2, 
                 _properties.IconLocation.Y * _cityWindow.Scale);
         }
@@ -173,10 +183,10 @@ public class ProductionBox : BaseControl
         {
             spacing = (int)(drawWidth - _shieldWidth) / shieldsPerRow;
         }
-        var shields = _city.ShieldsProgress;
+        var shields = Math.Min(_city.ShieldsProgress, _totalCost);
         int count = 0;
         posX += 3 * scale;
-        for (int row = 0; row < 10 && count < shields; row++)
+        for (int row = 0; row < lines && count < shields; row++)
         {
             for (int col = 0; col < shieldsPerRow && count < shields; col++)
             {

@@ -397,6 +397,6 @@ public class ViewPiece : IGameMode
 
     public void MouseClear()
     {
-        
+        Input.SetMouseCursor(MouseCursor.Arrow);
     }
 }

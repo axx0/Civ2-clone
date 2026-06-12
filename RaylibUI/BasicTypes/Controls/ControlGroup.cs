@@ -39,11 +39,34 @@ public class ControlGroup : BaseControl
 
     public void ResizeChildWidths(int targetCumulativeWidth)
     {
-        var factor = (double)(targetCumulativeWidth - Controls.Count * _spacing) / (double)Controls.Select(c => c.Width).Sum();
-        foreach (var c in Controls)
-            c.Width = (int)(c.Width * factor);
+        if (Controls.Count == 0)
+        {
+            return;
+        }
+
+        var totalSpacing = (Controls.Count - 1) * _spacing;
+        var availableWidth = Math.Max(0, targetCumulativeWidth - totalSpacing);
+        var currentWidth = Controls.Select(c => c.Width).Sum();
+        if (currentWidth <= 0)
+        {
+            currentWidth = Controls.Select(c => c.GetPreferredWidth()).Sum();
+        }
+
+        var remainingWidth = availableWidth;
+        for (var i = 0; i < Controls.Count; i++)
+        {
+            var control = Controls[i];
+            var isLast = i == Controls.Count - 1;
+            var width = isLast
+                ? remainingWidth
+                : (int)Math.Round(control.Width * availableWidth / (double)currentWidth);
+
+            control.Width = Math.Max(0, width);
+            remainingWidth -= control.Width;
+        }
+
         ChildWidths = Controls.Select(c => c.Width).ToList();
-        Width = ChildWidths.Sum() + ChildWidths.Count * _spacing - _spacing;
+        Width = targetCumulativeWidth;
     }
 
     public override int GetPreferredHeight()

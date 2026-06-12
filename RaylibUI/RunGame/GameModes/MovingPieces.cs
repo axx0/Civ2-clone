@@ -148,10 +148,10 @@ public class MovingPieces : IGameMode
     {
         var controls = new List<IControl> { _title };
 
-        var fontSize = _gameScreen.ToTPanelLayout ? 14 : 18;
+        var fontSize = _gameScreen.ToTPanelLayout ? 13 : 15;
         _title.FontSize = fontSize;
-        var unitZoom = _gameScreen.ToTPanelLayout ? -1 : 1;
-        var labelHeight = _title.TextSize.Y;
+        var unitZoom = _gameScreen.ToTPanelLayout ? -2 : 0;
+        var labelHeight = Math.Max(16, _title.TextSize.Y + 1);
 
         _title.Location = new(bounds.X, bounds.Y);
         _title.Width = (int)bounds.Width;
@@ -181,9 +181,12 @@ public class MovingPieces : IGameMode
         {
             movesText = $"{Labels.For(LabelIndex.Moves)}: {remainingFullPoints}";
         }
+        var detailX = unitDisplay.Location.X + unitDisplay.Width + 4;
+        var detailWidth = Math.Max(1, (int)(bounds.X + bounds.Width - detailX - 2));
+
         var movesLabel = new StatusLabel(_gameScreen, movesText, fontSize: fontSize);
-        movesLabel.Location = new(unitDisplay.Location.X + unitDisplay.Width, currentY);
-        movesLabel.Width = (int)movesLabel.TextSize.X;
+        movesLabel.Location = new(detailX, currentY);
+        movesLabel.Width = detailWidth;
         movesLabel.Height = (int)labelHeight;
         controls.Add(movesLabel);
         currentY += labelHeight;
@@ -191,22 +194,22 @@ public class MovingPieces : IGameMode
         // Show other unit info
         var cityName = (activeUnit.HomeCity == null) ? Labels.For(LabelIndex.NONE) : activeUnit.HomeCity.Name;
         var cityNameLabel = new StatusLabel(_gameScreen, cityName, fontSize: fontSize);
-        cityNameLabel.Location = new(unitDisplay.Location.X + unitDisplay.Width, currentY);
-        cityNameLabel.Width = (int)cityNameLabel.TextSize.X;
+        cityNameLabel.Location = new(detailX, currentY);
+        cityNameLabel.Width = detailWidth;
         cityNameLabel.Height = (int)labelHeight;
         controls.Add(cityNameLabel);
         currentY += labelHeight;
         
         var ownerLabel = new StatusLabel(_gameScreen, _gameScreen.Player.Civilization.Adjective, fontSize: fontSize);
-        ownerLabel.Location = new(unitDisplay.Location.X + unitDisplay.Width, currentY);
-        ownerLabel.Width = (int)ownerLabel.TextSize.X;
+        ownerLabel.Location = new(detailX, currentY);
+        ownerLabel.Width = detailWidth;
         ownerLabel.Height = (int)labelHeight;
         controls.Add(ownerLabel);
         
         var nameLabel = new StatusLabel(_gameScreen, activeUnit.Veteran ? $"{activeUnit.Name} ({Labels.For(LabelIndex.Veteran)})" : 
             activeUnit.Name, fontSize: fontSize);
         nameLabel.Location = new(currentX, unitDisplay.Location.Y + unitDisplay.Height);
-        nameLabel.Width = (int)nameLabel.TextSize.X;
+        nameLabel.Width = (int)bounds.Width;
         nameLabel.Height = (int)labelHeight;
         controls.Add(nameLabel);
         currentY = unitDisplay.Location.Y + unitDisplay.Height + labelHeight;
@@ -221,7 +224,7 @@ public class MovingPieces : IGameMode
         var tileLabel = new StatusLabel(_gameScreen, $"({terrainName})", fontSize: fontSize);
         var tileLabelWidth = tileLabel.TextSize.X;
         tileLabel.Location = new(currentX, currentY);
-        tileLabel.Width = (int)tileLabel.TextSize.X;
+        tileLabel.Width = (int)bounds.Width;
         tileLabel.Height = (int)labelHeight;
         controls.Add(tileLabel);
         currentY += labelHeight;

@@ -1,4 +1,5 @@
 using Civ2engine;
+using Civ2engine.IO;
 using Model;
 using Model.Core;
 using Model.InterfaceActions;
@@ -111,6 +112,12 @@ public class MainMenu : BaseScreen
     private void HandleButtonClick(string button, int selectedIndex, IList<bool> checkboxStates,
         IDictionary<string, string>? textBoxValues)
     {
+        if (_currentAction.Name == Civ2.Dialogs.MainMenu.Title && button == Labels.Cancel)
+        {
+            _shutdownApp();
+            return;
+        }
+
         ProcessAction(MainWindow.ActiveInterface.ProcessDialog(_currentAction.Name,
             new DialogResult(button, selectedIndex, checkboxStates, TextValues: textBoxValues)));
 

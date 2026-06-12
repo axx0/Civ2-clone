@@ -313,6 +313,11 @@ public class MapControl : BaseControl
     private DateTime _animationStart;
     public override void Draw(bool pulse)
     {
+        if (!Input.IsMouseButtonDown(MouseButton.Left))
+        {
+            _gameScreen.ActiveMode.MouseClear();
+        }
+
         if (_animationStart.AddMilliseconds(_currentView.Interval) < DateTime.Now)
         {
             if (_currentView.Finished())

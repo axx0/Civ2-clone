@@ -58,7 +58,16 @@ public class Button : BaseControl
 
             return _width;
         }
-        set { _width = value; }
+        set
+        {
+            if (_width == value)
+            {
+                return;
+            }
+
+            _width = value;
+            InvalidateTexture();
+        }
     }
 
     private int _height;
@@ -73,7 +82,16 @@ public class Button : BaseControl
 
             return _height;
         }
-        set { _height = value; }
+        set
+        {
+            if (_height == value)
+            {
+                return;
+            }
+
+            _height = value;
+            InvalidateTexture();
+        }
     }
 
     public override void Draw(bool pulse)
@@ -93,7 +111,7 @@ public class Button : BaseControl
 
             if (_hovered)
             {
-                Graphics.DrawRectangleLinesEx(Bounds, 0.5f, Color.Magenta);
+                DrawPressedOverlay();
             }
         }
         else
@@ -104,9 +122,30 @@ public class Button : BaseControl
 
         var drawFontSize = GetDrawFontSize();
         var drawTextSize = drawFontSize == _fontSize ? _textSize : TextManager.MeasureTextEx(_font, Text, drawFontSize, 0f);
-        Graphics.DrawTextEx(_font, Text, new Vector2(Bounds.X + Width / 2 - drawTextSize.X / 2, Bounds.Y + Height / 2 - drawTextSize.Y / 2), drawFontSize, 0f, Enabled ? _textColour : Color.Gray);
+        var textOffset = _hovered && _backgroundImage == null ? Vector2.One : Vector2.Zero;
+        Graphics.DrawTextEx(_font, Text, new Vector2(Bounds.X + Width / 2 - drawTextSize.X / 2, Bounds.Y + Height / 2 - drawTextSize.Y / 2) + textOffset, drawFontSize, 0f, Enabled ? _textColour : Color.Gray);
 
         base.Draw(pulse);
+    }
+
+    private void DrawPressedOverlay()
+    {
+        var x = (int)Bounds.X;
+        var y = (int)Bounds.Y;
+        var w = (int)Bounds.Width;
+        var h = (int)Bounds.Height;
+        if (w <= 2 || h <= 2)
+        {
+            return;
+        }
+
+        Graphics.DrawRectangle(x + 2, y + 2, w - 4, h - 4, new Color(176, 176, 176, 90));
+        Graphics.DrawLine(x + 1, y + 1, x + w - 2, y + 1, new Color(96, 96, 96, 255));
+        Graphics.DrawLine(x + 1, y + 1, x + 1, y + h - 2, new Color(96, 96, 96, 255));
+        Graphics.DrawLine(x + 2, y + 2, x + w - 3, y + 2, new Color(128, 128, 128, 255));
+        Graphics.DrawLine(x + 2, y + 2, x + 2, y + h - 3, new Color(128, 128, 128, 255));
+        Graphics.DrawLine(x + 1, y + h - 2, x + w - 2, y + h - 2, Color.White);
+        Graphics.DrawLine(x + w - 2, y + 1, x + w - 2, y + h - 2, Color.White);
     }
 
     public int FontSize
@@ -129,6 +168,15 @@ public class Button : BaseControl
                 _texture = ImageUtils.PaintButtonBase(Width, Height);
             }
             return _texture;
+        }
+    }
+
+    private void InvalidateTexture()
+    {
+        if (_texture.Width > 0)
+        {
+            _texture.Unload();
+            _texture = default;
         }
     }
 

@@ -65,7 +65,7 @@ public class CityCitizensBox : BaseControl
             _icons[i].Image = [_active.PicSources["people"][_citizenIndex[i] + 11 * _epoch]];
 
             _icons[i].Location = new((2 + i * spacing) * _cityWindow.Scale, 7 * _cityWindow.Scale);
-            _icons[i].Scale = _cityWindow.Scale;
+            _icons[i].Scale = Math.Min(_cityWindow.Scale, 1.25f);
         }
 
         foreach (var child in Controls)

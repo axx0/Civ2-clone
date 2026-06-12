@@ -42,10 +42,12 @@ public class StatusPanel : BaseControl
 
     public void Update()
     {
-        var statusFontSize = _gameScreen.ToTPanelLayout ? 16 : 18;
+        var statusFontSize = _gameScreen.ToTPanelLayout ? 14 : 15;
         var statusPaddingTop = 0;
-        var yOffset = _gameScreen.ToTPanelLayout ? 2 : 1;
-        var labelHeight = Math.Max(16, statusFontSize + 1);
+        var yOffset = _gameScreen.ToTPanelLayout ? 2 : 2;
+        var labelHeight = Math.Max(16, statusFontSize + 2);
+        var infoInset = _gameScreen.ToTPanelLayout ? 1 : 2;
+        var infoWidth = Math.Max(1, (int)_infoPanelRect.Width - 2 * infoInset);
 
         var populText = _game.GetPlayerCiv.Cities.Count == 0 ? "0 " + Labels.For(LabelIndex.People) : 
             _game.GetPlayerCiv.Cities.Sum(c=>c.GetPopulation()).ToString("###,###,###", 
@@ -53,33 +55,36 @@ public class StatusPanel : BaseControl
         
         var populLabel = new StatusLabel(_gameScreen, populText, alignment: HorizontalAlignment.Right, fontSize: statusFontSize);
         populLabel.Padding = new(0, statusPaddingTop, 0, 0);
-        populLabel.Location = new(_infoPanelRect.X, _infoPanelRect.Y + yOffset);
-        populLabel.Width = (int)_infoPanelRect.Width;
+        populLabel.Location = new(_infoPanelRect.X + infoInset, _infoPanelRect.Y + yOffset);
+        populLabel.Width = infoWidth;
         populLabel.Height = populLabel.GetPreferredHeight();
 
         var yearLabel = new StatusLabel(_gameScreen, _game.Date.GameYearString(_game.TurnNumber), fontSize: statusFontSize);
         yearLabel.Padding = new(0, statusPaddingTop, 0, 0);
-        yearLabel.Location = new(_infoPanelRect.X, _infoPanelRect.Y + yOffset + labelHeight);
-        yearLabel.Width = (int)_infoPanelRect.Width;
+        yearLabel.Location = new(_infoPanelRect.X + infoInset, _infoPanelRect.Y + yOffset + labelHeight);
+        yearLabel.Width = (int)(infoWidth * 0.55f);
         yearLabel.Height = yearLabel.GetPreferredHeight();
 
         var goldLabel = new StatusLabel(_gameScreen, $"{_game.GetPlayerCiv.Money} {Labels.For(LabelIndex.Gold)}  {_game.GetPlayerCiv.TaxRate / 10}.{_game.GetPlayerCiv.LuxRate / 10}.{_game.GetPlayerCiv.ScienceRate / 10}", fontSize: statusFontSize);
         goldLabel.Padding = new (0, statusPaddingTop, 0, 0);
-        goldLabel.Location = new(_infoPanelRect.X, _infoPanelRect.Y + yOffset + 2 * labelHeight);
-        goldLabel.Width = (int)(_infoPanelRect.Width * 0.65f);
+        goldLabel.Location = new(_infoPanelRect.X + infoInset, _infoPanelRect.Y + yOffset + 2 * labelHeight);
+        goldLabel.Width = (int)(infoWidth * 0.58f);
         goldLabel.Height = goldLabel.GetPreferredHeight();
 
         var turnsLabel = new StatusLabel(_gameScreen, $"{Labels.For(LabelIndex.Turn)} {_game.TurnNumber}", HorizontalAlignment.Right, fontSize: statusFontSize);
         turnsLabel.Padding = new (0, statusPaddingTop, 0, 0);
-        turnsLabel.Location = new(_infoPanelRect.X, _infoPanelRect.Y + yOffset + 2 * labelHeight);
-        turnsLabel.Width = (int)_infoPanelRect.Width;
+        turnsLabel.Location = new(_infoPanelRect.X + infoInset, _infoPanelRect.Y + yOffset + 2 * labelHeight);
+        turnsLabel.Width = infoWidth;
         turnsLabel.Height = turnsLabel.GetPreferredHeight();
 
         var iconNo = 0; // TODO: determine one of 4 icons based on current research progress (0...25%, 25...50%, 50...75%, 75...100%)
-        var researchIconLoc = new Vector2(_infoPanelRect.X + 119, _infoPanelRect.Y + labelHeight);
+        var iconScale = _gameScreen.ToTPanelLayout ? 1.0f : 1.0f;
+        var researchIconLoc = new Vector2(
+            _infoPanelRect.X + _infoPanelRect.Width - 58,
+            _infoPanelRect.Y + yOffset + labelHeight - 1);
         if (_gameScreen.ToTPanelLayout)
             researchIconLoc = new Vector2(_infoPanelRect.X + 7, _infoPanelRect.Y + 72);
-        var researchIcon = new TextureDisplay(_gameScreen, TextureCache.GetImage(_active.PicSources["researchProgress"][iconNo]), researchIconLoc, scale: 1.5f);
+        var researchIcon = new TextureDisplay(_gameScreen, TextureCache.GetImage(_active.PicSources["researchProgress"][iconNo]), researchIconLoc, scale: iconScale);
 
         _endTurnButton.Visible = _game.GetPlayerCiv == _game.GetActiveCiv;
         Controls = [_headerLabel, populLabel, yearLabel, goldLabel, turnsLabel, researchIcon, _endTurnButton];
@@ -88,8 +93,8 @@ public class StatusPanel : BaseControl
         if (true)
         {
             iconNo = 0;
-            var warmingIconLoc = new Vector2(researchIconLoc.X + 31, researchIconLoc.Y);
-            var warmingIcon = new TextureDisplay(_gameScreen, TextureCache.GetImage(_active.PicSources["globalWarming"][iconNo]), warmingIconLoc, scale: 1.5f);
+            var warmingIconLoc = new Vector2(researchIconLoc.X + 24, researchIconLoc.Y);
+            var warmingIcon = new TextureDisplay(_gameScreen, TextureCache.GetImage(_active.PicSources["globalWarming"][iconNo]), warmingIconLoc, scale: iconScale);
             Controls.Add(warmingIcon);
         }
 

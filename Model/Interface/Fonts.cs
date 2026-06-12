@@ -31,13 +31,12 @@ public static class Fonts
     public static void SetArial(Font font)
     {
         Arial = font;
-        //Raylib.SetTextureFilter(Arial.Texture, TextureFilter.Point);
+        Arial.Texture.SetFilter(TextureFilter.Bilinear);
     }
 
     public static void SetBold(Font font)
     {
         TnRbold = font;
-        TnRbold.Texture.SetFilter( TextureFilter.Bilinear);
+        TnRbold.Texture.SetFilter(TextureFilter.Bilinear);
     }
 }
-

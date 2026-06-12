@@ -10,6 +10,7 @@ using Raylib_CSharp.Textures;
 using Raylib_CSharp.Rendering;
 using Model;
 using Model.Core;
+using Model.Core.Mapping;
 using Model.Core.Units;
 using Model.ImageSets;
 using Model.Interface;
@@ -363,7 +364,7 @@ public static class ImageUtils
             offset: shield.Offset + shield.HPbarOffset, shield));
 
         // Orders text
-        var shieldText = (int)unit.Order <= 11 ? game.Rules.Orders[(int)unit.Order - 1].Key : "-";
+        var shieldText = GetOrderShieldText(unit, game);
         viewElements.Add(new TextElement(shieldText, loc, shield.OrderTextHeight,
             tile, shield.Offset + shield.OrderOffset));
 
@@ -380,6 +381,36 @@ public static class ImageUtils
         }
 
         return new Vector2(unitTexture.Width, unitTexture.Height);
+    }
+
+    private static string GetOrderShieldText(IUnit unit, IGame game)
+    {
+        if (unit is Unit { Building: > 0 } worker)
+        {
+            if (worker.Building == ImprovementTypes.Road)
+            {
+                return "R";
+            }
+
+            if (worker.Building == ImprovementTypes.Irrigation)
+            {
+                return "I";
+            }
+
+            if (worker.Building == ImprovementTypes.Mining)
+            {
+                return "M";
+            }
+        }
+
+        if (unit.Order == (int)OrderType.Automate)
+        {
+            return "A";
+        }
+
+        return unit.Order > 0 && unit.Order <= game.Rules.Orders.Length
+            ? game.Rules.Orders[unit.Order - 1].Key
+            : "-";
     }
 
     // public static Image GetUnitImage(IUserInterface active, Unit unit, bool noStacking = false)

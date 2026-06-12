@@ -161,6 +161,11 @@ namespace Civ2engine
         private static void ResolveResearch(Game game, IPlayer player)
         {
             var activeCiv = game.GetActiveCiv;
+            if (activeCiv.Cities.Count == 0)
+            {
+                return;
+            }
+
             if (activeCiv.ReseachingAdvance < 0)
             {
                 var researchPossibilities = AdvanceFunctions.CalculateAvailableResearch(game, activeCiv);

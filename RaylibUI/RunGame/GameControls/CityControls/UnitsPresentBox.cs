@@ -32,12 +32,6 @@ public class UnitsPresentBox : Listbox
         Width = (int)(pos.Width * _cityWindow.Scale);
         Height = (int)(pos.Height * _cityWindow.Scale);
 
-        if (Definition.Groups.Count <= Definition.Columns)
-        {
-            Height /= 2;
-            Location = new(Location.X, Location.Y + Height / 2);
-        }
-
         Visible = _infoArea.Mode == CityDisplayMode.Info;
 
         base.OnResize();
@@ -56,7 +50,7 @@ public class UnitsPresentBox : Listbox
             {
                 Elements = [
                     new ListboxGroupElement { Unit = unit, Game = cityWindow.CurrentGameScreen.Game,
-                        ScaleIcon = ImageUtils.ZoomScale(-2 + (int)(6 * (cityWindow.Scale - 1)))},    // zoom = -5 / -2 / 1
+                        ScaleIcon = ImageUtils.ZoomScale(0)},
                     new ListboxGroupElement { Text = ShortCityName(cityWindow.City), Xoffset = 0, 
                         HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Bottom }],
                 Height = (int)Math.Ceiling(properties.Box.Height / properties.Rows * cityWindow.Scale)

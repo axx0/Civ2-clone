@@ -65,6 +65,6 @@ public class ProcessingMode : IGameMode
 
     public void MouseClear()
     {
-        
+        Input.SetMouseCursor(MouseCursor.Arrow);
     }
 }

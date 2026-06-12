@@ -19,6 +19,7 @@ public class FoodStorageBox : BaseControl
     private float _iconWidth, _iconHeight;
     private readonly int _boxRows;
     private readonly Rectangle _panelBounds;
+    private float IconScale => Math.Min(_cityWindow.Scale, 1.25f);
 
     public FoodStorageBox(CityWindow cityWindow) : base(cityWindow, true)
     {
@@ -42,8 +43,8 @@ public class FoodStorageBox : BaseControl
         Height = (int)(_panelBounds.Height * _cityWindow.Scale);
         base.OnResize();
 
-        _iconWidth = _foodIcon.Width * _cityWindow.Scale;
-        _iconHeight = _foodIcon.Height * _cityWindow.Scale;
+        _iconWidth = _foodIcon.Width * IconScale;
+        _iconHeight = _foodIcon.Height * IconScale;
     }
 
     public override void Draw(bool pulse)
@@ -99,7 +100,7 @@ public class FoodStorageBox : BaseControl
             {
                 Graphics.DrawTextureEx(_foodIcon,
                     new Vector2((int)posX + wheat_spacing * col, Bounds.Y + 15 * _cityWindow.Scale + 3 + _iconHeight * row),
-                    0f, _cityWindow.Scale, Color.White);
+                    0f, IconScale, Color.White);
                 count++;
             }
         }

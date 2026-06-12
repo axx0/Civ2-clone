@@ -174,6 +174,17 @@ namespace Civ2engine
             }
 
             var nearbyCity = currentTile.CityRadius().FirstOrDefault(t => t.CityHere != null)?.CityHere;
+            var workTile = FindAutomatedSettlerWorkTile(unit, currentTile, nearbyCity?.Location);
+            if (workTile != null)
+            {
+                MovementFunctions.MoveC2(this, unit, workTile.X - currentTile.X, workTile.Y - currentTile.Y);
+                if (!unit.Dead)
+                {
+                    unit.Order = (int)OrderType.Automate;
+                }
+                return;
+            }
+
             if (nearbyCity == null && currentTile.Type != TerrainType.Ocean)
             {
                 var moreFertile = MovementFunctions.GetPossibleMoves(currentTile, unit)
@@ -204,18 +215,12 @@ namespace Civ2engine
             var preferredImprovements = new[]
             {
                 ImprovementTypes.Road,
-                ImprovementTypes.Irrigation,
-                ImprovementTypes.Mining
+                ImprovementTypes.Irrigation
             };
 
             foreach (var improvementId in preferredImprovements)
             {
-                if (!TerrainImprovements.TryGetValue(improvementId, out var improvement))
-                {
-                    continue;
-                }
-
-                if (!TerrainImprovementFunctions.CanImprovementBeBuiltHere(currentTile, improvement, unit.Owner).Enabled)
+                if (!CanAutomatedSettlerBuild(unit, currentTile, improvementId, out var improvement))
                 {
                     continue;
                 }
@@ -226,6 +231,65 @@ namespace Civ2engine
             }
 
             return false;
+        }
+
+        private Tile? FindAutomatedSettlerWorkTile(Unit unit, Tile currentTile, Tile? nearbyCityTile)
+        {
+            var cityRadius = nearbyCityTile?.CityRadius().ToHashSet();
+            return MovementFunctions.GetPossibleMoves(currentTile, unit)
+                .Where(t => t.Type != TerrainType.Ocean && t.CityHere == null)
+                .Where(t => cityRadius == null || cityRadius.Contains(t))
+                .Where(t => CanAutomatedSettlerImprove(unit, t))
+                .OrderByDescending(t => AutomatedSettlerWorkScore(unit, t))
+                .FirstOrDefault();
+        }
+
+        private bool CanAutomatedSettlerImprove(Unit unit, Tile tile)
+        {
+            return CanAutomatedSettlerBuild(unit, tile, ImprovementTypes.Road, out _) ||
+                   CanAutomatedSettlerBuild(unit, tile, ImprovementTypes.Irrigation, out _);
+        }
+
+        private int AutomatedSettlerWorkScore(Unit unit, Tile tile)
+        {
+            var score = (int)tile.Fertility;
+            if (tile.WorkedBy != null)
+            {
+                score += 200;
+            }
+
+            if (CanAutomatedSettlerBuild(unit, tile, ImprovementTypes.Road, out _))
+            {
+                score += 100;
+            }
+
+            if (CanAutomatedSettlerBuild(unit, tile, ImprovementTypes.Irrigation, out _))
+            {
+                score += 80;
+            }
+
+            return score;
+        }
+
+        private bool CanAutomatedSettlerBuild(Unit unit, Tile tile, int improvementId, out TerrainImprovement improvement)
+        {
+            if (!TerrainImprovements.TryGetValue(improvementId, out var foundImprovement))
+            {
+                improvement = null!;
+                return false;
+            }
+
+            improvement = foundImprovement;
+
+            var selectedImprovement = improvement;
+
+            if (selectedImprovement.ExclusiveGroup > 0 &&
+                tile.Improvements.Any(i => i.Group == selectedImprovement.ExclusiveGroup && i.Improvement != selectedImprovement.Id))
+            {
+                return false;
+            }
+
+            return TerrainImprovementFunctions.CanImprovementBeBuiltHere(tile, selectedImprovement, unit.Owner).Enabled;
         }
     }
 }
