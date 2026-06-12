@@ -36,7 +36,7 @@ public class GameScreen : BaseScreen
 
     public IGameMode ActiveMode
     {
-        get => _activeMode ??= ViewPiece;
+        get => _activeMode;
         set
         {
             if (value.Activate())
@@ -69,7 +69,7 @@ public class GameScreen : BaseScreen
     private const int MiniMapNormalWidth = 262;
     private const int MiniMapGlobeWidth = 134;
     private const int MiniMapGlobeHeight = 142;
-    private IGameMode _activeMode;
+    private IGameMode _activeMode = null!;
     
     private CivDialog? _currentPopupDialog;
     private Action<string,int,IList<bool>?,IDictionary<string,string>?>? _popupClicked;
@@ -167,6 +167,36 @@ public class GameScreen : BaseScreen
     public override int Height => _height;
 
     private Dictionary<Shortcut, IList<IGameCommand>> GameCommands { get; }
+
+    public override void Draw(bool pulse)
+    {
+        HandleMouseWheelZoom();
+        base.Draw(pulse);
+    }
+
+    private void HandleMouseWheelZoom()
+    {
+        var wheel = Input.GetMouseWheelMove();
+        if (Math.Abs(wheel) < float.Epsilon ||
+            (!Input.IsKeyDown(KeyboardKey.LeftControl) && !Input.IsKeyDown(KeyboardKey.RightControl)))
+        {
+            return;
+        }
+
+        var mousePos = Input.GetMousePosition();
+        var mapBounds = _mapControl.Bounds;
+        if (mousePos.X < mapBounds.X || mousePos.X > mapBounds.X + mapBounds.Width ||
+            mousePos.Y < mapBounds.Y || mousePos.Y > mapBounds.Y + mapBounds.Height)
+        {
+            return;
+        }
+
+        var nextZoom = Math.Clamp(Zoom + (wheel > 0 ? 1 : -1), -7, 8);
+        if (nextZoom != Zoom)
+        {
+            TriggerMapEvent(new MapEventArgs(MapEventType.ZoomChange) { Zoom = nextZoom });
+        }
+    }
 
     private void TryExecuteCommand(IList<IGameCommand> commands)
     {
@@ -385,6 +415,7 @@ public class GameScreen : BaseScreen
             }
             if (checkboxStates != null)
             {
+                dialog.Options ??= new OptionsDefinition();
                 dialog.Options.CheckboxStates = checkboxStates;
             }
             if (replaceNumbers != null)

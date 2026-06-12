@@ -13,19 +13,20 @@ public class ImageBox : BaseControl
 
     public ImageBox(IControlLayout controller, DialogImageElements image, bool eventTransparent = true) : base(controller, eventTransparent)
     {
-        Image = image.Image;
+        _active = controller.MainWindow.ActiveInterface;
+        Image = image.Image ?? [];
         Scale = image.Scale;
         Coords = image.Coords;
-        _active = controller.MainWindow.ActiveInterface;
     }
 
     public ImageBox(IControlLayout controller, IImageSource? image, float scale = 1.0f, bool eventTransparent = true) : base(controller, eventTransparent)
     {
+        _active = controller.MainWindow.ActiveInterface;
         Image = [image];
         Scale = scale;
     }
 
-    private IImageSource[] _image;
+    private IImageSource?[] _image = [];
     public IImageSource?[] Image 
     {
         get => _image;
@@ -56,12 +57,12 @@ public class ImageBox : BaseControl
 
     public override int GetPreferredWidth()
     {
-        return Image.Select(img => Images.GetImageWidth(img, _active, _scale)).Max();
+        return Image.Length == 0 ? 0 : Image.Select(img => Images.GetImageWidth(img, _active, _scale)).Max();
     }
 
     public override int GetPreferredHeight()
     {
-        return Image.Select(img => Images.GetImageHeight(img, _active, _scale)).Max();
+        return Image.Length == 0 ? 0 : Image.Select(img => Images.GetImageHeight(img, _active, _scale)).Max();
     }
 
     private int _width;
@@ -102,7 +103,13 @@ public class ImageBox : BaseControl
         {
             for (int i = 0; i < _image.Length; i++)
             {
-                Graphics.DrawTextureEx(TextureCache.GetImage(_image[i]),
+                var image = _image[i];
+                if (image is null)
+                {
+                    continue;
+                }
+
+                Graphics.DrawTextureEx(TextureCache.GetImage(image),
                     //new System.Numerics.Vector2((int)Bounds.X + Coords[i, 0] * Scale, (int)Bounds.Y + Coords[i, 1] * Scale),
                     new System.Numerics.Vector2((int)Bounds.X + Coords[i, 0], (int)Bounds.Y + Coords[i, 1]),
                     0f, _scale, Color.White);

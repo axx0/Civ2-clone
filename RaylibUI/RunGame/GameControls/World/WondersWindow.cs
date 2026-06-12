@@ -42,9 +42,6 @@ public class WondersWindow : BaseDialog
         List<ListboxGroup> groups = [];
         for (var i = 0; i < _civ.Cities.Count; i++)
         {
-            Color? frontColor = null;
-            Color? shadowColor = null;
-
             var group = new ListboxGroup()
             {
                 Elements = [],

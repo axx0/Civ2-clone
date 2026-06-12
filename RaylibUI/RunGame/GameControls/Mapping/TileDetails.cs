@@ -12,12 +12,12 @@ public class TileDetails
 
 public class ForegroundImprovement
 {
-    public IImageSource Image { get; set; }
+    public IImageSource Image { get; set; } = null!;
 }
 
 public class UnitHidingImprovement : ForegroundImprovement
 {
-    public IImageSource UnitImage { get; set; }
+    public IImageSource UnitImage { get; set; } = null!;
     
     public UnitGas UnitDomain { get; set; }
 }

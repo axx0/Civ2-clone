@@ -154,12 +154,15 @@ public static class MapImage
             tilePic.Draw(Images.ExtractBitmap(terrainSet.Huts), TileRec, TileRec, Color.White);
         }    
 
-            var tileDetails = new TileDetails { Image = tilePic };
-        if (tile.Map.MapRevealed || (tile.PlayerKnowledge != null && tile.PlayerKnowledge.Length > civilizationId &&
-            tile.PlayerKnowledge[civilizationId] != null))
+        var tileDetails = new TileDetails { Image = tilePic };
+        var playerKnowledge = tile.PlayerKnowledge != null && tile.PlayerKnowledge.Length > civilizationId
+            ? tile.PlayerKnowledge[civilizationId]
+            : null;
+
+        if (tile.Map.MapRevealed || playerKnowledge != null)
         {
             var improvements =
-                (tile.Map.MapRevealed ? tile.Improvements : tile.PlayerKnowledge[civilizationId].Improvements)
+                (tile.Map.MapRevealed ? tile.Improvements : playerKnowledge!.Improvements)
                 .Where(ci => game.TerrainImprovements.ContainsKey(ci.Improvement))
                 .OrderBy(ci => game.TerrainImprovements[ci.Improvement].Layer).ToList();
 
@@ -207,7 +210,7 @@ public static class MapImage
                         }
                     }
                 }
-                else if (tile.PlayerKnowledge[civilizationId].CityHere is not null)
+                else if (playerKnowledge?.CityHere is not null)
                 {
                     if (tile.Map.DirectNeighbours(tile)
                         .Any(t => t.Improvements.Any(i => i.Improvement == construct.Improvement)))

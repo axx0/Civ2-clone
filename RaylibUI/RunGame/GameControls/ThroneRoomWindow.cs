@@ -48,7 +48,7 @@ public class ThroneRoomWindow : FullscreenView
         };
 
         // Which section shall we improve?
-        var text = _active.GetDialog("ADDTOTHRONE").Text[0];
+        var text = _active.GetDialog("ADDTOTHRONE")?.Text?.FirstOrDefault() ?? string.Empty;
         _chooseSectionlabel = new LabelControl(this, text, true, 
             horizontalAlignment: Model.Controls.HorizontalAlignment.Center, font: Fonts.Arial,
             colorFront: Color.White, colorShadow: Color.Black, shadowOffset: new(-2, -2),
@@ -68,9 +68,9 @@ public class ThroneRoomWindow : FullscreenView
 
         // Spontaneously texts
         var textsWidth = 430;
-        var _texts = _active.GetDialog("THRONE").Text;
+        IList<string> throneTexts = _active.GetDialog("THRONE")?.Text ?? [];
         var texts = string.Empty;
-        foreach (var txt in _texts)
+        foreach (var txt in throneTexts)
             texts = texts + " " + txt;
         var wrappedTexts = DialogUtils.GetWrappedTexts(texts, textsWidth, Fonts.Arial, 26);
         int offsetY = _offsetY + 120;

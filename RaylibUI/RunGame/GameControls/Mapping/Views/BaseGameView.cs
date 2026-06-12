@@ -210,38 +210,67 @@ public abstract class BaseGameView : IGameView
     }
 
 
+    private static int GetCitySizeIndexForStyle(int cityStyleIndex, int citySize)
+    {
+        return cityStyleIndex switch
+        {
+            4 => citySize switch
+            {
+                <= 4 => 0,
+                <= 7 => 1,
+                <= 10 => 2,
+                _ => 3
+            },
+            5 => citySize switch
+            {
+                <= 4 => 0,
+                <= 10 => 1,
+                <= 18 => 2,
+                _ => 3
+            },
+            _ => citySize switch
+            {
+                <= 3 => 0,
+                <= 5 => 1,
+                <= 7 => 2,
+                _ => 3
+            }
+        };
+    }
+
     private void CalculateElementsAtTile(GameScreen gameScreen, Tile tile, List<IViewElement> elements,
         IUserInterface activeInterface,
         CityImageSet cities,
         Vector2 posVector, TileDetails tileDetails, int civilizationId)
     {
-        if (tile.PlayerKnowledge == null || tile.PlayerKnowledge.Length < civilizationId ||
+        if (tile.PlayerKnowledge == null || tile.PlayerKnowledge.Length <= civilizationId ||
             tile.PlayerKnowledge[civilizationId] == null)
         {
             return; //We know nothing of this tile 
         }
 
-        var playerKnowledge = tile.PlayerKnowledge[civilizationId];
-        if (playerKnowledge.CityHere != null)
+        var playerKnowledge = tile.PlayerKnowledge[civilizationId]!;
+        var cityHere = playerKnowledge.CityHere;
+        if (cityHere != null)
         {
-            var apparentOwner = _gameScreen.Game.Players[playerKnowledge.CityHere.OwnerId].Civilization;
+            var apparentOwner = _gameScreen.Game.Players[cityHere.OwnerId].Civilization;
             var cityStyleIndex = _gameScreen.Main.ActiveInterface.GetCityStyleIndexFromEpoch(apparentOwner.CityStyle, apparentOwner.Epoch);
-            var sizeIncrement =
-                _gameScreen.Main.ActiveInterface.GetCityIndexForStyle(cityStyleIndex,
-                    tile.CityHere, playerKnowledge.CityHere.Size);
+            var sizeIncrement = tile.CityHere is { } city
+                ? _gameScreen.Main.ActiveInterface.GetCityIndexForStyle(cityStyleIndex, city, cityHere.Size)
+                : GetCitySizeIndexForStyle(cityStyleIndex, cityHere.Size);
             
             var cityImage = cities.Sets[cityStyleIndex][sizeIncrement];
             var cityPos = posVector with{ Y = posVector.Y + Dimensions.TileHeight - TextureCache.GetImage(cityImage.Image).Height.ZoomScale(gameScreen.Zoom) };
             elements.Add(new CityData(
-                color: activeInterface.PlayerColours[playerKnowledge.CityHere.OwnerId],
-                name: playerKnowledge.CityHere.Name,
-                size: playerKnowledge.CityHere.Size,
+                color: activeInterface.PlayerColours[cityHere.OwnerId],
+                name: cityHere.Name,
+                size: cityHere.Size,
                 sizeRectLoc: cityImage.SizeLoc,
                 texture: TextureCache.GetImage(cityImage.Image),
                 location: cityPos, tile: tile));
             if (tile.UnitsHere.Count > 0)
             {
-                var flagTexture = TextureCache.GetImage(activeInterface.PlayerColours[playerKnowledge.CityHere.OwnerId].Image);
+                var flagTexture = TextureCache.GetImage(activeInterface.PlayerColours[cityHere.OwnerId].Image);
                 var flagOffset = cityImage.FlagLoc - new Vector2(0, flagTexture.Height - 5);
                 elements.Add(new TextureElement(texture: flagTexture,
                     tile: tile, location: cityPos, offset: flagOffset)

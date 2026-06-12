@@ -31,21 +31,30 @@ public class OptionsPanel : BaseControl
     public OptionsPanel(IControlLayout controller, OptionsDefinition def) : base(controller)
     {
         _controller = controller;
-        _active = controller.MainWindow.ActiveInterface;
+        _active = controller.MainWindow.ActiveInterface ?? throw new InvalidOperationException("OptionsPanel requires an active user interface.");
         _def = def;
 
         // Make controls
-        var images = def.IsCheckbox ? _active.Look.CheckBoxes : _active.Look.RadioButtons;
-        for (int i = 0; i < (def.Icons == null ? def.Texts.Count : def.Icons.Length); i++)
+        var images = def.IsCheckbox ? _active.Look.CheckBoxes! : _active.Look.RadioButtons!;
+        IList<string> optionTexts = def.Texts ?? [];
+        var overrideIcons = def.Icons;
+        var checkboxStates = def.CheckboxStates;
+        var optionCount = Math.Max(Math.Max(def.ReplacedTexts.Count, optionTexts.Count), overrideIcons?.Length ?? 0);
+        for (int i = 0; i < optionCount; i++)
         {
+            var optionText = i < def.ReplacedTexts.Count
+                ? def.ReplacedTexts[i]
+                : i < optionTexts.Count ? optionTexts[i] : string.Empty;
+            var optionImages = overrideIcons is not null && i < overrideIcons.Length ? new[] { overrideIcons[i] } : images;
+            var isChecked = checkboxStates is not null && i < checkboxStates.Count && checkboxStates[i];
             _optionControls.Add(
-                new OptionControl(controller, this, def.ReplacedTexts[i], i,
-                def.CheckboxStates?[i] ?? false, i < (def.Icons?.Length ?? 0) ? [def.Icons[i]] : images));
+                new OptionControl(controller, this, optionText, i,
+                    isChecked, optionImages));
         }
 
         SelectedId = def.SelectedId;
         CheckboxStates = def.CheckboxStates;
-        if (!def.IsCheckbox)
+        if (!def.IsCheckbox && SelectedId >= 0 && SelectedId < _optionControls.Count)
         {
             _optionControls[SelectedId].Checked = true;
         }
@@ -84,7 +93,10 @@ public class OptionsPanel : BaseControl
             for (int row = 0; row < _rows; row++)
             {
                 var index = _rows * col + row;
-                _tableLayout.Add(_optionControls[index], row, col);
+                if (index < _optionControls.Count)
+                {
+                    _tableLayout.Add(_optionControls[index], row, col);
+                }
             }
         }
     }
@@ -96,7 +108,7 @@ public class OptionsPanel : BaseControl
             option.Width = Width / Math.Min(_columns, _maxVisibleColumns);
         }
 
-        _tableLayout?.CalculateDimensions(_startingControlRow, _startingControlCol, _maxVisibleRows, _maxVisibleColumns);
+        _tableLayout.CalculateDimensions(_startingControlRow, _startingControlCol, _maxVisibleRows, _maxVisibleColumns);
 
         Height = _tableLayout.GetHeight(_startingControlRow, _maxVisibleRows);
 
@@ -135,11 +147,14 @@ public class OptionsPanel : BaseControl
 
     private void SetSelectedOption(OptionControl newSelection)
     {
-        if (_optionControls[SelectedId] == newSelection) return;
+        if (SelectedId >= 0 && SelectedId < _optionControls.Count && _optionControls[SelectedId] == newSelection) return;
         if (!_def.IsCheckbox)
         {
             newSelection.Checked = true;
-            _optionControls[SelectedId]?.Clear();
+            if (SelectedId >= 0 && SelectedId < _optionControls.Count)
+            {
+                _optionControls[SelectedId].Clear();
+            }
         }
         SelectedId = newSelection.Index;
     }
@@ -148,13 +163,14 @@ public class OptionsPanel : BaseControl
     {
         SelectedId = checkBox.Index;
         checkBox.Checked = !checkBox.Checked;
-        if (CheckboxStates == null || CheckboxStates.Count < checkBox.Index)
+        IList<bool> states = CheckboxStates ?? [];
+        while (states.Count <= checkBox.Index)
         {
-            var old = CheckboxStates ?? new List<bool>();
-            CheckboxStates = old.Concat(Enumerable.Repeat(false, checkBox.Index + 1)).ToList();
+            states.Add(false);
         }
 
-        CheckboxStates[checkBox.Index] = checkBox.Checked;
+        states[checkBox.Index] = checkBox.Checked;
+        CheckboxStates = states;
     }
 
     public override bool OnKeyPressed(KeyboardKey key)

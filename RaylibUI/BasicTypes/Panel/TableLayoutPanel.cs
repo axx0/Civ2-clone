@@ -28,14 +28,17 @@ public class TableLayoutPanel : BaseControl
     /// </summary>
     public int MaxControlColumns { get; set; } = 20;
 
-    private TableLayout _tableLayout;
+    private TableLayout _tableLayout = new();
     public TableLayout TableLayout
     {
         get { return _tableLayout; }
         set
         {
             _tableLayout = value;
-            _tableLayout.Cells.Select(cell => cell.Control).ToList().ForEach(c => Controls.Add(c));
+            foreach (var control in _tableLayout.Cells.Select(cell => cell.Control).OfType<IControl>())
+            {
+                Controls.Add(control);
+            }
         }
     }
 

@@ -34,7 +34,7 @@ public class StatusPanel : BaseControl
         _active = gameScreen.MainWindow.ActiveInterface;
 
         _headerLabel = new HeaderLabel(gameScreen, _active.Look, Labels.For(LabelIndex.Status), fontSize: _active.Look.HeaderLabelFontSizeNormal);
-        _endTurnButton = new Button(gameScreen, Labels.For(LabelIndex.Turn), _active.Look.ButtonFont, 14);
+        _endTurnButton = new Button(gameScreen, Labels.For(LabelIndex.Turn), _active.Look.ButtonFont, 15);
         _endTurnButton.Click += EndTurnButtonClicked;
         _padding = _active.GetPadding(_headerLabel.TextSize.Y, false);
         Click += OnClick;
@@ -42,10 +42,10 @@ public class StatusPanel : BaseControl
 
     public void Update()
     {
-        var statusFontSize = _gameScreen.ToTPanelLayout ? 14 : 15;
+        var statusFontSize = _gameScreen.ToTPanelLayout ? 15 : 16;
         var statusPaddingTop = 0;
         var yOffset = _gameScreen.ToTPanelLayout ? 2 : 2;
-        var labelHeight = Math.Max(16, statusFontSize + 2);
+        var labelHeight = Math.Max(18, statusFontSize + 3);
         var infoInset = _gameScreen.ToTPanelLayout ? 1 : 2;
         var infoWidth = Math.Max(1, (int)_infoPanelRect.Width - 2 * infoInset);
 
@@ -150,8 +150,8 @@ public class StatusPanel : BaseControl
             _unitPanelRect = new Rectangle(_padding.Left, _padding.Top + 68, Width - _padding.Left - _padding.Right, Height - 68 - _padding.Top - _padding.Bottom);
         }
 
-        _endTurnButton.Width = 64;
-        _endTurnButton.Height = 26;
+        _endTurnButton.Width = 78;
+        _endTurnButton.Height = 30;
         _endTurnButton.Location = new(Width - _padding.Right - _endTurnButton.Width - 6, Height - _padding.Bottom - _endTurnButton.Height - 6);
 
         base.OnResize();

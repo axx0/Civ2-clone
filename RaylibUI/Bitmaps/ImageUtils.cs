@@ -35,7 +35,7 @@ public static class ImageUtils
         }
         else
         {
-            active.DrawBorderWallpaper(Wallpaper, ref image, height, width, padding, statusPanel && !toTStatusPanelLayout);
+            active.DrawBorderWallpaper(Wallpaper!, ref image, height, width, padding, statusPanel && !toTStatusPanelLayout);
             active.DrawBorderLines(ref image, height, width, padding, statusPanel);
         }
     }
@@ -79,7 +79,7 @@ public static class ImageUtils
     //}
 
 
-    public static void DrawTiledImage(Wallpaper wp, ref Image destination, int height, int width, Padding padding, bool statusPanel = false, bool ToTStatusPanelLayout = false)
+    public static void DrawTiledImage(Wallpaper? wp, ref Image destination, int height, int width, Padding padding, bool statusPanel = false, bool ToTStatusPanelLayout = false)
     {
         // MGE uses inner wallpaper from ICONS for all dialogs
         // TOT uses inner wallpaper from ICONS only for status panel, otherwise uses tiles from dialog image file
@@ -217,38 +217,39 @@ public static class ImageUtils
 
     public static void SetLook(IUserInterface active)
     {
-        Wallpaper = new Wallpaper();
+        var wallpaper = new Wallpaper();
+        Wallpaper = wallpaper;
         _look = active.Look;
         if (_look.Outer is null)  // TOT
         {
-            Wallpaper.OuterTitleTop = _look.OuterTitleTop.Select(img => Images.ExtractBitmap(img, active)).ToArray();
-            Wallpaper.OuterThinTop = _look.OuterThinTop.Select(img => Images.ExtractBitmap(img, active)).ToArray();
-            Wallpaper.OuterBottom = _look.OuterBottom.Select(img => Images.ExtractBitmap(img, active)).ToArray();
-            Wallpaper.OuterMiddle = _look.OuterMiddle.Select(img => Images.ExtractBitmap(img, active)).ToArray();
-            Wallpaper.OuterLeft = _look.OuterLeft.Select(img => Images.ExtractBitmap(img, active)).ToArray();
-            Wallpaper.OuterRight = _look.OuterRight.Select(img => Images.ExtractBitmap(img, active)).ToArray();
-            Wallpaper.OuterTitleTopLeft = Images.ExtractBitmap(_look.OuterTitleTopLeft, active);
-            Wallpaper.OuterTitleTopRight = Images.ExtractBitmap(_look.OuterTitleTopRight, active);
-            Wallpaper.OuterThinTopLeft = Images.ExtractBitmap(_look.OuterThinTopLeft, active);
-            Wallpaper.OuterThinTopRight = Images.ExtractBitmap(_look.OuterThinTopRight, active);
-            Wallpaper.OuterMiddleLeft = Images.ExtractBitmap(_look.OuterMiddleLeft, active);
-            Wallpaper.OuterMiddleRight = Images.ExtractBitmap(_look.OuterMiddleRight, active);
-            Wallpaper.OuterBottomLeft = Images.ExtractBitmap(_look.OuterBottomLeft, active);
-            Wallpaper.OuterBottomRight = Images.ExtractBitmap(_look.OuterBottomRight, active);
-            Wallpaper.Inner = _look.Inner.Select(img => Images.ExtractBitmap(img, active)).ToArray();
-            Wallpaper.InnerAlt = Images.ExtractBitmap(_look.InnerAlt, active);
-            Wallpaper.Button = _look.Button.Select(img => Images.ExtractBitmap(img, active)).ToArray();
-            Wallpaper.ButtonClicked = _look.ButtonClicked.Select(img => Images.ExtractBitmap(img, active)).ToArray();
+            wallpaper.OuterTitleTop = _look.OuterTitleTop!.Select(img => Images.ExtractBitmap(img, active)).ToArray();
+            wallpaper.OuterThinTop = _look.OuterThinTop!.Select(img => Images.ExtractBitmap(img, active)).ToArray();
+            wallpaper.OuterBottom = _look.OuterBottom!.Select(img => Images.ExtractBitmap(img, active)).ToArray();
+            wallpaper.OuterMiddle = _look.OuterMiddle!.Select(img => Images.ExtractBitmap(img, active)).ToArray();
+            wallpaper.OuterLeft = _look.OuterLeft!.Select(img => Images.ExtractBitmap(img, active)).ToArray();
+            wallpaper.OuterRight = _look.OuterRight!.Select(img => Images.ExtractBitmap(img, active)).ToArray();
+            wallpaper.OuterTitleTopLeft = Images.ExtractBitmap(_look.OuterTitleTopLeft!, active);
+            wallpaper.OuterTitleTopRight = Images.ExtractBitmap(_look.OuterTitleTopRight!, active);
+            wallpaper.OuterThinTopLeft = Images.ExtractBitmap(_look.OuterThinTopLeft!, active);
+            wallpaper.OuterThinTopRight = Images.ExtractBitmap(_look.OuterThinTopRight!, active);
+            wallpaper.OuterMiddleLeft = Images.ExtractBitmap(_look.OuterMiddleLeft!, active);
+            wallpaper.OuterMiddleRight = Images.ExtractBitmap(_look.OuterMiddleRight!, active);
+            wallpaper.OuterBottomLeft = Images.ExtractBitmap(_look.OuterBottomLeft!, active);
+            wallpaper.OuterBottomRight = Images.ExtractBitmap(_look.OuterBottomRight!, active);
+            wallpaper.Inner = _look.Inner!.Select(img => Images.ExtractBitmap(img, active)).ToArray();
+            wallpaper.InnerAlt = Images.ExtractBitmap(_look.InnerAlt!, active);
+            wallpaper.Button = _look.Button!.Select(img => Images.ExtractBitmap(img, active)).ToArray();
+            wallpaper.ButtonClicked = _look.ButtonClicked!.Select(img => Images.ExtractBitmap(img, active)).ToArray();
         }
         else    // MGE
         {
-            Wallpaper.Outer = Images.ExtractBitmap(_look.Outer, active);
-            Wallpaper.Inner = new[] { Images.ExtractBitmap(_look.Inner[0], active) };
+            wallpaper.Outer = Images.ExtractBitmap(_look.Outer, active);
+            wallpaper.Inner = new[] { Images.ExtractBitmap(_look.Inner![0], active) };
         }
 
     }
 
-    private static InterfaceStyle _look;
+    private static InterfaceStyle _look = null!;
 
     public static Image[] GetScrollImages(int dim, bool vertical)
     {

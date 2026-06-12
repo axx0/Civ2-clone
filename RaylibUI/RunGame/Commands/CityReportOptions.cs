@@ -23,6 +23,11 @@ public class CityReportOptions(GameScreen gameScreen)
     {
         if (button == Labels.Ok)
         {
+            if (checkboxes is not { Count: >= 11 })
+            {
+                return;
+            }
+
             var options = GameScreen.Game.Options;
             options.WarnWhenCityGrowthHalted = checkboxes[0];
             options.ShowCityImprovementsBuilt = checkboxes[1];

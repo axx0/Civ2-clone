@@ -8,7 +8,7 @@ namespace RaylibUI.RunGame.Commands;
 
 public class LoadGame(GameScreen gameScreen) : AlwaysOnCommand(gameScreen, CommandIds.LoadGame, [new Shortcut(Key.L, ctrl: true)])
 {
-    private FileDialog _loadDialog;
+    private FileDialog _loadDialog = null!;
 
     public override void Action()
     {

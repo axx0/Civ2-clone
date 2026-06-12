@@ -11,17 +11,17 @@ public class DynamicSizingDialog : BaseDialog
     private readonly int _requestedWidth;
 
     private readonly HeaderLabel? _headerLabel;
-    private TableLayoutPanel _innerPanel;
+    private TableLayoutPanel _innerPanel = null!;
     private int _maxHeight;
 
     private ControlGroup? _buttons;
 
-    private IUserInterface _active;
+    private IUserInterface _active = null!;
 
     protected DynamicSizingDialog(Main host, string title, int requestedWidth, Point? position = null) :
         base(host, position)
     {
-        _active = host.ActiveInterface;
+        _active = host.ActiveInterface!;
 
         _requestedWidth = requestedWidth;
         if (!string.IsNullOrEmpty(title))
@@ -38,7 +38,13 @@ public class DynamicSizingDialog : BaseDialog
 
     public override void Resize(int width, int height)
     {
-        _innerPanel = Controls.OfType<TableLayoutPanel>().FirstOrDefault();
+        var innerPanel = Controls.OfType<TableLayoutPanel>().FirstOrDefault();
+        if (innerPanel is null)
+        {
+            return;
+        }
+
+        _innerPanel = innerPanel;
         _innerPanel.MaxControlRows = 999;
 
         var imageBox = _innerPanel.Controls.OfType<ImageBox>().FirstOrDefault();
@@ -66,8 +72,11 @@ public class DynamicSizingDialog : BaseDialog
         if (listbox is not null)
         {
             var cell = _innerPanel.TableLayout.Cells.FirstOrDefault(c => c.Control == listbox);
-            listbox.Width = _innerPanel.Width - cell.Padding.Left - cell.Padding.Right - imageWidth;
-            listbox.OnResize();
+            if (cell is not null)
+            {
+                listbox.Width = _innerPanel.Width - cell.Padding.Left - cell.Padding.Right - imageWidth;
+                listbox.OnResize();
+            }
         }
 
         _innerPanel.OnResize();

@@ -1,4 +1,3 @@
-using Civ2engine;
 using Model.Controls;
 using RaylibUI.BasicTypes;
 using System.Drawing;
@@ -78,12 +77,14 @@ public class UnitsPresentBox : Listbox
     private void OpenPopup(object? sender, ListboxSelectionEventArgs args)
     {
         var city = _cityWindow.City;
-        var screen = _cityWindow.CurrentGameScreen;
+        if (args.Index < 0 || args.Index >= city.UnitsInCity.Count)
+        {
+            return;
+        }
+
         var unit = city.UnitsInCity[args.Index];
 
-        screen.ShowPopup("UNITOPTIONS", 
-            replaceStrings: [$"{unit.Owner.Adjective} {unit.Name}", "", $"{unit.HomeCity?.Name ?? "NONE"}"],
-            dialogImage: new(unit, screen.MainWindow.ActiveInterface));
+        CityUnitMenu.Show(_cityWindow, unit);
     }
 
 

@@ -51,7 +51,7 @@ public class LabelControl : BaseControl
         ColorShadow = colorShadow ?? Color.Black;
         ShadowOffset = shadowOffset ?? Vector2.Zero;
 
-        _active = controller.MainWindow.ActiveInterface;
+        _active = controller.MainWindow.ActiveInterface ?? throw new InvalidOperationException("LabelControl requires an active user interface.");
         _timer = new Timer(_ => _switch = !_switch, null, 0, switchTime);
         _switchColors = switchColors;
         BackgroundColor = colorBack;

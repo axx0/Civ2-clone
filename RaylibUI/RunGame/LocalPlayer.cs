@@ -13,6 +13,7 @@ using Model.Core.Units;
 using Model.Events;
 using Model.Core.Player;
 using Model.Core.Production;
+using Model.Images;
 
 namespace RaylibUI.RunGame;
 
@@ -28,7 +29,7 @@ public class LocalPlayer : IPlayer
 
     public Civilization Civilization { get; }
 
-    public Tile ActiveTile { get; set; }
+    public Tile ActiveTile { get; set; } = null!;
 
     private Unit? _activeUnit;
 
@@ -102,7 +103,7 @@ public class LocalPlayer : IPlayer
             listBox: new ListboxDefinition
             {
                 VerticalScrollbar = false,
-                ImageShift = true,
+                ImageShift = false,
                 Rows = Math.Min(10, researchPossibilities.Count),
                 Looks = new ListboxLooks
                 {
@@ -110,6 +111,7 @@ public class LocalPlayer : IPlayer
                     FontSize = 20,
                     TextColorFront = Raylib_CSharp.Colors.Color.Black,
                     TextColorShadow = Raylib_CSharp.Colors.Color.Blank,
+                    TextShadowOffset = System.Numerics.Vector2.Zero,
                     SelectedTextFont = activeInterface.Look.DefaultFont,
                     SelectedTextBackgroundColor = new Raylib_CSharp.Colors.Color(107, 107, 107, 255),
                     SelectedTextColorFront = Raylib_CSharp.Colors.Color.White,
@@ -117,11 +119,18 @@ public class LocalPlayer : IPlayer
                 },
                 Groups = researchPossibilities.Select(a => new ListboxGroup
                 {
-                    Elements = [new() { Icon = activeInterface.GetAdvanceImage(a), Width = 2 * 36 + 2 },
+                    Elements = [new() { Icon = GetClassicAdvanceIcon(a), Width = 2 * 36 + 2 },
                                 new() { Text = a.Name, VerticalAlignment = VerticalAlignment.Center } ],
                     Height = 36
                 }).ToList()
             });
+    }
+
+    private static IImageSource GetClassicAdvanceIcon(Advance advance)
+    {
+        var x = 343 + advance.KnowledgeCategory * 37;
+        var y = 211 + advance.Epoch * 21;
+        return new BitmapStorage("icons", x, y, 36, 20);
     }
 
     public void CantProduce(City city, IProductionOrder? newItem)
@@ -134,7 +143,7 @@ public class LocalPlayer : IPlayer
         _gameScreen.ShowCityDialog("BUILT", city);
     }
 
-    public IInterfaceCommands Ui { get; }
+    public IInterfaceCommands Ui { get; } = null!;
     public List<Unit> WaitingList { get; } = new();
 
     public void NotifyImprovementEnabled(TerrainImprovement improvement, int level)
@@ -226,7 +235,7 @@ public class LocalPlayer : IPlayer
         OnUnitEvent?.Invoke(this, new MovementBlockedEventArgs(unit, blockedReason));
     }
 
-    public event EventHandler<UnitEventArgs> OnUnitEvent;
+    public event EventHandler<UnitEventArgs>? OnUnitEvent;
 
     public void GoodyHutTriggered(Unit unit, GoodyHutOutcomeResult outcome)
     {

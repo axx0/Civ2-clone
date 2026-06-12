@@ -12,13 +12,12 @@ namespace RaylibUI
 {
     public partial class Main
     {
-        private Unit _activeUnit;
 
-        
+
         public void StartGame(IGame game, IDictionary<string, string?>? viewData)
         {
             game.UpdatePlayerViewData();
-            
+
             _activeScreen = new GameScreen(this, game, Soundman, viewData);
 
             if (game.TurnNumber == 0)
@@ -71,8 +70,8 @@ namespace RaylibUI
             return ActiveInterface;
         }
 
-        public Ruleset[] AllRuleSets { get; set; }
-        public Ruleset? ActiveRuleSet { get; private set; }
+        public Ruleset[] AllRuleSets { get; set; } = [];
+        public Ruleset ActiveRuleSet { get; private set; } = null!;
 
         public IUserInterface SetActiveRuleSet(int ruleSetIndex)
         {

@@ -71,7 +71,13 @@ public class PillageOrder : Order
     {
         var player = GameScreen.Player;
         
-        player.ActiveUnit.MovePointsLost += _game.Rules.Cosmic.MovementMultiplier;
+        var activeUnit = player.ActiveUnit;
+        if (activeUnit is null)
+        {
+            return;
+        }
+
+        activeUnit.MovePointsLost += _game.Rules.Cosmic.MovementMultiplier;
             
         var improvement = _game.TerrainImprovements[improvementToPillage.Improvement];
         player.ActiveTile.RemoveImprovement(improvement,improvementToPillage.Level, player.ActiveTile.GetCivsVisibleTo(_game));
@@ -81,7 +87,7 @@ public class PillageOrder : Order
             tiles.AddRange(player.ActiveTile.Neighbours());
         }
         _game.UpdateTiles(tiles);
-        if (player.ActiveUnit.MovePoints <= 0)
+        if (activeUnit.MovePoints <= 0)
         {
             _game.ChooseNextUnit();
         }

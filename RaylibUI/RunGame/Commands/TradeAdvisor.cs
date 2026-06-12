@@ -13,6 +13,6 @@ public class TradeAdvisor(GameScreen gameScreen)
     public override void Action()
     {
         // ReSharper disable once StringLiteralTypo
-        GameScreen.ShowDialog(new TradeAdvisorWindow(gameScreen));
+        GameScreen.ShowDialog(new TradeAdvisorWindow(GameScreen));
     }
 }

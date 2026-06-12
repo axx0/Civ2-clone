@@ -12,6 +12,6 @@ public class WorldWonders(GameScreen gameScreen)
     public override void Action()
     {
         // ReSharper disable once StringLiteralTypo
-        GameScreen.ShowDialog(new WondersWindow(gameScreen));
+        GameScreen.ShowDialog(new WondersWindow(GameScreen));
     }
 }

@@ -18,9 +18,9 @@ public class OptionControl : BaseControl
     private readonly Font _font;
     private readonly Color _textColor;
     private readonly string _text;
-    private const int MaxFontSize = 20;
+    private const int MaxFontSize = 22;
     private const int MinFontSize = 13;
-    private const int TextGap = 7;
+    private const int TextGap = 9;
 
     public override bool CanFocus => false;
 
@@ -84,7 +84,7 @@ public class OptionControl : BaseControl
     public override int GetPreferredHeight()
     {
         var textHeight = TextManager.MeasureTextEx(_font, _text, MaxFontSize, 0f).Y;
-        return Math.Max(_imageHeight, (int)Math.Ceiling(textHeight));
+        return Math.Max(_imageHeight, (int)Math.Ceiling(textHeight)) + 6;
     }
 
     public override void Draw(bool pulse)
@@ -103,7 +103,6 @@ public class OptionControl : BaseControl
             MathF.Round(Bounds.X + _imageWidth + TextGap),
             MathF.Round(Bounds.Y + (Height - textSize.Y) / 2f));
 
-        Graphics.DrawTextEx(_font, _text, textPosition + new Vector2(1, 0), fontSize, 0f, new Color(0, 0, 0, 120));
         Graphics.DrawTextEx(_font, _text, textPosition, fontSize, 0f, _textColor);
 
         if (_parent.SelectedId == Index)

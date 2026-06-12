@@ -50,7 +50,7 @@ public class TaxRateWindow : BaseDialog
                         fontSize: _active.Look.HeaderLabelFontSizeNormal);
         Controls.Add(_headerLabel);
 
-        LayoutPadding = _active.GetPadding(_headerLabel?.TextSize.Y ?? 0, false);
+        LayoutPadding = _active.GetPadding(_headerLabel.TextSize.Y, false);
 
         var back = _active.PicSources["taxRateBack"][0];
         _width = Images.GetImageWidth(back, _active) + PaddingSide;
@@ -82,7 +82,7 @@ public class TaxRateWindow : BaseDialog
         btn.Click += CloseButtonOnClick;
         Controls.Add(btn);
 
-        _checkboxImg = _active.Look.CheckBoxes;
+        _checkboxImg = _active.Look.CheckBoxes!;
         _lockImages = new ImageBox[3];
 
         // Taxes

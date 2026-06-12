@@ -13,6 +13,6 @@ public class AttitudeAdvisor(GameScreen gameScreen)
     public override void Action()
     {
         // ReSharper disable once StringLiteralTypo
-        GameScreen.ShowDialog(new AttitudeAdvisorWindow(gameScreen));
+        GameScreen.ShowDialog(new AttitudeAdvisorWindow(GameScreen));
     }
 }

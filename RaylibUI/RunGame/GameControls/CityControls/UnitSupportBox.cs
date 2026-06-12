@@ -2,7 +2,6 @@ using Model;
 using Model.Controls;
 using Raylib_CSharp.Colors;
 using RaylibUI.BasicTypes;
-using System;
 
 namespace RaylibUI.RunGame.GameControls.CityControls;
 
@@ -70,12 +69,12 @@ public class UnitSupportBox : Listbox
 
     private void OpenPopup(object? sender, ListboxSelectionEventArgs args)
     {
-        var city = _cityWindow.City;
-        var screen = _cityWindow.CurrentGameScreen;
-        var unit = city.SupportedUnits[args.Index];
+        var units = _cityWindow.City.SupportedUnits;
+        if (args.Index < 0 || args.Index >= units.Count)
+        {
+            return;
+        }
 
-        screen.ShowPopup("CHILDCLICK", 
-            replaceStrings: [$"{unit.Owner.Adjective} {unit.Name}", $"({unit.CurrentLocation.X},{unit.CurrentLocation.Y})"],
-            dialogImage: new(unit, screen.MainWindow.ActiveInterface));
+        CityUnitMenu.Show(_cityWindow, units[args.Index]);
     }
 }

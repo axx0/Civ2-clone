@@ -14,6 +14,6 @@ public class ChangeTaxRate(GameScreen gameScreen)
     public override void Action()
     {
         // ReSharper disable once StringLiteralTypo
-        GameScreen.ShowDialog(new TaxRateWindow(gameScreen));
+        GameScreen.ShowDialog(new TaxRateWindow(GameScreen));
     }
 }

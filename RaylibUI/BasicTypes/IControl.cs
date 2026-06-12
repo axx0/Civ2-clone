@@ -16,10 +16,10 @@ public interface IControl : IComponent
     /// <summary>
     /// Bounds of control relative to game window.
     /// </summary>
-    Rectangle Bounds { get; }
+    new Rectangle Bounds { get; }
 
     bool CanFocus { get; }
-    IList<IControl>? Controls { get; }
+    new IList<IControl>? Controls { get; }
 
     IComponent Parent { get; }
 
@@ -51,5 +51,5 @@ public interface IControl : IComponent
     void OnResize();
     
     bool EventTransparent { get; }
-    bool Visible { get; set; }
+    new bool Visible { get; set; }
 }

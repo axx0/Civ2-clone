@@ -49,21 +49,28 @@ public class CityView : FullscreenView
         {
             if (_city.ImprovementExists(id))
             {
-                var tileId = tiles.FirstOrDefault(t => t.RulesId == id).Id;
-                _drawTiles.Add(new(tiles[tileId].Source, tiles[tileId].Position));
+                var tile = tiles.FirstOrDefault(t => t.RulesId == id);
+                if (tile is null) continue;
+                _drawTiles.Add(new(tiles[tile.Id].Source, tiles[tile.Id].Position));
             }
         }
 
         // Harbor/port fac.
         if (_city.ImprovementExists(34))    // port fac.
         {
-            var tileId = tiles.FirstOrDefault(t => t.RulesId == 34).Id;
-            _drawTiles.Add(new(tiles[tileId].Source, tiles[tileId].Position));
+            var tile = tiles.FirstOrDefault(t => t.RulesId == 34);
+            if (tile is not null)
+            {
+                _drawTiles.Add(new(tiles[tile.Id].Source, tiles[tile.Id].Position));
+            }
         }
         else if (_city.ImprovementExists(30))    // harbor
         {
-            var tileId = tiles.FirstOrDefault(t => t.RulesId == 30).Id;
-            _drawTiles.Add(new(tiles[tileId].Source, tiles[tileId].Position));
+            var tile = tiles.FirstOrDefault(t => t.RulesId == 30);
+            if (tile is not null)
+            {
+                _drawTiles.Add(new(tiles[tile.Id].Source, tiles[tile.Id].Position));
+            }
         }
 
         // Colossus
@@ -99,8 +106,11 @@ public class CityView : FullscreenView
         var _id = 45;
         if (_city.ImprovementExists(_id))
         {
-            var tileId = tiles.FirstOrDefault(t => t.RulesId == _id).Id;
-            _drawTiles.Add(new(tiles[tileId].Source, tiles[tileId].Position));
+            var tile = tiles.FirstOrDefault(t => t.RulesId == _id);
+            if (tile is not null)
+            {
+                _drawTiles.Add(new(tiles[tile.Id].Source, tiles[tile.Id].Position));
+            }
         }
 
         _backId = city.Owner.Epoch switch

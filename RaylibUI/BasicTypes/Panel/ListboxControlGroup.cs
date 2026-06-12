@@ -13,7 +13,7 @@ namespace RaylibUI.BasicTypes;
 
 public class ListboxControlGroup : ControlGroup
 {
-    public Action<ListboxControlGroup, bool> Selected { get; set; }
+    public Action<ListboxControlGroup, bool> Selected { get; set; } = (_, _) => { };
     private readonly List<ListboxGroupElement> _elements;
     private bool _softSelection;    // true = don't make final selection based on this
     private readonly IUserInterface _active;
@@ -23,7 +23,7 @@ public class ListboxControlGroup : ControlGroup
     public ListboxControlGroup(IControlLayout controller, ListboxDefinition def, int index) :
         base(controller, eventTransparent: false)
     {
-        _active = controller.MainWindow.ActiveInterface;
+        _active = controller.MainWindow.ActiveInterface!;
         var group = def.Groups[index];
         _elements = group.Elements;
         _looks = def.Looks;
@@ -55,7 +55,6 @@ public class ListboxControlGroup : ControlGroup
             else if (element.Icon is not null)
             {
                 var imagebox = new ImageBox(controller, element.Icon, element.ScaleIcon);
-                int coordX = 0;
                 if (element.Width != null)
                 {
                     imagebox.Width = (int)element.Width;
@@ -64,18 +63,13 @@ public class ListboxControlGroup : ControlGroup
                 {
                     imagebox.Height = (int)group.Height;
                 }
-                if (def.ImageShift && index % 2 == 1)
-                {
-                    coordX = imagebox.Width / 2 + 1;
-                }
-                var imageHeight = Images.GetImageHeight(imagebox.Image[0], _active, imagebox.Scale);
-                int coordY = imagebox.Height / 2 - imageHeight / 2;
-                imagebox.Coords = new int[,] { { coordX, coordY } };
+
+                FitIcon(imagebox, element.ScaleIcon, def.ImageShift && index % 2 == 1);
                 Controls.Add(imagebox);
             }
             else if (element.Unit is not null)
             {
-                Controls.Add(new UnitDisplay(controller, element.Unit, element.Game, new(0, 0), _active, element.ScaleIcon, true));
+                Controls.Add(new UnitDisplay(controller, element.Unit, element.Game!, new(0, 0), _active, element.ScaleIcon, true));
             }
         }
 
@@ -134,9 +128,15 @@ public class ListboxControlGroup : ControlGroup
         for (int i = 0; i < Controls.Count; i++)
         {
             var child = Controls[i];
+            var element = _elements[i];
             offset = _elements[i].Xoffset ?? offset;
             child.Location = new Vector2(offset, 0);
-            child.Width = _elements[i].Width ?? child.GetPreferredWidth();
+            child.Width = element.Width ?? child.GetPreferredWidth();
+            child.Height = element.Height ?? (Height > 0 ? Height : child.GetPreferredHeight());
+            if (child is ImageBox imageBox)
+            {
+                FitIcon(imageBox, element.ScaleIcon, false);
+            }
             offset += child.Width;
         }
 
@@ -156,5 +156,39 @@ public class ListboxControlGroup : ControlGroup
         }
 
         base.Draw(pulse);
+    }
+
+    private void FitIcon(ImageBox imageBox, float baseScale, bool shiftToRightHalf)
+    {
+        var slotWidth = imageBox.Width;
+        var slotHeight = imageBox.Height;
+        imageBox.Scale = baseScale;
+        imageBox.Width = slotWidth;
+        imageBox.Height = slotHeight;
+
+        var imageWidth = Images.GetImageWidth(imageBox.Image[0], _active, imageBox.Scale);
+        var imageHeight = Images.GetImageHeight(imageBox.Image[0], _active, imageBox.Scale);
+        if (imageWidth > 0 && imageHeight > 0)
+        {
+            var maxWidth = Math.Max(1, slotWidth - 4);
+            var maxHeight = Math.Max(1, slotHeight - 4);
+            if (imageWidth > maxWidth || imageHeight > maxHeight)
+            {
+                var fitScale = Math.Min(maxWidth / (float)imageWidth, maxHeight / (float)imageHeight);
+                imageBox.Scale *= Math.Max(0.05f, fitScale);
+                imageBox.Width = slotWidth;
+                imageBox.Height = slotHeight;
+                imageWidth = Images.GetImageWidth(imageBox.Image[0], _active, imageBox.Scale);
+                imageHeight = Images.GetImageHeight(imageBox.Image[0], _active, imageBox.Scale);
+            }
+        }
+
+        var coordX = Math.Max(0, slotWidth / 2 - imageWidth / 2);
+        if (shiftToRightHalf && imageWidth <= slotWidth / 2)
+        {
+            coordX = Math.Max(0, Math.Min(slotWidth - imageWidth, coordX + slotWidth / 2));
+        }
+        var coordY = Math.Max(0, slotHeight / 2 - imageHeight / 2);
+        imageBox.Coords = new int[,] { { coordX, coordY } };
     }
 }

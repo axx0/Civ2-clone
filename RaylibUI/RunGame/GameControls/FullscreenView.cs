@@ -16,9 +16,8 @@ public abstract class FullscreenView : BaseDialog
         foreach (var ctrl in gameScreen.Controls)
         {
             ctrl.Visible = false;
-            if (ctrl is GameMenu)
+            if (ctrl is GameMenu menu)
             {
-                GameMenu? menu = ctrl as GameMenu;
                 menu.Dropdown.Hide();
             }
         }

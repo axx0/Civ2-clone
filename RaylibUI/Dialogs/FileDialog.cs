@@ -23,16 +23,16 @@ public class FileDialog : DynamicSizingDialog
     private readonly Func<string, bool> _isValidSelectionCallback;
     private readonly Func<string?, bool> _onSelectionCallback;
     private readonly bool _selectionMode;
-    private string _currentDirectory;
+    private string _currentDirectory = string.Empty;
     private readonly Listbox _listbox;
     private readonly LabelControl _directoryLabel;
     private readonly TextBox _textBox;
     private readonly Button _okButton;
     private readonly TableLayoutPanel _innerPanel;
     private bool _isRoot;
-    private readonly IUserInterface? _active;
-    private Dictionary<string, GameVersionType?> _fileList;
-    private ListboxDefinition _listboxDef;
+    private readonly IUserInterface _active;
+    private Dictionary<string, GameVersionType?> _fileList = [];
+    private ListboxDefinition _listboxDef = null!;
 
     public FileDialog(Main host, string title, string baseDirectory, Func<string, bool> isValidSelectionCallback,
         Func<string?, bool> onSelectionCallback, string? initialFileName = null, bool selectionMode = true) : base(host, title, requestedWidth: 950)
@@ -40,26 +40,23 @@ public class FileDialog : DynamicSizingDialog
         _isValidSelectionCallback = isValidSelectionCallback;
         _onSelectionCallback = onSelectionCallback;
         _selectionMode = selectionMode;
-        _active = host.ActiveInterface;
+        _active = host.ActiveInterface!;
 
         var innerLayout = new TableLayout();
 
-        _directoryLabel = new LabelControl(this, "", true, font: _active?.Look.StatusPanelLabelFont, 
-            colorFront: _active?.Look.StatusPanelLabelColor, colorShadow: _active?.Look.StatusPanelLabelColorShadow, shadowOffset: new(1, 1));
+        _directoryLabel = new LabelControl(this, "", true, font: _active.Look.StatusPanelLabelFont,
+            colorFront: _active.Look.StatusPanelLabelColor, colorShadow: _active.Look.StatusPanelLabelColorShadow, shadowOffset: new(1, 1));
         innerLayout.Add(_directoryLabel, 0, 0);
 
         SetDirectoryLocation(baseDirectory);
         BuildFileList(false);
-        _listboxDef = new ListboxDefinition() 
-        { 
+        _listboxDef = new ListboxDefinition()
+        {
             Groups = MakeListboxEntries(),
             Columns = 5,
             VerticalScrollbar = false
         };
-        if (_active != null)
-        {
-            _listboxDef.Looks = _active.GetListboxLooks(ListboxType.Default);
-        }
+        _listboxDef.Looks = _active.GetListboxLooks(ListboxType.Default);
         _listbox = new Listbox(this, _listboxDef);
         _listbox.ItemSelected += ItemSelected;
         innerLayout.Add(_listbox, 1, 0, new Padding(2, 2, 2, 2));
@@ -73,12 +70,12 @@ public class FileDialog : DynamicSizingDialog
         Controls.Add(_innerPanel);
 
         _textBox = new TextBox(this, initialFileName ?? string.Empty, 600, TestSelection);
-        _okButton = new Button(this, _active == null ? Labels.Ok : Labels.For(LabelIndex.OK));
+        _okButton = new Button(this, Labels.For(LabelIndex.OK));
         _okButton.Click += OkClicked;
         var menuBar = new ControlGroup(this, flexElement: 0);
         menuBar.AddChild(_textBox);
         menuBar.AddChild(_okButton);
-        var cancelButton = new Button(this, _active == null ? Labels.Cancel : Labels.For(LabelIndex.Cancel));
+        var cancelButton = new Button(this, Labels.For(LabelIndex.Cancel));
         cancelButton.Click += CancelButtonOnClick;
         menuBar.AddChild(cancelButton);
         Controls.Add(menuBar);
@@ -111,14 +108,14 @@ public class FileDialog : DynamicSizingDialog
             lists.Add(new ListboxGroup
             {
                 Elements =
-                [ new ListboxGroupElement { Icon = _active?.Look.DiskIcons[iconIndex] },
+                [ new ListboxGroupElement { Icon = _active.Look.DiskIcons[iconIndex] },
                   new ListboxGroupElement { Text = _fileList.ElementAt(i).Key, VerticalAlignment = VerticalAlignment.Center } ],
-                Height = Images.GetImageHeight(_active?.Look.DiskIcons[0], _active)
+                Height = Images.GetImageHeight(_active.Look.DiskIcons[0], _active)
             });
         }
         return lists;
     }
-    
+
     private void SetDirectoryLocation(string directory)
     {
         _directoryLabel.Text = $" Contents of: {directory}";
@@ -221,16 +218,23 @@ public class FileDialog : DynamicSizingDialog
         foreach (var directory in Directory.EnumerateDirectories(_currentDirectory))
         {
             if (directory.StartsWith('.')) continue;
-            _fileList.Add(Path.GetFileName(directory), null);
+            var directoryName = Path.GetFileName(directory);
+            if (!string.IsNullOrEmpty(directoryName))
+            {
+                _fileList.Add(directoryName, null);
+            }
             valid.Add(_isValidSelectionCallback(directory));
         }
 
-        var files = Directory.EnumerateFiles(_currentDirectory).Where(file => _isValidSelectionCallback(file)).Select(Path.GetFileName)!;
+        var files = Directory.EnumerateFiles(_currentDirectory)
+            .Where(file => _isValidSelectionCallback(file))
+            .Select(Path.GetFileName)
+            .OfType<string>();
 
         // Get civ2 version of files
-        for (int i = 0; i < files.Count(); i++)
+        foreach (var file in files)
         {
-            _fileList.Add(files.ElementAt(i), GetCiv2Version(Path.Combine(_currentDirectory, files.ElementAt(i))));
+            _fileList.Add(file, GetCiv2Version(Path.Combine(_currentDirectory, file)));
         }
     }
 

@@ -142,7 +142,7 @@ public class CityWindow : BaseDialog
     {
         _headerLabel.FontSize = Math.Max(_active.Look.CityHeaderLabelFontSizeSmall, (int)(_active.Look.CityHeaderLabelFontSizeNormal * _scale));
 
-        LayoutPadding = _active.GetPadding(_headerLabel?.TextSize.Y ?? 0, false);
+        LayoutPadding = _active.GetPadding(_headerLabel.TextSize.Y, false);
 
         BackgroundImage = ImageUtils.PaintDialogBase(_active, Width, Height, LayoutPadding,
             Images.ExtractBitmap(_cityWindowProps.Image, _active));
@@ -184,8 +184,8 @@ public class CityWindow : BaseDialog
     public void UpdateProduction()
     {
         City.CalculateOutput(City.Owner.Government, CurrentGameScreen.Game);
-        ResourceProductionChanged(this, EventArgs.Empty);
+        ResourceProductionChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    public event EventHandler ResourceProductionChanged;
+    public event EventHandler? ResourceProductionChanged;
 }

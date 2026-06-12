@@ -114,7 +114,7 @@ public class CivilopediaWindow : BaseDialog
                         for (var i = 0; i < names.Length; i++)
                         {
                             icons[i] = new IImageSource[1];
-                            icons[i][0] = _active.GetImprovementImage(_improvements[i], _rules.FirstWonderIndex);
+                            icons[i][0] = _active.GetImprovementImage(_improvements[i], _rules.FirstWonderIndex)!;
                         }
                         break;
                     case CivilopediaInfoType.Wonders:
@@ -123,7 +123,7 @@ public class CivilopediaWindow : BaseDialog
                         for (var i = 0; i < names.Length; i++)
                         {
                             icons[i] = new IImageSource[1];
-                            icons[i][0] = _active.GetImprovementImage(_wonders[i], _rules.FirstWonderIndex);
+                            icons[i][0] = _active.GetImprovementImage(_wonders[i], _rules.FirstWonderIndex)!;
                         }
                         break;
                     case CivilopediaInfoType.Units:
@@ -163,7 +163,8 @@ public class CivilopediaWindow : BaseDialog
                                 }
                                 else
                                 {
-                                    baseTerrain = _rules.Terrains[0].FirstOrDefault(t => t.Specials[1] == s);
+                                    baseTerrain = _rules.Terrains[0].FirstOrDefault(t => t.Specials[1] == s)
+                                        ?? throw new InvalidOperationException("Unable to find base terrain for special.");
                                     icons[i][0] = _active.PicSources["base1"][(int)baseTerrain.Type];
                                     icons[i][1] = _active.PicSources["special2"][(int)baseTerrain.Type];
                                 }

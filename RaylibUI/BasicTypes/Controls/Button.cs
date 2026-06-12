@@ -35,7 +35,7 @@ public class Button : BaseControl
         Scale = imageScale;
     }
 
-    private string _text;
+    private string _text = string.Empty;
     public string Text
     {
         get => _text;
@@ -223,12 +223,12 @@ public class Button : BaseControl
 
     public override int GetPreferredHeight()
     {
-        return _backgroundImage == null ? 36 : Images.GetImageHeight(_backgroundImage, _active, Scale);
+        return _backgroundImage == null ? 36 : Images.GetImageHeight(_backgroundImage, _active!, Scale);
     }
 
     public override int GetPreferredWidth()
     {
         return _backgroundImage == null ? Math.Max((int)_textSize.X + 10, 160) :
-            Math.Max((int)_textSize.X, Images.GetImageWidth(_backgroundImage, _active, Scale));
+            Math.Max((int)_textSize.X, Images.GetImageWidth(_backgroundImage, _active!, Scale));
     }
 }

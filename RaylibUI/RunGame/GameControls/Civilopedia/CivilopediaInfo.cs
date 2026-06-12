@@ -632,7 +632,8 @@ public sealed class CivilopediaInfo : BaseControl
                     }
                     else
                     {
-                        baseTerrain = rules.Terrains[0].FirstOrDefault(t => t.Specials[1] == s);
+                        baseTerrain = rules.Terrains[0].FirstOrDefault(t => t.Specials[1] == s)
+                            ?? throw new InvalidOperationException("Unable to find base terrain for special.");
                         icons[0] = active.PicSources["base1"][(int)baseTerrain.Type];
                         icons[1] = active.PicSources["special2"][(int)baseTerrain.Type];
                     }

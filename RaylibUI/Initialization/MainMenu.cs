@@ -109,7 +109,7 @@ public class MainMenu : BaseScreen
 
 
 
-    private void HandleButtonClick(string button, int selectedIndex, IList<bool> checkboxStates,
+    private void HandleButtonClick(string button, int selectedIndex, IList<bool>? checkboxStates,
         IDictionary<string, string>? textBoxValues)
     {
         if (_currentAction.Name == Civ2.Dialogs.MainMenu.Title && button == Labels.Cancel)
@@ -134,17 +134,17 @@ public class MainMenu : BaseScreen
         if (titleImg != null)
         {
             var titleTexture = TextureCache.GetImage(titleImg, MainWindow.ActiveInterface);
-            Graphics.ClearBackground(_background.Background);
+            Graphics.ClearBackground(_background?.Background ?? new Color(143, 123, 99, 255));
             Graphics.DrawTexture(titleTexture, (screenWidth - titleTexture.Width) / 2, (screenHeight - titleTexture.Height) / 2, Color.White);
         }
-        else if (_background == null)
+        else if (_background is not { } background)
         {
             Graphics.ClearBackground(new Color(143, 123, 99, 255));
         }
         else
         {
-            Graphics.ClearBackground(_background.Background);
-            Graphics.DrawTexture(_background.CentreImage, (screenWidth- _background.CentreImage.Width)/2, (screenHeight-_background.CentreImage.Height)/2, Color.White);
+            Graphics.ClearBackground(background.Background);
+            Graphics.DrawTexture(background.CentreImage, (screenWidth - background.CentreImage.Width) / 2, (screenHeight - background.CentreImage.Height) / 2, Color.White);
         }
         foreach (var panel in _imagePanels)
         {

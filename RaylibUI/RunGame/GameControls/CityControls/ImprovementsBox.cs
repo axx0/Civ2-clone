@@ -45,7 +45,7 @@ public class ImprovementsBox : Listbox
         List<ListboxGroup> groups = new();
         foreach (var improvement in improvements)
         {
-            var icon = improvement.Icon ?? active.GetImprovementImage(improvement, firstWonderIndex);
+            var icon = improvement.Icon ?? active.GetImprovementImage(improvement, firstWonderIndex)!;
             var iconScale = 0.5f * cityWindow.Scale;
             var iconWidth = Images.GetImageWidth(icon, active, iconScale);
 
@@ -89,11 +89,12 @@ public class ImprovementsBox : Listbox
         }
         else if (city.Improvements[args.Index].Type == 1)   // Can't sell palace
         {
-            screen.ShowPopup("CANTHOCKTHIS", dialogImage: new([improvement.Icon ??
-                    active.GetImprovementImage(improvement, screen.Game.Rules.FirstWonderIndex)]));
+            var improvementImage = improvement.Icon ?? active.GetImprovementImage(improvement, screen.Game.Rules.FirstWonderIndex)!;
+            screen.ShowPopup("CANTHOCKTHIS", dialogImage: new([improvementImage]));
         }
         else
         {
+            var improvementImage = improvement.Icon ?? active.GetImprovementImage(improvement, screen.Game.Rules.FirstWonderIndex)!;
             screen.ShowPopup("HOCKTHIS",
                 handleButtonClick: (button, i, arg3, arg4) =>
                 {
@@ -104,8 +105,7 @@ public class ImprovementsBox : Listbox
                         OnResize();
                     }
                 },
-                dialogImage: new([improvement.Icon ??
-                    active.GetImprovementImage(improvement, screen.Game.Rules.FirstWonderIndex)]),
+                dialogImage: new([improvementImage]),
                 replaceStrings: [improvement.Name],
                 replaceNumbers: [improvement.Cost * 10]);
         }

@@ -16,14 +16,13 @@ namespace RaylibUI
 {
     public partial class Main : IMain
     {
-        private Map _map;
 
-        private IScreen _activeScreen;
+        private IScreen _activeScreen = null!;
         private bool _shouldClose;
 
 
-        private Sound Soundman;
-        private IUserInterface _activeInterface;
+        private Sound Soundman = null!;
+        private IUserInterface _activeInterface = null!;
 
         public Main()
         {
@@ -61,9 +60,9 @@ namespace RaylibUI
         }
 
         private const float pulseTime = 30;
-        
+
         private List<TimedEvent> _events = new List<TimedEvent>();
-        
+
         public void RunLoop()
         {
             var counter = pulseTime;
@@ -103,14 +102,14 @@ namespace RaylibUI
         }
 
         private MainMenu SetupMainScreen()
-        {    
+        {
             //Helpers.LoadFonts();
             Interfaces = Helpers.LoadInterfaces(this);
             AllRuleSets =  Interfaces.SelectMany((userInterface, idx) =>
                 {
-                    userInterface.InterfaceIndex = idx; 
+                    userInterface.InterfaceIndex = idx;
                     var sets = userInterface.FindRuleSets(Settings.SearchPaths);
-                    
+
                     foreach (var ruleset in sets)
                     {
                         ruleset.InterfaceIndex = idx;
@@ -130,11 +129,11 @@ namespace RaylibUI
             private set
             {
                 if(value == _activeInterface) return;
-                
+
                 _activeInterface = value;
-                
+
                 ActiveRuleSet ??= AllRuleSets.First(r => r.InterfaceIndex == _activeInterface.InterfaceIndex);
-                
+
                 _activeInterface.Initialize();
                 TextureCache.Clear();
                 Labels.UpdateLabels(ActiveRuleSet);
@@ -145,7 +144,7 @@ namespace RaylibUI
             }
         }
 
-        public IList<IUserInterface> Interfaces { get; set; }
+        public IList<IUserInterface> Interfaces { get; set; } = [];
 
         void ShutdownApp()
         {

@@ -27,7 +27,7 @@ internal class DropDownItem : ControlGroup
         _command = command;
         _dropdownMenu = dropdownMenu;
         _index = index;
-        var texts = command.MenuText.Split("|");
+        var texts = (command.MenuText ?? string.Empty).Split("|");
         var menuFontSize = TextRendering.LegibleUiFontSize(look.MenuFontSize);
         var textHeight = (int)TextRendering.Measure(look.MenuFont, texts[0], menuFontSize, 0f).Y + 4;
         Controls.Add(new LabelControl(dropdownMenu, texts[0].Replace("&", ""), true, defaultHeight: textHeight, font: look.MenuFont, fontSize: look.MenuFontSize, padding: new Padding(0, _paddingLeft, 0, 0)));

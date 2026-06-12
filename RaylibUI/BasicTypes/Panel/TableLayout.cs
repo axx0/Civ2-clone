@@ -4,7 +4,7 @@ namespace RaylibUI.BasicTypes;
 
 public class TableLayout
 {
-    private int[] _maxWidths, _maxHeights;
+    private int[] _maxWidths = [], _maxHeights = [];
 
     public List<Cell> Cells;
     public int RowCount { get; set; } = 1;
@@ -33,7 +33,7 @@ public class TableLayout
             var cells = Cells.Where(c => c.Row == row && c.Control is not null);
             if (cells.Any())
             {
-                _maxHeights[row] = cells.Max(c => c.Control.Height + c.Padding.Top + c.Padding.Bottom);
+                _maxHeights[row] = cells.Max(c => c.Control!.Height + c.Padding.Top + c.Padding.Bottom);
             }
         }
 
@@ -44,7 +44,7 @@ public class TableLayout
             var cells = Cells.Where(c => c.Column == col && c.Control is not null);
             if (cells.Any())
             {
-                _maxWidths[col] = cells.Max(c => c.Control.Width + c.Padding.Left + c.Padding.Right);
+                _maxWidths[col] = cells.Max(c => c.Control!.Width + c.Padding.Left + c.Padding.Right);
             }
         }
 
@@ -58,17 +58,11 @@ public class TableLayout
             if (cell.Control is not null)
             {
                 cell.Control.Location = cell.Location + new System.Numerics.Vector2(cell.Padding.Left, cell.Padding.Top);
-            }
 
-            // Make out of bounds controls unvisible
-            if (cell.Row < startingRow || cell.Column < startingCol ||
-                cell.Row >= startingRow + visibleRows || cell.Column >= startingCol + visibleCols)
-            {
-                cell.Control.Visible = false;
-            }
-            else
-            {
-                cell.Control.Visible = true;
+                // Make out of bounds controls invisible
+                cell.Control.Visible = cell.Row >= startingRow && cell.Column >= startingCol &&
+                                       cell.Row < startingRow + visibleRows &&
+                                       cell.Column < startingCol + visibleCols;
             }
         }
 

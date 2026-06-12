@@ -13,6 +13,6 @@ public class DefenseMinister(GameScreen gameScreen)
     public override void Action()
     {
         // ReSharper disable once StringLiteralTypo
-        GameScreen.ShowDialog(new DefenseMinisterWindow(gameScreen));
+        GameScreen.ShowDialog(new DefenseMinisterWindow(GameScreen));
     }
 }

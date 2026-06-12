@@ -21,7 +21,7 @@ public class CityInfoArea : BaseControl
     private CityDisplayMode _mode;
     private IUserInterface _active;
     private readonly CityLabel _label, _suppliesLabel, _demandsLabel;
-    private readonly CityLabel[] _tradeLabels;
+    private readonly CityLabel[] _tradeLabels = [];
     private readonly CityWindowLayout _props;
     private readonly IGame _game;
     private readonly City _city;
@@ -79,14 +79,11 @@ public class CityInfoArea : BaseControl
         };
         Controls.Add(_demandsLabel);
 
-        var noRoutes = _city.TradeRoutes?.Length ?? 0;
-        if (noRoutes > 0) 
+        var tradeRoutes = _city.TradeRoutes ?? Array.Empty<TradeRoute>();
+        _tradeLabels = new CityLabel[tradeRoutes.Length];
+        for (var i = 0; i < tradeRoutes.Length; i++)
         {
-            _tradeLabels = new CityLabel[noRoutes];
-        }
-        for (var i = 0; i < noRoutes; i++)
-        {
-            var route = _city.TradeRoutes[i];
+            var route = tradeRoutes[i];
             var tradeCity = _game.AllCities[route.Destination];
             var box = new Rectangle(demandsProp.Box.X, demandsProp.Box.Y + 15 + 13 * i, demandsProp.Box.Width, demandsProp.Box.Height);
             _tradeLabels[i] = new CityLabel(controller, new CityLabelProperties($"{tradeCity.Name} {route.Commodity.Name} +xx", 
@@ -117,12 +114,9 @@ public class CityInfoArea : BaseControl
         _label.Visible = !(_mode == CityDisplayMode.Info && _city.UnitsInCity.Count > _props.InfoPanel.UnitsPresent.Columns);
         _suppliesLabel.Visible = _mode == CityDisplayMode.Info;
         _demandsLabel.Visible = _mode == CityDisplayMode.Info;
-        if (_tradeLabels != null)
+        for (var i = 0; i < _tradeLabels.Length; i++)
         {
-            for (var i = 0; i < _tradeLabels.Length; i++)
-            {
-                _tradeLabels[i].Visible = _mode == CityDisplayMode.Info;
-            }
+            _tradeLabels[i].Visible = _mode == CityDisplayMode.Info;
         }
 
 

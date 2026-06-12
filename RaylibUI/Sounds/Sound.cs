@@ -64,10 +64,10 @@ namespace RaylibUI
         {
           using (StreamReader reader = new StreamReader(cachePath))
           {
-            string line;
+            string? line;
             while ((line = reader.ReadLine()) != null)
             {
-              SoundData soundData = SoundData.FromCacheString(line, _convertedSoundsDir);
+              SoundData? soundData = SoundData.FromCacheString(line, _convertedSoundsDir);
               if (soundData != null)
               {
                 cache.Add(soundData);

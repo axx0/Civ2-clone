@@ -6,8 +6,6 @@ using Raylib_CSharp.Colors;
 using Raylib_CSharp.Fonts;
 using Raylib_CSharp.Rendering;
 using Raylib_CSharp.Textures;
-using Raylib_CSharp.Transformations;
-using RaylibUI.Properties;
 using System.Numerics;
 
 namespace RaylibUI.RunGame.GameControls.CityControls;
@@ -20,15 +18,15 @@ public class ResourceProductionBar : BaseControl
     private readonly ResourceArea _resource;
     private int _spacing;
     private int _mid;
-    private List<ProdSection> _sections;
-    private int _iconWidth;
-    private IUserInterface _active;
+    private List<ProdSection> _sections = [];
+    private int _iconStep;
+    private float _iconScale = 1f;
+    private int _iconTargetHeight;
 
     public ResourceProductionBar(CityWindow cityWindow, ResourceArea resource) : base(cityWindow)
     {
         _cityWindow = cityWindow;
         _resource = resource;
-        _active = cityWindow.MainWindow.ActiveInterface;
         _cityWindow.ResourceProductionChanged += (_, _) => CalculateContents();
         Controls = [];
     }
@@ -60,7 +58,6 @@ public class ResourceProductionBar : BaseControl
             var lossImage = TextureCache.GetImage(resourceImage.LossImage);
             
             var values = _cityWindow.City.GetConsumableResourceValues(consumableResource.Name);
-             _iconWidth = mainImage.Width;
 
             sections.Add(
                 new ProdSection(label: consumableResource.GetDisplayDetails(values.Consumption, OutputType.Consumption), value: values.Consumption,
@@ -77,7 +74,8 @@ public class ResourceProductionBar : BaseControl
                 sections.Add(new ProdSection(label: consumableResource.GetDisplayDetails(values.Surplus, OutputType.Surplus), value: values.Surplus,
                     icon: mainImage));
             }
-        }else if (_resource is SharedResourceArea sharedResourceArea)
+        }
+        else if (_resource is SharedResourceArea sharedResourceArea)
         {
             foreach (var resource in sharedResourceArea.Resources)
             {
@@ -86,78 +84,117 @@ public class ResourceProductionBar : BaseControl
                     value: value,
                     icon: TextureCache.GetImage(resource.Icon)));
             }
-
-            _iconWidth = sections[0].Icon.Width;
         }
         else
         {
             throw new NotImplementedException("Unknown area type " + _resource.GetType());
         }
 
-        var requiredSpace = sections.Sum(s => s.Value * _iconWidth) + 2 * _iconWidth;
+        if (sections.Count == 0)
+        {
+            _sections = [];
+            return;
+        }
+
+        CalculateIconMetrics(sections);
+
+        var requiredSpace = sections.Sum(s => Math.Max(0, s.Value) * _iconStep) + 2 * _iconStep;
         if (requiredSpace < Width)
         {
-            _spacing = _iconWidth;
+            _spacing = _iconStep;
             _mid = sections.Count < 3
                 ? -1
-                : (Width - requiredSpace)/2 + sections[0].Value * _iconWidth;
+                : (Width - requiredSpace) / 2 + Math.Max(0, sections[0].Value) * _iconStep;
         }
         else
         {
-            var minSpace = (sections.Count * 2 - 1) * _iconWidth;
+            var minSpace = (sections.Count * 2 - 1) * _iconStep;
             var remainingSpace = Width - minSpace;
             var points = sections.Sum(s => s.Value > 0 ? s.Value - 1 : 0);
-            _spacing = Math.DivRem(remainingSpace, points, out remainingSpace);
+            _spacing = points <= 0
+                ? _iconStep
+                : Math.Max(1, Math.DivRem(Math.Max(1, remainingSpace), points, out remainingSpace));
 
-            _mid = sections.Count < 3 ? -1 : 2 * _iconWidth + sections[0].Value * _spacing + remainingSpace / 2;
+            _mid = sections.Count < 3 ? -1 : 2 * _iconStep + Math.Max(0, sections[0].Value) * _spacing + remainingSpace / 2;
         }
 
         _sections = sections;
     }
 
+    private void CalculateIconMetrics(IReadOnlyCollection<ProdSection> sections)
+    {
+        var maxIconWidth = Math.Max(1, sections.Max(s => s.Icon.Width));
+        var maxIconHeight = Math.Max(1, sections.Max(s => s.Icon.Height));
+        var targetHeight = Math.Max(8, Height - 2);
+
+        _iconScale = Math.Min(1.35f, targetHeight / (float)maxIconHeight);
+        _iconTargetHeight = Math.Max(1, (int)Math.Ceiling(maxIconHeight * _iconScale));
+        _iconStep = Math.Max(1, (int)Math.Ceiling(maxIconWidth * _iconScale) + 1);
+    }
+
     public override void Draw(bool pulse)
     {
         base.Draw(pulse);
+
+        if (_sections.Count == 0)
+        {
+            return;
+        }
         
-        var textDim = TextManager.MeasureTextEx(Fonts.Arial, _sections[0].Label, LabelFontSize, LabelSpacing);
+        var fontSize = Math.Max(10, (int)Math.Round(LabelFontSize * Math.Min(1.25f, _cityWindow.Scale * 0.85f)));
+        var textDim = TextManager.MeasureTextEx(Fonts.Arial, _sections[0].Label, fontSize, LabelSpacing);
         var labely = Bounds.Y + (_resource.LabelBelow ? Bounds.Height : 1-textDim.Y);
             
-        Graphics.DrawTextEx(Fonts.Arial, _sections[0].Label, new Vector2(Bounds.X + 1, labely), LabelFontSize, LabelSpacing, Color.White);
-        var pos = new Vector2(Bounds.X, Bounds.Y) + Vector2.One;
+        Graphics.DrawTextEx(Fonts.Arial, _sections[0].Label, new Vector2(Bounds.X + 1, labely), fontSize, LabelSpacing, Color.White);
+        var pos = new Vector2(Bounds.X + 1, Bounds.Y + Math.Max(0, (Bounds.Height - _iconTargetHeight) / 2f));
         for (int i = 0; i < _sections[0].Value; i++)
         {
-            Graphics.DrawTextureEx(_sections[0].Icon, pos,0,1,Color.White);
+            DrawIcon(_sections[0].Icon, pos);
             pos.X += _spacing;
+        }
+
+        if (_sections.Count == 1)
+        {
+            return;
         }
 
         var final = 1;
         if (_mid != -1)
         {
-            pos = new Vector2(Bounds.X, Bounds.Y) + Vector2.One;
+            pos = new Vector2(Bounds.X + 1, Bounds.Y + Math.Max(0, (Bounds.Height - _iconTargetHeight) / 2f));
             pos.X += _mid;
             for (int i = 0; i < _sections[1].Value; i++)
             {
-                Graphics.DrawTextureEx(_sections[1].Icon, pos,0,1,Color.White);
+                DrawIcon(_sections[1].Icon, pos);
                 pos.X += _spacing;
             }
             var midText = _sections[1].Label;
-            var midSize = TextManager.MeasureTextEx(Fonts.Arial, midText, LabelFontSize, LabelSpacing);
-            Graphics.DrawTextEx(Fonts.Arial, midText, new Vector2(Bounds.X + Width/2f - midSize.X/2, labely), LabelFontSize, LabelSpacing, Color.White);
+            var midSize = TextManager.MeasureTextEx(Fonts.Arial, midText, fontSize, LabelSpacing);
+            Graphics.DrawTextEx(Fonts.Arial, midText, new Vector2(Bounds.X + Width/2f - midSize.X/2, labely), fontSize, LabelSpacing, Color.White);
 
             final = 2;
         }
-        pos = new Vector2(Bounds.X, Bounds.Y) + Vector2.One;
-        pos.X += Width - _iconWidth -2;
+        pos = new Vector2(Bounds.X + 1, Bounds.Y + Math.Max(0, (Bounds.Height - _iconTargetHeight) / 2f));
+        pos.X += Width - _iconStep - 2;
         for (int i = 0; i < _sections[final].Value; i++)
         {
-            Graphics.DrawTextureEx(_sections[final].Icon, pos,0,1,Color.White);
+            DrawIcon(_sections[final].Icon, pos);
             pos.X -= _spacing;
         }
 
         var finalText = _sections[final].Label;
-        var finalSize = TextManager.MeasureTextEx(Fonts.Arial, finalText, LabelFontSize, LabelSpacing);
-        Graphics.DrawTextEx(Fonts.Arial, finalText, new Vector2(Bounds.X + Width - finalSize.X -1, labely), LabelFontSize, LabelSpacing, Color.White);
+        var finalSize = TextManager.MeasureTextEx(Fonts.Arial, finalText, fontSize, LabelSpacing);
+        Graphics.DrawTextEx(Fonts.Arial, finalText, new Vector2(Bounds.X + Width - finalSize.X -1, labely), fontSize, LabelSpacing, Color.White);
 
+    }
+
+    private void DrawIcon(Texture2D icon, Vector2 slotPosition)
+    {
+        var drawWidth = icon.Width * _iconScale;
+        var drawHeight = icon.Height * _iconScale;
+        var x = slotPosition.X + Math.Max(0, (_iconStep - drawWidth) / 2f);
+        var y = slotPosition.Y + Math.Max(0, (_iconTargetHeight - drawHeight) / 2f);
+        Graphics.DrawTextureEx(icon, new Vector2(x, y), 0, _iconScale, Color.White);
     }
 }
 

@@ -10,7 +10,6 @@ namespace RaylibUI.RunGame.GameControls.Menu;
 public class MenuLabel : LabelControl
 {
     private readonly GameMenu _gameMenu;
-    private bool _active;
     private readonly DropdownMenuContents _menuElements;
 
     public override bool CanFocus => true;

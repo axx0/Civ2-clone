@@ -107,9 +107,10 @@ public class BuildCity(GameScreen gameScreen) : Order(gameScreen, new Shortcut(K
         if (activeUnit == null)
         {
 #if DEBUG
-     throw new InvalidOperationException("Tried to build city when no unit was active");       
-#endif
+            throw new InvalidOperationException("Tried to build city when no unit was active");
+#else
             return;
+#endif
         }
         var city = activeUnit.CurrentLocation.CityHere;
         if (city != null)

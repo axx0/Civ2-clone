@@ -58,8 +58,8 @@ public class CivilopediaTree : BaseControl
                 if (_prereq1 != null)
                 {
                     _prereq2 = j == 0 ?
-                        _prereq1?.Prereq1 != -1 ? _rules.Advances[_prereq1.Prereq1] : null :
-                        _prereq1?.Prereq2 != -1 ? _rules.Advances[_prereq1.Prereq2] : null;
+                        _prereq1.Prereq1 != -1 ? _rules.Advances[_prereq1.Prereq1] : null :
+                        _prereq1.Prereq2 != -1 ? _rules.Advances[_prereq1.Prereq2] : null;
                 }
                 MakeControl(_prereq2, 2, 2 * i + j);
 
@@ -68,8 +68,8 @@ public class CivilopediaTree : BaseControl
                     if (_prereq2 != null)
                     {
                         _prereq3 = k == 0 ?
-                        _prereq2?.Prereq1 != -1 ? _rules.Advances[_prereq2.Prereq1] : null :
-                        _prereq2?.Prereq2 != -1 ? _rules.Advances[_prereq2.Prereq2] : null;
+                        _prereq2.Prereq1 != -1 ? _rules.Advances[_prereq2.Prereq1] : null :
+                        _prereq2.Prereq2 != -1 ? _rules.Advances[_prereq2.Prereq2] : null;
                     }
                     MakeControl(_prereq3, 3, 4 * i + 2 * j + k);
                 }
@@ -149,8 +149,8 @@ public class CivilopediaTree : BaseControl
                 if (prereq1 == null) continue;
                  
                 var prereq2 = j == 0 ?
-                    prereq1?.Prereq1 != -1 ? _rules.Advances[prereq1.Prereq1] : null :
-                    prereq1?.Prereq2 != -1 ? _rules.Advances[prereq1.Prereq2] : null;
+                    prereq1.Prereq1 != -1 ? _rules.Advances[prereq1.Prereq1] : null :
+                    prereq1.Prereq2 != -1 ? _rules.Advances[prereq1.Prereq2] : null;
 
                 c1 = GetCenter(2, 2 * i + j);
                 if (prereq2 != null)
@@ -164,8 +164,8 @@ public class CivilopediaTree : BaseControl
                     if (prereq2 == null) continue;
 
                     var prereq3 = k == 0 ?
-                        prereq2?.Prereq1 != -1 ? _rules.Advances[prereq2.Prereq1] : null :
-                        prereq2?.Prereq2 != -1 ? _rules.Advances[prereq2.Prereq2] : null;
+                        prereq2.Prereq1 != -1 ? _rules.Advances[prereq2.Prereq1] : null :
+                        prereq2.Prereq2 != -1 ? _rules.Advances[prereq2.Prereq2] : null;
 
                     c1 = GetCenter(3, 4 * i + 2 * j + k);
                     if (prereq3 != null)

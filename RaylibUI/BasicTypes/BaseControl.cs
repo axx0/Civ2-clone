@@ -75,15 +75,15 @@ public abstract class BaseControl : IControl
     public virtual bool CanFocus => false;
     public IList<IControl> Controls { get; protected set; } = [];
 
-    private IComponent _parent;
-    public IComponent? Parent => _parent ??= SearchForParent(Controller);
+    private IComponent? _parent;
+    public IComponent Parent => _parent ??= SearchForParent(Controller) ?? Controller;
 
     /// <summary>
     /// Search for this control's parent control.
     /// </summary>
-    private IComponent SearchForParent(IComponent parent)
+    private IComponent? SearchForParent(IComponent parent)
     {
-        foreach (IControl c in parent.Controls)
+        foreach (IControl c in parent.Controls ?? [])
         {
             if (c == this)
             {
@@ -173,9 +173,9 @@ public abstract class BaseControl : IControl
     {
     }
 
-    public event EventHandler<MouseEventArgs> MouseDown;
+    public event EventHandler<MouseEventArgs>? MouseDown;
 
-    public event EventHandler<MouseEventArgs> Click;
+    public event EventHandler<MouseEventArgs>? Click;
 
     public virtual void Draw(bool pulse)
     {

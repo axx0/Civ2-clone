@@ -2,6 +2,7 @@ using Civ2engine;
 using Model;
 using Model.Controls;
 using Model.Core;
+using Raylib_CSharp.Colors;
 using Raylib_CSharp.Fonts;
 using Raylib_CSharp.Interact;
 using Raylib_CSharp.Windowing;
@@ -19,16 +20,15 @@ public class CivDialog : DynamicSizingDialog
 {
     private readonly IUserInterface _active;
     private readonly TableLayoutPanel _innerPanel;
-    private readonly IList<LabeledTextBox> _textBoxes;
+    private readonly IList<LabeledTextBox> _textBoxes = [];
     private readonly Action<string, int, IList<bool>?, IDictionary<string, string>?> _handleButtonClick;
     private readonly OptionsPanel? _optionsPanel;
     private readonly Listbox? _listbox;
     private int _selectedIndex = -1;
-    private readonly ImageBox _imageBox;
     private bool _closed;
 
     public CivDialog(Main host, DialogElements dialog, Action<string, int, IList<bool>?, IDictionary<string, string>?> handleButtonClick) :
-        base(host, DialogUtils.ReplacePlaceholders(dialog.Title, dialog.ReplaceStrings, dialog.ReplaceNumbers),
+        base(host, DialogUtils.ReplacePlaceholders(dialog.Title ?? string.Empty, dialog.ReplaceStrings, dialog.ReplaceNumbers),
             dialog.Width == null ? host.ActiveInterface.DefaultDialogWidth : (int)(1.5 * dialog.Width),
             dialog.X != null || dialog.Y != null ? new Point(dialog.X ?? 0 / Window.GetScreenWidth(),
             dialog.Y ?? 0 / Window.GetScreenHeight()) : dialog.DialogPos)
@@ -39,17 +39,21 @@ public class CivDialog : DynamicSizingDialog
         var innerLayout = new TableLayout();
         var layoutRow = 0;
 
-        if (dialog.Image != null && dialog.Image.Image.All(n => n != null))
+        if (dialog.Image?.Image is { } dialogImages && dialogImages.All(n => n != null))
         {
-            _imageBox = new ImageBox(this, dialog.Image);
-            innerLayout.Add(_imageBox, 0, 0);
+            var imageBox = new ImageBox(this, dialog.Image);
+            innerLayout.Add(imageBox, 0, 0);
         }
 
         var maxTextWidth = 0;
-        if (dialog.Text?.Count > 0)
+        if (dialog.Text is { Count: > 0 } dialogTexts)
         {
-            var texts = dialog.Text;
-            var styles = dialog.LineStyles;
+            var texts = dialogTexts.ToList();
+            var styles = (dialog.LineStyles ?? Enumerable.Repeat(TextStyles.LeftOwnLine, texts.Count)).ToList();
+            while (styles.Count < texts.Count)
+            {
+                styles.Add(TextStyles.LeftOwnLine);
+            }
 
             // Group left-aligned texts
             int i = 0;
@@ -98,7 +102,7 @@ public class CivDialog : DynamicSizingDialog
                         var wrappedLabel = new LabelControl(this,
                             string.IsNullOrEmpty(text) ? " " : text,    // Add space if ^ is the only character 
                             false,
-                            horizontalAlignment: styles[i] == TextStyles.Centered ? HorizontalAlignment.Center : HorizontalAlignment.Left,
+                            horizontalAlignment: styles[j] == TextStyles.Centered ? HorizontalAlignment.Center : HorizontalAlignment.Left,
                             font: _active.Look.LabelFont, fontSize: _active.Look.LabelFontSize,
                             colorFront: _active.Look.LabelColour, colorShadow: _active.Look.LabelShadowColour, shadowOffset: new Vector2(1, 1));
 
@@ -124,40 +128,40 @@ public class CivDialog : DynamicSizingDialog
             _selectedIndex = 0;
         }
 
-        if (dialog.TextBoxes is { Count: > 0 })
+        if (dialog.TextBoxes is { Count: > 0 } textBoxes)
         {
             _textBoxes = new List<LabeledTextBox>();
             List<string> textBoxLabels;
-            if (dialog.TextBoxes.Any(t => string.IsNullOrWhiteSpace(t.Description)) && dialog.Options != null && dialog.Options.Texts.Count == dialog.TextBoxes.Count)
+            if (textBoxes.Any(t => string.IsNullOrWhiteSpace(t.Description)) && dialog.Options?.Texts is { } optionTexts && optionTexts.Count == textBoxes.Count)
             {
-                textBoxLabels = new List<string>(dialog.Options.Texts);
+                textBoxLabels = new List<string>(optionTexts);
                 dialog.Options = null;
             }
             else
             {
-                textBoxLabels = dialog.TextBoxes.Select(t =>
-                    DialogUtils.ReplacePlaceholders(t.Description, dialog.ReplaceStrings, dialog.ReplaceNumbers)).ToList();
+                textBoxLabels = textBoxes.Select(t =>
+                    DialogUtils.ReplacePlaceholders(t.Description ?? string.Empty, dialog.ReplaceStrings, dialog.ReplaceNumbers)).ToList();
             }
 
             var labelSize = (int)textBoxLabels.Max(l => TextManager.MeasureTextEx(host.ActiveInterface.Look.DefaultFont, l, 20, 1.0f).X) + 24;
 
-            for (int i = 0; i < dialog.TextBoxes.Count; i++)
+            for (int i = 0; i < textBoxes.Count; i++)
             {
-                var labeledBox = new LabeledTextBox(this, dialog.TextBoxes[i], textBoxLabels[i], labelSize);
+                var labeledBox = new LabeledTextBox(this, textBoxes[i], textBoxLabels[i], labelSize);
                 labeledBox.Width = labeledBox.GetPreferredWidth();
                 innerLayout.Add(labeledBox, layoutRow++, 1);
                 _textBoxes.Add(labeledBox);
             }
         }
 
-        if (dialog.Options is not null)
+        if (dialog.Options is { } options)
         {
-            dialog.Options.ReplacedTexts = [];
-            for (int i = 0; i < dialog.Options.Texts.Count; i++)
+            options.ReplacedTexts = [];
+            foreach (var optionText in options.Texts ?? Array.Empty<string>())
             {
-                dialog.Options.ReplacedTexts.Add(DialogUtils.ReplacePlaceholders(dialog.Options.Texts[i], dialog.ReplaceStrings, dialog.ReplaceNumbers));
+                options.ReplacedTexts.Add(DialogUtils.ReplacePlaceholders(optionText, dialog.ReplaceStrings, dialog.ReplaceNumbers));
             }
-            _optionsPanel = new OptionsPanel(this, dialog.Options);
+            _optionsPanel = new OptionsPanel(this, options);
 
             innerLayout.Add(_optionsPanel, layoutRow++, 1);
         }
@@ -170,7 +174,7 @@ public class CivDialog : DynamicSizingDialog
         Controls.Add(_innerPanel);
 
         var menuBar = new ControlGroup(this);
-        foreach (var button in dialog.Button)
+        foreach (var button in dialog.Button ?? [Labels.Ok])
         {
             var actionButton = new Button(this, button);
 
@@ -235,13 +239,15 @@ public class CivDialog : DynamicSizingDialog
         {
             _selectedIndex = _optionsPanel?.SelectedId ?? -1;
         }
-        _handleButtonClick(buttonText, _selectedIndex, _optionsPanel?.CheckboxStates ?? [], FormatTextBoxReturn());
+        _handleButtonClick(buttonText, _selectedIndex, _optionsPanel?.CheckboxStates ?? Array.Empty<bool>(), FormatTextBoxReturn());
     }
 
     private IDictionary<string, string>? FormatTextBoxReturn()
     {
-        return _textBoxes?.Select(box => new { box.Name, Value = box.Text })
-            .ToDictionary(k => k.Name, v => v.Value);
+        return _textBoxes.Count == 0
+            ? null
+            : _textBoxes.Select(box => new { box.Name, Value = box.Text })
+                .ToDictionary(k => k.Name, v => v.Value);
     }
 
     private int GetInnerPanelWidthFromText(IList<LabelControl> labels, int popupboxWidth)
@@ -251,7 +257,7 @@ public class CivDialog : DynamicSizingDialog
         if (_labels.Count != 0)
             centredTextMaxWidth = (from label in _labels
                                    orderby label.TextSize.X descending
-                                   select label).ToList().FirstOrDefault().TextSize.X;
+                                   select label).ToList().First().TextSize.X;
 
         if (popupboxWidth != 0)
             return (int)Math.Ceiling(Math.Max(centredTextMaxWidth, 1.5 * popupboxWidth));

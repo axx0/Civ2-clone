@@ -41,7 +41,7 @@ public class ChangeMoney(GameScreen gameScreen) : AlwaysOnCommand(gameScreen, Co
         if (button == Labels.Ok)
         {
             var civId = selection + 1;
-            targetCiv = gameScreen.Game.AllCivilizations.Find(civ => civ.Id == civId && civ.PlayerType != PlayerType.Barbarians);
+            targetCiv = GameScreen.Game.AllCivilizations.Find(civ => civ.Id == civId && civ.PlayerType != PlayerType.Barbarians);
             Debug.Assert(targetCiv != null, nameof(targetCiv) + " != null");
 
             _enterNewMoneyDialog = BuildChangeMoneyDialog(targetCiv.Money, targetCiv.Adjective);

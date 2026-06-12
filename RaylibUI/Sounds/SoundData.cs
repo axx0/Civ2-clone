@@ -101,7 +101,7 @@ public class SoundData : IDisposable
                 }
             }
         }
-        catch (DllNotFoundException ex)
+        catch (DllNotFoundException)
         {
             //TODO: find alternative sound methods for OSX
             return false;

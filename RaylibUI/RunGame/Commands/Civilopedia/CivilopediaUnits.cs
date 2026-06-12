@@ -13,6 +13,6 @@ public class CivilopediaUnits(GameScreen gameScreen)
     public override void Action()
     {
         // ReSharper disable once StringLiteralTypo
-        GameScreen.ShowDialog(new CivilopediaWindow(gameScreen, new(CivilopediaInfoType.Units, CivilopediaWindowType.Listbox)));
+        GameScreen.ShowDialog(new CivilopediaWindow(GameScreen, new(CivilopediaInfoType.Units, CivilopediaWindowType.Listbox)));
     }
 }

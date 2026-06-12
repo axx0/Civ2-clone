@@ -8,7 +8,7 @@ namespace RaylibUI;
 public interface IControlLayout : IComponent
 {
     Main MainWindow { get; }
-    IList<IControl> Controls { get; }
+    new IList<IControl> Controls { get; }
     IControl? Focused { get; set; }
     IControl? Hovered { get; set; }
 
@@ -19,7 +19,7 @@ public interface IControlLayout : IComponent
     
     Padding LayoutPadding { get; set; }
     
-    Vector2 Location { get; }
+    new Vector2 Location { get; }
     int Width { get; }
     int Height { get; }
     void MouseOutsideControls(Vector2 mousePos);

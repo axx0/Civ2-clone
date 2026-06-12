@@ -158,7 +158,7 @@ public class MinimapPanel : BaseControl
 
     }
 
-    private void MapEventTriggered(object sender, MapEventArgs e)
+    private void MapEventTriggered(object? sender, MapEventArgs e)
     {
         if (!Visible) return;
 
@@ -204,7 +204,12 @@ public class MinimapPanel : BaseControl
 
     public override void Draw(bool pulse)
     {
-        Graphics.DrawTexture(_backgroundImage.Value,(int)Location.X, (int)Location.Y, Color.White);
+        if (_backgroundImage is not { } backgroundImage)
+        {
+            return;
+        }
+
+        Graphics.DrawTexture(backgroundImage, (int)Location.X, (int)Location.Y, Color.White);
         Graphics.DrawRectangleRec(_drawArea, Color.Black);
 
         if (_gameScreen.MinimapGlobe)

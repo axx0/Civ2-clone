@@ -76,7 +76,7 @@ public class ControlGroup : BaseControl
 
     public override void OnResize()
     {
-        if (ChildWidths == null || ChildWidths.Count == 0)
+        if (ChildWidths.Count == 0)
         {
             GetPreferredWidth();
         }

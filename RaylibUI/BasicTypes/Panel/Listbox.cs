@@ -13,14 +13,14 @@ namespace RaylibUI.BasicTypes;
 public class Listbox : BaseControl
 {
     private readonly IControlLayout _controller;
-    private TableLayout _tableLayout;
-    private List<ListboxControlGroup> _controls;
+    private TableLayout _tableLayout = new();
+    private List<ListboxControlGroup> _controls = [];
     private int _totalColumns, _totalRows;   // visible & non-visible rows & columns
-    private ScrollBar _VscrollBar, _HscrollBar;
+    private ScrollBar? _VscrollBar, _HscrollBar;
     private int _viewStartingRow, _viewStartingCol;
     private readonly IUserInterface? _active;
 
-    private ListboxDefinition _def;
+    private ListboxDefinition _def = new();
     public ListboxDefinition Definition 
     {
         get => _def;
@@ -29,7 +29,7 @@ public class Listbox : BaseControl
             _def = value;
             if (_def.Type != null)
             {
-                _def.Looks = _active.GetListboxLooks(_def.Type);
+                _def.Looks = _active!.GetListboxLooks(_def.Type);
             }
             Update();
         }
@@ -47,7 +47,7 @@ public class Listbox : BaseControl
         Definition = new();
         if (_def.Type != null)
         {
-            _def.Looks = _active.GetListboxLooks(_def.Type);
+            _def.Looks = _active!.GetListboxLooks(_def.Type);
         }
     }
 
@@ -58,7 +58,7 @@ public class Listbox : BaseControl
 
         if (def.Type != null)
         {
-            def.Looks = _active.GetListboxLooks(def.Type);
+            def.Looks = _active!.GetListboxLooks(def.Type);
         }
 
         Definition = def;
@@ -96,21 +96,23 @@ public class Listbox : BaseControl
 
         if (_def.VerticalScrollbar)
         {
-            _VscrollBar = new ScrollBar(_controller, (position) =>
+            var vScrollBar = new ScrollBar(_controller, (position) =>
             {
                 _viewStartingRow = position;
                 OnResize();
             });
-            Controls.Add(_VscrollBar);
+            _VscrollBar = vScrollBar;
+            Controls.Add(vScrollBar);
         }
         else
         {
-            _HscrollBar = new ScrollBar(_controller, (position) =>
+            var hScrollBar = new ScrollBar(_controller, (position) =>
             {
                 _viewStartingCol = position;
                 OnResize();
             }, false);
-            Controls.Add(_HscrollBar);
+            _HscrollBar = hScrollBar;
+            Controls.Add(hScrollBar);
         }
 
         foreach (var control in _controls)
@@ -153,7 +155,7 @@ public class Listbox : BaseControl
         int scrollBarWidth = 0;
         if (_def.VerticalScrollbar && _controls.Count > _def.Rows * _def.Columns)
         {
-            scrollBarWidth = _VscrollBar.Width;
+            scrollBarWidth = _VscrollBar!.Width;
         }
 
         foreach (var control in _controls)
@@ -162,24 +164,25 @@ public class Listbox : BaseControl
             control.OnResize();
         }
 
-        _tableLayout?.CalculateDimensions(_viewStartingRow, _viewStartingCol, _def.Rows, _def.Columns);
+        var tableLayout = _tableLayout ?? throw new InvalidOperationException("Listbox has not been initialized.");
+        tableLayout.CalculateDimensions(_viewStartingRow, _viewStartingCol, _def.Rows, _def.Columns);
 
-        Height = _def.Rows * _controls[0].Height + (_def.VerticalScrollbar ? 0 : _HscrollBar.Height);
+        Height = _def.Rows * _controls[0].Height + (_def.VerticalScrollbar ? 0 : _HscrollBar!.Height);
 
         if (_def.VerticalScrollbar)
         {
-            _VscrollBar.Maximum = _tableLayout.RowCount - _def.Rows;
-            _VscrollBar.Location = new(Width - _VscrollBar.Width - 2, 2);
-            _VscrollBar.Height = Height - 4;
-            _VscrollBar.Visible = _def.Rows < _tableLayout.RowCount;
+            _VscrollBar!.Maximum = tableLayout.RowCount - _def.Rows;
+            _VscrollBar!.Location = new(Width - _VscrollBar.Width - 2, 2);
+            _VscrollBar!.Height = Height - 4;
+            _VscrollBar!.Visible = _def.Rows < tableLayout.RowCount;
         }
         else
         {
-            _HscrollBar.Location = new(2, Height - _HscrollBar.Height - 2);
-            _HscrollBar.Maximum = _tableLayout.ColumnCount - _def.Columns;
-            _HscrollBar.Width = Width - 4;
-            _HscrollBar.Visible = _def.Columns < _tableLayout.ColumnCount;
-            _HscrollBar.Location = new(_HscrollBar.Location.X, Height - _HscrollBar.Height);
+            _HscrollBar!.Location = new(2, Height - _HscrollBar!.Height - 2);
+            _HscrollBar!.Maximum = tableLayout.ColumnCount - _def.Columns;
+            _HscrollBar!.Width = Width - 4;
+            _HscrollBar!.Visible = _def.Columns < tableLayout.ColumnCount;
+            _HscrollBar!.Location = new(_HscrollBar!.Location.X, Height - _HscrollBar!.Height);
         }
     }
 
@@ -246,7 +249,7 @@ public class Listbox : BaseControl
     public void ScrollToEnd()
     {
         _viewStartingRow = Math.Max(0, _totalRows - _def.Rows);
-        _VscrollBar.SetScrollPosition(_viewStartingRow);
+        _VscrollBar?.SetScrollPosition(_viewStartingRow);
     }
 
     public void EnterPressed()

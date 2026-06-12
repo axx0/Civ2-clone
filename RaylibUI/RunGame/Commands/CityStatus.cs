@@ -13,6 +13,6 @@ public class CityStatus(GameScreen gameScreen)
     public override void Action()
     {
         // ReSharper disable once StringLiteralTypo
-        GameScreen.ShowDialog(new CityStatusWindow(gameScreen));
+        GameScreen.ShowDialog(new CityStatusWindow(GameScreen));
     }
 }

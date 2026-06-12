@@ -87,7 +87,8 @@ public class ProductionBox : BaseControl
         _shieldWidth = _shieldIcon.Width * _cityWindow.Scale;
         _shieldHeight = _shieldIcon.Height * _cityWindow.Scale;
 
-        if (_city.ItemInProduction.Type == ItemType.Unit)
+        var activeOrder = GetDisplayedOrder();
+        if (activeOrder.Type == ItemType.Unit)
         {
             _label.Visible = false;
             _icon.Scale = ImageUtils.ZoomScale(1);
@@ -96,9 +97,9 @@ public class ProductionBox : BaseControl
         else
         {
             _label.Visible = true;
-            _label.Text = _city.ItemInProduction.Title;
+            _label.Text = activeOrder.Title;
             _icon.Scale = Math.Min(_cityWindow.Scale, 1.25f);
-            _icon.Location = new(_properties.IconLocation.X * _cityWindow.Scale - _icon.Width / 2, 
+            _icon.Location = new(_properties.IconLocation.X * _cityWindow.Scale - _icon.Width / 2,
                 _properties.IconLocation.Y * _cityWindow.Scale);
         }
 
@@ -108,15 +109,29 @@ public class ProductionBox : BaseControl
         }
     }
 
+    private IProductionOrder GetDisplayedOrder()
+    {
+        return _city.ConstructionQueue.Current?.Order ?? _city.ItemInProduction;
+    }
+
+    private int GetDisplayedProgress()
+    {
+        var queuedItem = _city.ConstructionQueue.Current;
+        return queuedItem == null
+            ? _city.ShieldsProgress
+            : queuedItem.TotalCost - queuedItem.RemainingCost;
+    }
+
     private void ChangeProductionDisplay()
     {
-        _icon.Image = [_city.ItemInProduction.GetIcon(_active)];
+        var activeOrder = GetDisplayedOrder();
+        _icon.Image = [activeOrder.GetIcon(_active)];
 
         OnResize();
 
         if (_properties.Type == "Box")
         {
-            UpdateData(_city.ItemInProduction);
+            UpdateData(activeOrder);
         }
     }
 
@@ -128,9 +143,13 @@ public class ProductionBox : BaseControl
         }
 
         selectedIndex = Math.Clamp(selectedIndex, 0, _canProduce.Count - 1);
-        if (_city.ItemInProduction != _canProduce[selectedIndex])
+        var selectedOrder = _canProduce[selectedIndex];
+        if (_city.ItemInProduction != selectedOrder)
         {
-            _city.ItemInProduction = _canProduce[selectedIndex];
+            _city.ItemInProduction = selectedOrder;
+            _city.ConstructionQueue.Clear();
+            _city.ConstructionQueue.Enqueue(selectedOrder, _shieldBoxRows);
+            _city.ShieldsProgress = 0;
 
             ChangeProductionDisplay();
         }
@@ -140,13 +159,41 @@ public class ProductionBox : BaseControl
     {
         base.Draw(pulse);
 
-        //Graphics.DrawRectangleLinesEx(Bounds, 1f, Color.Yellow);
-
         var scale = _cityWindow.Scale;
+        var queueItems = _city.ConstructionQueue.Items;
 
-        int lines = (int)((Height - 48 * scale) / _shieldHeight);
-        int requiredLines = _city.ItemInProduction.Cost;
-        int shieldsPerRow = _shieldBoxRows;
+        var queueTextY = Bounds.Y + 45 * scale;
+        var queueTextOffset = 0f;
+
+        for (var i = 0; i < queueItems.Count; i++)
+        {
+            var item = queueItems[i];
+            var progress = item.TotalCost <= 0
+                ? 1f
+                : (item.TotalCost - item.RemainingCost) / (float)item.TotalCost;
+            var text = $"[{i + 1}] {item.Name}: {(int)(progress * 100)}%";
+            Graphics.DrawTextEx(_active.Look.CityWindowFont, text,
+                new Vector2(Bounds.X + 5 * scale, queueTextY + queueTextOffset),
+                12 * scale, 0f, Color.White);
+            queueTextOffset += 20 * scale;
+        }
+
+        var activeOrder = GetDisplayedOrder();
+        var progressShields = Math.Min(GetDisplayedProgress(), _totalCost);
+        DrawShieldProgress(activeOrder, progressShields, queueTextOffset);
+    }
+
+    private void DrawShieldProgress(IProductionOrder activeOrder, int progressShields, float queueTextOffset)
+    {
+        var scale = _cityWindow.Scale;
+        var lines = (int)((Height - 48 * scale - queueTextOffset) / _shieldHeight);
+        var requiredLines = activeOrder.Cost;
+        var shieldsPerRow = _shieldBoxRows;
+        if (lines <= 0)
+        {
+            return;
+        }
+
         if (lines > requiredLines)
         {
             lines = requiredLines;
@@ -157,22 +204,18 @@ public class ProductionBox : BaseControl
         }
 
         var posX = Bounds.X + 5 * scale;
-        var posY = Bounds.Y + 42 * scale;
-
+        var posY = Bounds.Y + 42 * scale + queueTextOffset;
         var drawWidth = Width - 42 * scale;
         var spacing = (int)_shieldWidth;
         var requiredWidth = shieldsPerRow * spacing;
 
         Graphics.DrawLineEx(new Vector2(posX, posY), new Vector2(posX + Width - 15 * scale, posY), 1f, _pen1);
-        // 2nd horizontal line
         var lineHeight = 6 * scale + lines * _shieldHeight;
-        posY = Bounds.Y + 42 * scale + lineHeight;
+        posY = Bounds.Y + 42 * scale + queueTextOffset + lineHeight;
         Graphics.DrawLineEx(new Vector2(posX, posY), new Vector2(posX + Width - 15 * scale, posY), 1f, _pen2);
-        // 1st vertical line
-        posY = Bounds.Y + 42 * scale;
-        Graphics.DrawLineEx(new Vector2(posX, posY), new Vector2(posX, posY + lineHeight), 1f, _pen1);
 
-        // 2nd vertical line
+        posY = Bounds.Y + 42 * scale + queueTextOffset;
+        Graphics.DrawLineEx(new Vector2(posX, posY), new Vector2(posX, posY + lineHeight), 1f, _pen1);
         Graphics.DrawLineEx(new Vector2(posX + Width - 15 * scale, posY), new Vector2(posX + Width - 15 * scale, posY + lineHeight), 1f, _pen2);
 
         if (requiredWidth < drawWidth)
@@ -183,15 +226,15 @@ public class ProductionBox : BaseControl
         {
             spacing = (int)(drawWidth - _shieldWidth) / shieldsPerRow;
         }
-        var shields = Math.Min(_city.ShieldsProgress, _totalCost);
-        int count = 0;
+
+        var count = 0;
         posX += 3 * scale;
-        for (int row = 0; row < lines && count < shields; row++)
+        for (var row = 0; row < lines && count < progressShields; row++)
         {
-            for (int col = 0; col < shieldsPerRow && count < shields; col++)
+            for (var col = 0; col < shieldsPerRow && count < progressShields; col++)
             {
-                Graphics.DrawTextureEx(_shieldIcon, 
-                    new Vector2((int)posX + spacing * col, (int)(Bounds.Y + 45 * scale + _shieldHeight * row)),
+                Graphics.DrawTextureEx(_shieldIcon,
+                    new Vector2((int)posX + spacing * col, (int)(Bounds.Y + 45 * scale + queueTextOffset + _shieldHeight * row)),
                     0f, scale, Color.White);
                 count++;
             }

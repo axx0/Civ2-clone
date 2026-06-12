@@ -14,12 +14,12 @@ namespace RaylibUI.Controls;
 
 public class TextBox : BaseControl
 {
-    public event EventHandler<EventArgs> TextChanged; 
+    public event EventHandler<EventArgs>? TextChanged;
     public override bool CanFocus => true;
-    
+
     private int _editPosition = 0;
 
-    private string _text;
+    private string _text = string.Empty;
     private readonly IControlLayout _controller;
     private readonly IUserInterface? _active;
     private readonly int _minWidth;
@@ -28,7 +28,7 @@ public class TextBox : BaseControl
     private int _editWidth;
 
     private readonly Vector2 _textOffsetV = new Vector2(5,5);
-    private string _focusText;
+    private string _focusText = string.Empty;
 
     private const int TextMargin = 5;
 
@@ -61,7 +61,7 @@ public class TextBox : BaseControl
         Graphics.DrawRectangleRec(Bounds, Color.White);
         Graphics.DrawRectangleLinesEx(Bounds, 1f, Color.Black);
         TextRendering.Draw(_active?.Look.DefaultFont ?? Fonts.Tnr, _text, new Vector2(Bounds.X, Bounds.Y) + _textOffsetV, TextRendering.LegibleUiFontSize(Styles.BaseFontSize),1.0f, Color.Black);
-        
+
         if (_editMode)
         {
             if (pulse)

@@ -23,13 +23,12 @@ public class CityTileMap : BaseControl
     private Texture2D? _texture;
     private float _scaleFactor;
     private Vector2 _offset;
-    private readonly string _text;
     private readonly IUserInterface _active;
     private readonly int _organizationLevel;
     private readonly CityLabel _label;
     private readonly CityWindowLayout _props;
 
-    private IList<IViewElement> _viewElements;
+    private IList<IViewElement> _viewElements = [];
 
     public CityTileMap(CityWindow cityWindow, IGame game) : base(cityWindow)
     {
@@ -195,7 +194,12 @@ public class CityTileMap : BaseControl
     public override void Draw(bool pulse)
     {
         var adjustedLocation = new Vector2(Parent.Bounds.X, Parent.Bounds.Y) + Location + _offset;
-        Graphics.DrawTextureEx(_texture.Value, adjustedLocation, 0, _scaleFactor, Color.White);
+        if (_texture is not { } texture)
+        {
+            return;
+        }
+
+        Graphics.DrawTextureEx(texture, adjustedLocation, 0, _scaleFactor, Color.White);
 
         foreach (var element in _viewElements)
         {
@@ -343,15 +347,16 @@ public class CityTileMap : BaseControl
             }
         }
 
-        if (_texture.HasValue)
+        if (_texture is { } oldTexture)
         {
-            _texture.Value.Unload();
+            oldTexture.Unload();
         }
 
         _viewElements = elements;
 
-        _texture = Texture2D.LoadFromImage(image);
-        _scaleFactor = Width / (float)_texture.Value.Width;
+        var texture = Texture2D.LoadFromImage(image);
+        _texture = texture;
+        _scaleFactor = Width / (float)texture.Width;
         
         _offset = new Vector2(0, (Height - height * _scaleFactor) / 2f);
         image.Unload();
