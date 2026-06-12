@@ -532,6 +532,12 @@ public abstract class Civ2Interface(IMain main) : IUserInterface
 
     public IImageSource? GetImprovementImage(Improvement improvement, int firstWonderIndex)
     {
+        var fossArtImage = GetFossArtImage(improvement.IsWonder ? "Wonders" : "Improvements", improvement.Name);
+        if (fossArtImage != null)
+        {
+            return fossArtImage;
+        }
+
         var y = 1;
         var x = 343;
         var index = improvement.Type;
@@ -557,10 +563,67 @@ public abstract class Civ2Interface(IMain main) : IUserInterface
 
     public IImageSource? GetAdvanceImage(Advance advance)
     {
+        var fossArtImage = GetFossArtImage("Advances", advance.Name);
+        if (fossArtImage != null)
+        {
+            return fossArtImage;
+        }
+
         var x = 343 + (advance.KnowledgeCategory) * 37;
         var y = 211 + (advance.Epoch) * 21;
         
         return new BitmapStorage("icons", x, y, 36, 20);
+    }
+
+    private static IImageSource? GetFossArtImage(string category, string title)
+    {
+        var directName = NormalizeFossArtName(title);
+
+        foreach (var categoryPath in GetFossArtCategoryPaths(category))
+        {
+            var matchingFile = Directory.EnumerateFiles(categoryPath)
+                .FirstOrDefault(file => string.Equals(
+                    NormalizeFossArtName(Path.GetFileNameWithoutExtension(file)),
+                    directName,
+                    StringComparison.OrdinalIgnoreCase));
+            if (matchingFile != null)
+            {
+                return new BitmapStorage(matchingFile);
+            }
+        }
+
+        return null;
+    }
+
+    private static IEnumerable<string> GetFossArtCategoryPaths(string category)
+    {
+        var roots = Settings.SearchPaths
+            .Concat([
+                Environment.CurrentDirectory,
+                AppContext.BaseDirectory,
+                Path.Combine(Environment.CurrentDirectory, "RaylibUI")
+            ]);
+
+        foreach (var rootPath in roots.Distinct())
+        {
+            foreach (var candidate in new[]
+                     {
+                         Path.Combine(rootPath, category),
+                         Path.Combine(rootPath, "FOSSart", category),
+                         Path.Combine(rootPath, "RaylibUI", "FOSSart", category)
+                     })
+            {
+                if (Directory.Exists(candidate))
+                {
+                    yield return candidate;
+                }
+            }
+        }
+    }
+
+    private static string NormalizeFossArtName(string value)
+    {
+        return Regex.Replace(value, "[^A-Za-z0-9]", string.Empty).ToLowerInvariant();
     }
 
     public string GetScientistName(int epoch)

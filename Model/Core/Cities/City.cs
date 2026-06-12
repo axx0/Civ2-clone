@@ -66,6 +66,8 @@ namespace Model.Core.Cities
         public int TotalProduction { get; set; }
         public int Production { get; set; }
         public int ShieldsProgress { get; set; }
+        public ProductionQueue ConstructionQueue { get; set; } = new();
+
         
         public int Support { get; set; }
         public int Waste { get; set; }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace Civ2engine
             {
                 var secondaryMaps = config.Rules.Maps;
                 var area = config.WorldSize;
-                var maps = new Map[secondaryMaps?.Length ?? 0 + 1];
+                var maps = new Map[(secondaryMaps?.Length ?? 0) + 1];
 
                 var width = area[0];
                 var height = area[1];
@@ -142,8 +143,6 @@ namespace Civ2engine
                     
             var maxIslandSize = 30;
 
-            var grassland = terrains[0][(int) TerrainType.Grassland];
-
             var oceans = new HashSet<Tile>();
 
             var islands = new List<IslandDetails>();
@@ -155,7 +154,7 @@ namespace Civ2engine
                 land.Add(candidate);
 
                 var edgeSet = new HashSet<Tile>();
-                candidate.Terrain = grassland;
+                SetGeneratedLandTerrain(candidate, config, terrains[0], yMax);
                 var island = new IslandDetails {Tiles = {candidate}, Id = islands.Count +1};
                 islands.Add(island);
                         
@@ -177,7 +176,7 @@ namespace Civ2engine
                     land.Add(choice);
 
                     choice.Island = candidate.Island;
-                    choice.Terrain = grassland;
+                    SetGeneratedLandTerrain(choice, config, terrains[0], yMax);
                     foreach (var tile in mainMap.DirectNeighbours(choice))
                     {
                         if (tile.Island != -1 || !remainingTiles.Contains(tile)) continue;
@@ -218,10 +217,101 @@ namespace Civ2engine
             mainMap.Islands = islands;
             mainMap.RenumberIslands();
             mainMap.RenumberOceans(oceans);
+
+            foreach (var tile in land)
+            {
+                tile.RefreshGoodyHut(mainMap.ResourceSeed);
+            }
                     
             mainMap.CalculateFertility(terrains[0]);
 
             return mainMap;
+        }
+
+        private static void SetGeneratedLandTerrain(Tile tile, GameInitializationConfig config, Terrain[] terrains, int yMax)
+        {
+            tile.Terrain = SelectGeneratedTerrain(tile, config, terrains, yMax);
+            tile.River = ShouldPlaceRiver(tile, config);
+        }
+
+        private static Terrain SelectGeneratedTerrain(Tile tile, GameInitializationConfig config, Terrain[] terrains, int yMax)
+        {
+            var latitude = yMax <= 0 ? 0d : Math.Abs((tile.Y / (double)yMax) - 0.5d) * 2d;
+            var wetness = config.Climate switch
+            {
+                0 => -18,
+                2 => 18,
+                _ => 0
+            };
+            var warmth = config.Temperature switch
+            {
+                0 => -18,
+                2 => 18,
+                _ => 0
+            };
+            var ageRoughness = config.Age switch
+            {
+                0 => 18,
+                2 => -10,
+                _ => 0
+            };
+
+            if (!config.FlatWorld && latitude > 0.9d)
+            {
+                return terrains[(int)(config.Random.Next(100) < 70 - warmth ? TerrainType.Glacier : TerrainType.Tundra)];
+            }
+
+            var roll = config.Random.Next(100);
+
+            if (latitude > 0.72d)
+            {
+                if (roll < 45 - warmth) return terrains[(int)TerrainType.Tundra];
+                if (roll < 62 + ageRoughness) return terrains[(int)TerrainType.Hills];
+                if (roll < 74 + ageRoughness) return terrains[(int)TerrainType.Mountains];
+                if (roll < 86 + wetness) return terrains[(int)TerrainType.Forest];
+                return terrains[(int)TerrainType.Plains];
+            }
+
+            if (latitude < 0.28d)
+            {
+                if (roll < 18 + wetness) return terrains[(int)TerrainType.Jungle];
+                if (roll < 28 + wetness) return terrains[(int)TerrainType.Swamp];
+                if (roll < 42 - wetness + warmth) return terrains[(int)TerrainType.Desert];
+                if (roll < 58 + ageRoughness) return terrains[(int)TerrainType.Hills];
+                if (roll < 68 + ageRoughness) return terrains[(int)TerrainType.Mountains];
+                if (roll < 82) return terrains[(int)TerrainType.Plains];
+                return terrains[(int)TerrainType.Grassland];
+            }
+
+            if (roll < 10 - wetness + warmth) return terrains[(int)TerrainType.Desert];
+            if (roll < 24 + wetness) return terrains[(int)TerrainType.Forest];
+            if (roll < 34 + wetness) return terrains[(int)TerrainType.Swamp];
+            if (roll < 50 + ageRoughness) return terrains[(int)TerrainType.Hills];
+            if (roll < 60 + ageRoughness) return terrains[(int)TerrainType.Mountains];
+            if (roll < 78) return terrains[(int)TerrainType.Plains];
+            return terrains[(int)TerrainType.Grassland];
+        }
+
+        private static bool ShouldPlaceRiver(Tile tile, GameInitializationConfig config)
+        {
+            if (tile.Type is TerrainType.Ocean or TerrainType.Glacier or TerrainType.Mountains)
+            {
+                return false;
+            }
+
+            var riverChance = config.Climate switch
+            {
+                0 => 4,
+                2 => 13,
+                _ => 8
+            };
+
+            if (tile.Type is TerrainType.Jungle or TerrainType.Swamp or TerrainType.Grassland)
+            {
+                riverChance += 4;
+            }
+
+            return config.Random.Next(100) < riverChance;
         }
     }
 }

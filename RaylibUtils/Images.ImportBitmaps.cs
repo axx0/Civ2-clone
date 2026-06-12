@@ -117,6 +117,10 @@ namespace RaylibUtils
                         if (!_imageCache.ContainsKey(sourceKey))
                         {
                             var path = Utils.GetFilePath(binarySource.Filename);
+                            if (path is null)
+                            {
+                                throw new FileNotFoundException($"Image file '{binarySource.Filename}' was not found.");
+                            }
                             var source_img_bpp = Images.LoadImageFromFile(path, binarySource.DataStart, binarySource.Length);
                             _imageCache[sourceKey] = source_img_bpp.Image;
                             _sourceBpp[sourceKey] = source_img_bpp.ColourDepth;
@@ -141,6 +145,10 @@ namespace RaylibUtils
                                 active.MainApp.ActiveRuleSet.Paths : searchPaths ?? Settings.SearchPaths;
                             var path = Utils.GetFilePath(bitmapStorage.Filename, _paths, bitmapStorage.Extension);
                             path ??= Utils.GetFilePath(bitmapStorage.Filename, Settings.SearchPaths, bitmapStorage.Extension);
+                            if (path is null)
+                            {
+                                throw new FileNotFoundException($"Image file '{bitmapStorage.Filename}' was not found.");
+                            }
                             var source_img_bpp = Images.LoadImageFromFile(path);
                             _imageCache[sourceKey] = source_img_bpp.Image;
                             _sourceBpp[sourceKey] = source_img_bpp.ColourDepth;

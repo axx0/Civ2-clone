@@ -496,6 +496,10 @@ namespace Civ2engine.UnitActions
                     
                     moveCost *= tileTo.MoveCost;
                     moveCost = MoveCost(tileTo, tileFrom, moveCost, cosmicRules);
+                    if (unit.MaxMovePoints <= cosmicRules.MovementMultiplier && moveCost < cosmicRules.MovementMultiplier)
+                    {
+                        moveCost = unit.MovePoints;
+                    }
 
                     // If alpine movement could be less use that
                     if (cosmicRules.AlpineMovement < moveCost && unit.Alpine)

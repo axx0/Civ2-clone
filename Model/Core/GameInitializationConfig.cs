@@ -6,7 +6,7 @@ namespace Model.Core
 {
     public class GameInitializationConfig
     {
-        public FastRandom Random { get; set; } = new (4564234);
+        public FastRandom Random { get; set; } = new();
         
         public Dictionary<string, PopupBox?> PopUps { get; set; } = new();
         public int[] WorldSize { get; set; } = { 50, 80 };

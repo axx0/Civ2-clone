@@ -34,10 +34,21 @@ namespace Civ2engine
                 var files = extensions.Select(e => filename + "." + e).ToArray();
                 foreach (var path in paths)
                 {
-                    if(!Directory.Exists(path)) continue;
+                    if (!Directory.Exists(path)) continue;
                     foreach (var file in files)
                     {
-                        var filePath = Directory.EnumerateFiles(path, file,
+                        var filePath = GetExactOrRelativeFilePath(path, file);
+                        if (filePath != null)
+                        {
+                            return filePath;
+                        }
+
+                        if (file.Contains(Path.DirectorySeparatorChar) || file.Contains(Path.AltDirectorySeparatorChar))
+                        {
+                            continue;
+                        }
+
+                        filePath = Directory.EnumerateFiles(path, file,
                             new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive }).FirstOrDefault();
                         if (filePath != null)
                         {
@@ -51,8 +62,19 @@ namespace Civ2engine
             {
                 foreach (var path in paths)
                 {
-                    if(!Directory.Exists(path)) continue;
-                    var filePath = Directory.EnumerateFiles(path, filename,
+                    if (!Directory.Exists(path)) continue;
+                    var filePath = GetExactOrRelativeFilePath(path, filename);
+                    if (filePath != null)
+                    {
+                        return filePath;
+                    }
+
+                    if (filename.Contains(Path.DirectorySeparatorChar) || filename.Contains(Path.AltDirectorySeparatorChar))
+                    {
+                        continue;
+                    }
+
+                    filePath = Directory.EnumerateFiles(path, filename,
                         new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive }).FirstOrDefault();
                     if (filePath != null)
                     {
@@ -64,6 +86,38 @@ namespace Civ2engine
             Console.WriteLine(filename + " not found!");
             
             return null;
+        }
+
+        private static string? GetExactOrRelativeFilePath(string rootPath, string filename)
+        {
+            if (Path.IsPathRooted(filename))
+            {
+                if (File.Exists(filename))
+                {
+                    return filename;
+                }
+
+                return FindCaseInsensitiveFile(Path.GetDirectoryName(filename), Path.GetFileName(filename));
+            }
+
+            var candidate = Path.Combine(rootPath, filename);
+            if (File.Exists(candidate))
+            {
+                return candidate;
+            }
+
+            return FindCaseInsensitiveFile(Path.GetDirectoryName(candidate), Path.GetFileName(candidate));
+        }
+
+        private static string? FindCaseInsensitiveFile(string? directory, string filename)
+        {
+            if (string.IsNullOrWhiteSpace(directory) || !Directory.Exists(directory))
+            {
+                return null;
+            }
+
+            return Directory.EnumerateFiles(directory)
+                .FirstOrDefault(file => string.Equals(Path.GetFileName(file), filename, StringComparison.OrdinalIgnoreCase));
         }
 
         public static int ToBitmask(bool[]? bitArray)

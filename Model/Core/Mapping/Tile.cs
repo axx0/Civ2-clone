@@ -82,14 +82,9 @@ namespace Model.Core.Mapping
                 Special = (d & a) == (d & b) ? 1 : 0;
             }
 
-            if(terrain.Type != TerrainType.Ocean && !terrain.Impassable && CalculateGoodyHut(seed))
-            {
-                IsGoodyHutTile = true;
-                _goodyHut = new GoodyHut();
-            }
-
             // Terrain must be set after special to get the correct EffectiveTerrain type for specials
             Terrain = terrain;
+            RefreshGoodyHut(seed);
         }
 
         private bool CalculateGoodyHut(int seed)
@@ -105,6 +100,20 @@ namespace Model.Core.Mapping
             var expectedHash = (nSum % 4) + (nDiff % 4) * 4;
 
             return hash == expectedHash;
+        }
+
+        public void RefreshGoodyHut(int seed)
+        {
+            if (Terrain.Type != TerrainType.Ocean && !Terrain.Impassable && CalculateGoodyHut(seed))
+            {
+                IsGoodyHutTile = true;
+                _goodyHut ??= new GoodyHut();
+            }
+            else
+            {
+                IsGoodyHutTile = false;
+                _goodyHut = null;
+            }
         }
 
         public bool HasShield { get; }
@@ -210,6 +219,14 @@ namespace Model.Core.Mapping
 
         public bool[] Visibility { get; set; }
 
-        public bool HasGoodieHut { get; set; }
+        public bool HasGoodieHut
+        {
+            get => HasGoodyHut;
+            set
+            {
+                IsGoodyHutTile = value;
+                _goodyHut = value ? new GoodyHut() : null;
+            }
+        }
     }
 }

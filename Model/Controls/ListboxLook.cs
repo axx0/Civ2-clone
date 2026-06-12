@@ -13,8 +13,8 @@ public class ListboxLooks
     public Font Font { get; set; } = Fonts.Tnr;
     public int FontSize { get; set; } = 12;
     public Color TextColorFront { get; set; } = Color.Black;
-    public Color TextColorShadow { get; set; } = Color.Black;
-    public Vector2 TextShadowOffset { get; set; } = new(1, 1);
+    public Color TextColorShadow { get; set; } = Color.Blank;
+    public Vector2 TextShadowOffset { get; set; } = Vector2.Zero;
 
     public Font SelectedTextFont { get; set; } = Fonts.Tnr;
     public Color SelectedTextBackgroundColor { get; set; } = Color.Gray;

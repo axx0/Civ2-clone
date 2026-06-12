@@ -33,7 +33,7 @@ public class BitmapStorage : IImageSource
         if (Path.HasExtension(file))
         {
             Extension = new[] { Path.GetExtension(file).Remove(0,1) };
-            Filename = Path.GetFileNameWithoutExtension(file);
+            Filename = Path.ChangeExtension(file, null) ?? file;
         }
         else
         {

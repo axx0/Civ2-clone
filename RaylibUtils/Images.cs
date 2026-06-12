@@ -180,6 +180,12 @@ public static partial class Images
             img = Image.LoadFromMemory(Path.GetExtension(filename).ToLowerInvariant(), bytes);
             img.ReplaceColor(new Color(255, 0, 255, 255), new Color(255, 0, 255, 0));
         }
+        // JPG/JPEG
+        else if (bytes.Length > 2 && bytes[0] == 0xff && bytes[1] == 0xd8)
+        {
+            bpp = 24;
+            img = Image.LoadFromMemory(Path.GetExtension(filename).ToLowerInvariant(), bytes);
+        }
 
         return new Image_and_bpp
         {

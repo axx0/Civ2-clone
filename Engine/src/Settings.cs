@@ -19,7 +19,7 @@ namespace Civ2engine
         // Game settings from App.config
         public static string Civ2Path { get; private set; } = string.Empty;
         
-        public static string[] SearchPaths { get; internal set; } = [BasePath];
+        public static string[] SearchPaths { get; internal set; } = BuiltInSearchPaths;
 
         public static int TextureFilter { get; private set; }
 
@@ -64,7 +64,7 @@ namespace Civ2engine
             if (root.TryGetProperty(nameof(SearchPaths), out var searchPathsElement))
             {
                 var searchPaths = searchPathsElement.EnumerateArray().Select(e => e.GetString()).Where(IsValidRoot).OfType<string>().Concat(
-                        [BasePath])
+                        BuiltInSearchPaths)
                     .ToArray();
                 if (!string.IsNullOrWhiteSpace(Civ2Path))
                 {
@@ -78,7 +78,7 @@ namespace Civ2engine
                 
             }else if (!string.IsNullOrWhiteSpace(Civ2Path))
             {
-                SearchPaths = [Civ2Path, BasePath];
+                SearchPaths = [Civ2Path, ..BuiltInSearchPaths];
             }
 
             TextureFilter = root.TryGetProperty(nameof(TextureFilter), out var textureFilter) ? textureFilter.GetInt32() : 0;
@@ -110,7 +110,7 @@ namespace Civ2engine
             if (string.IsNullOrWhiteSpace(Civ2Path) || !IsValidRoot(Civ2Path))
             {
                 Civ2Path = path;
-                SearchPaths = new[] { path, BasePath };
+                SearchPaths = [path, ..BuiltInSearchPaths];
             }
             else
             {
@@ -119,6 +119,13 @@ namespace Civ2engine
             Save();// This overwrites the appsettings.
             return true;
         }
+
+        private static string[] BuiltInSearchPaths =>
+        [
+            Path.Combine(BasePath, "FOSSart"),
+            Path.Combine(BasePath, "RaylibUI", "FOSSart"),
+            BasePath
+        ];
 
         public static void Save()
         {
