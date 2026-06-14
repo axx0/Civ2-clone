@@ -51,7 +51,12 @@ internal class MockGame : IGame
     }
 
     public IGameDate Date => throw new NotImplementedException();
-    public int TurnNumber => throw new NotImplementedException();
+    public int TurnNumber
+    {
+        get => throw new NotImplementedException();
+        set => throw new NotImplementedException();
+    }
+
     public List<City> AllCities => throw new NotImplementedException();
     public IPlayer[] Players { get; set; }
 

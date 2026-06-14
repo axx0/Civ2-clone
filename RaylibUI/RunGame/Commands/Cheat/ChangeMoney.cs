@@ -1,12 +1,8 @@
 using Model.Input;
 using System.Diagnostics;
-using Civ2engine;
 using Civ2engine.IO;
 using Microsoft.VisualBasic.CompilerServices;
 using Model.Core;
-using Model.Interface;
-using Raylib_CSharp.Interact;
-using Point = Model.Point;
 using Model.Controls;
 
 namespace RaylibUI.RunGame.Commands.Cheat;
@@ -20,9 +16,6 @@ public class ChangeMoney(GameScreen gameScreen) : AlwaysOnCommand(gameScreen, Co
 
     public override void Action()
     {
-        var allLabel = Labels.For(LabelIndex.EntireMap);
-        var noSpecial = Labels.For(LabelIndex.NoSpecialView);
-
         _selectTribeDialog = new CivDialog(GameScreen.Main, new DialogElements(new PopupBox
         {
             Title = "Pick A Player",
