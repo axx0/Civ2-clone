@@ -1,29 +1,25 @@
+using Civ2engine;
 using Model.Input;
-using Civ2engine.IO;
-using Model.Core;
 using Model.Controls;
+using Model.Core.Mapping;
+using Model.Core.Units;
 
 namespace RaylibUI.RunGame.Commands.Cheat;
 
 public class DestroyUnitsAtCursor(GameScreen gameScreen) : AlwaysOnCommand(gameScreen, CommandIds.CheatDestroyAllUnitsAtCursor, [new Shortcut(Key.D, ctrl: true, shift: true)])
 {
-    private CivDialog? _placeholderDialog;
-
     public override void Action()
     {
-        _placeholderDialog = new CivDialog(GameScreen.Main, new DialogElements(new PopupBox
-        {
-            Title = GetType().Name,
-            Text = [$"This is a placeholder for {Command?.GameCommand?.Id}, which is not yet implemented."],
-            LineStyles = [TextStyles.Left],
-            Button = [Labels.Ok]
-        }), PlaceholderHandler);
-
-        GameScreen.ShowDialog(_placeholderDialog);
-    }
-
-    private void PlaceholderHandler(string button, int selection, IList<bool>? arg3, IDictionary<string, string>? arg4)
-    {
-        GameScreen.CloseDialog(_placeholderDialog);
+        Tile cursorTile = ((Game)GameScreen.Game).ActiveTile;
+        // Note that this can't just be:
+        //   cursorTile.UnitsHere.forEach(u => u.Dead = true)
+        // because this would mutate UnitsHere while we're iterating it!
+        // So we have to copy into a temp list, and iterate over that.
+        List<Unit> unitsToDelete = new List<Unit>();
+        cursorTile.UnitsHere.ForEach(unitsToDelete.Add);
+        unitsToDelete.ForEach(unit => unit.Dead = true);
+        GameScreen.StatusPanel.Update();
+        GameScreen.TileCache.Clear();
+        GameScreen.MapControl.ForceRedraw = true;
     }
 }
