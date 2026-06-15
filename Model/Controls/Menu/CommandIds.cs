@@ -62,6 +62,19 @@ public static class CommandIds
     public const string SaveMap = "SAVE_MAP";
     public const string LoadMap = "LOAD_MAP";
     
+    public const string CheatCreateUnit = "CHEAT_CREATE_UNIT";
     public const string CheatRevealMapCommand = "CHEAT_REVEAL_MAP";
+    public const string CheatSetHumanPlayer = "CHEAT_SET_HUMAN_PLAYER";
+    public const string CheatSetGameYear = "CHEAT_SET_GAME_YEAR";
+    public const string CheatKillCiv =  "CHEAT_KILL_CIVILIZATION";
+    public const string CheatTechAdvance = "CHEAT_TECH_ADVANCE";
+    public const string CheatEditTechnologies =  "CHEAT_EDIT_TECHNOLOGIES";
+    public const string CheatForceGovernment = "CHEAT_FORCE_GOVERNMENT";
+    public const string CheatChangeTerrainAtCursor = "CHEAT_CHANGE_TERRAIN_AT_CURSOR";
+    public const string CheatDestroyAllUnitsAtCursor = "CHEAT_DESTROY_ALL_UNITS_AT_CURSOR";
     public const string CheatChangeMoneyCommand = "CHEAT_CHANGE_MONEY";
+    public const string CheatEditUnit = "CHEAT_EDIT_UNIT";
+    public const string CheatEditCity = "CHEAT_EDIT_CITY";
+    public const string CheatEditKing = "CHEAT_EDIT_KING";
+    public const string CheatSetScenarioParameters = "CHEAT_SET_SCENARIO_PARAMETERS";
 }

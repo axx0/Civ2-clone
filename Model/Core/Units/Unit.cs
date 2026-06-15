@@ -1,6 +1,5 @@
-﻿using Civ2engine;
+﻿using System.Text;
 using Civ2engine.Enums;
-using Civ2engine.Units;
 using Model.Constants;
 using Model.Core.Cities;
 using Model.Core.Mapping;
@@ -159,6 +158,23 @@ namespace Model.Core.Units
         public int Building { get; set; }
         public int AttacksSpent { get; set; }
 
+        // Used in some dialogs like Unit Activation when clicking on a stack of units.
+        // Examples: "Carthaginian Veteran Riflemen (Carthage)", "American Armor (Philadelphia)"
+        public String LongDescription()
+        {
+            var desc = new StringBuilder();
+            desc.Append(Owner.Adjective);
+            if (Veteran)
+            {
+                desc.Append(" Veteran");
+            }
+            desc.Append($" {Name}");
+            var homeCity = HomeCity?.Name ?? "NONE";
+            desc.Append($" ({homeCity})");
+
+            return desc.ToString();
+        }
+        
         public Dictionary<string, string> ExtendedData { get;} = new();
     }
 }

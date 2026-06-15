@@ -36,7 +36,7 @@ public interface IGame
     int DifficultyLevel { get; set; }
     IGameDate Date { get; }
     
-    int TurnNumber { get; }
+    int TurnNumber { get; set; }
     List<City> AllCities { get; }
     IPlayer[] Players { get; }
     int PollutionSkulls { get; }

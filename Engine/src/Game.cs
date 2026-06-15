@@ -39,7 +39,7 @@ namespace Civ2engine
         public Rules Rules => _rules;
 
         public IGameDate Date { get; }
-        public int TurnNumber { get; private set; }
+        public int TurnNumber { get; set; }
 
         public int DifficultyLevel { get; set; }
         public int BarbarianActivity => (int)_barbarianActivity;
