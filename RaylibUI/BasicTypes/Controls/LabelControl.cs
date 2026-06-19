@@ -47,15 +47,15 @@ public class LabelControl : BaseControl
         _fontSize = fontSize;
         _spacing = spacing;
         _font = font ?? controller.MainWindow.ActiveInterface?.Look.LabelFont ?? Fonts.Tnr;
-        ColorFront = colorFront ?? Color.Black;
-        ColorShadow = colorShadow ?? Color.Black;
+        ColorFront = colorFront ?? TextRendering.StrongBlack;
+        ColorShadow = colorShadow ?? Color.Blank;
         ShadowOffset = shadowOffset ?? Vector2.Zero;
 
-        _active = controller.MainWindow.ActiveInterface ?? throw new InvalidOperationException("LabelControl requires an active user interface.");
+        _active = controller.MainWindow.ActiveInterface;
         _timer = new Timer(_ => _switch = !_switch, null, 0, switchTime);
         _switchColors = switchColors;
         BackgroundColor = colorBack;
-        _textSize = TextManager.MeasureTextEx(_font, _text, _fontSize, _spacing);
+        _textSize = TextRendering.Measure(_font, _text, _fontSize, _spacing);
     }
 
     private Vector2 _textSize;
@@ -68,18 +68,18 @@ public class LabelControl : BaseControl
         set
         {
             _text = value;
-            _textSize = TextManager.MeasureTextEx(_font, _text, _fontSize, _spacing);
+            _textSize = TextRendering.Measure(_font, _text, _fontSize, _spacing);
         }
     }
 
     private Font _font;
-    public Font Font 
+    public Font Font
     {
         get => _font;
-        set 
+        set
         {
             _font = value;
-            _textSize = TextManager.MeasureTextEx(_font, _text, _fontSize, _spacing);
+            _textSize = TextRendering.Measure(_font, _text, _fontSize, _spacing);
         }
     }
 
@@ -90,7 +90,7 @@ public class LabelControl : BaseControl
         set
         {
             _fontSize = value;
-            _textSize = TextManager.MeasureTextEx(_font, _text, _fontSize, _spacing);
+            _textSize = TextRendering.Measure(_font, _text, _fontSize, _spacing);
         }
     }
 
@@ -107,14 +107,14 @@ public class LabelControl : BaseControl
     private int _width;
     public override int Width
     {
-        get 
-        { 
+        get
+        {
             if (_width == 0)
             {
                 _width = GetPreferredWidth();
             }
 
-            return _width; 
+            return _width;
         }
         set { _width = value; }
     }
@@ -134,13 +134,15 @@ public class LabelControl : BaseControl
         set { _height = value; }
     }
 
-
     public override int GetPreferredWidth()
     {
         return Math.Max(_minWidth, (int)_textSize.X + Padding.Left + Padding.Right + (HorizontalAlignment == HorizontalAlignment.Center ? 10 : 0));
     }
 
-    public override int GetPreferredHeight() => (int)_textSize.Y + Padding.Top + Padding.Bottom;
+    public override int GetPreferredHeight()
+    {
+        return Math.Max(_defaultHeight, (int)MathF.Ceiling(_textSize.Y) + Padding.Top + Padding.Bottom);
+    }
 
     public override void Draw(bool pulse)
     {
@@ -150,14 +152,14 @@ public class LabelControl : BaseControl
         {
             Graphics.DrawRectangleRec(Bounds, BackgroundColor.Value);
         }
-        
+
         var fontSize = _fontSize;
         var textSize = _textSize;
         var availableWidth = Width - Padding.Left - Padding.Right;
         while (fontSize > 8 && availableWidth > 0 && textSize.X > availableWidth)
         {
             fontSize--;
-            textSize = TextManager.MeasureTextEx(_font, _text, fontSize, _spacing);
+            textSize = TextRendering.Measure(_font, _text, fontSize, _spacing);
         }
 
         var textPosition = new Vector2(Bounds.X + Padding.Left, Bounds.Y + Padding.Top);
@@ -180,24 +182,29 @@ public class LabelControl : BaseControl
             textPosition.Y += Height - Padding.Top - Padding.Bottom - textSize.Y;
         }
 
-        Color colorFront, colorShadow;
+        Color colorFront;
+        Color colorShadow;
         if (_switchColors is not null)
         {
             colorFront = _switch ? _switchColors[0] : _switchColors[1];
-            colorShadow = Color.Black;
+            colorShadow = Color.Blank;
         }
         else
         {
             colorFront = ColorFront;
             colorShadow = ColorShadow;
         }
+
         textPosition = new Vector2(MathF.Round(textPosition.X), MathF.Round(textPosition.Y));
 
-        Graphics.DrawTextEx(_font, _text, textPosition + ShadowOffset, fontSize, _spacing, colorShadow);
-        Graphics.DrawTextEx(_font, _text, textPosition, fontSize, _spacing, colorFront);
-
-        // Draw control's bounds
-        //Graphics.DrawRectangleLinesEx(Bounds, 1f, Color.Blue);
+        if (ShadowOffset != Vector2.Zero && colorShadow.A > 0)
+        {
+            TextRendering.DrawWithShadow(_font, _text, textPosition, fontSize, _spacing, colorFront, colorShadow, ShadowOffset);
+        }
+        else
+        {
+            TextRendering.Draw(_font, _text, textPosition, fontSize, _spacing, colorFront);
+        }
 
         base.Draw(pulse);
     }

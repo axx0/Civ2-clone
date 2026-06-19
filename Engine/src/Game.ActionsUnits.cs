@@ -111,14 +111,41 @@ namespace Civ2engine
                             unit.MovePointsLost = unit.MovePoints;
                             break;
                         case OrderType.GoTo:
-                            if (unit.CurrentLocation.Map.IsValidTileC2(unit.GoToX, unit.GoToY))
+                            if (!unit.CurrentLocation.Map.IsValidTileC2(unit.GoToX, unit.GoToY))
                             {
-                                var tile = unit.CurrentLocation.Map.TileC2(unit.GoToX, unit.GoToY);
-                                var path = Path.CalculatePathBetween(this, unit.CurrentLocation, tile, unit.Domain, unit.MaxMovePoints, unit.Owner, unit.Alpine, unit.IgnoreZonesOfControl);
-                                path?.Follow(this, unit);
+                                ClearGotoOrder(unit);
+                                break;
                             }
 
-                            if (unit.MovePoints >= 0)
+                            var destination = unit.CurrentLocation.Map.TileC2(unit.GoToX, unit.GoToY);
+                            if (destination == unit.CurrentLocation)
+                            {
+                                ClearGotoOrder(unit);
+                                break;
+                            }
+
+                            var path = Path.CalculatePathBetween(this, unit.CurrentLocation, destination, unit.Domain, unit.MaxMovePoints, unit.Owner, unit.Alpine, unit.IgnoreZonesOfControl);
+                            if (path == null)
+                            {
+                                ClearGotoOrder(unit);
+                                player.SetUnitActive(unit, true);
+                                return false;
+                            }
+
+                            path.Follow(this, unit);
+
+                            if (unit.Dead)
+                            {
+                                break;
+                            }
+
+                            if (unit.CurrentLocation == destination)
+                            {
+                                ClearGotoOrder(unit);
+                                break;
+                            }
+
+                            if (unit.MovePoints > 0)
                             {
                                 player.SetUnitActive(unit, true);
                                 return false;
@@ -157,6 +184,14 @@ namespace Civ2engine
             }
 
             return true;
+        }
+
+        private static void ClearGotoOrder(Unit unit)
+        {
+            unit.Order = (int)OrderType.NoOrders;
+            unit.GoToX = unit.X;
+            unit.GoToY = unit.Y;
+            unit.GoToMapIndex = unit.MapIndex;
         }
 
         private void ProcessAutomatedSettler(Unit unit)

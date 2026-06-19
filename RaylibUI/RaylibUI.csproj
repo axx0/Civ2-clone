@@ -1,60 +1,34 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NAudio" Version="2.1.0" />
-    <PackageReference Include="Raylib-CSharp" Version="5.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <ProjectReference Include="..\Civ2\Civ2.csproj" />
     <ProjectReference Include="..\Civ2Gold\Civ2Gold.csproj" />
-	  <ProjectReference Include="..\Civ2TOT\Civ2TOT.csproj" />
+    <ProjectReference Include="..\Civ2TOT\Civ2TOT.csproj" />
     <ProjectReference Include="..\Engine\Core.csproj" />
     <ProjectReference Include="..\Model\Model.csproj" />
   </ItemGroup>
-
   <ItemGroup>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
+    <Compile Update="Properties\Resources.Designer.cs" DesignTime="True" AutoGen="True" DependentUpon="Resources.resx" />
     <Compile Remove="IScreen.cs" />
   </ItemGroup>
-
   <ItemGroup>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    <Compile Include="*.cs" />
+    <EmbeddedResource Include="Properties/Resources.resx" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
-
   <ItemGroup>
-    <None Update="Shaders\base.vs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Shaders\grayscale.fs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="SteelGrey.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="stripe.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="FOSSart\**\*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>FOSSart\%(RecursiveDir)%(Filename)%(Extension)</Link>
-    </None>
+    <None Update="Shaders\base.vs" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="Shaders\grayscale.fs" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="SteelGrey.png" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="stripe.png" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="FOSSart\**\*" CopyToOutputDirectory="PreserveNewest" Link="FOSSart\%(RecursiveDir)\%(Filename)\%(Extension)" />
   </ItemGroup>
-
-
-
 </Project>

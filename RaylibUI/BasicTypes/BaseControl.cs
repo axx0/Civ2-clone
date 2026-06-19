@@ -76,7 +76,29 @@ public abstract class BaseControl : IControl
     public IList<IControl> Controls { get; protected set; } = [];
 
     private IComponent? _parent;
-    public IComponent Parent => _parent ??= SearchForParent(Controller) ?? Controller;
+    public IComponent Parent
+    {
+        get
+        {
+            if (_parent != null)
+            {
+                return _parent;
+            }
+
+            var parent = SearchForParent(Controller);
+            if (parent != null)
+            {
+                _parent = parent;
+                return parent;
+            }
+
+            // Do not cache this fallback. Many controls are sized before they are
+            // inserted into their real parent; caching Controller here makes their
+            // bounds permanently relative to the wrong window and lets large art
+            // escape city/civilopedia panels.
+            return Controller;
+        }
+    }
 
     /// <summary>
     /// Search for this control's parent control.

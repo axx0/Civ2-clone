@@ -23,12 +23,13 @@ public class CityTileMap : BaseControl
     private Texture2D? _texture;
     private float _scaleFactor;
     private Vector2 _offset;
+    private readonly string _text;
     private readonly IUserInterface _active;
     private readonly int _organizationLevel;
     private readonly CityLabel _label;
     private readonly CityWindowLayout _props;
 
-    private IList<IViewElement> _viewElements = [];
+    private IList<IViewElement> _viewElements;
 
     public CityTileMap(CityWindow cityWindow, IGame game) : base(cityWindow)
     {
@@ -194,12 +195,7 @@ public class CityTileMap : BaseControl
     public override void Draw(bool pulse)
     {
         var adjustedLocation = new Vector2(Parent.Bounds.X, Parent.Bounds.Y) + Location + _offset;
-        if (_texture is not { } texture)
-        {
-            return;
-        }
-
-        Graphics.DrawTextureEx(texture, adjustedLocation, 0, _scaleFactor, Color.White);
+        Graphics.DrawTextureEx(_texture.Value, adjustedLocation, 0, _scaleFactor, Color.White);
 
         foreach (var element in _viewElements)
         {
@@ -311,10 +307,13 @@ public class CityTileMap : BaseControl
 
         var lowOrganisation = _organizationLevel == 0;
         var totalDrawWidth = dim.TileWidth - 20;
-        var resourceXOffset = 10;
+        var resourceXOffset = 8;
         var resourceWidth = resources.First().Value.Width;
         var resourceHeight = resources.First().Value.Height;
-        var resourceYOffset = dim.HalfHeight - resourceHeight / 2;
+        const float resourceScale = 1.45f;
+        var drawResourceWidth = (int)Math.Round(resourceWidth * resourceScale);
+        var drawResourceHeight = (int)Math.Round(resourceHeight * resourceScale);
+        var resourceYOffset = dim.HalfHeight - drawResourceHeight / 2;
         var resourceRect = new Rectangle(0, 0, resourceWidth, resourceHeight);
         foreach (var workedTile in city.WorkedTiles)
         {
@@ -327,8 +326,8 @@ public class CityTileMap : BaseControl
             {
                 var locationX = xcentre + (workedTile.X - city.Location.X) * dim.HalfWidth + resourceXOffset;
                 var locationY = ycentre + (workedTile.Y - city.Location.Y) * dim.HalfHeight + resourceYOffset;
-                var spacing = Math.Min(resourceWidth + 1, Math.Max(totalDrawWidth / totalResources, 1));
-                var destRect = resourceRect with { X = locationX, Y = locationY };
+                var spacing = Math.Min(drawResourceWidth + 1, Math.Max(totalDrawWidth / totalResources, 1));
+                var destRect = new Rectangle(locationX, locationY, drawResourceWidth, drawResourceHeight);
                 for (var i = 0; i < food; i++)
                 {
                     image.Draw(resources["Food"], resourceRect, destRect, Color.White);
@@ -347,16 +346,15 @@ public class CityTileMap : BaseControl
             }
         }
 
-        if (_texture is { } oldTexture)
+        if (_texture.HasValue)
         {
-            oldTexture.Unload();
+            _texture.Value.Unload();
         }
 
         _viewElements = elements;
 
-        var texture = Texture2D.LoadFromImage(image);
-        _texture = texture;
-        _scaleFactor = Width / (float)texture.Width;
+        _texture = Texture2D.LoadFromImage(image);
+        _scaleFactor = Width / (float)_texture.Value.Width;
         
         _offset = new Vector2(0, (Height - height * _scaleFactor) / 2f);
         image.Unload();

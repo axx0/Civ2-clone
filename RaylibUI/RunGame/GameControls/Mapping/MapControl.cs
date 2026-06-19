@@ -29,13 +29,13 @@ public class MapControl : BaseControl
     private Texture2D? _backgroundImage;
     private int _viewWidth,_viewHeight;
     private Padding _padding;
-    private HeaderLabel _headerLabel = null!;
-    private IUserInterface _active = null!;
-    private Button _zoomInButton = null!, _zoomOutButton = null!;
+    private HeaderLabel? _headerLabel;
+    private IUserInterface _active;
+    private Button _zoomInButton, _zoomOutButton;
     private float _zoomBtnScale;
 
     private readonly Queue<IGameView> _animationQueue = new();
-    private IGameView _currentView = null!;
+    private IGameView _currentView;
     
     public MapControl(GameScreen gameScreen, IGame game, Rectangle initialBounds, LocalPlayer player) : base(gameScreen)
     {
@@ -45,12 +45,12 @@ public class MapControl : BaseControl
         _currentBounds = initialBounds;
         _gameScreen = gameScreen;
         _game = game;
-        _active = gameScreen.MainWindow.ActiveInterface!;
+        _active = gameScreen.MainWindow.ActiveInterface;
         
         _headerLabel = new HeaderLabel(gameScreen, _active.Look, $"{_game.GetPlayerCiv.Adjective} {Labels.For(LabelIndex.Map)}", 
             fontSize: _active.Look.HeaderLabelFontSizeNormal);
 
-        _padding = _active.GetPadding(_headerLabel.TextSize.Y, false);
+        _padding = _active.GetPadding(_headerLabel?.TextSize.Y ?? 0, false);
 
         _zoomBtnScale = _padding.Top > 30 ? 1.4f : 1.0f;   // MGE=1.4f, ToT=1.0f
         _zoomInButton = new Button(Controller, String.Empty, backgroundImage: _active.PicSources["zoomIn"][0], imageScale: _zoomBtnScale);
@@ -84,7 +84,7 @@ public class MapControl : BaseControl
         _gameScreen.ActiveMode.MouseDown(tile);
     }
 
-    private void UnitEventTriggered(object? sender, UnitEventArgs e)
+    private void UnitEventTriggered(object sender, UnitEventArgs e)
     {
         switch (e.EventType)
         {
@@ -275,7 +275,7 @@ public class MapControl : BaseControl
         }
     }
 
-    private void MapEventTriggered(object? sender, MapEventArgs e)
+    private void MapEventTriggered(object sender, MapEventArgs e)
     {
         switch (e.EventType)
         {
@@ -353,7 +353,7 @@ public class MapControl : BaseControl
                 var textPosition = citySizeRectLoc;
                 Graphics.DrawRectangle((int)citySizeRectLoc.X, (int)citySizeRectLoc.Y, (int)textSize.X, (int)textSize.Y, data.Color.TextColour);
                 Graphics.DrawRectangleLines((int)citySizeRectLoc.X - 1, (int)citySizeRectLoc.Y, (int)textSize.X + 2, (int)textSize.Y, Color.Black);
-                Graphics.DrawTextEx(Fonts.TnRbold, size, textPosition, fontSize, 0, Color.Black);
+                global::RaylibUI.TextRendering.Draw(Fonts.TnRbold, size, textPosition, fontSize, 0, Color.Black);
             }
             else if (element.IsTerrain || !_currentView.ActionTiles.Contains(element.Tile) || element.Tile.IsCityPresent)
             {
@@ -368,8 +368,7 @@ public class MapControl : BaseControl
             var textSize = TextManager.MeasureTextEx(_active.Look.DefaultFont, name, fontSize, 1);
             var textPosition = paddedLoc + cityData.Location + new Vector2(cityData.Texture.Width.ZoomScale(zoom) / 2f , cityData.Texture.Height.ZoomScale(zoom)) - textSize /2f;
 
-            Graphics.DrawTextEx(_active.Look.DefaultFont, name, textPosition + new Vector2(1,1), fontSize, 1, Color.Black);
-            Graphics.DrawTextEx(_active.Look.DefaultFont, name, textPosition, fontSize, 1, cityData.Color.TextColour);
+            global::RaylibUI.TextRendering.DrawWithShadow(_active.Look.DefaultFont, name, textPosition, fontSize, 1, cityData.Color.TextColour, Color.Black, new Vector2(1, 1));
         }
 
         foreach (var animation in _currentView.CurrentAnimations)
@@ -377,10 +376,8 @@ public class MapControl : BaseControl
             animation.Draw(animation.Location + paddedLoc, scale: ImageUtils.ZoomScale(zoom));
         }
 
-        if (_backgroundImage is { } backgroundImage)
-        {
-            Graphics.DrawTextureEx(backgroundImage, Location, 0f, 1f, Color.White);
-        }
+        if (_backgroundImage != null)
+            Graphics.DrawTextureEx(_backgroundImage.Value, Location, 0f, 1f, Color.White);
 
         base.Draw(pulse);
     }

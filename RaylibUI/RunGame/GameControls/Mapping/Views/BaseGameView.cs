@@ -305,7 +305,7 @@ public abstract class BaseGameView : IGameView
                         {
                             Y = posVector.Y + Dimensions.TileHeight -
                                 activeInterface.UnitImages.UnitRectangle.Height.ZoomScale(gameScreen.Zoom)
-                        });
+                        }, useMapArt: true);
                 }
             }
             else
@@ -315,7 +315,7 @@ public abstract class BaseGameView : IGameView
                     {
                         Y = posVector.Y + Dimensions.TileHeight -
                             activeInterface.UnitImages.UnitRectangle.Height.ZoomScale(gameScreen.Zoom)
-                    });
+                    }, useMapArt: true);
                 if (tileDetails.ForegroundElement != null)
                 {
                     var impImage = ImageUtils.GetImpImage(activeInterface,

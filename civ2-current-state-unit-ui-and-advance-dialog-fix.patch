@@ -1,0 +1,342 @@
+diff --git a/Civ2/Civ2Interface.cs b/Civ2/Civ2Interface.cs
+index 37048e8..974ee87 100644
+--- a/Civ2/Civ2Interface.cs
++++ b/Civ2/Civ2Interface.cs
+@@ -754,7 +754,7 @@ public abstract class Civ2Interface(IMain main) : IUserInterface
+                 var c when c.WindowType == CivilopediaWindowType.Listbox && c.InfoType != CivilopediaInfoType.Advances
+                     => ["Info", "Close"],
+                 var c when c.WindowType == CivilopediaWindowType.Info && c.InfoType == CivilopediaInfoType.Advances
+-                    => ["Go Back", "Tree", "Description", "Close"],
++                    => ["Go Back", "Tree", "Close"],
+                 var c when c.WindowType == CivilopediaWindowType.Info && 
+                     (c.InfoType == CivilopediaInfoType.Governments || c.InfoType == CivilopediaInfoType.Concepts)
+                     => ["Go Back", "Close"],
+diff --git a/Civ2/ImageLoader/UnitLoader.cs b/Civ2/ImageLoader/UnitLoader.cs
+index bb44cc4..ad7a923 100644
+--- a/Civ2/ImageLoader/UnitLoader.cs
++++ b/Civ2/ImageLoader/UnitLoader.cs
+@@ -26,21 +26,26 @@ namespace Civ2.ImageLoader
+             for (var i = 0; i < units.Length; i++)
+             {
+                 var originalSource = active.PicSources["unit"][i];
+-                var unitSource = active.GetFossArtUnitImage(i) ?? originalSource;
+-                var props = Images.ExtractBitmapData(unitSource, active); // put into cache
++                var mapSource = active.GetFossArtUnitImage(i) ?? originalSource;
+ 
+-                var drawScale = GetDrawScale(props.Image.Width, props.Image.Height, logicalSize);
+-                var drawSize = new Vector2(props.Image.Width * drawScale, props.Image.Height * drawScale);
++                // Keep the classic 64px unit sheet as the UI icon source. City
++                // windows, status panels, listboxes and production pickers all
++                // expect small Civ2 sprites. The high-resolution FOSS art belongs
++                // only to zoomable map rendering.
++                var uiProps = Images.ExtractBitmapData(originalSource, active);
++                var mapProps = Images.ExtractBitmapData(mapSource, active);
++
++                var drawScale = GetDrawScale(mapProps.Image.Width, mapProps.Image.Height, logicalSize);
++                var drawSize = new Vector2(mapProps.Image.Width * drawScale, mapProps.Image.Height * drawScale);
+                 var drawOffset = new Vector2(
+                     MathF.Max(0, (logicalSize.X - drawSize.X) / 2f),
+                     MathF.Max(0, logicalSize.Y - drawSize.Y));
+ 
+                 units[i] = new UnitImage
+                 {
+-                    Image = unitSource,
+-                    FlagLoc = ReferenceEquals(unitSource, originalSource)
+-                        ? props.Flag1
+-                        : new Vector2(MathF.Max(0, logicalSize.X - ShieldWidth), 0),
++                    Image = originalSource,
++                    MapImage = ReferenceEquals(mapSource, originalSource) ? null : mapSource,
++                    FlagLoc = uiProps.Flag1,
+                     LogicalSize = logicalSize,
+                     DrawOffset = drawOffset,
+                     DrawScale = drawScale,
+diff --git a/Model/ImageSets/UnitImage.cs b/Model/ImageSets/UnitImage.cs
+index 582c6a7..8c22ca8 100644
+--- a/Model/ImageSets/UnitImage.cs
++++ b/Model/ImageSets/UnitImage.cs
+@@ -6,6 +6,13 @@ namespace Model.ImageSets;
+ public class UnitImage
+ {
+     public IImageSource Image { get; set; } = null!;
++
++    /// <summary>Classic Civ2-sized sprite used by city/status/dialog UI.</summary>
++    public IImageSource UiImage => Image;
++
++    /// <summary>Optional high-resolution sprite used only by zoomable map rendering.</summary>
++    public IImageSource? MapImage { get; set; }
++
+     public Vector2 FlagLoc { get; set; }
+ 
+     /// <summary>
+diff --git a/RaylibUI/Bitmaps/ImageUtils.cs b/RaylibUI/Bitmaps/ImageUtils.cs
+index c3570af..7aa09d1 100644
+--- a/RaylibUI/Bitmaps/ImageUtils.cs
++++ b/RaylibUI/Bitmaps/ImageUtils.cs
+@@ -314,10 +314,11 @@ public static class ImageUtils
+     }
+ 
+     public static Vector2 GetUnitTextures(IUnit unit, IUserInterface active, IGame game,
+-        List<IViewElement> viewElements, Vector2 loc, bool noStacking = false)
++        List<IViewElement> viewElements, Vector2 loc, bool noStacking = false, bool useMapArt = false)
+     {
+         var unitImage = active.UnitImages.Units[(int)unit.Type];
+-        var unitTexture = TextureCache.GetImage(unitImage.Image);
++        var sourceImage = useMapArt ? unitImage.MapImage ?? unitImage.Image : unitImage.Image;
++        var unitTexture = TextureCache.GetImage(sourceImage);
+         var shieldTexture = TextureCache.GetImage(active.UnitImages.Shields, active, unit.Owner.Id);
+ 
+         var logicalSize = GetLogicalUnitSize(active, unitImage, unitTexture);
+diff --git a/RaylibUI/RunGame/GameControls/Mapping/Views/AttackAnimation.cs b/RaylibUI/RunGame/GameControls/Mapping/Views/AttackAnimation.cs
+index 56b7da3..3431d51 100644
+--- a/RaylibUI/RunGame/GameControls/Mapping/Views/AttackAnimation.cs
++++ b/RaylibUI/RunGame/GameControls/Mapping/Views/AttackAnimation.cs
+@@ -18,11 +18,11 @@ internal class AttackAnimation : BaseGameView
+ 
+         var unitAnimations = new List<IViewElement>();
+         var attackerPos  = ActivePos with{ Y = ActivePos.Y + Dimensions.TileHeight - active.UnitImages.UnitRectangle.Height.ZoomScale(gameScreen.Zoom) };
+-        ImageUtils.GetUnitTextures(args.Attacker, active, game, unitAnimations, attackerPos );
++        ImageUtils.GetUnitTextures(args.Attacker, active, game, unitAnimations, attackerPos, useMapArt: true);
+         var defPos = GetPosForTile(args.Defender.CurrentLocation);
+         var defenderPos = defPos with { Y = defPos.Y + Dimensions.TileHeight - active.UnitImages.UnitRectangle.Height.ZoomScale(gameScreen.Zoom) };
+         ImageUtils.GetUnitTextures(args.Defender, active, game, unitAnimations,
+-            defenderPos);
++            defenderPos, useMapArt: true);
+         var explosion = 0;
+         //SetAnimation(unitAnimations);
+         var battleAnimation = active.UnitImages.BattleAnim.Select(a => TextureCache.GetImage(a)).ToArray();
+diff --git a/RaylibUI/RunGame/GameControls/Mapping/Views/MoveAnimation.cs b/RaylibUI/RunGame/GameControls/Mapping/Views/MoveAnimation.cs
+index bb8da29..6d35a7c 100644
+--- a/RaylibUI/RunGame/GameControls/Mapping/Views/MoveAnimation.cs
++++ b/RaylibUI/RunGame/GameControls/Mapping/Views/MoveAnimation.cs
+@@ -34,7 +34,7 @@ internal class MoveAnimation : BaseGameView
+         if (prevTileUnit != null)
+         {
+             ImageUtils.GetUnitTextures(prevTileUnit, activeInterface, gameScreen.Game, viewElementsPrevTileUnits,
+-                ActivePos with { Y = ActivePos.Y - activeInterface.UnitImages.UnitRectangle.Height.ZoomScale(gameScreen.Zoom) + Dimensions.TileHeight });
++                ActivePos with { Y = ActivePos.Y - activeInterface.UnitImages.UnitRectangle.Height.ZoomScale(gameScreen.Zoom) + Dimensions.TileHeight }, useMapArt: true);
+         }
+ 
+         // Get view elements of units on next tile of moving unit
+@@ -43,13 +43,13 @@ internal class MoveAnimation : BaseGameView
+         if (nextTileUnit != null)
+         {
+             ImageUtils.GetUnitTextures(nextTileUnit, activeInterface, gameScreen.Game, viewElementsNextTileUnits,
+-                new Vector2(unitDrawOffset[0] * (4 * (gameScreen.Zoom + 8)), unitDrawOffset[1] * (2 * (gameScreen.Zoom + 8))) + ActivePos with { Y = ActivePos.Y - activeInterface.UnitImages.UnitRectangle.Height.ZoomScale(gameScreen.Zoom) + Dimensions.TileHeight });
++                new Vector2(unitDrawOffset[0] * (4 * (gameScreen.Zoom + 8)), unitDrawOffset[1] * (2 * (gameScreen.Zoom + 8))) + ActivePos with { Y = ActivePos.Y - activeInterface.UnitImages.UnitRectangle.Height.ZoomScale(gameScreen.Zoom) + Dimensions.TileHeight }, useMapArt: true);
+         }
+ 
+         // Moving unit view elements
+         var viewElementsActiveUnit = new List<IViewElement>();
+         ImageUtils.GetUnitTextures(activeUnit, activeInterface, gameScreen.Game, viewElementsActiveUnit,
+-            ActivePos with { Y = ActivePos.Y - activeInterface.UnitImages.UnitRectangle.Height.ZoomScale(gameScreen.Zoom) + Dimensions.TileHeight }, true);
++            ActivePos with { Y = ActivePos.Y - activeInterface.UnitImages.UnitRectangle.Height.ZoomScale(gameScreen.Zoom) + Dimensions.TileHeight }, true, useMapArt: true);
+ 
+         SetAnimation(viewElementsPrevTileUnits.Concat(viewElementsNextTileUnits).Concat(viewElementsActiveUnit).ToList());
+ 
+diff --git a/RaylibUI/RunGame/GameControls/Mapping/Views/UnitReadyView.cs b/RaylibUI/RunGame/GameControls/Mapping/Views/UnitReadyView.cs
+index ca51b82..b0bfac6 100644
+--- a/RaylibUI/RunGame/GameControls/Mapping/Views/UnitReadyView.cs
++++ b/RaylibUI/RunGame/GameControls/Mapping/Views/UnitReadyView.cs
+@@ -14,7 +14,7 @@ public class UnitReadyView : BaseGameView
+         var activeInterface = gameScreen.Main.ActiveInterface;
+ 
+         var elements = new List<IViewElement>();
+-        ImageUtils.GetUnitTextures(unit, activeInterface, gameScreen.Game, elements, ActivePos with{ Y = ActivePos.Y + Dimensions.TileHeight - activeInterface.UnitImages.UnitRectangle.Height.ZoomScale(gameScreen.Zoom)});
++        ImageUtils.GetUnitTextures(unit, activeInterface, gameScreen.Game, elements, ActivePos with{ Y = ActivePos.Y + Dimensions.TileHeight - activeInterface.UnitImages.UnitRectangle.Height.ZoomScale(gameScreen.Zoom)}, useMapArt: true);
+ 
+         SetAnimation(elements);
+ 
+diff --git a/RaylibUI/RunGame/GameControls/Mapping/Views/BaseGameView.cs b/RaylibUI/RunGame/GameControls/Mapping/Views/BaseGameView.cs
+index e3b01ff..6ff27b5 100644
+--- a/RaylibUI/RunGame/GameControls/Mapping/Views/BaseGameView.cs
++++ b/RaylibUI/RunGame/GameControls/Mapping/Views/BaseGameView.cs
+@@ -305,7 +305,7 @@ public abstract class BaseGameView : IGameView
+                         {
+                             Y = posVector.Y + Dimensions.TileHeight -
+                                 activeInterface.UnitImages.UnitRectangle.Height.ZoomScale(gameScreen.Zoom)
+-                        });
++                        }, useMapArt: true);
+                 }
+             }
+             else
+@@ -315,7 +315,7 @@ public abstract class BaseGameView : IGameView
+                     {
+                         Y = posVector.Y + Dimensions.TileHeight -
+                             activeInterface.UnitImages.UnitRectangle.Height.ZoomScale(gameScreen.Zoom)
+-                    });
++                    }, useMapArt: true);
+                 if (tileDetails.ForegroundElement != null)
+                 {
+                     var impImage = ImageUtils.GetImpImage(activeInterface,
+diff --git a/RaylibUI/BasicTypes/BaseControl.cs b/RaylibUI/BasicTypes/BaseControl.cs
+index 75d105b..cb75596 100644
+--- a/RaylibUI/BasicTypes/BaseControl.cs
++++ b/RaylibUI/BasicTypes/BaseControl.cs
+@@ -76,7 +76,29 @@ public abstract class BaseControl : IControl
+     public IList<IControl> Controls { get; protected set; } = [];
+ 
+     private IComponent? _parent;
+-    public IComponent Parent => _parent ??= SearchForParent(Controller) ?? Controller;
++    public IComponent Parent
++    {
++        get
++        {
++            if (_parent != null)
++            {
++                return _parent;
++            }
++
++            var parent = SearchForParent(Controller);
++            if (parent != null)
++            {
++                _parent = parent;
++                return parent;
++            }
++
++            // Do not cache this fallback. Many controls are sized before they are
++            // inserted into their real parent; caching Controller here makes their
++            // bounds permanently relative to the wrong window and lets large art
++            // escape city/civilopedia panels.
++            return Controller;
++        }
++    }
+ 
+     /// <summary>
+     /// Search for this control's parent control.
+diff --git a/RaylibUI/RunGame/GameControls/CityControls/ProductionBox.cs b/RaylibUI/RunGame/GameControls/CityControls/ProductionBox.cs
+index cc26cb7..08cf49c 100644
+--- a/RaylibUI/RunGame/GameControls/CityControls/ProductionBox.cs
++++ b/RaylibUI/RunGame/GameControls/CityControls/ProductionBox.cs
+@@ -126,8 +126,8 @@ public class ProductionBox : BaseControl
+         FitIconInSlot(activeOrder.GetIcon(_active), slotWidth, slotHeight);
+ 
+         _icon.Location = new(
+-            _properties.IconLocation.X * scale - _icon.Width / 2f,
+-            Math.Max(0, _properties.IconLocation.Y * scale - _icon.Height / 2f));
++            (_properties.IconLocation.X - _properties.Box.X) * scale - _icon.Width / 2f,
++            Math.Max(0, (_properties.IconLocation.Y - _properties.Box.Y) * scale - _icon.Height / 2f));
+     }
+ 
+     private void FitIconInSlot(IImageSource? source, int slotWidth, int slotHeight)
+@@ -147,9 +147,11 @@ public class ProductionBox : BaseControl
+         _changeButton.FontSize = fontSize;
+     }
+ 
+-    private static void LayoutButton(CityButton button, CityButtonProperties properties, float scale)
++    private void LayoutButton(CityButton button, CityButtonProperties properties, float scale)
+     {
+-        button.Location = new(properties.Box.X * scale, properties.Box.Y * scale);
++        button.Location = new(
++            (properties.Box.X - _properties.Box.X) * scale,
++            (properties.Box.Y - _properties.Box.Y) * scale);
+         button.Width = Math.Max(1, (int)Math.Round(properties.Box.Width * scale));
+         button.Height = Math.Max(1, (int)Math.Round(properties.Box.Height * scale));
+     }
+diff --git a/RaylibUI/RunGame/GameControls/Civilopedia/CivilopediaAdvanceInfo.cs b/RaylibUI/RunGame/GameControls/Civilopedia/CivilopediaAdvanceInfo.cs
+index 82d82fe..c42dca2 100644
+--- a/RaylibUI/RunGame/GameControls/Civilopedia/CivilopediaAdvanceInfo.cs
++++ b/RaylibUI/RunGame/GameControls/Civilopedia/CivilopediaAdvanceInfo.cs
+@@ -66,12 +66,12 @@ public sealed class CivilopediaAdvanceInfo : BaseControl
+         var advanceId = Array.FindIndex(rules.Advances, row => row == advance);
+         var image = _active.GetAdvanceImage(advance) ?? _active.PicSources["advanceCategories"][5 * advance.Epoch + advance.KnowledgeCategory];
+ 
+-        var imageBox = new ImageBox(_window, image, eventTransparent: true);
++        var imageBox = new ImageBox(this, image, eventTransparent: true);
+         imageBox.FitIntoSlot(ArtWidth, ArtHeight, padding: 4, maxScale: 8f);
+         imageBox.Location = new(Margin, Margin + 20);
+         Controls.Add(imageBox);
+ 
+-        var proclamation = new LabelControl(_window,
++        var proclamation = new LabelControl(this,
+             $"{_active.GetScientistName(_gameScreen.Player.Civilization.Epoch)} proclaims a discovery:",
+             true,
+             font: _active.Look.DefaultFont,
+@@ -111,44 +111,25 @@ public sealed class CivilopediaAdvanceInfo : BaseControl
+         var wrappedTexts = DialogUtils.GetWrappedTexts(description.Replace("_", " "), textWidth,
+             _active.Look.LabelFont, BodyFontSize);
+ 
+-        var groups = wrappedTexts.Select(text => new ListboxGroup
++        var lineY = y + 8;
++        var maxLines = Math.Max(1, (DescriptionHeight - 16) / LineHeight);
++        foreach (var text in wrappedTexts.Take(maxLines))
+         {
+-            Elements =
+-            [
+-                new ListboxGroupElement
+-                {
+-                    Text = string.IsNullOrWhiteSpace(text) ? " " : text,
+-                    Width = textWidth,
+-                    TextSizeOverride = BodyFontSize,
+-                    VerticalAlignment = VerticalAlignment.Center
+-                }
+-            ],
+-            Height = LineHeight
+-        }).ToList();
+-
+-        var listbox = new Listbox(_window, new ListboxDefinition
+-        {
+-            Groups = groups,
+-            Rows = Math.Max(1, DescriptionHeight / LineHeight),
+-            Selectable = false,
+-            VerticalScrollbar = true,
+-            Looks = new ListboxLooks
++            var label = new LabelControl(this, string.IsNullOrWhiteSpace(text) ? " " : text, true,
++                font: _active.Look.LabelFont,
++                fontSize: BodyFontSize,
++                colorFront: new Color(20, 20, 20, 255),
++                colorShadow: Color.Blank,
++                shadowOffset: Vector2.Zero)
+             {
+-                BoxBackgroundColor = new Color(250, 246, 224, 235),
+-                BoxLineColor = new Color(92, 70, 35, 255),
+-                Font = _active.Look.LabelFont,
+-                FontSize = BodyFontSize,
+-                TextColorFront = new Color(20, 20, 20, 255),
+-                TextColorShadow = Color.Blank,
+-                TextShadowOffset = Vector2.Zero
+-            }
+-        })
+-        {
+-            Location = new(x, y),
+-            Width = DescriptionWidth,
+-            Height = DescriptionHeight
+-        };
+-        Controls.Add(listbox);
++                Location = new(x + 8, lineY),
++                Width = textWidth,
++                Height = LineHeight,
++                VerticalAlignment = VerticalAlignment.Top
++            };
++            Controls.Add(label);
++            lineY += LineHeight;
++        }
+     }
+ 
+     private int AddPrerequisites(Advance advance, Rules rules, int y)
+@@ -241,7 +222,7 @@ public sealed class CivilopediaAdvanceInfo : BaseControl
+ 
+         foreach (var (text, click) in links)
+         {
+-            var label = new PediaLinkLabel(_window, text, cursorX, cursorY)
++            var label = new PediaLinkLabel(this, text, cursorX, cursorY)
+             {
+                 FontSize = LinkFontSize
+             };
+@@ -264,7 +245,7 @@ public sealed class CivilopediaAdvanceInfo : BaseControl
+     private void AddInfoLine(string heading, string value, int x, int y)
+     {
+         AddSectionLabel(heading + ":", x, y, 150);
+-        var label = new LabelControl(_window, value, true,
++        var label = new LabelControl(this, value, true,
+             font: _active.Look.LabelFont,
+             fontSize: BodyFontSize,
+             colorFront: new Color(20, 20, 20, 255),
+@@ -281,7 +262,7 @@ public sealed class CivilopediaAdvanceInfo : BaseControl
+ 
+     private void AddSectionLabel(string text, int x, int y, int width)
+     {
+-        var label = new LabelControl(_window, text, true,
++        var label = new LabelControl(this, text, true,
+             font: _active.Look.HeaderLabelFont,
+             fontSize: SectionFontSize,
+             colorFront: new Color(68, 42, 10, 255),

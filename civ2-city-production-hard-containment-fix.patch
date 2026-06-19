@@ -1,0 +1,248 @@
+--- a/Civ2/ImageLoader/UnitLoader.cs	2026-06-12 20:48:34.100080896 +0000
++++ b/Civ2/ImageLoader/UnitLoader.cs	2026-06-12 21:15:12.045508428 +0000
+@@ -25,7 +25,7 @@
+ 
+             for (var i = 0; i < units.Length; i++)
+             {
+-                var originalSource = active.PicSources["unit"][i];
++                var originalSource = GetClassicUnitImage(active, i);
+                 var mapSource = active.GetFossArtUnitImage(i) ?? originalSource;
+ 
+                 // Keep the classic 64px unit sheet as the UI icon source. City
+@@ -58,6 +58,22 @@
+             active.GetShieldImages();
+         }
+ 
++        private static IImageSource GetClassicUnitImage(Civ2Interface active, int index)
++        {
++            if (active.PicSources.TryGetValue("unit", out var unitIcons) &&
++                index >= 0 && index < unitIcons.Length &&
++                unitIcons[index] is BitmapStorage bitmap &&
++                string.Equals(Path.GetFileNameWithoutExtension(bitmap.Filename), "UNITS", StringComparison.OrdinalIgnoreCase))
++            {
++                return unitIcons[index];
++            }
++
++            return new BitmapStorage("UNITS",
++                new Rectangle(1 + 65 * (index % UnitColumns), 1 + (active.UnitsPxHeight + 1) * (index / UnitColumns),
++                    OriginalUnitWidth, active.UnitsPxHeight),
++                searchFlagLoc: true);
++        }
++
+         private static float GetDrawScale(int sourceWidth, int sourceHeight, Vector2 logicalSize)
+         {
+             if (sourceWidth <= 0 || sourceHeight <= 0)
+--- a/Engine/src/Production/UnitProductionOrder.cs	2026-06-12 21:02:17.641036209 +0000
++++ b/Engine/src/Production/UnitProductionOrder.cs	2026-06-12 21:15:12.045344655 +0000
+@@ -61,11 +61,20 @@
+         {
+             // Production lists and city panels need the original Civ2-sized icon.
+             // FOSS unit art is intentionally high-resolution and is used only by
+-            // the zoomable map renderer.
++            // the zoomable map renderer. Prefer the UnitLoader-populated UI image
++            // because older FOSS-art patches may have redirected PicSources["unit"]
++            // to 1024px art.
++            if (activeInterface.UnitImages.Units is { } unitImages &&
++                unitDefinition.Type >= 0 && unitDefinition.Type < unitImages.Length &&
++                unitImages[unitDefinition.Type].UiImage is { } uiImage)
++            {
++                return uiImage;
++            }
++
+             return activeInterface.PicSources.TryGetValue("unit", out var unitIcons) &&
+                    unitDefinition.Type >= 0 && unitDefinition.Type < unitIcons.Length
+                 ? unitIcons[unitDefinition.Type]
+-                : activeInterface.UnitImages.Units[unitDefinition.Type].Image;
++                : null;
+         }
+ 
+         public override bool IsValidBuild(City city)
+--- a/RaylibUI/Bitmaps/ImageUtils.cs	2026-06-12 21:02:17.641566797 +0000
++++ b/RaylibUI/Bitmaps/ImageUtils.cs	2026-06-12 21:15:12.045057100 +0000
+@@ -334,7 +334,7 @@
+             // Unit
+             viewElements.Add(new TextureElement(location: loc, texture: unitTexture,
+                 tile: tile, isShaded: unit.Order == (int)OrderType.Sleep,
+-                offset: unitDrawOffset, renderScale: unitRenderScale));
++                offset: unitDrawOffset, renderScale: unitRenderScale, maxDrawSize: logicalSize));
+         }
+ 
+         // Stacked shield
+@@ -381,7 +381,7 @@
+             // Unit
+             viewElements.Add(new TextureElement(location: loc, texture: unitTexture,
+                 tile: tile, isShaded: unit.Order == (int)OrderType.Sleep,
+-                offset: unitDrawOffset, renderScale: unitRenderScale));
++                offset: unitDrawOffset, renderScale: unitRenderScale, maxDrawSize: logicalSize));
+         }
+ 
+         if (unit.Order == (int)OrderType.Fortified)
+--- a/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/TextureElement.cs	2026-06-12 20:46:23.615209023 +0000
++++ b/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/TextureElement.cs	2026-06-12 21:15:12.044664387 +0000
+@@ -10,7 +10,7 @@
+ public class TextureElement : IViewElement
+ {
+     public TextureElement(Texture2D texture, Vector2 location, Tile tile, bool isTerrain = false, bool isShaded = false,
+-        Vector2? offset = null, float renderScale = 1f)
++        Vector2? offset = null, float renderScale = 1f, Vector2? maxDrawSize = null)
+     {
+         Texture = texture;
+         Location = location;
+@@ -19,6 +19,7 @@
+         IsShaded = isShaded;
+         Offset = offset ?? Vector2.Zero;
+         RenderScale = renderScale;
++        MaxDrawSize = maxDrawSize;
+     }
+ 
+     /// <summary>
+@@ -34,6 +35,13 @@
+     /// </summary>
+     public float RenderScale { get; }
+ 
++    /// <summary>
++    /// Optional logical-size clamp. This is primarily used for high-resolution
++    /// FOSS unit art: the source texture can be 1024px, but it must still occupy
++    /// the same logical Civ2 unit footprint on the map and in city/status UI.
++    /// </summary>
++    public Vector2? MaxDrawSize { get; }
++
+     public Texture2D Texture { get; init; }
+     
+     public Vector2 Location { get; set; }
+@@ -49,10 +57,18 @@
+             Graphics.BeginShaderMode(Shaders.Grayscale);
+         }
+ 
++        var drawScale = scale * RenderScale;
++        if (MaxDrawSize is { } maxDrawSize && Texture.Width > 0 && Texture.Height > 0)
++        {
++            var maxWidth = Math.Max(1f, maxDrawSize.X * scale);
++            var maxHeight = Math.Max(1f, maxDrawSize.Y * scale);
++            drawScale = Math.Min(drawScale, Math.Min(maxWidth / Texture.Width, maxHeight / Texture.Height));
++        }
++
+         Graphics.DrawTextureEx(Texture,
+             adjustedLocation + Offset * scale,
+             0f,
+-            scale * RenderScale,
++            Math.Max(0.01f, drawScale),
+             Color.White);
+ 
+         if (isShaded)
+@@ -63,6 +79,6 @@
+ 
+     public IViewElement CloneForLocation(Vector2 newLocation)
+     {
+-        return new TextureElement(Texture, newLocation, Tile, IsTerrain, IsShaded, Offset, RenderScale);
++        return new TextureElement(Texture, newLocation, Tile, IsTerrain, IsShaded, Offset, RenderScale, MaxDrawSize);
+     }
+ }
+--- a/RaylibUI/RunGame/GameControls/CityControls/ProductionBox.cs	2026-06-12 21:02:17.639774246 +0000
++++ b/RaylibUI/RunGame/GameControls/CityControls/ProductionBox.cs	2026-06-12 21:15:12.045719652 +0000
+@@ -9,6 +9,7 @@
+ using Raylib_CSharp.Colors;
+ using Raylib_CSharp.Rendering;
+ using Raylib_CSharp.Textures;
++using Raylib_CSharp.Transformations;
+ using RaylibUI.BasicTypes.Controls;
+ using RaylibUtils;
+ using System.Numerics;
+@@ -33,6 +34,9 @@
+     private const float ShieldBoxTop = 42f;
+     private const float ProductionIconSlotWidth = 42f;
+     private const float ProductionIconSlotHeight = 36f;
++    private const float BuyButtonX = 5f;
++    private const float ChangeButtonX = 120f;
++    private const float ProductionButtonY = 16f;
+     private const float Padding = 5f;
+ 
+     public ProductionBox(CityWindow cityWindow) : base(cityWindow, eventTransparent: false)
+@@ -78,7 +82,13 @@
+         };
+ 
+         _icon = new ImageBox(_cityWindow, _city.ItemInProduction.GetIcon(_active));
+-        Controls = [_label, _icon, _buyButton, _changeButton];
++
++        // Do not draw the production icon through ImageBox. The icon source can
++        // be redirected by art-replacement code, and ImageBox parent discovery has
++        // repeatedly allowed 1024px FOSS unit art to escape the production panel.
++        // ProductionBox draws the icon itself into a fixed slot below.
++        _icon.Visible = false;
++        Controls = [_label, _buyButton, _changeButton];
+ 
+         // CityWindow inserts this control into the tree after the constructor.
+         // Do not call OnResize here; child controls can resolve the CityWindow
+@@ -144,20 +154,22 @@
+     private void LayoutActionButtons()
+     {
+         var scale = _cityWindow.Scale;
+-        LayoutButton(_buyButton, _cityWindow.CityWindowProps.Buttons["Buy"], scale);
+-        LayoutButton(_changeButton, _cityWindow.CityWindowProps.Buttons["Change"], scale);
++        var buyProps = _cityWindow.CityWindowProps.Buttons["Buy"];
++        var changeProps = _cityWindow.CityWindowProps.Buttons["Change"];
++
++        LayoutButton(_buyButton, BuyButtonX, ProductionButtonY, buyProps.Box.Width, buyProps.Box.Height, scale);
++        LayoutButton(_changeButton, ChangeButtonX, ProductionButtonY, changeProps.Box.Width, changeProps.Box.Height, scale);
+ 
+         var fontSize = Math.Max(10, (int)Math.Round(_active.Look.CityWindowFontSize * scale * 0.78f));
+         _buyButton.FontSize = fontSize;
+         _changeButton.FontSize = fontSize;
+     }
+ 
+-    private void LayoutButton(CityButton button, CityButtonProperties properties, float scale)
++    private static void LayoutButton(CityButton button, float x, float y, float width, float height, float scale)
+     {
+-        // Buy/Change button rectangles are production-box-local coordinates.
+-        button.Location = new(properties.Box.X * scale, properties.Box.Y * scale);
+-        button.Width = Math.Max(1, (int)Math.Round(properties.Box.Width * scale));
+-        button.Height = Math.Max(1, (int)Math.Round(properties.Box.Height * scale));
++        button.Location = new(x * scale, y * scale);
++        button.Width = Math.Max(1, (int)Math.Round(width * scale));
++        button.Height = Math.Max(1, (int)Math.Round(height * scale));
+     }
+ 
+     private IProductionOrder GetDisplayedOrder()
+@@ -211,9 +223,42 @@
+         var activeOrder = GetDisplayedOrder();
+         var progressShields = Math.Min(GetDisplayedProgress(), _totalCost);
+         DrawShieldProgress(activeOrder, progressShields);
++        DrawProductionIcon(activeOrder);
+         base.Draw(pulse);
+     }
+ 
++    private void DrawProductionIcon(IProductionOrder activeOrder)
++    {
++        var source = activeOrder.GetIcon(_active);
++        if (source == null)
++        {
++            return;
++        }
++
++        var texture = TextureCache.GetImage(source);
++        if (texture.Width <= 0 || texture.Height <= 0)
++        {
++            return;
++        }
++
++        var scale = _cityWindow.Scale;
++        var slotWidth = ProductionIconSlotWidth * scale;
++        var slotHeight = ProductionIconSlotHeight * scale;
++        var drawScale = Math.Min(slotWidth / texture.Width, slotHeight / texture.Height);
++        drawScale = Math.Max(0.01f, Math.Min(1.25f * scale, drawScale));
++
++        var drawWidth = texture.Width * drawScale;
++        var drawHeight = texture.Height * drawScale;
++        var center = new Vector2(
++            Bounds.X + _properties.IconLocation.X * scale,
++            Bounds.Y + _properties.IconLocation.Y * scale);
++
++        Graphics.DrawTexturePro(texture,
++            new Rectangle(0, 0, texture.Width, texture.Height),
++            new Rectangle(center.X - drawWidth / 2f, center.Y - drawHeight / 2f, drawWidth, drawHeight),
++            Vector2.Zero, 0f, Color.White);
++    }
++
+     private void DrawShieldProgress(IProductionOrder activeOrder, int progressShields)
+     {
+         var scale = _cityWindow.Scale;

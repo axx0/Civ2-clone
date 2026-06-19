@@ -2,8 +2,10 @@ using Civ2engine;
 using Civ2engine.Advances;
 using Civ2engine.Enums;
 using Civ2engine.Events;
+using Civ2engine.IO;
 using Civ2engine.MapObjects;
 using Model.Controls;
+using Model.Controls.Civilopedia;
 using Model.Core;
 using Model.Core.Advances;
 using Model.Core.Cities;
@@ -14,6 +16,7 @@ using Model.Events;
 using Model.Core.Player;
 using Model.Core.Production;
 using Model.Images;
+using RaylibUI.RunGame.GameControls.Civilopedia;
 
 namespace RaylibUI.RunGame;
 
@@ -29,7 +32,7 @@ public class LocalPlayer : IPlayer
 
     public Civilization Civilization { get; }
 
-    public Tile ActiveTile { get; set; } = null!;
+    public Tile ActiveTile { get; set; }
 
     private Unit? _activeUnit;
 
@@ -143,7 +146,7 @@ public class LocalPlayer : IPlayer
         _gameScreen.ShowCityDialog("BUILT", city);
     }
 
-    public IInterfaceCommands Ui { get; } = null!;
+    public IInterfaceCommands Ui { get; }
     public List<Unit> WaitingList { get; } = new();
 
     public void NotifyImprovementEnabled(TerrainImprovement improvement, int level)
@@ -177,13 +180,22 @@ public class LocalPlayer : IPlayer
 
     public void NotifyAdvanceResearched(int advance)
     {
-        var activeInterface = _gameScreen.Main.ActiveInterface;
-        _gameScreen.ShowPopup("CIVADVANCE",
-            replaceStrings: new[]
-            {
-                Civilization.Adjective, activeInterface.GetScientistName(Civilization.Epoch),
-                _gameScreen.Game.Rules.Advances[advance].Name
-            });
+        var rules = _gameScreen.Game.Rules;
+        if (advance < 0 || advance >= rules.Advances.Length)
+        {
+            return;
+        }
+
+        var discoveredAdvance = rules.Advances[advance];
+        var sortedAdvances = rules.Advances.Take(89).OrderBy(a => a.Name).ToList();
+        var civilopediaIndex = sortedAdvances.IndexOf(discoveredAdvance);
+        if (civilopediaIndex < 0)
+        {
+            civilopediaIndex = Math.Clamp(advance, 0, Math.Max(0, sortedAdvances.Count - 1));
+        }
+
+        _gameScreen.ShowDialog(new CivilopediaWindow(_gameScreen,
+            new CivilopediaEntry(CivilopediaInfoType.Advances, CivilopediaWindowType.Info, civilopediaIndex)), stack: true);
     }
 
     public void FoodShortage(City city)
@@ -235,25 +247,51 @@ public class LocalPlayer : IPlayer
         OnUnitEvent?.Invoke(this, new MovementBlockedEventArgs(unit, blockedReason));
     }
 
-    public event EventHandler<UnitEventArgs>? OnUnitEvent;
+    public event EventHandler<UnitEventArgs> OnUnitEvent;
 
     public void GoodyHutTriggered(Unit unit, GoodyHutOutcomeResult outcome)
     {
         var args = new GoodyHutOutcomeEventArgs(unit, outcome);
         OnUnitEvent?.Invoke(this, args);
 
-        var popupName = outcome.OutcomeType switch
+        _gameScreen.ForceRedraw();
+        ShowGoodyHutResult(outcome);
+    }
+
+    private void ShowGoodyHutResult(GoodyHutOutcomeResult outcome)
+    {
+        var title = outcome.OutcomeType switch
         {
-            "Gold" => "SURPRISEMETALS",
-            "Scrolls" => "SURPRISESCROLLS",
-            "Tribe" => "SURPRISENOMADS",
-            "Barbarians" => "SURPRISEBARB",
-            "AbandonedVillage" => "SURPRISENOTHING",
-            "Mercenaries" => "SURPRISEMERCS",
-            _ => "GOODYHUT_DEFAULT"
+            "Gold" => "Village Gold",
+            "Scrolls" => "Ancient Scrolls",
+            "Nomads" => "Wandering Nomads",
+            "AdvancedTribe" => "Advanced Tribe",
+            "Barbarians" => "Barbarian Horde",
+            "AbandonedVillage" => "Abandoned Village",
+            "Mercenaries" => "Mercenaries",
+            _ => "Village"
         };
 
-        _gameScreen.ShowPopup(popupName, replaceNumbers: [50]);
+        var message = outcome.Message;
+        if (outcome.AdvanceIndex is { } advanceIndex &&
+            advanceIndex >= 0 && advanceIndex < _gameScreen.Game.Rules.Advances.Length)
+        {
+            message += $" You have gained { _gameScreen.Game.Rules.Advances[advanceIndex].Name }.";
+        }
+
+        var dialogElements = new DialogElements
+        {
+            Name = "GOODYHUT_DYNAMIC",
+            Title = title,
+            Width = 420,
+            Button = [Labels.Ok],
+            Text = [message],
+            LineStyles = [TextStyles.Left]
+        };
+
+        CivDialog? dialog = null;
+        dialog = new CivDialog(_gameScreen.Main, dialogElements, (_, _, _, _) => _gameScreen.CloseDialog(dialog));
+        _gameScreen.ShowDialog(dialog, stack: true);
     }
 
     public void SelectTechFromConquest(List<Advance> techs)

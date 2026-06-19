@@ -23,8 +23,8 @@ public class CivilopediaWindow : BaseDialog
 {
     private readonly IUserInterface _active;
     private readonly GameScreen _gameScreen;
-    private const int InnerWidth = 624;
-    private const int InnerHeight = 318;
+    private const int InnerWidth = 900;
+    private const int InnerHeight = 540;
     private CivilopediaEntry _pedia;
     private readonly Button _exitIcon;
     private readonly Rules _rules;
@@ -104,8 +104,8 @@ public class CivilopediaWindow : BaseDialog
                         for (var i = 0; i < names.Length; i++)
                         {
                             icons[i] = new IImageSource[1];
-                            icons[i][0] = 
-                                _active.PicSources["advanceCategories"][5 * _advances[i].Epoch + _advances[i].KnowledgeCategory];
+                            icons[i][0] = _active.GetAdvanceImage(_advances[i]) ??
+                                          _active.PicSources["advanceCategories"][5 * _advances[i].Epoch + _advances[i].KnowledgeCategory];
                         }
                         break;
                     case CivilopediaInfoType.Improvements:
@@ -132,7 +132,11 @@ public class CivilopediaWindow : BaseDialog
                         for (var i = 0; i < names.Length; i++)
                         {
                             icons[i] = new IImageSource[1];
-                            icons[i][0] = _active.PicSources["unit"][_units[i].Type];
+                            icons[i][0] = _active.UnitImages.Units is { } unitImages &&
+                                          _units[i].Type >= 0 && _units[i].Type < unitImages.Length &&
+                                          unitImages[_units[i].Type].UiImage is { } uiImage
+                                ? uiImage
+                                : _active.PicSources["unit"][_units[i].Type];
                         }
                         iconOffset = Images.GetImageWidth(icons[0][0], _active);
                         break;
@@ -251,6 +255,11 @@ public class CivilopediaWindow : BaseDialog
                 else if (_pedia.InfoType == CivilopediaInfoType.Concepts)
                 {
                     Controls.Add(new CivilopediaDescription(this, _gameScreen, _pedia, _pedia.Id));
+                }
+                else if (_pedia.InfoType == CivilopediaInfoType.Advances)
+                {
+                    Controls.Add(new CivilopediaAdvanceInfo(this, _gameScreen, _advances, _improvements, _wonders,
+                        _units, _terrains, _pedia));
                 }
                 else
                 {

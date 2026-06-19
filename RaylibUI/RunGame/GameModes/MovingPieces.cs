@@ -193,7 +193,7 @@ public class MovingPieces : IGameMode
 
         // Show other unit info
         var cityName = (activeUnit.HomeCity == null) ? Labels.For(LabelIndex.NONE) : activeUnit.HomeCity.Name;
-        var cityNameLabel = new StatusLabel(_gameScreen, cityName, fontSize: fontSize);
+        var cityNameLabel = new StatusLabel(_gameScreen, $"Home: {cityName}", fontSize: fontSize);
         cityNameLabel.Location = new(detailX, currentY);
         cityNameLabel.Width = detailWidth;
         cityNameLabel.Height = (int)labelHeight;
@@ -303,8 +303,7 @@ public class MovingPieces : IGameMode
         {
             var unit = unitsLeftOnTile[i];
 
-            cityNameLabel = new StatusLabel(_gameScreen, (unit.HomeCity == null) ? Labels.For(LabelIndex.NONE) : 
-                unit.HomeCity.Name, fontSize: fontSize);
+            cityNameLabel = new StatusLabel(_gameScreen, $"Home: {(unit.HomeCity == null ? Labels.For(LabelIndex.NONE) : unit.HomeCity.Name)}", fontSize: fontSize);
             cityNameLabel.Width = (int)cityNameLabel.TextSize.X;
 
             var orderLabel = new StatusLabel(_gameScreen, _gameScreen.Game.Order2String(unit.Order), fontSize: fontSize);
@@ -332,8 +331,7 @@ public class MovingPieces : IGameMode
                 if (i < unitsLeftOnTile.Count - 1)
                 {
                     var nextUnit = unitsLeftOnTile[i + 1];
-                    var cityNameLabelNu = new StatusLabel(_gameScreen, (nextUnit.HomeCity == null) ? Labels.For(LabelIndex.NONE) :
-                                    nextUnit.HomeCity.Name, fontSize: fontSize);
+                    var cityNameLabelNu = new StatusLabel(_gameScreen, $"Home: {(nextUnit.HomeCity == null ? Labels.For(LabelIndex.NONE) : nextUnit.HomeCity.Name)}", fontSize: fontSize);
                     var cityNameLabelWidthNu = cityNameLabelNu.TextSize.X;
                     var orderLabelNu = new StatusLabel(_gameScreen, _gameScreen.Game.Order2String(nextUnit.Order), fontSize: fontSize);
                     var orderLabelWidthNu = orderLabelNu.TextSize.X;

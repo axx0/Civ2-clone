@@ -1,0 +1,142 @@
+--- a/Engine/src/Production/UnitProductionOrder.cs
++++ b/Engine/src/Production/UnitProductionOrder.cs
+@@ -59,7 +59,13 @@
+ 
+         public override IImageSource? GetIcon(IUserInterface activeInterface)
+         {
+-            return activeInterface.UnitImages.Units[unitDefinition.Type].Image;
++            // Production lists and city panels need the original Civ2-sized icon.
++            // FOSS unit art is intentionally high-resolution and is used only by
++            // the zoomable map renderer.
++            return activeInterface.PicSources.TryGetValue("unit", out var unitIcons) &&
++                   unitDefinition.Type >= 0 && unitDefinition.Type < unitIcons.Length
++                ? unitIcons[unitDefinition.Type]
++                : activeInterface.UnitImages.Units[unitDefinition.Type].Image;
+         }
+ 
+         public override bool IsValidBuild(City city)
+--- a/Model/Controls/Dialog/DialogImageElements.cs
++++ b/Model/Controls/Dialog/DialogImageElements.cs
+@@ -23,24 +23,20 @@
+ 
+     public DialogImageElements(IUnit unit, IUserInterface active)
+     {
+-        if (unit.Type >= 0 && active.UnitImages.Units.Length > unit.Type &&
+-            active.UnitImages.Units[unit.Type] is { } unitImage &&
+-            unitImage.Image is { } highResolutionImage)
++        if (unit.Type >= 0 &&
++            active.PicSources.TryGetValue("unit", out var unitIcons) &&
++            unit.Type < unitIcons.Length)
+         {
+-            Image = [highResolutionImage];
+-            Scale = GetSafeUnitScale(unitImage.DrawScale);
+-            Coords = new[,]
+-            {
+-                {
+-                    (int)MathF.Round(unitImage.DrawOffset.X),
+-                    (int)MathF.Round(unitImage.DrawOffset.Y)
+-                }
+-            };
++            Image = [unitIcons[unit.Type]];
++            Coords = new int[,] { { 0, 0 } };
+             return;
+         }
+ 
+-        Image = [active.PicSources["unit"][unit.Type]];
+-        Coords = new int[,] { { 0, 0 } };
++        if (unit.Type >= 0 && active.UnitImages.Units.Length > unit.Type)
++        {
++            Image = [active.UnitImages.Units[unit.Type].Image];
++            Coords = new int[,] { { 0, 0 } };
++        }
+     }
+ 
+     private static float GetSafeUnitScale(float drawScale)
+--- a/RaylibUI/Bitmaps/ImageUtils.cs
++++ b/RaylibUI/Bitmaps/ImageUtils.cs
+@@ -317,7 +317,7 @@
+         List<IViewElement> viewElements, Vector2 loc, bool noStacking = false, bool useMapArt = false)
+     {
+         var unitImage = active.UnitImages.Units[(int)unit.Type];
+-        var sourceImage = useMapArt ? unitImage.MapImage ?? unitImage.Image : unitImage.Image;
++        var sourceImage = GetUnitSourceImage(unit, active, unitImage, useMapArt);
+         var unitTexture = TextureCache.GetImage(sourceImage);
+         var shieldTexture = TextureCache.GetImage(active.UnitImages.Shields, active, unit.Owner.Id);
+ 
+@@ -390,6 +390,25 @@
+         }
+ 
+         return logicalSize;
++    }
++
++    private static IImageSource GetUnitSourceImage(IUnit unit, IUserInterface active, UnitImage unitImage, bool useMapArt)
++    {
++        if (useMapArt)
++        {
++            return unitImage.MapImage ?? unitImage.Image;
++        }
++
++        // UI controls need the small classic unit sheet even if UnitImage.Image
++        // was temporarily pointed at a 1024px FOSS sprite by older patches.
++        var unitIndex = (int)unit.Type;
++        if (active.PicSources.TryGetValue("unit", out var unitIcons) &&
++            unitIndex >= 0 && unitIndex < unitIcons.Length)
++        {
++            return unitIcons[unitIndex];
++        }
++
++        return unitImage.Image;
+     }
+ 
+     private static Vector2 GetLogicalUnitSize(IUserInterface active, UnitImage unitImage, Texture2D unitTexture)
+--- a/RaylibUI/RunGame/GameControls/CityControls/ProductionBox.cs
++++ b/RaylibUI/RunGame/GameControls/CityControls/ProductionBox.cs
+@@ -80,7 +80,11 @@
+         _icon = new ImageBox(_cityWindow, _city.ItemInProduction.GetIcon(_active));
+         Controls = [_label, _icon, _buyButton, _changeButton];
+ 
+-        ChangeProductionDisplay();
++        // CityWindow inserts this control into the tree after the constructor.
++        // Do not call OnResize here; child controls can resolve the CityWindow
++        // as their parent before this ProductionBox is discoverable, which makes
++        // production icons/buttons draw in the wrong coordinate space.
++        UpdateData(GetDisplayedOrder());
+     }
+ 
+     public override void OnResize()
+@@ -125,9 +129,10 @@
+         var slotHeight = Math.Max(1, (int)Math.Round(ProductionIconSlotHeight * scale));
+         FitIconInSlot(activeOrder.GetIcon(_active), slotWidth, slotHeight);
+ 
++        // IconLocation is already relative to the production box in Civ2Interface.
+         _icon.Location = new(
+-            (_properties.IconLocation.X - _properties.Box.X) * scale - _icon.Width / 2f,
+-            Math.Max(0, (_properties.IconLocation.Y - _properties.Box.Y) * scale - _icon.Height / 2f));
++            _properties.IconLocation.X * scale - _icon.Width / 2f,
++            Math.Max(0, _properties.IconLocation.Y * scale - _icon.Height / 2f));
+     }
+ 
+     private void FitIconInSlot(IImageSource? source, int slotWidth, int slotHeight)
+@@ -149,9 +154,8 @@
+ 
+     private void LayoutButton(CityButton button, CityButtonProperties properties, float scale)
+     {
+-        button.Location = new(
+-            (properties.Box.X - _properties.Box.X) * scale,
+-            (properties.Box.Y - _properties.Box.Y) * scale);
++        // Buy/Change button rectangles are production-box-local coordinates.
++        button.Location = new(properties.Box.X * scale, properties.Box.Y * scale);
+         button.Width = Math.Max(1, (int)Math.Round(properties.Box.Width * scale));
+         button.Height = Math.Max(1, (int)Math.Round(properties.Box.Height * scale));
+     }
+--- a/RaylibUI/RunGame/GameControls/UnitDisplay.cs
++++ b/RaylibUI/RunGame/GameControls/UnitDisplay.cs
+@@ -23,7 +23,7 @@
+         // Keep child texture elements relative to this control. Passing the final UI
+         // location into ImageUtils made high-resolution unit art much easier to draw
+         // outside its parent when the parent later moved the control during layout.
+-        _size = ImageUtils.GetUnitTextures(unit, activeInterface, game, _unitTextures, Vector2.Zero, true);
++        _size = ImageUtils.GetUnitTextures(unit, activeInterface, game, _unitTextures, Vector2.Zero, noStacking: true, useMapArt: false);
+         Location = location;
+     }
+ 

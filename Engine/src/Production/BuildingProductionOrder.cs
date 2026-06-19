@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text.RegularExpressions;
 using Model;
 using Model.Constants;
 using Model.Controls;
@@ -42,7 +45,72 @@ namespace Civ2engine.Production
 
         public override IImageSource? GetIcon(IUserInterface activeInterface)
         {
-            return Improvement.Icon ?? activeInterface.GetImprovementImage(Improvement, _firstWonderIndex);
+            return FindFossArtImprovementImage(Improvement.Name)
+                   ?? Improvement.Icon
+                   ?? activeInterface.GetImprovementImage(Improvement, _firstWonderIndex);
+        }
+
+        private bool HasFossArtIcon()
+        {
+            return FindFossArtImprovementImage(Improvement.Name) != null;
+        }
+
+        private static IImageSource? FindFossArtImprovementImage(string improvementName)
+        {
+            var target = NormalizeFossArtName(improvementName);
+            foreach (var directory in GetFossArtImprovementDirectories())
+            {
+                if (!Directory.Exists(directory))
+                {
+                    continue;
+                }
+
+                var matchingFile = Directory.EnumerateFiles(directory)
+                    .Where(IsSupportedArtFile)
+                    .FirstOrDefault(file => string.Equals(
+                        NormalizeFossArtName(Path.GetFileNameWithoutExtension(file)),
+                        target,
+                        StringComparison.OrdinalIgnoreCase));
+
+                if (!string.IsNullOrWhiteSpace(matchingFile))
+                {
+                    return new BitmapStorage(matchingFile);
+                }
+            }
+
+            return null;
+        }
+
+        private static IEnumerable<string> GetFossArtImprovementDirectories()
+        {
+            var roots = new[]
+            {
+                Environment.CurrentDirectory,
+                AppContext.BaseDirectory,
+                Path.Combine(Environment.CurrentDirectory, "RaylibUI"),
+                Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", ".."))
+            };
+
+            foreach (var root in roots.Where(root => !string.IsNullOrWhiteSpace(root)).Distinct(StringComparer.OrdinalIgnoreCase))
+            {
+                yield return Path.Combine(root, "FOSSart", "Improvements");
+                yield return Path.Combine(root, "RaylibUI", "FOSSart", "Improvements");
+            }
+        }
+
+        private static bool IsSupportedArtFile(string file)
+        {
+            var extension = Path.GetExtension(file);
+            return extension.Equals(".png", StringComparison.OrdinalIgnoreCase)
+                   || extension.Equals(".jpg", StringComparison.OrdinalIgnoreCase)
+                   || extension.Equals(".jpeg", StringComparison.OrdinalIgnoreCase)
+                   || extension.Equals(".gif", StringComparison.OrdinalIgnoreCase)
+                   || extension.Equals(".bmp", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static string NormalizeFossArtName(string value)
+        {
+            return Regex.Replace(value, "[^A-Za-z0-9]", string.Empty).ToLowerInvariant();
         }
 
         public override bool IsValidBuild(City city)
@@ -70,7 +138,7 @@ namespace Civ2engine.Production
                                                       (decimal)Math.Max(1, city.Production)));
             return new ListboxGroup
             {
-                Elements = [ new() { Icon = GetIcon(active), Width = 70, ScaleIcon = 0.85f },
+                Elements = [ new() { Icon = GetIcon(active), Width = 70, ScaleIcon = HasFossArtIcon() ? 0.028f : 0.48f },
                              new() { Text = Improvement.Name, Width = 260, TextSizeOverride = 18, VerticalAlignment = VerticalAlignment.Center },
                              new() { Text = $"({turns} Turns)", TextSizeOverride = 16,
                                  HorizontalAlignment = HorizontalAlignment.Right, VerticalAlignment = VerticalAlignment.Center } ],

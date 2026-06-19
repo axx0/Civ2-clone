@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.Advances;
@@ -10,6 +11,7 @@ using Civ2engine.Scripting.ScriptObjects;
 using Civ2engine.Scripting.UnitActions;
 using Civ2engine.UnitActions;
 using Civ2engine.Units;
+using Model.Constants;
 using Model.Core;
 using Model.Core.Advances;
 using Model.Core.Cities;
@@ -82,13 +84,13 @@ namespace Civ2engine
 
         public void CantProduce(City city, IProductionOrder? newItem)
         {
-            
         }
 
         public void CityProductionComplete(City city)
         {
             var productionOrders = ProductionPossibilities.GetAllowedProductionOrders(city);
-            Ai.Call(AiEvent.CityProductionComplete, new LuaTable { { "city", city }, { "productionOrders", productionOrders } });
+            Ai.Call(AiEvent.CityProductionComplete,
+                new LuaTable { { "city", city }, { "productionOrders", productionOrders } });
         }
 
         public IInterfaceCommands Ui { get; } = null!;
@@ -96,36 +98,28 @@ namespace Civ2engine
 
         public void NotifyImprovementEnabled(TerrainImprovement improvement, int level)
         {
-            // 
         }
 
         public void MapChanged(List<Tile> tiles)
         {
-            //Does the AI care?
         }
 
         public void WaitingAtEndOfTurn()
         {
-            //Call out to AI script to finalize turn
             Ai.Call(AiEvent.TurnEnd, new LuaTable());
-            
-            //End turn
             game.ChoseNextCiv();
         }
 
         public void NotifyAdvanceResearched(int advance)
         {
-            // What should the AI do??
         }
 
         public void FoodShortage(City city)
         {
-            // What should the AI do??
         }
 
         public void CityDecrease(City city)
         {
-            // What should the AI do??
         }
 
         public void TurnStart(int turnNumber)
@@ -138,30 +132,282 @@ namespace Civ2engine
         {
             ActiveUnit = unit;
             if (unit == null) return;
-            
+
             if (unit.CurrentLocation != null) ActiveTile = unit.CurrentLocation;
             if (!move) return;
-            
-            UnitAction? action = null;
-            while (unit.MovePoints > 0)
+
+            var safety = 0;
+            while (!unit.Dead && unit.MovePoints > 0 && safety++ < 12)
             {
-                var result = Ai.Call(AiEvent.UnitOrdersNeeded, new LuaTable { { "Unit", new UnitApi(unit, game) } });
-                if (result is LuaResult { Count: > 0 } luaResult)
+                var oldTile = unit.CurrentLocation;
+                var oldMovesLost = unit.MovePointsLost;
+                var oldOrder = unit.Order;
+
+                var action = GetScriptedAction(unit) ?? GetFallbackAction(unit) ?? new NothingAction(unit, game);
+                action.Execute();
+
+                if (unit.Dead || unit.MovePoints <= 0)
                 {
-                    action = luaResult[0] switch
-                    {
-                        UnitAction luaAction => luaAction,
-                        TileApi tile => TileToAction(tile.BaseTile, unit),
-                        "B" or "b" => new BuildCityAction(unit, game),
-                        "F" or "f" => new FortifyAction(unit, game),
-                        "W" or "w" => new WaitAction(unit, game, this),
-                        _ => action
-                    };
+                    break;
                 }
 
-                action ??= new NothingAction(unit, game);
-                action.Execute();
+                if (unit.CurrentLocation == oldTile && unit.MovePointsLost == oldMovesLost && unit.Order == oldOrder)
+                {
+                    unit.SkipTurn();
+                    break;
+                }
             }
+        }
+
+        private UnitAction? GetScriptedAction(Unit unit)
+        {
+            var result = Ai.Call(AiEvent.UnitOrdersNeeded, new LuaTable { { "Unit", new UnitApi(unit, game) } });
+            if (result is not LuaResult { Count: > 0 } luaResult)
+            {
+                return null;
+            }
+
+            return luaResult[0] switch
+            {
+                UnitAction luaAction => luaAction,
+                TileApi tile => TileToAction(tile.BaseTile, unit),
+                "B" or "b" => new BuildCityAction(unit, game),
+                "F" or "f" => new FortifyAction(unit, game),
+                "W" or "w" => new WaitAction(unit, game, this),
+                _ => null
+            };
+        }
+
+        private UnitAction? GetFallbackAction(Unit unit)
+        {
+            if (unit.CurrentLocation == null || unit.Dead)
+            {
+                return null;
+            }
+
+            var currentTile = unit.CurrentLocation;
+
+            if (unit.AttackBase > 0)
+            {
+                var adjacentEnemy = AdjacentEnemyAction(unit, currentTile);
+                if (adjacentEnemy != null)
+                {
+                    return adjacentEnemy;
+                }
+            }
+
+            if (unit.AiRole == AiRoleType.Settle || unit.TypeDefinition.IsSettler)
+            {
+                return SettlerAction(unit, currentTile);
+            }
+
+            if (unit.AiRole == AiRoleType.Defend && currentTile.CityHere?.Owner == unit.Owner)
+            {
+                return new FortifyAction(unit, game);
+            }
+
+            if (unit.AttackBase > 0)
+            {
+                var targetAction = MoveTowardNearestEnemy(unit, currentTile);
+                if (targetAction != null)
+                {
+                    return targetAction;
+                }
+            }
+
+            return ExploreAction(unit, currentTile);
+        }
+
+        private UnitAction? AdjacentEnemyAction(Unit unit, Tile currentTile)
+        {
+            var attackTile = MovementFunctions.GetPossibleMoves(currentTile, unit)
+                .Where(tile => IsEnemyTile(unit, tile))
+                .OrderBy(tile => tile.CityHere == null ? 1 : 0)
+                .ThenByDescending(tile => tile.UnitsHere.Any(other => other.AttackBase > 0))
+                .FirstOrDefault();
+
+            return attackTile == null ? null : TileToAction(attackTile, unit);
+        }
+
+        private UnitAction? SettlerAction(Unit unit, Tile currentTile)
+        {
+            if (CanFoundUsefulCity(unit, currentTile) && ShouldFoundCityNow(unit, currentTile))
+            {
+                return new BuildCityAction(unit, game);
+            }
+
+            var destination = MovementFunctions.GetPossibleMoves(currentTile, unit)
+                .Where(tile => IsSafeForNonCombatUnit(unit, tile))
+                .Where(tile => tile.Type != TerrainType.Ocean && !tile.Terrain.Impassable)
+                .OrderByDescending(tile => CitySiteScore(unit, tile))
+                .FirstOrDefault();
+
+            if (destination != null && CitySiteScore(unit, destination) >= CitySiteScore(unit, currentTile))
+            {
+                return new MoveAction(unit, destination, game);
+            }
+
+            if (CanFoundUsefulCity(unit, currentTile))
+            {
+                return new BuildCityAction(unit, game);
+            }
+
+            return ExploreAction(unit, currentTile, avoidEnemies: true);
+        }
+
+        private bool ShouldFoundCityNow(Unit unit, Tile tile)
+        {
+            if (unit.Owner.Cities.Count == 0)
+            {
+                return true;
+            }
+
+            if (tile.Fertility >= 6)
+            {
+                return true;
+            }
+
+            return !MovementFunctions.GetPossibleMoves(tile, unit)
+                .Any(next => CitySiteScore(unit, next) > CitySiteScore(unit, tile) + 25);
+        }
+
+        private bool CanFoundUsefulCity(Unit unit, Tile tile)
+        {
+            if (tile.Type == TerrainType.Ocean || tile.Terrain.Impassable || tile.CityHere != null)
+            {
+                return false;
+            }
+
+            if (tile.UnitsHere.Any(other => other.Owner != unit.Owner))
+            {
+                return false;
+            }
+
+            return !tile.CityRadius().Any(other => other.CityHere != null && other.CityHere.Owner == unit.Owner);
+        }
+
+        private int CitySiteScore(Unit unit, Tile tile)
+        {
+            if (!CanFoundUsefulCity(unit, tile))
+            {
+                return int.MinValue / 2;
+            }
+
+            var score = (int)(tile.Fertility * 100);
+            if (tile.River) score += 80;
+            if (tile.Special >= 0) score += 90;
+            if (tile.HasShield) score += 25;
+            if (tile.Resource) score += 40;
+            if (tile.HasGoodyHut) score -= 75;
+
+            var friendlyCityDistance = unit.Owner.Cities.Count == 0
+                ? 8d
+                : unit.Owner.Cities.Min(city => Utilities.DistanceTo(tile, city.Location));
+            score += (int)(Math.Min(friendlyCityDistance, 10d) * 8d);
+
+            var enemyNearby = tile.Neighbours().Any(neighbour => IsEnemyTile(unit, neighbour));
+            if (enemyNearby)
+            {
+                score -= 150;
+            }
+
+            return score;
+        }
+
+        private UnitAction? MoveTowardNearestEnemy(Unit unit, Tile currentTile)
+        {
+            var target = FindNearestEnemyTile(unit, currentTile);
+            if (target == null)
+            {
+                return null;
+            }
+
+            var destination = MovementFunctions.GetPossibleMoves(currentTile, unit)
+                .Where(tile => tile == target || !BlocksCombatUnit(unit, tile))
+                .OrderBy(tile => Utilities.DistanceTo(tile, target))
+                .ThenByDescending(tile => tile.CityHere != null && tile.CityHere.Owner != unit.Owner)
+                .FirstOrDefault();
+
+            return destination == null ? null : TileToAction(destination, unit);
+        }
+
+        private UnitAction? ExploreAction(Unit unit, Tile currentTile, bool avoidEnemies = false)
+        {
+            var moves = MovementFunctions.GetPossibleMoves(currentTile, unit)
+                .Where(tile => unit.AttackBase > 0 || IsSafeForNonCombatUnit(unit, tile))
+                .Where(tile => !avoidEnemies || !tile.Neighbours().Any(neighbour => IsEnemyTile(unit, neighbour)))
+                .ToList();
+
+            if (moves.Count == 0)
+            {
+                return new NothingAction(unit, game);
+            }
+
+            var destination = moves
+                .OrderBy(tile => tile.Visibility.Length > unit.Owner.Id && tile.Visibility[unit.Owner.Id] ? 1 : 0)
+                .ThenByDescending(tile => tile.Fertility)
+                .ThenBy(_ => game.Random.Next(1000))
+                .First();
+
+            return TileToAction(destination, unit);
+        }
+
+        private Tile? FindNearestEnemyTile(Unit unit, Tile currentTile)
+        {
+            Tile? best = null;
+            var bestDistance = double.MaxValue;
+            foreach (var tile in currentTile.Map.Tile)
+            {
+                if (!IsEnemyTile(unit, tile))
+                {
+                    continue;
+                }
+
+                if (unit.Domain == UnitGas.Ground && tile.Type == TerrainType.Ocean)
+                {
+                    continue;
+                }
+
+                var distance = Utilities.DistanceTo(currentTile, tile);
+                if (distance < bestDistance)
+                {
+                    best = tile;
+                    bestDistance = distance;
+                }
+            }
+
+            return best;
+        }
+
+        private static bool IsSafeForNonCombatUnit(Unit unit, Tile tile)
+        {
+            if (tile.UnitsHere.Any(other => other.Owner != unit.Owner))
+            {
+                return false;
+            }
+
+            if (tile.CityHere != null && tile.CityHere.Owner != unit.Owner)
+            {
+                return false;
+            }
+
+            return !tile.Neighbours().Any(neighbour => IsEnemyTile(unit, neighbour));
+        }
+
+        private static bool BlocksCombatUnit(Unit unit, Tile tile)
+        {
+            return tile.UnitsHere.Any(other => other.Owner == unit.Owner && other.InShip == null) &&
+                   tile.CityHere?.Owner != unit.Owner;
+        }
+
+        private static bool IsEnemyTile(Unit unit, Tile tile)
+        {
+            if (tile.CityHere != null && tile.CityHere.Owner != unit.Owner)
+            {
+                return true;
+            }
+
+            return tile.UnitsHere.Any(other => !other.Dead && other.Owner != unit.Owner && other.InShip == null);
         }
 
         private void CallUnitsLost(LuaTable units, Unit? by)
@@ -193,37 +439,33 @@ namespace Civ2engine
 
         public void UnitMoved(Unit unit, Tile tileTo, Tile tileFrom)
         {
-            Ai.Call(AiEvent.UnitMoved, new LuaTable { { "Unit", new UnitApi(unit, game) }, { "TileTo", new TileApi(tileTo, game)}, { "TileFrom", new TileApi(tileFrom, game)} });
+            Ai.Call(AiEvent.UnitMoved,
+                new LuaTable
+                {
+                    { "Unit", new UnitApi(unit, game) },
+                    { "TileTo", new TileApi(tileTo, game) },
+                    { "TileFrom", new TileApi(tileFrom, game) }
+                });
         }
 
         public void CombatHappened(CombatEventArgs combatEventArgs)
         {
-            //TODO: Does the AI care?
         }
 
         public void MoveBlocked(Unit unit, BlockedReason blockedReason)
         {
-            //TODO: Does the AI care? Can this even happen?
         }
 
         public void GoodyHutTriggered(Unit unit, GoodyHutOutcomeResult outcome)
         {
         }
 
-        /// <summary>
-        /// Determines and assigns a technology from the provided list of advances, based on AI logic or random selection.
-        ///
-        ///  Note: if the AI has no specific logic, it will randomly select a technology from the provided list.
-        ///         if the AI logic returns a number it will first be treated as an index into the provided list of advances, and then a general advance index
-        ///          if it returns an Advance or Tech it will be given even if not in the provided techs list
-        /// 
-        /// </summary>
-        /// <param name="techs">A list of potential technological advances gained from conquest.</param>
         public void SelectTechFromConquest(List<Advance> techs)
         {
             int result;
-            var luaResult = Ai.Call(AiEvent.SelectTechFromConquest, new LuaTable { { "Techs", techs.Select(t => new Tech(game.Rules.Advances, t.Index)).ToList() } });
-            if(luaResult is { Count: > 0})
+            var luaResult = Ai.Call(AiEvent.SelectTechFromConquest,
+                new LuaTable { { "Techs", techs.Select(t => new Tech(game.Rules.Advances, t.Index)).ToList() } });
+            if (luaResult is { Count: > 0 })
             {
                 result = luaResult[0] switch
                 {
@@ -243,12 +485,12 @@ namespace Civ2engine
 
         public void CityLost(City city)
         {
-            Ai.Call(AiEvent.CityLost, new LuaTable {{ "city", new CityApi(city, game)}});
+            Ai.Call(AiEvent.CityLost, new LuaTable { { "city", new CityApi(city, game) } });
         }
 
         public void CityCaptured(City city)
         {
-            Ai.Call(AiEvent.CityCaptured, new LuaTable {{ "city", new CityApi(city, game)}});
+            Ai.Call(AiEvent.CityCaptured, new LuaTable { { "city", new CityApi(city, game) } });
         }
 
         private UnitAction? TileToAction(Tile tile, Unit unit)
@@ -262,7 +504,7 @@ namespace Civ2engine
             {
                 return new GotoAction(unit, tile, game);
             }
-            
+
             if (tile.UnitsHere.Count > 0 && tile.UnitsHere[0].Owner.Id != unit.Owner.Id)
             {
                 return new AttackAction(unit, tile, game);

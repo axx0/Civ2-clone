@@ -1,0 +1,475 @@
+diff --git a/Civ2/Civ2Interface.cs b/Civ2/Civ2Interface.cs
+index 37048e85..974ee875 100644
+--- a/Civ2/Civ2Interface.cs
++++ b/Civ2/Civ2Interface.cs
+@@ -754,7 +754,7 @@ public abstract class Civ2Interface(IMain main) : IUserInterface
+                 var c when c.WindowType == CivilopediaWindowType.Listbox && c.InfoType != CivilopediaInfoType.Advances
+                     => ["Info", "Close"],
+                 var c when c.WindowType == CivilopediaWindowType.Info && c.InfoType == CivilopediaInfoType.Advances
+-                    => ["Go Back", "Tree", "Description", "Close"],
++                    => ["Go Back", "Tree", "Close"],
+                 var c when c.WindowType == CivilopediaWindowType.Info && 
+                     (c.InfoType == CivilopediaInfoType.Governments || c.InfoType == CivilopediaInfoType.Concepts)
+                     => ["Go Back", "Close"],
+diff --git a/Civ2/ImageLoader/UnitLoader.cs b/Civ2/ImageLoader/UnitLoader.cs
+index 84423294..0823d5e9 100644
+--- a/Civ2/ImageLoader/UnitLoader.cs
++++ b/Civ2/ImageLoader/UnitLoader.cs
+@@ -24,7 +24,7 @@ namespace Civ2.ImageLoader
+ 
+             for (var i = 0; i < units.Length; i++)
+             {
+-                var originalSource = active.PicSources["unit"][i];
++                var originalSource = GetClassicUnitImageSource(active, i);
+                 var originalProps = Images.ExtractBitmapData(originalSource, active); // put original icon into cache
+ 
+                 var mapSource = active.GetFossArtUnitImage(i) ?? originalSource;
+@@ -55,6 +55,34 @@ namespace Civ2.ImageLoader
+             active.GetShieldImages();
+         }
+ 
++        private static IImageSource GetClassicUnitImageSource(Civ2Interface active, int index)
++        {
++            if (active.PicSources.TryGetValue("unit", out var sources) &&
++                index >= 0 && index < sources.Length &&
++                IsClassicUnitSprite(sources[index], active))
++            {
++                return sources[index];
++            }
++
++            // The FOSS artwork can be substituted into PicSources by the asset-replacement
++            // path. Fixed-size UI panels still need the original 64px Civ2 sprite, so build
++            // that source explicitly from UNITS.* when PicSources no longer points there.
++            return new BitmapStorage("UNITS",
++                new Rectangle(1 + 65 * (index % UnitColumns),
++                    1 + (active.UnitsPxHeight + 1) * (index / UnitColumns),
++                    OriginalUnitWidth, active.UnitsPxHeight),
++                transparencyPixel: active.Title.Contains("Test of Time", StringComparison.OrdinalIgnoreCase),
++                searchFlagLoc: true);
++        }
++
++        private static bool IsClassicUnitSprite(IImageSource source, Civ2Interface active)
++        {
++            return source is BitmapStorage bitmapStorage &&
++                   string.Equals(bitmapStorage.Filename, "UNITS", StringComparison.OrdinalIgnoreCase) &&
++                   Math.Abs(bitmapStorage.Location.Width - OriginalUnitWidth) < 0.01f &&
++                   Math.Abs(bitmapStorage.Location.Height - active.UnitsPxHeight) < 0.01f;
++        }
++
+         private static float GetDrawScale(int sourceWidth, int sourceHeight, Vector2 logicalSize)
+         {
+             if (sourceWidth <= 0 || sourceHeight <= 0)
+diff --git a/RaylibUI/BasicTypes/BaseControl.cs b/RaylibUI/BasicTypes/BaseControl.cs
+index 75d105be..caf4e962 100644
+--- a/RaylibUI/BasicTypes/BaseControl.cs
++++ b/RaylibUI/BasicTypes/BaseControl.cs
+@@ -76,7 +76,28 @@ public abstract class BaseControl : IControl
+     public IList<IControl> Controls { get; protected set; } = [];
+ 
+     private IComponent? _parent;
+-    public IComponent Parent => _parent ??= SearchForParent(Controller) ?? Controller;
++    public IComponent Parent
++    {
++        get
++        {
++            if (_parent is not null)
++            {
++                return _parent;
++            }
++
++            var parent = SearchForParent(Controller);
++            if (parent is not null)
++            {
++                _parent = parent;
++                return parent;
++            }
++
++            // Controls are often sized before they are inserted into their real
++            // parent. Return the controller as a temporary fallback, but do not
++            // cache it; otherwise later drawing/hit testing uses the wrong bounds.
++            return Controller;
++        }
++    }
+ 
+     /// <summary>
+     /// Search for this control's parent control.
+diff --git a/RaylibUI/Bitmaps/ImageUtils.cs b/RaylibUI/Bitmaps/ImageUtils.cs
+index a306751f..e7262bd2 100644
+--- a/RaylibUI/Bitmaps/ImageUtils.cs
++++ b/RaylibUI/Bitmaps/ImageUtils.cs
+@@ -338,7 +338,7 @@ public static class ImageUtils
+             // Unit
+             viewElements.Add(new TextureElement(location: loc, texture: unitTexture,
+                 tile: tile, isShaded: unit.Order == (int)OrderType.Sleep,
+-                offset: unitDrawOffset, renderScale: unitRenderScale));
++                offset: unitDrawOffset, renderScale: unitRenderScale, maxDrawSize: logicalSize));
+         }
+ 
+         // Stacked shield
+@@ -385,7 +385,7 @@ public static class ImageUtils
+             // Unit
+             viewElements.Add(new TextureElement(location: loc, texture: unitTexture,
+                 tile: tile, isShaded: unit.Order == (int)OrderType.Sleep,
+-                offset: unitDrawOffset, renderScale: unitRenderScale));
++                offset: unitDrawOffset, renderScale: unitRenderScale, maxDrawSize: logicalSize));
+         }
+ 
+         if (unit.Order == (int)OrderType.Fortified)
+diff --git a/RaylibUI/RunGame/GameControls/CityControls/ProductionBox.cs b/RaylibUI/RunGame/GameControls/CityControls/ProductionBox.cs
+index 0485ebc5..14d8c0ce 100644
+--- a/RaylibUI/RunGame/GameControls/CityControls/ProductionBox.cs
++++ b/RaylibUI/RunGame/GameControls/CityControls/ProductionBox.cs
+@@ -34,8 +34,6 @@ public class ProductionBox : BaseControl
+     private const float ProductionIconSlotWidth = 42f;
+     private const float ProductionIconSlotHeight = 36f;
+     private const float Padding = 5f;
+-    private const float BuyButtonX = 5f;
+-    private const float ChangeButtonX = 120f;
+     private const float ButtonY = 16f;
+     private const float ButtonWidth = 68f;
+     private const float ButtonHeight = 24f;
+@@ -131,8 +129,8 @@ public class ProductionBox : BaseControl
+         FitIconInSlot(activeOrder.GetIcon(_active), slotWidth, slotHeight);
+ 
+         _icon.Location = new(
+-            _properties.IconLocation.X * scale - _icon.Width / 2f,
+-            Math.Max(0, _properties.IconLocation.Y * scale - _icon.Height / 2f));
++            Math.Max(0, (Width - _icon.Width) / 2f),
++            Math.Max(0, 6 * scale));
+     }
+ 
+     private void FitIconInSlot(IImageSource? source, int slotWidth, int slotHeight)
+@@ -144,8 +142,13 @@ public class ProductionBox : BaseControl
+     private void LayoutActionButtons()
+     {
+         var scale = _cityWindow.Scale;
+-        LayoutButton(_buyButton, BuyButtonX, ButtonY, ButtonWidth, ButtonHeight, scale);
+-        LayoutButton(_changeButton, ChangeButtonX, ButtonY, ButtonWidth, ButtonHeight, scale);
++        var padding = Padding * scale;
++        var buttonHeight = Math.Max(20, (int)Math.Round(ButtonHeight * scale));
++        var buttonWidth = Math.Max(54, Math.Min(ButtonWidth * scale, (Width - ProductionIconSlotWidth * scale - 4 * padding) / 2f));
++        var buttonY = ButtonY * scale;
++
++        LayoutButton(_buyButton, padding, buttonY, buttonWidth, buttonHeight);
++        LayoutButton(_changeButton, Width - padding - buttonWidth, buttonY, buttonWidth, buttonHeight);
+ 
+         _buyButton.Visible = true;
+         _changeButton.Visible = true;
+@@ -154,11 +157,11 @@ public class ProductionBox : BaseControl
+         _changeButton.FontSize = fontSize;
+     }
+ 
+-    private static void LayoutButton(CityButton button, float x, float y, float width, float height, float scale)
++    private static void LayoutButton(CityButton button, float x, float y, float width, float height)
+     {
+-        button.Location = new(x * scale, y * scale);
+-        button.Width = Math.Max(1, (int)Math.Round(width * scale));
+-        button.Height = Math.Max(1, (int)Math.Round(height * scale));
++        button.Location = new(x, y);
++        button.Width = Math.Max(1, (int)Math.Round(width));
++        button.Height = Math.Max(1, (int)Math.Round(height));
+     }
+ 
+     private IProductionOrder GetDisplayedOrder()
+diff --git a/RaylibUI/RunGame/GameControls/Civilopedia/CivilopediaAdvanceInfo.cs b/RaylibUI/RunGame/GameControls/Civilopedia/CivilopediaAdvanceInfo.cs
+index 82d82fef..06f5fbab 100644
+--- a/RaylibUI/RunGame/GameControls/Civilopedia/CivilopediaAdvanceInfo.cs
++++ b/RaylibUI/RunGame/GameControls/Civilopedia/CivilopediaAdvanceInfo.cs
+@@ -13,22 +13,24 @@ using Model.Core.Units;
+ using Model.Images;
+ using Raylib_CSharp.Colors;
+ using Raylib_CSharp.Rendering;
++using Raylib_CSharp.Transformations;
+ using RaylibUI.BasicTypes;
+ using RaylibUI.BasicTypes.Controls;
++using RaylibUtils;
+ 
+ namespace RaylibUI.RunGame.GameControls.Civilopedia;
+ 
+ public sealed class CivilopediaAdvanceInfo : BaseControl
+ {
+     private const int Margin = 16;
+-    private const int ArtWidth = 340;
+-    private const int ArtHeight = 250;
+-    private const int DescriptionWidth = 500;
+-    private const int DescriptionHeight = 248;
+-    private const int SectionFontSize = 20;
+-    private const int BodyFontSize = 19;
+-    private const int LinkFontSize = 20;
+-    private const int LineHeight = 26;
++    private const int ArtWidth = 360;
++    private const int ArtHeight = 270;
++    private const int DescriptionWidth = 470;
++    private const int DescriptionHeight = 268;
++    private const int SectionFontSize = 18;
++    private const int BodyFontSize = 17;
++    private const int LinkFontSize = 18;
++    private const int LineHeight = 29;
+ 
+     private readonly CivilopediaWindow _window;
+     private readonly GameScreen _gameScreen;
+@@ -38,6 +40,7 @@ public sealed class CivilopediaAdvanceInfo : BaseControl
+     private readonly List<UnitDefinition> _units;
+     private readonly CivilopediaEntry _pedia;
+     private readonly IUserInterface _active;
++    private IImageSource? _advanceImage;
+ 
+     public CivilopediaAdvanceInfo(CivilopediaWindow window, GameScreen gameScreen, List<Advance> advances,
+         List<Improvement> improvements, List<Improvement> wonders, List<UnitDefinition> units,
+@@ -64,12 +67,8 @@ public sealed class CivilopediaAdvanceInfo : BaseControl
+         var advance = _advances[_pedia.Id];
+         var rules = _gameScreen.Game.Rules;
+         var advanceId = Array.FindIndex(rules.Advances, row => row == advance);
+-        var image = _active.GetAdvanceImage(advance) ?? _active.PicSources["advanceCategories"][5 * advance.Epoch + advance.KnowledgeCategory];
+-
+-        var imageBox = new ImageBox(_window, image, eventTransparent: true);
+-        imageBox.FitIntoSlot(ArtWidth, ArtHeight, padding: 4, maxScale: 8f);
+-        imageBox.Location = new(Margin, Margin + 20);
+-        Controls.Add(imageBox);
++        _advanceImage = _active.GetAdvanceImage(advance) ??
++                        _active.PicSources["advanceCategories"][5 * advance.Epoch + advance.KnowledgeCategory];
+ 
+         var proclamation = new LabelControl(_window,
+             $"{_active.GetScientistName(_gameScreen.Player.Civilization.Epoch)} proclaims a discovery:",
+@@ -107,48 +106,59 @@ public sealed class CivilopediaAdvanceInfo : BaseControl
+             description = advance.Name;
+         }
+ 
+-        var textWidth = DescriptionWidth - ScrollBar.ScrollbarDimDefault - 12;
+-        var wrappedTexts = DialogUtils.GetWrappedTexts(description.Replace("_", " "), textWidth,
+-            _active.Look.LabelFont, BodyFontSize);
++        var lines = WrapDescription(description.Replace("_", " "), DescriptionWidth - 16, DescriptionHeight / LineHeight);
++        for (var i = 0; i < lines.Count; i++)
++        {
++            var label = new LabelControl(_window, lines[i], true,
++                font: _active.Look.LabelFont,
++                fontSize: BodyFontSize,
++                colorFront: new Color(22, 22, 22, 255),
++                colorShadow: Color.Blank,
++                shadowOffset: Vector2.Zero)
++            {
++                Location = new(x + 8, y + i * LineHeight),
++                Width = DescriptionWidth - 16,
++                Height = LineHeight,
++                VerticalAlignment = VerticalAlignment.Center
++            };
++            Controls.Add(label);
++        }
++    }
+ 
+-        var groups = wrappedTexts.Select(text => new ListboxGroup
++    private List<string> WrapDescription(string text, int maxWidth, int maxLines)
++    {
++        var lines = new List<string>();
++        foreach (var paragraph in text.Replace("\r\n", "\n").Split('\n'))
+         {
+-            Elements =
+-            [
+-                new ListboxGroupElement
++            if (string.IsNullOrWhiteSpace(paragraph))
++            {
++                if (lines.Count > 0)
+                 {
+-                    Text = string.IsNullOrWhiteSpace(text) ? " " : text,
+-                    Width = textWidth,
+-                    TextSizeOverride = BodyFontSize,
+-                    VerticalAlignment = VerticalAlignment.Center
++                    lines.Add(" ");
+                 }
+-            ],
+-            Height = LineHeight
+-        }).ToList();
++            }
++            else
++            {
++                lines.AddRange(DialogUtils.GetWrappedTexts(paragraph.Trim(), maxWidth, _active.Look.LabelFont, BodyFontSize));
++            }
+ 
+-        var listbox = new Listbox(_window, new ListboxDefinition
+-        {
+-            Groups = groups,
+-            Rows = Math.Max(1, DescriptionHeight / LineHeight),
+-            Selectable = false,
+-            VerticalScrollbar = true,
+-            Looks = new ListboxLooks
++            if (lines.Count >= maxLines)
+             {
+-                BoxBackgroundColor = new Color(250, 246, 224, 235),
+-                BoxLineColor = new Color(92, 70, 35, 255),
+-                Font = _active.Look.LabelFont,
+-                FontSize = BodyFontSize,
+-                TextColorFront = new Color(20, 20, 20, 255),
+-                TextColorShadow = Color.Blank,
+-                TextShadowOffset = Vector2.Zero
++                break;
+             }
+-        })
++        }
++
++        if (lines.Count > maxLines)
+         {
+-            Location = new(x, y),
+-            Width = DescriptionWidth,
+-            Height = DescriptionHeight
+-        };
+-        Controls.Add(listbox);
++            lines = lines.Take(maxLines).ToList();
++        }
++
++        if (lines.Count == maxLines && !string.IsNullOrWhiteSpace(lines[^1]))
++        {
++            lines[^1] = lines[^1].TrimEnd() + " ...";
++        }
++
++        return lines.Count == 0 ? [" "] : lines;
+     }
+ 
+     private int AddPrerequisites(Advance advance, Rules rules, int y)
+@@ -243,8 +253,10 @@ public sealed class CivilopediaAdvanceInfo : BaseControl
+         {
+             var label = new PediaLinkLabel(_window, text, cursorX, cursorY)
+             {
+-                FontSize = LinkFontSize
++                FontSize = LinkFontSize,
++                Height = LineHeight
+             };
++            label.Width = label.GetPreferredWidth();
+ 
+             if (cursorX + label.Width > maxX && cursorX > x + 155)
+             {
+@@ -255,7 +267,7 @@ public sealed class CivilopediaAdvanceInfo : BaseControl
+ 
+             label.Click += (_, _) => click();
+             Controls.Add(label);
+-            cursorX += label.Width + 12;
++            cursorX += label.Width + 14;
+         }
+ 
+         return cursorY + LineHeight;
+@@ -365,6 +377,38 @@ public sealed class CivilopediaAdvanceInfo : BaseControl
+         Graphics.DrawRectangle(leftX, lowerY, Width - 2 * Margin + 16, lowerH, new Color(250, 246, 224, 205));
+         Graphics.DrawRectangleLines(leftX, lowerY, Width - 2 * Margin + 16, lowerH, new Color(92, 70, 35, 255));
+ 
++        DrawAdvanceArt(leftX + 8, topY + 34, ArtWidth, ArtHeight);
++
+         base.Draw(pulse);
+     }
++
++    private void DrawAdvanceArt(int x, int y, int width, int height)
++    {
++        if (_advanceImage is null)
++        {
++            return;
++        }
++
++        var texture = TextureCache.GetImage(_advanceImage);
++        if (texture.Width <= 0 || texture.Height <= 0)
++        {
++            return;
++        }
++
++        const int padding = 4;
++        var availableWidth = Math.Max(1, width - 2 * padding);
++        var availableHeight = Math.Max(1, height - 2 * padding);
++        var scale = MathF.Min(availableWidth / (float)texture.Width, availableHeight / (float)texture.Height);
++        var drawWidth = texture.Width * scale;
++        var drawHeight = texture.Height * scale;
++        var dest = new Rectangle(
++            x + padding + (availableWidth - drawWidth) / 2f,
++            y + padding + (availableHeight - drawHeight) / 2f,
++            drawWidth,
++            drawHeight);
++
++        Graphics.DrawTexturePro(texture,
++            new Rectangle(0, 0, texture.Width, texture.Height),
++            dest, Vector2.Zero, 0f, Color.White);
++    }
+ }
+diff --git a/RaylibUI/RunGame/GameControls/Civilopedia/CivilopediaWindow.cs b/RaylibUI/RunGame/GameControls/Civilopedia/CivilopediaWindow.cs
+index 362e392e..880e89d4 100644
+--- a/RaylibUI/RunGame/GameControls/Civilopedia/CivilopediaWindow.cs
++++ b/RaylibUI/RunGame/GameControls/Civilopedia/CivilopediaWindow.cs
+@@ -104,7 +104,7 @@ public class CivilopediaWindow : BaseDialog
+                         for (var i = 0; i < names.Length; i++)
+                         {
+                             icons[i] = new IImageSource[1];
+-                            icons[i][0] = 
++                            icons[i][0] = _active.GetAdvanceImage(_advances[i]) ??
+                                 _active.PicSources["advanceCategories"][5 * _advances[i].Epoch + _advances[i].KnowledgeCategory];
+                         }
+                         break;
+@@ -132,7 +132,9 @@ public class CivilopediaWindow : BaseDialog
+                         for (var i = 0; i < names.Length; i++)
+                         {
+                             icons[i] = new IImageSource[1];
+-                            icons[i][0] = _active.PicSources["unit"][_units[i].Type];
++                            icons[i][0] = _active.UnitImages.Units.Length > _units[i].Type
++                                ? _active.UnitImages.Units[_units[i].Type].Image
++                                : _active.PicSources["unit"][_units[i].Type];
+                         }
+                         iconOffset = Images.GetImageWidth(icons[0][0], _active);
+                         break;
+diff --git a/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/TextureElement.cs b/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/TextureElement.cs
+index bb274923..202b35da 100644
+--- a/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/TextureElement.cs
++++ b/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/TextureElement.cs
+@@ -10,7 +10,7 @@ namespace RaylibUI.RunGame.GameControls.Mapping.Views.ViewElements;
+ public class TextureElement : IViewElement
+ {
+     public TextureElement(Texture2D texture, Vector2 location, Tile tile, bool isTerrain = false, bool isShaded = false,
+-        Vector2? offset = null, float renderScale = 1f)
++        Vector2? offset = null, float renderScale = 1f, Vector2? maxDrawSize = null)
+     {
+         Texture = texture;
+         Location = location;
+@@ -19,6 +19,7 @@ public class TextureElement : IViewElement
+         IsShaded = isShaded;
+         Offset = offset ?? Vector2.Zero;
+         RenderScale = renderScale;
++        MaxDrawSize = maxDrawSize;
+     }
+ 
+     /// <summary>
+@@ -34,6 +35,13 @@ public class TextureElement : IViewElement
+     /// </summary>
+     public float RenderScale { get; }
+ 
++    /// <summary>
++    /// Optional logical maximum draw size. Unit textures use this as a final
++    /// guard so a high-resolution source can never cover fixed-size UI panels
++    /// or modal windows if scale metadata is missing or stale.
++    /// </summary>
++    public Vector2? MaxDrawSize { get; }
++
+     public Texture2D Texture { get; init; }
+     
+     public Vector2 Location { get; set; }
+@@ -49,10 +57,19 @@ public class TextureElement : IViewElement
+             Graphics.BeginShaderMode(Shaders.Grayscale);
+         }
+ 
++        var drawScale = scale * RenderScale;
++        if (MaxDrawSize is { } maxDrawSize && Texture.Width > 0 && Texture.Height > 0 &&
++            maxDrawSize.X > 0 && maxDrawSize.Y > 0)
++        {
++            var maxWidth = maxDrawSize.X * scale;
++            var maxHeight = maxDrawSize.Y * scale;
++            drawScale = MathF.Min(drawScale, MathF.Min(maxWidth / Texture.Width, maxHeight / Texture.Height));
++        }
++
+         Graphics.DrawTextureEx(Texture,
+             adjustedLocation + Offset * scale,
+             0f,
+-            scale * RenderScale,
++            MathF.Max(0.01f, drawScale),
+             Color.White);
+ 
+         if (isShaded)
+@@ -63,6 +80,6 @@ public class TextureElement : IViewElement
+ 
+     public IViewElement CloneForLocation(Vector2 newLocation)
+     {
+-        return new TextureElement(Texture, newLocation, Tile, IsTerrain, IsShaded, Offset, RenderScale);
++        return new TextureElement(Texture, newLocation, Tile, IsTerrain, IsShaded, Offset, RenderScale, MaxDrawSize);
+     }
+ }

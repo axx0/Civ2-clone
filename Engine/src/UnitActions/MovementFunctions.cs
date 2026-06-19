@@ -1,4 +1,4 @@
-using Civ2engine.Enums;
+﻿using Civ2engine.Enums;
 using Civ2engine.Events;
 using Civ2engine.MapObjects;
 using Civ2engine.Terrains;
@@ -286,7 +286,16 @@ namespace Civ2engine.UnitActions
 
             if (tileTo.CityHere != null)
             {
-                //Anything can attack or defend a city
+                // Empty enemy cities are captured by moving into them.  The barbarian AI can
+                // target cities directly, so do not enter the combat resolver unless there is
+                // actually an enemy defender on the city tile.
+                if (!tileTo.UnitsHere.Any(u => !u.Dead && u.Owner != unit.Owner))
+                {
+                    Moveto(game, unit, tileTo.X, tileTo.Y);
+                    return true;
+                }
+
+                // Anything can attack or defend a city when a defender is present.
                 Attack(game, unit, tileTo);
                 return true;
             }
@@ -329,16 +338,30 @@ namespace Civ2engine.UnitActions
         private static void Attack(IGame game, Unit attacker, Tile tile)
         {           
 
-            // Primary defender is the unit with largest defense factor
-            var defender = tile.UnitsHere[0];
-            var groundDefenceFactor = tile.EffectsList.Where(e => e.Target == ImprovementConstants.GroundDefence).Sum(e=>e.Value);
-            var defenseFactor = defender.DefenseFactor(attacker, tile, groundDefenceFactor);
-            for (var i = 1; i < tile.UnitsHere.Count; i++)
+            // Primary defender is the enemy unit with the largest defense factor.  An
+            // undefended city can be reached here when an AI routine calls AttackAtTile
+            // directly rather than going through MoveC2, so guard against an empty defender
+            // stack and capture the city by movement instead of indexing UnitsHere[0].
+            var defenders = tile.UnitsHere.Where(u => !u.Dead && u.Owner != attacker.Owner).ToList();
+            if (defenders.Count == 0)
             {
-                var altDefenseFactor = tile.UnitsHere[i].DefenseFactor(attacker, tile, groundDefenceFactor);
+                if (tile.CityHere != null && tile.CityHere.Owner != attacker.Owner)
+                {
+                    Moveto(game, attacker, tile.X, tile.Y);
+                }
+
+                return;
+            }
+
+            var groundDefenceFactor = tile.EffectsList.Where(e => e.Target == ImprovementConstants.GroundDefence).Sum(e=>e.Value);
+            var defender = defenders[0];
+            var defenseFactor = defender.DefenseFactor(attacker, tile, groundDefenceFactor);
+            for (var i = 1; i < defenders.Count; i++)
+            {
+                var altDefenseFactor = defenders[i].DefenseFactor(attacker, tile, groundDefenceFactor);
                 if (altDefenseFactor > defenseFactor)
                 {
-                    defender = tile.UnitsHere[i];
+                    defender = defenders[i];
                     defenseFactor = altDefenseFactor;
                 }
             }
@@ -413,7 +436,7 @@ namespace Civ2engine.UnitActions
             
             if (attackerWinsBattle)
             {
-                attacker.MovePointsLost += game.Rules.Cosmic.MovementMultiplier;
+                ApplyPostCombatMovementCost(game, attacker);
                 // Defender loses - kill all units on the tile (except if on city & if in fortress/airbase)
                 if (tile.CityHere != null ||
                     tile.EffectsList.Any(e => e.Target == ImprovementConstants.NoStackElimination))
@@ -451,6 +474,34 @@ namespace Civ2engine.UnitActions
                 //_units.Remove(attacker);
             }
 
+            var updatedTiles = new List<Tile> { tile };
+            if (attacker.CurrentLocation != null)
+            {
+                updatedTiles.Add(attacker.CurrentLocation);
+            }
+
+            game.UpdateTiles(updatedTiles.Distinct().ToList());
+
+        }
+
+        private static void ApplyPostCombatMovementCost(IGame game, Unit attacker)
+        {
+            var attackCost = game.Rules.Cosmic.MovementMultiplier;
+            var movementLost = Math.Min(attacker.MaxMovePoints, attacker.MovePointsLost + attackCost);
+
+            if (attacker.Domain != UnitGas.Air && attacker.HitpointsBase > 0 && attacker.HitPointsLost > 0)
+            {
+                var remainingHitpointRatio = Math.Max(0d, attacker.RemainingHitpoints) / attacker.HitpointsBase;
+                var damageLimitedMovement = (int)Math.Round(attacker.MaxMovePoints * remainingHitpointRatio);
+                var minimumMovement = attacker.Domain == UnitGas.Sea
+                    ? Math.Min(attacker.MaxMovePoints, game.Rules.Cosmic.MovementMultiplier * 2)
+                    : Math.Min(attacker.MaxMovePoints, game.Rules.Cosmic.MovementMultiplier);
+
+                damageLimitedMovement = Math.Max(minimumMovement, damageLimitedMovement);
+                movementLost = Math.Max(movementLost, attacker.MaxMovePoints - damageLimitedMovement);
+            }
+
+            attacker.MovePointsLost = Math.Clamp(movementLost, 0, attacker.MaxMovePoints);
         }
 
         private static void Moveto(IGame game, Unit unit, int destX, int destY)
@@ -685,6 +736,19 @@ namespace Civ2engine.UnitActions
                 }else if (tileTo.HasGoodyHut)
                 {
                     var outcome = tileTo.ConsumeGoodyHut(unit);
+                    if (outcome.OutcomeType == "AdvancedTribe")
+                    {
+                        ApplyAdvancedTribeOutcome(game, unit, tileTo, outcome, mapUpdates);
+                    }
+                    else if (outcome.OutcomeType == "Nomads")
+                    {
+                        ApplyNomadsOutcome(game, outcome);
+                    }
+                    else if (outcome.OutcomeType == "Barbarians")
+                    {
+                        ApplyBarbarianOutcome(game, unit, tileTo, outcome, mapUpdates);
+                    }
+
                     game.Players[unit.Owner.Id].GoodyHutTriggered(unit, outcome);
 
                     mapUpdates.Add(tileTo);
@@ -695,6 +759,172 @@ namespace Civ2engine.UnitActions
                     game.UpdateTiles(mapUpdates);
                 }
             }
+        }
+
+        private static void ApplyAdvancedTribeOutcome(IGame game, Unit unit, Tile tile,
+            Model.Core.GoodyHuts.Outcomes.GoodyHutOutcomeResult outcome, IList<Tile> mapUpdates)
+        {
+            var cityNearby = tile.CityHere != null || tile.Neighbours().Any(t => t.IsCityPresent);
+            if (tile.Type != TerrainType.Ocean && !tile.Terrain.Impassable && !cityNearby)
+            {
+                tile.HasGoodieHut = false;
+                var cityName = CityActions.GetCityName(unit.Owner, game);
+                var city = CityActions.BuildCity(unit, game, cityName);
+
+                // A hut-created advanced tribe founds a city, but the unit that opened
+                // the hut survives and stands inside the new city. BuildCity normally
+                // consumes a settler, so restore the triggering unit explicitly.
+                unit.Dead = false;
+                unit.X = tile.X;
+                unit.Y = tile.Y;
+                unit.MapIndex = tile.Z;
+                unit.MovePointsLost = unit.MaxMovePoints;
+                if (!tile.UnitsHere.Contains(unit))
+                {
+                    tile.UnitsHere.Add(unit);
+                }
+
+                tile.SetVisible(unit.Owner.Id);
+                mapUpdates.Add(tile);
+                foreach (var neighbour in tile.Neighbours())
+                {
+                    if (neighbour.Visibility.Length > unit.Owner.Id)
+                    {
+                        neighbour.SetVisible(unit.Owner.Id);
+                    }
+                    mapUpdates.Add(neighbour);
+                }
+
+                outcome.Message = $"The villagers found the city of {city.Name} and join your civilization.";
+                return;
+            }
+
+            tile.HasGoodieHut = false;
+            unit.Owner.Money += 25;
+            outcome.Message = "The villagers cannot found a city here, but they welcome your people with gifts worth 25 gold.";
+            mapUpdates.Add(tile);
+        }
+
+
+        private static void ApplyBarbarianOutcome(IGame game, Unit triggeringUnit, Tile hutTile,
+            Model.Core.GoodyHuts.Outcomes.GoodyHutOutcomeResult outcome, IList<Tile> mapUpdates)
+        {
+            var barbarianCiv = game.AllCivilizations.FirstOrDefault(c => c.PlayerType == PlayerType.Barbarians)
+                               ?? game.AllCivilizations.FirstOrDefault(c => c.Id == 0);
+            if (barbarianCiv != null)
+            {
+                barbarianCiv.Alive = true;
+            }
+
+            if (barbarianCiv == null)
+            {
+                outcome.Message = "The village is deserted, but ominous tracks lead away from it.";
+                return;
+            }
+
+            var barbarianUnitDefinition = GetBarbarianUnitDefinition(game, triggeringUnit);
+            if (barbarianUnitDefinition == null)
+            {
+                outcome.Message = "The village is deserted, but ominous tracks lead away from it.";
+                return;
+            }
+
+            var spawnTiles = hutTile.Neighbours()
+                .Where(tile => tile.Type != TerrainType.Ocean)
+                .Where(tile => !tile.Terrain.Impassable)
+                .Where(tile => tile.CityHere == null)
+                .Where(tile => tile.UnitsHere.All(u => u.Owner == barbarianCiv))
+                .OrderBy(tile => Math.Abs(tile.X - triggeringUnit.X) + Math.Abs(tile.Y - triggeringUnit.Y))
+                .Take(Math.Max(1, Math.Min(3, game.BarbarianActivity + 1)))
+                .ToList();
+
+            if (spawnTiles.Count == 0)
+            {
+                var fallbackTile = hutTile.Neighbours()
+                    .FirstOrDefault(tile => tile.Type != TerrainType.Ocean && !tile.Terrain.Impassable && tile.CityHere == null);
+                if (fallbackTile != null)
+                {
+                    spawnTiles.Add(fallbackTile);
+                }
+            }
+
+            var created = 0;
+            foreach (var spawnTile in spawnTiles)
+            {
+                var barbarian = CreateBarbarianUnit(barbarianCiv, barbarianUnitDefinition, spawnTile, veteran: game.DifficultyLevel >= 3);
+                barbarian.MovePointsLost = barbarian.MaxMovePoints;
+                spawnTile.SetVisible(triggeringUnit.Owner.Id);
+                created++;
+                if (!mapUpdates.Contains(spawnTile))
+                {
+                    mapUpdates.Add(spawnTile);
+                }
+            }
+
+            outcome.Message = created == 0
+                ? "A barbarian horde was near, but could not reach this village."
+                : created == 1
+                    ? "A barbarian warrior appears near the village!"
+                    : "A barbarian horde appears near the village!";
+        }
+
+        private static UnitDefinition? GetBarbarianUnitDefinition(IGame game, Unit triggeringUnit)
+        {
+            var preferredTypes = triggeringUnit.Owner.Epoch <= 1
+                ? new[] { UnitType.Horsemen, UnitType.Warriors, UnitType.Archers }
+                : new[] { UnitType.Dragoons, UnitType.Crusaders, UnitType.Horsemen, UnitType.Warriors };
+
+            foreach (var preferredType in preferredTypes)
+            {
+                var index = (int)preferredType;
+                if (index >= 0 && index < game.Rules.UnitTypes.Length)
+                {
+                    return game.Rules.UnitTypes[index];
+                }
+            }
+
+            return game.Rules.UnitTypes.FirstOrDefault(unit => unit.Domain == UnitGas.Ground && unit.Attack > 0);
+        }
+
+        private static Unit CreateBarbarianUnit(Civilization owner, UnitDefinition unitDefinition, Tile tile, bool veteran)
+        {
+            var unit = new Unit
+            {
+                Id = owner.Units.Count != 0 ? owner.Units.Max(u => u.Id) + 1 : 0,
+                Order = (int)OrderType.NoOrders,
+                Owner = owner,
+                Veteran = veteran,
+                X = tile.X,
+                Y = tile.Y,
+                MapIndex = tile.Z,
+                TypeDefinition = unitDefinition,
+                NeedsSupport = false
+            };
+
+            owner.Units.Add(unit);
+            unit.CurrentLocation = tile;
+            return unit;
+        }
+        private static void ApplyNomadsOutcome(IGame game, Model.Core.GoodyHuts.Outcomes.GoodyHutOutcomeResult outcome)
+        {
+            if (outcome.CreatedUnit == null)
+            {
+                return;
+            }
+
+            var settlerDefinition = game.Rules.UnitTypes.FirstOrDefault(u => u.IsSettler)
+                                    ?? game.Rules.UnitTypes.FirstOrDefault(u => u.AIrole == AiRoleType.Settle)
+                                    ?? game.Rules.UnitTypes.FirstOrDefault(u =>
+                                        string.Equals(u.Name, "Settlers", StringComparison.OrdinalIgnoreCase) ||
+                                        string.Equals(u.Name, "Settler", StringComparison.OrdinalIgnoreCase));
+            if (settlerDefinition == null)
+            {
+                return;
+            }
+
+            outcome.CreatedUnit.TypeDefinition = settlerDefinition;
+            outcome.CreatedUnit.MovePointsLost = 0;
+            outcome.Message = "You discover a band of wandering nomads. They agree to join your tribe as Settlers.";
         }
 
         internal static int MoveCost(Tile tileTo, Tile tileFrom, int moveCost, CosmicRules cosmicRules)

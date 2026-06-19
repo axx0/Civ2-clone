@@ -1,0 +1,211 @@
+--- a/Model/ImageSets/UnitImage.cs
++++ b/Model/ImageSets/UnitImage.cs
+@@ -6,6 +6,14 @@
+ public class UnitImage
+ {
+     public IImageSource Image { get; set; } = null!;
++
++    /// <summary>
++    /// Optional high-resolution art used for map rendering. UI icons intentionally
++    /// keep <see cref="Image"/> so city windows, list boxes, and status panels
++    /// retain the original Civ2-sized footprint.
++    /// </summary>
++    public IImageSource? MapImage { get; set; }
++
+     public Vector2 FlagLoc { get; set; }
+ 
+     /// <summary>
+--- a/Civ2/ImageLoader/UnitLoader.cs
++++ b/Civ2/ImageLoader/UnitLoader.cs
+@@ -14,7 +14,6 @@
+     {
+         private const int UnitColumns = 9;
+         private const int OriginalUnitWidth = 64;
+-        private const int ShieldWidth = 12;
+ 
+         public static void LoadUnits(Ruleset ruleset, Civ2Interface active)
+         {
+@@ -26,21 +25,27 @@
+             for (var i = 0; i < units.Length; i++)
+             {
+                 var originalSource = active.PicSources["unit"][i];
+-                var unitSource = active.GetFossArtUnitImage(i) ?? originalSource;
+-                var props = Images.ExtractBitmapData(unitSource, active); // put into cache
++                var originalProps = Images.ExtractBitmapData(originalSource, active); // put original icon into cache
+ 
+-                var drawScale = GetDrawScale(props.Image.Width, props.Image.Height, logicalSize);
+-                var drawSize = new Vector2(props.Image.Width * drawScale, props.Image.Height * drawScale);
++                var mapSource = active.GetFossArtUnitImage(i) ?? originalSource;
++                var mapProps = ReferenceEquals(mapSource, originalSource)
++                    ? originalProps
++                    : Images.ExtractBitmapData(mapSource, active); // put high-resolution map art into cache
++
++                var drawScale = GetDrawScale(mapProps.Image.Width, mapProps.Image.Height, logicalSize);
++                var drawSize = new Vector2(mapProps.Image.Width * drawScale, mapProps.Image.Height * drawScale);
+                 var drawOffset = new Vector2(
+                     MathF.Max(0, (logicalSize.X - drawSize.X) / 2f),
+                     MathF.Max(0, logicalSize.Y - drawSize.Y));
+ 
+                 units[i] = new UnitImage
+                 {
+-                    Image = unitSource,
+-                    FlagLoc = ReferenceEquals(unitSource, originalSource)
+-                        ? props.Flag1
+-                        : new Vector2(MathF.Max(0, logicalSize.X - ShieldWidth), 0),
++                    // Keep the original Civ2 sprite for UI icons. The FOSS artwork is
++                    // much larger and belongs in map rendering, where DrawScale keeps
++                    // it in the old unit footprint while preserving detail at high zoom.
++                    Image = originalSource,
++                    MapImage = mapSource,
++                    FlagLoc = originalProps.Flag1,
+                     LogicalSize = logicalSize,
+                     DrawOffset = drawOffset,
+                     DrawScale = drawScale,
+--- a/RaylibUI/Bitmaps/ImageUtils.cs
++++ b/RaylibUI/Bitmaps/ImageUtils.cs
+@@ -314,15 +314,16 @@
+     }
+ 
+     public static Vector2 GetUnitTextures(IUnit unit, IUserInterface active, IGame game,
+-        List<IViewElement> viewElements, Vector2 loc, bool noStacking = false)
++        List<IViewElement> viewElements, Vector2 loc, bool noStacking = false, bool useMapArt = true)
+     {
+         var unitImage = active.UnitImages.Units[(int)unit.Type];
+-        var unitTexture = TextureCache.GetImage(unitImage.Image);
++        var unitSource = useMapArt ? unitImage.MapImage ?? unitImage.Image : unitImage.Image;
++        var unitTexture = TextureCache.GetImage(unitSource);
+         var shieldTexture = TextureCache.GetImage(active.UnitImages.Shields, active, unit.Owner.Id);
+ 
+-        var logicalSize = GetLogicalUnitSize(active, unitImage, unitTexture);
+-        var unitRenderScale = GetUnitRenderScale(unitImage, unitTexture, logicalSize);
+-        var unitDrawOffset = GetUnitDrawOffset(unitImage, unitTexture, logicalSize, unitRenderScale);
++        var logicalSize = GetLogicalUnitSize(active, unitImage, unitTexture, useMapArt);
++        var unitRenderScale = useMapArt ? GetUnitRenderScale(unitImage, unitTexture, logicalSize) : 1f;
++        var unitDrawOffset = useMapArt ? GetUnitDrawOffset(unitImage, unitTexture, logicalSize, unitRenderScale) : Vector2.Zero;
+ 
+         var shield = active.UnitShield((int)unit.Type);
+ 
+@@ -391,9 +392,9 @@
+         return logicalSize;
+     }
+ 
+-    private static Vector2 GetLogicalUnitSize(IUserInterface active, UnitImage unitImage, Texture2D unitTexture)
++    private static Vector2 GetLogicalUnitSize(IUserInterface active, UnitImage unitImage, Texture2D unitTexture, bool useMapArt)
+     {
+-        if (unitImage.LogicalSize != Vector2.Zero)
++        if (useMapArt && unitImage.LogicalSize != Vector2.Zero)
+         {
+             return unitImage.LogicalSize;
+         }
+@@ -434,6 +435,11 @@
+             return unitImage.DrawOffset;
+         }
+ 
++        return GetFittedUnitDrawOffset(unitTexture, logicalSize, renderScale);
++    }
++
++    private static Vector2 GetFittedUnitDrawOffset(Texture2D unitTexture, Vector2 logicalSize, float renderScale)
++    {
+         var drawWidth = unitTexture.Width * renderScale;
+         var drawHeight = unitTexture.Height * renderScale;
+         return new Vector2(
+--- a/RaylibUI/RunGame/GameControls/UnitDisplay.cs
++++ b/RaylibUI/RunGame/GameControls/UnitDisplay.cs
+@@ -22,7 +22,10 @@
+         // Keep child texture elements relative to this control. Passing the final UI
+         // location into ImageUtils made high-resolution unit art much easier to draw
+         // outside its parent when the parent later moved the control during layout.
+-        _size = ImageUtils.GetUnitTextures(unit, activeInterface, game, _unitTextures, Vector2.Zero, true);
++        // UnitDisplay is used by small UI/status/city panels. Use the classic unit
++        // sprite here; the high-resolution FOSS art is reserved for map rendering
++        // where zoom and logical unit sizing are controlled explicitly.
++        _size = ImageUtils.GetUnitTextures(unit, activeInterface, game, _unitTextures, Vector2.Zero, true, useMapArt: false);
+         Location = location;
+     }
+ 
+--- a/RaylibUI/BasicTypes/BaseControl.cs
++++ b/RaylibUI/BasicTypes/BaseControl.cs
+@@ -76,7 +76,29 @@
+     public IList<IControl> Controls { get; protected set; } = [];
+ 
+     private IComponent? _parent;
+-    public IComponent Parent => _parent ??= SearchForParent(Controller) ?? Controller;
++    public IComponent Parent
++    {
++        get
++        {
++            if (_parent != null)
++            {
++                return _parent;
++            }
++
++            var discoveredParent = SearchForParent(Controller);
++            if (discoveredParent != null)
++            {
++                _parent = discoveredParent;
++                return discoveredParent;
++            }
++
++            // Controls are sometimes sized inside their constructor before the parent
++            // has been inserted into Controller.Controls. Return the layout controller
++            // as a temporary fallback, but do not cache it; otherwise the control keeps
++            // drawing at root-window coordinates after it is later added to a panel.
++            return Controller;
++        }
++    }
+ 
+     /// <summary>
+     /// Search for this control's parent control.
+--- a/RaylibUI/RunGame/GameControls/CityControls/ProductionBox.cs
++++ b/RaylibUI/RunGame/GameControls/CityControls/ProductionBox.cs
+@@ -36,6 +36,11 @@
+     private const float HeaderAreaHeight = 42f;
+     private const float IconPadding = 2f;
+     private const float Padding = 6f;
++    private const float BuyButtonX = 5f;
++    private const float ChangeButtonX = 120f;
++    private const float ButtonY = 16f;
++    private const float ButtonWidth = 68f;
++    private const float ButtonHeight = 24f;
+ 
+     public ProductionBox(CityWindow cityWindow) : base(cityWindow, eventTransparent: false)
+     {
+@@ -82,7 +87,10 @@
+         _icon = new ImageBox(_cityWindow, _city.ItemInProduction.GetIcon(_active));
+         Controls = [_label, _icon, _buyButton, _changeButton];
+ 
+-        ChangeProductionDisplay();
++        // CityWindow adds this ProductionBox to Controls after the constructor returns.
++        // Do not call OnResize here, because child controls can cache the CityWindow as
++        // their parent before this box is discoverable in the control tree.
++        UpdateData(GetDisplayedOrder());
+     }
+ 
+     public override void OnResize()
+@@ -113,18 +121,20 @@
+     private void LayoutActionButtons()
+     {
+         var scale = _cityWindow.Scale;
+-        LayoutButton(_buyButton, _cityWindow.CityWindowProps.Buttons["Buy"], scale);
+-        LayoutButton(_changeButton, _cityWindow.CityWindowProps.Buttons["Change"], scale);
++        LayoutButton(_buyButton, BuyButtonX, ButtonY, ButtonWidth, ButtonHeight, scale);
++        LayoutButton(_changeButton, ChangeButtonX, ButtonY, ButtonWidth, ButtonHeight, scale);
+ 
++        _buyButton.Visible = true;
++        _changeButton.Visible = true;
+         _buyButton.FontSize = Math.Max(11, (int)Math.Round(_active.Look.CityWindowFontSize * scale * 0.78f));
+         _changeButton.FontSize = _buyButton.FontSize;
+     }
+ 
+-    private static void LayoutButton(CityButton button, CityButtonProperties properties, float scale)
++    private static void LayoutButton(CityButton button, float x, float y, float width, float height, float scale)
+     {
+-        button.Location = new(properties.Box.X * scale, properties.Box.Y * scale);
+-        button.Width = Math.Max(1, (int)Math.Round(properties.Box.Width * scale));
+-        button.Height = Math.Max(1, (int)Math.Round(properties.Box.Height * scale));
++        button.Location = new(x * scale, y * scale);
++        button.Width = Math.Max(1, (int)Math.Round(width * scale));
++        button.Height = Math.Max(1, (int)Math.Round(height * scale));
+     }
+ 
+     private void LayoutProductionIcon(IProductionOrder activeOrder)

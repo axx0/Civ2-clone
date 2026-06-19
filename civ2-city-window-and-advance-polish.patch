@@ -1,0 +1,698 @@
+diff --git a/Civ2/Civ2Interface.cs b/Civ2/Civ2Interface.cs
+index b7db82c..37048e8 100644
+--- a/Civ2/Civ2Interface.cs
++++ b/Civ2/Civ2Interface.cs
+@@ -735,7 +735,7 @@ public abstract class Civ2Interface(IMain main) : IUserInterface
+         {
+             Listbox = new()
+             {
+-                Rows = 9,
++                Rows = 14,
+                 Columns = 2,
+                 RowHeight = 33,
+                 VerticalScrollbar = false,
+diff --git a/Model/Controls/Dialog/DialogImageElements.cs b/Model/Controls/Dialog/DialogImageElements.cs
+index 5985912..2584d24 100644
+--- a/Model/Controls/Dialog/DialogImageElements.cs
++++ b/Model/Controls/Dialog/DialogImageElements.cs
+@@ -23,7 +23,12 @@ public class DialogImageElements
+ 
+     public DialogImageElements(IUnit unit, IUserInterface active)
+     {
+-        Image = [active.PicSources["unit"][unit.Type]];
++        var unitImage = unit.Type >= 0 && active.UnitImages.Units.Length > unit.Type &&
++                        active.UnitImages.Units[unit.Type].Image is { } highResolutionImage
++            ? highResolutionImage
++            : active.PicSources["unit"][unit.Type];
++
++        Image = [unitImage];
+         Coords = new int[,] { { 0, 0 } };
+     }
+ }
+diff --git a/RaylibUI/BasicTypes/Controls/ImageBox.cs b/RaylibUI/BasicTypes/Controls/ImageBox.cs
+index 1b69ccc..788ab22 100644
+--- a/RaylibUI/BasicTypes/Controls/ImageBox.cs
++++ b/RaylibUI/BasicTypes/Controls/ImageBox.cs
+@@ -65,6 +65,79 @@ public class ImageBox : BaseControl
+         return Image.Length == 0 ? 0 : Image.Select(img => Images.GetImageHeight(img, _active, _scale)).Max();
+     }
+ 
++    public void FitWithin(int maxWidth, int maxHeight, int padding = 0, float maxScale = 1f)
++    {
++        maxWidth = Math.Max(1, maxWidth);
++        maxHeight = Math.Max(1, maxHeight);
++
++        var sources = Image.Where(img => img is not null).ToList();
++        if (sources.Count == 0)
++        {
++            _scale = 1f;
++            Width = maxWidth;
++            Height = maxHeight;
++            Coords = new int[Math.Max(1, Image.Length), 2];
++            return;
++        }
++
++        var sourceSizes = sources
++            .Select(img => new
++            {
++                Width = Math.Max(1, Images.GetImageWidth(img, _active)),
++                Height = Math.Max(1, Images.GetImageHeight(img, _active))
++            })
++            .ToList();
++
++        var maxSourceWidth = sourceSizes.Max(size => size.Width);
++        var maxSourceHeight = sourceSizes.Max(size => size.Height);
++        var availableWidth = Math.Max(1, maxWidth - 2 * padding);
++        var availableHeight = Math.Max(1, maxHeight - 2 * padding);
++        var fitScale = Math.Min(availableWidth / (float)maxSourceWidth, availableHeight / (float)maxSourceHeight);
++
++        _scale = Math.Max(0.01f, Math.Min(maxScale, fitScale));
++
++        var drawWidth = (int)Math.Ceiling(maxSourceWidth * _scale);
++        var drawHeight = (int)Math.Ceiling(maxSourceHeight * _scale);
++        Width = Math.Min(maxWidth, drawWidth + 2 * padding);
++        Height = Math.Min(maxHeight, drawHeight + 2 * padding);
++
++        Coords = new int[Math.Max(1, Image.Length), 2];
++        for (var i = 0; i < Image.Length; i++)
++        {
++            var image = Image[i];
++            if (image is null)
++            {
++                continue;
++            }
++
++            var imageWidth = Images.GetImageWidth(image, _active, _scale);
++            var imageHeight = Images.GetImageHeight(image, _active, _scale);
++            Coords[i, 0] = padding + Math.Max(0, (Width - 2 * padding - imageWidth) / 2);
++            Coords[i, 1] = padding + Math.Max(0, (Height - 2 * padding - imageHeight) / 2);
++        }
++    }
++
++    public void FitIntoSlot(int slotWidth, int slotHeight, int padding = 0, float maxScale = 1f)
++    {
++        FitWithin(slotWidth, slotHeight, padding, maxScale);
++        Width = Math.Max(1, slotWidth);
++        Height = Math.Max(1, slotHeight);
++
++        for (var i = 0; i < Image.Length; i++)
++        {
++            var image = Image[i];
++            if (image is null)
++            {
++                continue;
++            }
++
++            var imageWidth = Images.GetImageWidth(image, _active, _scale);
++            var imageHeight = Images.GetImageHeight(image, _active, _scale);
++            Coords[i, 0] = padding + Math.Max(0, (Width - 2 * padding - imageWidth) / 2);
++            Coords[i, 1] = padding + Math.Max(0, (Height - 2 * padding - imageHeight) / 2);
++        }
++    }
++
+     private int _width;
+     public override int Width
+     {
+diff --git a/RaylibUI/Dialogs/CivDialog.cs b/RaylibUI/Dialogs/CivDialog.cs
+index ea96ca6..de91e29 100644
+--- a/RaylibUI/Dialogs/CivDialog.cs
++++ b/RaylibUI/Dialogs/CivDialog.cs
+@@ -24,6 +24,7 @@ public class CivDialog : DynamicSizingDialog
+     private readonly Action<string, int, IList<bool>?, IDictionary<string, string>?> _handleButtonClick;
+     private readonly OptionsPanel? _optionsPanel;
+     private readonly Listbox? _listbox;
++    private readonly int _requestedWidthForImages;
+     private int _selectedIndex = -1;
+     private bool _closed;
+ 
+@@ -34,6 +35,7 @@ public class CivDialog : DynamicSizingDialog
+             dialog.Y ?? 0 / Window.GetScreenHeight()) : dialog.DialogPos)
+     {
+         _active = host.ActiveInterface;
++        _requestedWidthForImages = dialog.Width == null ? host.ActiveInterface.DefaultDialogWidth : (int)(1.5 * dialog.Width);
+         _handleButtonClick = handleButtonClick;
+ 
+         var innerLayout = new TableLayout();
+@@ -42,6 +44,7 @@ public class CivDialog : DynamicSizingDialog
+         if (dialog.Image?.Image is { } dialogImages && dialogImages.All(n => n != null))
+         {
+             var imageBox = new ImageBox(this, dialog.Image);
++            FitDialogImage(imageBox);
+             innerLayout.Add(imageBox, 0, 0);
+         }
+ 
+@@ -83,7 +86,7 @@ public class CivDialog : DynamicSizingDialog
+                         string.IsNullOrEmpty(texts[j]) && styles[j] == TextStyles.LeftOwnLine ? " " : texts[j],    // Add space if ^ is the only character 
+                         false,
+                         horizontalAlignment: styles[j] == TextStyles.Centered ? HorizontalAlignment.Center : HorizontalAlignment.Left,
+-                        font: _active.Look.LabelFont, fontSize: _active.Look.LabelFontSize, colorFront: _active.Look.LabelColour, colorShadow: _active.Look.LabelShadowColour, shadowOffset: new Vector2(1, 1)));
++                        font: _active.Look.LabelFont, fontSize: _active.Look.LabelFontSize, colorFront: DialogTextColor, colorShadow: Color.Blank, shadowOffset: Vector2.Zero));
+                 }
+             }
+ 
+@@ -104,7 +107,7 @@ public class CivDialog : DynamicSizingDialog
+                             false,
+                             horizontalAlignment: styles[j] == TextStyles.Centered ? HorizontalAlignment.Center : HorizontalAlignment.Left,
+                             font: _active.Look.LabelFont, fontSize: _active.Look.LabelFontSize,
+-                            colorFront: _active.Look.LabelColour, colorShadow: _active.Look.LabelShadowColour, shadowOffset: new Vector2(1, 1));
++                            colorFront: DialogTextColor, colorShadow: Color.Blank, shadowOffset: Vector2.Zero);
+ 
+                         innerLayout.Add(wrappedLabel, layoutRow++, 1);
+                     }
+@@ -200,6 +203,18 @@ public class CivDialog : DynamicSizingDialog
+         }
+     }
+ 
++
++    private void FitDialogImage(ImageBox imageBox)
++    {
++        var maxWidth = Math.Max(96, Math.Min(280, _requestedDialogImageWidth));
++        var maxHeight = Math.Max(96, Math.Min(260, Window.GetScreenHeight() / 3));
++        imageBox.FitWithin(maxWidth, maxHeight, padding: 2, maxScale: imageBox.Scale);
++    }
++
++    private int _requestedDialogImageWidth => Math.Max(96, _requestedWidthForImages / 2);
++
++    private static readonly Color DialogTextColor = new(12, 12, 12, 255);
++
+     public override void OnKeyPress(KeyboardKey key)
+     {
+         switch (key)
+diff --git a/RaylibUI/RunGame/GameControls/CityControls/CityButton.cs b/RaylibUI/RunGame/GameControls/CityControls/CityButton.cs
+index b9ca294..029cdb4 100644
+--- a/RaylibUI/RunGame/GameControls/CityControls/CityButton.cs
++++ b/RaylibUI/RunGame/GameControls/CityControls/CityButton.cs
+@@ -10,6 +10,8 @@ public class CityButton : Button
+     private readonly IUserInterface _active;
+     private readonly CityButtonProperties _properties;
+ 
++    public bool ManualLayout { get; set; }
++
+     public CityButton(CityWindow controller, string key) : 
+         base(controller, controller.CityWindowProps.Buttons[key].Text, controller.MainWindow.ActiveInterface.Look.CityWindowFont)
+     {
+@@ -24,6 +26,11 @@ public class CityButton : Button
+ 
+         FontSize = Math.Max(10, (int)Math.Round(_active.Look.CityWindowFontSize * Scale * 0.78f));
+ 
++        if (ManualLayout)
++        {
++            return;
++        }
++
+         if (Parent == _cityWindow)
+         {
+             Location = new(_cityWindow.LayoutPadding.Left + _properties.Box.X * Scale,
+diff --git a/RaylibUI/RunGame/GameControls/CityControls/ProductionBox.cs b/RaylibUI/RunGame/GameControls/CityControls/ProductionBox.cs
+index 37ea830..ddb6866 100644
+--- a/RaylibUI/RunGame/GameControls/CityControls/ProductionBox.cs
++++ b/RaylibUI/RunGame/GameControls/CityControls/ProductionBox.cs
+@@ -50,8 +50,8 @@ public class ProductionBox : BaseControl
+ 
+         _label = new CityLabel(_cityWindow, _cityWindow.CityWindowProps.Labels["ItemInProduction"]);
+ 
+-        _buyButton = new CityButton(cityWindow, "Buy");
+-        _changeButton = new CityButton(cityWindow, "Change");
++        _buyButton = new CityButton(cityWindow, "Buy") { ManualLayout = true };
++        _changeButton = new CityButton(cityWindow, "Change") { ManualLayout = true };
+         _changeButton.Click += (_, _) =>
+         {
+             cityWindow.CurrentGameScreen.ShowPopup(
+diff --git a/RaylibUI/RunGame/GameControls/Civilopedia/CivilopediaAdvanceInfo.cs b/RaylibUI/RunGame/GameControls/Civilopedia/CivilopediaAdvanceInfo.cs
+new file mode 100644
+index 0000000..8107891
+--- /dev/null
++++ b/RaylibUI/RunGame/GameControls/Civilopedia/CivilopediaAdvanceInfo.cs
+@@ -0,0 +1,368 @@
++using System.Numerics;
++using Civ2engine;
++using Civ2engine.IO;
++using Civ2engine.Terrains;
++using Model;
++using Model.Controls;
++using Model.Controls.Civilopedia;
++using Model.Core.Advances;
++using Model.Core.GameRules;
++using Model.Core.Units;
++using Model.Images;
++using Raylib_CSharp.Colors;
++using Raylib_CSharp.Rendering;
++using RaylibUI.BasicTypes;
++using RaylibUI.BasicTypes.Controls;
++
++namespace RaylibUI.RunGame.GameControls.Civilopedia;
++
++public sealed class CivilopediaAdvanceInfo : BaseControl
++{
++    private const int Margin = 16;
++    private const int ArtWidth = 340;
++    private const int ArtHeight = 250;
++    private const int DescriptionWidth = 500;
++    private const int DescriptionHeight = 248;
++    private const int SectionFontSize = 20;
++    private const int BodyFontSize = 19;
++    private const int LinkFontSize = 20;
++    private const int LineHeight = 26;
++
++    private readonly CivilopediaWindow _window;
++    private readonly GameScreen _gameScreen;
++    private readonly List<Advance> _advances;
++    private readonly List<Improvement> _improvements;
++    private readonly List<Improvement> _wonders;
++    private readonly List<UnitDefinition> _units;
++    private readonly CivilopediaEntry _pedia;
++    private readonly IUserInterface _active;
++
++    public CivilopediaAdvanceInfo(CivilopediaWindow window, GameScreen gameScreen, List<Advance> advances,
++        List<Improvement> improvements, List<Improvement> wonders, List<UnitDefinition> units,
++        List<ITerrain> terrains, CivilopediaEntry pedia) : base(window)
++    {
++        _window = window;
++        _gameScreen = gameScreen;
++        _advances = advances;
++        _improvements = improvements;
++        _wonders = wonders;
++        _units = units;
++        _pedia = pedia;
++        _active = gameScreen.MainWindow.ActiveInterface;
++
++        Width = window.Width - window.LayoutPadding.Left - window.LayoutPadding.Right;
++        Height = window.Height - window.LayoutPadding.Top - window.LayoutPadding.Bottom;
++        Location = new Vector2(window.LayoutPadding.Left, window.LayoutPadding.Top);
++
++        BuildControls();
++    }
++
++    private void BuildControls()
++    {
++        var advance = _advances[_pedia.Id];
++        var rules = _gameScreen.Game.Rules;
++        var advanceId = Array.FindIndex(rules.Advances, row => row == advance);
++        var image = _active.GetAdvanceImage(advance) ?? _active.PicSources["advanceCategories"][5 * advance.Epoch + advance.KnowledgeCategory];
++
++        var imageBox = new ImageBox(_window, image, eventTransparent: true);
++        imageBox.FitIntoSlot(ArtWidth, ArtHeight, padding: 4, maxScale: 8f);
++        imageBox.Location = new(Margin, Margin + 20);
++        Controls.Add(imageBox);
++
++        var proclamation = new LabelControl(_window,
++            $"{_active.GetScientistName(_gameScreen.Player.Civilization.Epoch)} proclaims a discovery:",
++            true,
++            font: _active.Look.DefaultFont,
++            fontSize: 20,
++            colorFront: new Color(40, 40, 40, 255),
++            colorShadow: Color.Blank,
++            shadowOffset: Vector2.Zero)
++        {
++            Location = new(Margin, Margin - 4),
++            Width = ArtWidth,
++            Height = 24,
++            HorizontalAlignment = HorizontalAlignment.Center,
++            VerticalAlignment = VerticalAlignment.Center
++        };
++        Controls.Add(proclamation);
++
++        var rightX = Margin + ArtWidth + 22;
++        AddSectionLabel("Civilopedia", rightX, Margin - 4, DescriptionWidth);
++        AddDescriptionBox(advance, advanceId, rightX, Margin + 26);
++
++        var y = Margin + ArtHeight + 34;
++        y = AddPrerequisites(advance, rules, y);
++        y = AddAllows(advanceId, rules, y);
++        y = AddEnabledByAdvance(advanceId, rules, y);
++        AddObsoletedByAdvance(advanceId, rules, y);
++    }
++
++    private void AddDescriptionBox(Advance advance, int advanceId, int x, int y)
++    {
++        var description = CivilopediaLoader.GetDescription(_pedia, advanceId);
++        if (string.IsNullOrWhiteSpace(description))
++        {
++            description = advance.Name;
++        }
++
++        var textWidth = DescriptionWidth - ScrollBar.ScrollbarDimDefault - 12;
++        var wrappedTexts = DialogUtils.GetWrappedTexts(description.Replace("_", " "), textWidth,
++            _active.Look.LabelFont, BodyFontSize);
++
++        var groups = wrappedTexts.Select(text => new ListboxGroup
++        {
++            Elements =
++            [
++                new ListboxGroupElement
++                {
++                    Text = string.IsNullOrWhiteSpace(text) ? " " : text,
++                    Width = textWidth,
++                    TextSizeOverride = BodyFontSize,
++                    VerticalAlignment = VerticalAlignment.Center
++                }
++            ],
++            Height = LineHeight
++        }).ToList();
++
++        var listbox = new Listbox(_window, new ListboxDefinition
++        {
++            Groups = groups,
++            Rows = Math.Max(1, DescriptionHeight / LineHeight),
++            Selectable = false,
++            VerticalScrollbar = true,
++            Looks = new ListboxLooks
++            {
++                BoxBackgroundColor = new Color(250, 246, 224, 235),
++                BoxLineColor = new Color(92, 70, 35, 255),
++                Font = _active.Look.LabelFont,
++                FontSize = BodyFontSize,
++                TextColorFront = new Color(20, 20, 20, 255),
++                TextColorShadow = Color.Blank,
++                TextShadowOffset = Vector2.Zero
++            }
++        })
++        {
++            Location = new(x, y),
++            Width = DescriptionWidth,
++            Height = DescriptionHeight
++        };
++        Controls.Add(listbox);
++    }
++
++    private int AddPrerequisites(Advance advance, Rules rules, int y)
++    {
++        var prereqs = new List<Advance>();
++        if (advance.Prereq1 != AdvancesConstants.Nil)
++        {
++            prereqs.Add(rules.Advances[advance.Prereq1]);
++        }
++        if (advance.Prereq2 != AdvancesConstants.Nil)
++        {
++            prereqs.Add(rules.Advances[advance.Prereq2]);
++        }
++
++        if (prereqs.Count == 0)
++        {
++            AddInfoLine(Labels.For(LabelIndex.Prerequisites), Labels.For(LabelIndex.NONE), Margin, y);
++            return y + LineHeight;
++        }
++
++        return AddAdvanceLinks(Labels.For(LabelIndex.Prerequisites), prereqs, Margin, y, Width - Margin);
++    }
++
++    private int AddAllows(int advanceId, Rules rules, int y)
++    {
++        var allows = rules.Advances
++            .Where(a => a.Prereq1 == advanceId || a.Prereq2 == advanceId)
++            .Where(a => _advances.Contains(a))
++            .Take(14)
++            .ToList();
++
++        if (allows.Count == 0)
++        {
++            return y;
++        }
++
++        return AddAdvanceLinks(Labels.For(LabelIndex.Allows), allows, Margin, y, Width - Margin);
++    }
++
++    private int AddEnabledByAdvance(int advanceId, Rules rules, int y)
++    {
++        var improvements = rules.Improvements.Where(i => i.Prerequisite == advanceId).ToList();
++        var units = rules.UnitTypes.Where(u => u.Prereq == advanceId).ToList();
++        var labels = new List<(string Text, Action Click)>();
++
++        foreach (var improvement in improvements)
++        {
++            labels.Add((improvement.Name, () => OpenImprovement(improvement)));
++        }
++
++        foreach (var unit in units)
++        {
++            labels.Add((unit.Name, () => OpenUnit(unit)));
++        }
++
++        if (labels.Count == 0)
++        {
++            return y;
++        }
++
++        return AddFlowLinks("Enables", labels, Margin, y, Width - Margin);
++    }
++
++    private int AddObsoletedByAdvance(int advanceId, Rules rules, int y)
++    {
++        var cancelled = rules.Improvements.Where(i => i.ExpiresAt == advanceId).ToList();
++        if (cancelled.Count == 0)
++        {
++            return y;
++        }
++
++        var labels = cancelled.Select(improvement => (improvement.Name, (Action)(() => OpenImprovement(improvement)))).ToList();
++        return AddFlowLinks("Cancels", labels, Margin, y, Width - Margin);
++    }
++
++    private int AddAdvanceLinks(string heading, IReadOnlyList<Advance> advances, int x, int y, int maxX)
++    {
++        var labels = advances
++            .Select(advance => (advance.Name, (Action)(() => OpenAdvance(advance))))
++            .ToList();
++
++        return AddFlowLinks(heading, labels, x, y, maxX);
++    }
++
++    private int AddFlowLinks(string heading, IReadOnlyList<(string Text, Action Click)> links, int x, int y, int maxX)
++    {
++        AddSectionLabel(heading + ":", x, y, 150);
++        var cursorX = x + 155;
++        var cursorY = y;
++
++        foreach (var (text, click) in links)
++        {
++            var label = new PediaLinkLabel(_window, text, cursorX, cursorY)
++            {
++                FontSize = LinkFontSize
++            };
++
++            if (cursorX + label.Width > maxX && cursorX > x + 155)
++            {
++                cursorX = x + 155;
++                cursorY += LineHeight;
++                label.Location = new(cursorX, cursorY);
++            }
++
++            label.Click += (_, _) => click();
++            Controls.Add(label);
++            cursorX += label.Width + 12;
++        }
++
++        return cursorY + LineHeight;
++    }
++
++    private void AddInfoLine(string heading, string value, int x, int y)
++    {
++        AddSectionLabel(heading + ":", x, y, 150);
++        var label = new LabelControl(_window, value, true,
++            font: _active.Look.LabelFont,
++            fontSize: BodyFontSize,
++            colorFront: new Color(20, 20, 20, 255),
++            colorShadow: Color.Blank,
++            shadowOffset: Vector2.Zero)
++        {
++            Location = new(x + 155, y),
++            Width = Width - x - 155,
++            Height = LineHeight,
++            VerticalAlignment = VerticalAlignment.Center
++        };
++        Controls.Add(label);
++    }
++
++    private void AddSectionLabel(string text, int x, int y, int width)
++    {
++        var label = new LabelControl(_window, text, true,
++            font: _active.Look.HeaderLabelFont,
++            fontSize: SectionFontSize,
++            colorFront: new Color(68, 42, 10, 255),
++            colorShadow: new Color(255, 255, 255, 160),
++            shadowOffset: Vector2.One)
++        {
++            Location = new(x, y),
++            Width = width,
++            Height = LineHeight,
++            VerticalAlignment = VerticalAlignment.Center
++        };
++        Controls.Add(label);
++    }
++
++    private void OpenAdvance(Advance advance)
++    {
++        var id = _advances.IndexOf(advance);
++        if (id < 0)
++        {
++            return;
++        }
++
++        _pedia.InfoType = CivilopediaInfoType.Advances;
++        _pedia.WindowType = CivilopediaWindowType.Info;
++        _pedia.Id = id;
++        _window.UpdateControls();
++    }
++
++    private void OpenImprovement(Improvement improvement)
++    {
++        var id = _improvements.IndexOf(improvement);
++        if (id >= 0)
++        {
++            _pedia.InfoType = CivilopediaInfoType.Improvements;
++            _pedia.WindowType = CivilopediaWindowType.Info;
++            _pedia.Id = id;
++            _window.UpdateControls();
++            return;
++        }
++
++        id = _wonders.IndexOf(improvement);
++        if (id >= 0)
++        {
++            _pedia.InfoType = CivilopediaInfoType.Wonders;
++            _pedia.WindowType = CivilopediaWindowType.Info;
++            _pedia.Id = id;
++            _window.UpdateControls();
++        }
++    }
++
++    private void OpenUnit(UnitDefinition unit)
++    {
++        var id = _units.IndexOf(unit);
++        if (id < 0)
++        {
++            return;
++        }
++
++        _pedia.InfoType = CivilopediaInfoType.Units;
++        _pedia.WindowType = CivilopediaWindowType.Info;
++        _pedia.Id = id;
++        _window.UpdateControls();
++    }
++
++    public override void Draw(bool pulse)
++    {
++        var leftX = (int)(Bounds.X + Margin - 8);
++        var topY = (int)(Bounds.Y + Margin - 8);
++        var artPanelW = ArtWidth + 16;
++        var artPanelH = ArtHeight + 40;
++        Graphics.DrawRectangle(leftX, topY, artPanelW, artPanelH, new Color(250, 246, 224, 220));
++        Graphics.DrawRectangleLines(leftX, topY, artPanelW, artPanelH, new Color(92, 70, 35, 255));
++
++        var rightX = leftX + artPanelW + 14;
++        var rightW = DescriptionWidth + 16;
++        Graphics.DrawRectangle(rightX, topY, rightW, artPanelH, new Color(243, 238, 214, 220));
++        Graphics.DrawRectangleLines(rightX, topY, rightW, artPanelH, new Color(92, 70, 35, 255));
++
++        var lowerY = topY + artPanelH + 10;
++        var lowerH = Math.Max(1, (int)(Bounds.Y + Height - lowerY - 10));
++        Graphics.DrawRectangle(leftX, lowerY, Width - 2 * Margin + 16, lowerH, new Color(250, 246, 224, 205));
++        Graphics.DrawRectangleLines(leftX, lowerY, Width - 2 * Margin + 16, lowerH, new Color(92, 70, 35, 255));
++
++        base.Draw(pulse);
++    }
++}
+diff --git a/RaylibUI/RunGame/GameControls/Civilopedia/CivilopediaWindow.cs b/RaylibUI/RunGame/GameControls/Civilopedia/CivilopediaWindow.cs
+index 502128e..362e392 100644
+--- a/RaylibUI/RunGame/GameControls/Civilopedia/CivilopediaWindow.cs
++++ b/RaylibUI/RunGame/GameControls/Civilopedia/CivilopediaWindow.cs
+@@ -23,8 +23,8 @@ public class CivilopediaWindow : BaseDialog
+ {
+     private readonly IUserInterface _active;
+     private readonly GameScreen _gameScreen;
+-    private const int InnerWidth = 624;
+-    private const int InnerHeight = 318;
++    private const int InnerWidth = 900;
++    private const int InnerHeight = 540;
+     private CivilopediaEntry _pedia;
+     private readonly Button _exitIcon;
+     private readonly Rules _rules;
+@@ -252,6 +252,11 @@ public class CivilopediaWindow : BaseDialog
+                 {
+                     Controls.Add(new CivilopediaDescription(this, _gameScreen, _pedia, _pedia.Id));
+                 }
++                else if (_pedia.InfoType == CivilopediaInfoType.Advances)
++                {
++                    Controls.Add(new CivilopediaAdvanceInfo(this, _gameScreen, _advances, _improvements, _wonders,
++                        _units, _terrains, _pedia));
++                }
+                 else
+                 {
+                     Controls.Add(new CivilopediaInfo(this, _gameScreen, _advances, _improvements, _wonders, 
+diff --git a/RaylibUI/RunGame/GameScreen.cs b/RaylibUI/RunGame/GameScreen.cs
+index 672d1d8..e464357 100644
+--- a/RaylibUI/RunGame/GameScreen.cs
++++ b/RaylibUI/RunGame/GameScreen.cs
+@@ -355,6 +355,11 @@ public class GameScreen : BaseScreen
+     
+     
+ 
++    public void QueueAfterCurrentPopup(Action action)
++    {
++        _queuedPopups.Enqueue(action);
++    }
++
+     public void ShowPopup(string dialogName,
+         Action<string, int, IList<bool>?, IDictionary<string, string>?>? handleButtonClick = null,
+         IList<int>? replaceNumbers = null,
+diff --git a/RaylibUI/RunGame/LocalPlayer.cs b/RaylibUI/RunGame/LocalPlayer.cs
+index 355dc5e..38da2ac 100644
+--- a/RaylibUI/RunGame/LocalPlayer.cs
++++ b/RaylibUI/RunGame/LocalPlayer.cs
+@@ -4,6 +4,7 @@ using Civ2engine.Enums;
+ using Civ2engine.Events;
+ using Civ2engine.MapObjects;
+ using Model.Controls;
++using Model.Controls.Civilopedia;
+ using Model.Core;
+ using Model.Core.Advances;
+ using Model.Core.Cities;
+@@ -14,6 +15,7 @@ using Model.Events;
+ using Model.Core.Player;
+ using Model.Core.Production;
+ using Model.Images;
++using RaylibUI.RunGame.GameControls.Civilopedia;
+ 
+ namespace RaylibUI.RunGame;
+ 
+@@ -178,14 +180,39 @@ public class LocalPlayer : IPlayer
+     public void NotifyAdvanceResearched(int advance)
+     {
+         var activeInterface = _gameScreen.Main.ActiveInterface;
++        var discoveredAdvance = _gameScreen.Game.Rules.Advances[advance];
++        var civilopediaId = GetCivilopediaAdvanceId(advance);
++
+         _gameScreen.ShowPopup("CIVADVANCE",
++            (_, _, _, _) =>
++            {
++                if (civilopediaId < 0)
++                {
++                    return;
++                }
++
++                _gameScreen.QueueAfterCurrentPopup(() =>
++                    _gameScreen.ShowDialog(new CivilopediaWindow(_gameScreen,
++                        new CivilopediaEntry(CivilopediaInfoType.Advances, CivilopediaWindowType.Info, civilopediaId)),
++                        stack: true));
++            },
+             replaceStrings: new[]
+             {
+                 Civilization.Adjective, activeInterface.GetScientistName(Civilization.Epoch),
+-                _gameScreen.Game.Rules.Advances[advance].Name
++                discoveredAdvance.Name
+             });
+     }
+ 
++    private int GetCivilopediaAdvanceId(int advance)
++    {
++        var rulesAdvance = _gameScreen.Game.Rules.Advances[advance];
++        return _gameScreen.Game.Rules.Advances
++            .Take(89)
++            .OrderBy(a => a.Name)
++            .ToList()
++            .IndexOf(rulesAdvance);
++    }
++
+     public void FoodShortage(City city)
+     {
+         _gameScreen.ShowCityDialog("FOODSHORTAGE", city);

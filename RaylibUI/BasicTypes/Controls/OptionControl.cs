@@ -103,7 +103,7 @@ public class OptionControl : BaseControl
             MathF.Round(Bounds.X + _imageWidth + TextGap),
             MathF.Round(Bounds.Y + (Height - textSize.Y) / 2f));
 
-        Graphics.DrawTextEx(_font, _text, textPosition, fontSize, 0f, _textColor);
+        global::RaylibUI.TextRendering.Draw(_font, _text, textPosition, fontSize, 0f, _textColor);
 
         if (_parent.SelectedId == Index)
         {

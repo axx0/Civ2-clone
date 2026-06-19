@@ -17,6 +17,8 @@ using Raylib_CSharp.Images;
 using Raylib_CSharp.Rendering;
 using RaylibUtils;
 using static Model.Controls.CommandIds;
+using System.IO;
+using System.Numerics;
 
 namespace Civ2Gold;
 
@@ -38,9 +40,9 @@ public class Civ2GoldInterface(IMain main) : Civ2Interface(main)
           new BitmapStorage("explorer_icons.png", 64, 0, 32), new BitmapStorage("explorer_icons.png", 0, 32, 32),
           new BitmapStorage("explorer_icons.png", 32, 32, 32), new BitmapStorage("explorer_icons.png", 64, 32, 32)],
 
-        DefaultFont = Fonts.Tnr,
-        ButtonFont = Fonts.Tnr,
-        ButtonFontSize = 20,
+        DefaultFont = Fonts.Arial,
+        ButtonFont = Fonts.Arial,
+        ButtonFontSize = 18,
         ButtonColour = Color.Black,
         HeaderLabelFont = Fonts.TnRbold,
         HeaderLabelFontSizeNormal = 28,
@@ -50,18 +52,18 @@ public class Civ2GoldInterface(IMain main) : Civ2Interface(main)
         CityHeaderLabelFontSizeSmall = 16,
         HeaderLabelShadow = true,
         HeaderLabelColour = new Color(135, 135, 135, 255),
-        LabelFont = Fonts.Tnr,
-        LabelFontSize = 20,
+        LabelFont = Fonts.Arial,
+        LabelFontSize = 18,
         LabelColour = Color.Black,
-        LabelShadowColour = new Color(210, 210, 210, 255),
+        LabelShadowColour = new Color(182, 182, 182, 255),
         CityWindowFont = Fonts.Arial,
         CityWindowFontSize = 14,  // small=6, normal=14, large=20
         MenuFont = Fonts.Arial,
         MenuFontSize = 14,
         CivilopediaFontSize = 22,
-        StatusPanelLabelFont = Fonts.TnRbold,
-        StatusPanelLabelColor = new Color(51, 51, 51, 255),
-        StatusPanelLabelColorShadow = new Color(191, 191, 191, 255),
+        StatusPanelLabelFont = Fonts.Arial,
+        StatusPanelLabelColor = new Color(36, 36, 36, 255),
+        StatusPanelLabelColorShadow = new Color(204, 204, 204, 255),
         MovingUnitsViewingPiecesLabelColor = Color.White,
         MovingUnitsViewingPiecesLabelColorShadow = Color.Black,
         EndOfTurnColors = [new Color(135, 135, 135, 255), Color.White],
@@ -721,15 +723,142 @@ public class Civ2GoldInterface(IMain main) : Civ2Interface(main)
         Color shadowColour = new(51, 51, 51, 255);
         Color replacementColour = new(255, 0, 0, 255);
 
-        var shield = Images.ExtractBitmap(PicSources["backShield1"][0], this);
+        var shield = TryLoadModernShieldArtwork() ?? Images.ExtractBitmap(PicSources["backShield1"][0], this);
+
+        if (shield.Width < 64 && shield.Height < 64 && shield.Width >= 12 && shield.Height >= 15)
+        {
+            shield.Crop(new Rectangle(1, 0, Math.Min(11, shield.Width - 1), Math.Min(15, shield.Height)));
+        }
+
+        const int targetWidth = 18;
+        const int targetHeight = 24;
+        if (shield.Width != targetWidth || shield.Height != targetHeight)
+        {
+            shield.Resize(targetWidth, targetHeight);
+        }
+
         var shieldFront = shield.Copy();
         var shieldBack = shield.Copy();
-        shieldFront.DrawRectangle(0, 0, shieldFront.Width, 7, Color.Black);
-        shield.ReplaceColor(replacementColour, shadowColour);
+        var shieldShadow = shield.Copy();
+
+        // Give transparent outline-only PNGs a Civ2-style player-colour body,
+        // while keeping the upper band clean for the HP bar.
+        shieldFront.DrawRectangle(3, 9, targetWidth - 6, targetHeight - 12, replacementColour);
+        shieldFront.DrawRectangle(2, 2, targetWidth - 4, 7, new Color(16, 16, 16, 255));
+        shieldBack.DrawRectangle(3, 5, targetWidth - 6, targetHeight - 8, replacementColour);
+
+        shieldShadow.ReplaceColor(replacementColour, shadowColour);
 
         UnitImages.Shields = new MemoryStorage(shieldFront, "Unit-Shield", replacementColour);
         UnitImages.ShieldBack = new MemoryStorage(shieldBack, "Unit-Shield-Back", replacementColour, true);
-        UnitImages.ShieldShadow = new MemoryStorage(shield, "Unit-Shield-Shadow");
+        UnitImages.ShieldShadow = new MemoryStorage(shieldShadow, "Unit-Shield-Shadow", replacementColour);
+    }
+
+    private static string ResolveAssetPath(params string[] parts)
+    {
+        foreach (var root in CandidateAssetRoots())
+        {
+            var candidate = Path.Combine(new[] { root }.Concat(parts).ToArray());
+            if (File.Exists(candidate) || Directory.Exists(candidate))
+            {
+                return candidate;
+            }
+        }
+
+        return Path.Combine(parts);
+    }
+
+    private static IEnumerable<string> CandidateAssetRoots()
+    {
+        var roots = new[]
+        {
+            Environment.CurrentDirectory,
+            AppContext.BaseDirectory,
+            Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..")),
+            Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..")),
+            Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", ".."))
+        };
+
+        return roots.Where(Directory.Exists).Distinct(StringComparer.OrdinalIgnoreCase);
+    }
+
+    private static Image? TryLoadModernShieldArtwork()
+    {
+        var candidateFiles = new List<string>
+        {
+            ResolveAssetPath("FOSSart", "UnitShield.png"),
+            ResolveAssetPath("FOSSart", "shield.png"),
+            ResolveAssetPath("FOSSart", "unit-shield.png"),
+            ResolveAssetPath("FOSSart", "shield-outline.png"),
+            ResolveAssetPath("RaylibUI", "FOSSart", "UnitShield.png"),
+            ResolveAssetPath("RaylibUI", "FOSSart", "shield.png"),
+            ResolveAssetPath("RaylibUI", "FOSS art", "UnitShield.png"),
+            ResolveAssetPath("RaylibUI", "FOSS art", "shield.png")
+        };
+
+        var roots = new[]
+        {
+            Environment.CurrentDirectory,
+            AppContext.BaseDirectory,
+            Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", ".."))
+        };
+
+        foreach (var root in roots.Where(Directory.Exists).Distinct(StringComparer.OrdinalIgnoreCase))
+        {
+            foreach (var folder in new[]
+                     {
+                         Path.Combine(root, "FOSSart"),
+                         Path.Combine(root, "RaylibUI", "FOSSart"),
+                         Path.Combine(root, "RaylibUI", "FOSS art")
+                     })
+            {
+                if (!Directory.Exists(folder))
+                {
+                    continue;
+                }
+
+                candidateFiles.AddRange(Directory.EnumerateFiles(folder, "*shield*.png", SearchOption.AllDirectories));
+            }
+        }
+
+        foreach (var candidate in candidateFiles.Where(File.Exists).Distinct(StringComparer.OrdinalIgnoreCase))
+        {
+            var image = Image.Load(candidate);
+            if (image.Width > 0 && image.Height > 0)
+            {
+                return image;
+            }
+        }
+
+        return null;
+    }
+
+    private static string ResolveOptionalAsset(params string[] parts)
+    {
+        var relativePath = Path.Combine(parts);
+        if (Path.IsPathRooted(relativePath))
+        {
+            return relativePath;
+        }
+
+        var roots = new[]
+        {
+            Environment.CurrentDirectory,
+            AppContext.BaseDirectory,
+            Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..")),
+            Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", ".."))
+        };
+
+        foreach (var root in roots.Where(Directory.Exists).Distinct(StringComparer.OrdinalIgnoreCase))
+        {
+            var candidate = Path.Combine(root, relativePath);
+            if (File.Exists(candidate))
+            {
+                return candidate;
+            }
+        }
+
+        return relativePath;
     }
 
     public override void LoadPlayerColours()
@@ -761,16 +890,16 @@ public class Civ2GoldInterface(IMain main) : Civ2Interface(main)
     public override UnitShield UnitShield(int unitType) => new()
     {
         ShieldInFrontOfUnit = false,
-        Offset = UnitImages.Units[unitType].FlagLoc,
-        StackingOffset = new(UnitImages.Units[unitType].FlagLoc.X < UnitImages.UnitRectangle.Width / 2 ? -4 : 4, 0),
-        ShadowOffset = new(UnitImages.Units[unitType].FlagLoc.X < UnitImages.UnitRectangle.Width / 2 ? -1 : 1, 1),
+        Offset = UnitImages.Units[unitType].FlagLoc + new Vector2(4, 0),
+        StackingOffset = new(UnitImages.Units[unitType].FlagLoc.X < UnitImages.UnitRectangle.Width / 2 ? -3 : 5, 0),
+        ShadowOffset = new(UnitImages.Units[unitType].FlagLoc.X < UnitImages.UnitRectangle.Width / 2 ? 0 : 1, 1),
         DrawShadow = true,
-        HPbarOffset = new(0, 2),
-        HPbarSize = new(12, 3),
+        HPbarOffset = new(3, 3),
+        HPbarSize = new(12, 5),
         HPbarColours = [new Color(243, 0, 0, 255), new Color(255, 223, 79, 255), new Color(87, 171, 39, 255)],
-        HPbarSizeForColours = [3, 8],
-        OrderOffset = new(Images.ExtractBitmap(PicSources["backShield1"][0], this).Width / 2f, 7),
-        OrderTextHeight = Images.ExtractBitmap(PicSources["backShield1"][0], this).Height - 7,
+        HPbarSizeForColours = [4, 9],
+        OrderOffset = new(9f, 11),
+        OrderTextHeight = 13,
     };
 
     /// <summary>

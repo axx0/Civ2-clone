@@ -273,8 +273,7 @@ public class ViewPiece : IGameMode
         {
             var unit = unitsOnTile[i];
 
-            var cityNameLabel = new StatusLabel(_gameScreen, (unit.HomeCity == null) ? Labels.For(LabelIndex.NONE) :
-                unit.HomeCity.Name, fontSize: fontSize);
+            var cityNameLabel = new StatusLabel(_gameScreen, $"Home: {(unit.HomeCity == null ? Labels.For(LabelIndex.NONE) : unit.HomeCity.Name)}", fontSize: fontSize);
             cityNameLabel.Width = (int)cityNameLabel.TextSize.X;
             cityNameLabel.Height = (int)labelHeight;
 
@@ -306,8 +305,7 @@ public class ViewPiece : IGameMode
                 if (i < unitsOnTile.Count - 1)
                 {
                     var nextUnit = unitsOnTile[i + 1];
-                    var cityNameLabelNu = new StatusLabel(_gameScreen, (nextUnit.HomeCity == null) ? Labels.For(LabelIndex.NONE) :
-                                    nextUnit.HomeCity.Name, fontSize: fontSize);
+                    var cityNameLabelNu = new StatusLabel(_gameScreen, $"Home: {(nextUnit.HomeCity == null ? Labels.For(LabelIndex.NONE) : nextUnit.HomeCity.Name)}", fontSize: fontSize);
                     var cityNameLabelWidthNu = cityNameLabelNu.TextSize.X;
                     var orderLabelNu = new StatusLabel(_gameScreen, _gameScreen.Game.Order2String(nextUnit.Order), fontSize: fontSize);
                     var orderLabelWidthNu = orderLabelNu.TextSize.X;

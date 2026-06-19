@@ -10,6 +10,8 @@ public class CityButton : Button
     private readonly IUserInterface _active;
     private readonly CityButtonProperties _properties;
 
+    public bool ManualLayout { get; set; }
+
     public CityButton(CityWindow controller, string key) : 
         base(controller, controller.CityWindowProps.Buttons[key].Text, controller.MainWindow.ActiveInterface.Look.CityWindowFont)
     {
@@ -23,6 +25,11 @@ public class CityButton : Button
         Scale = _cityWindow.Scale;
 
         FontSize = Math.Max(10, (int)Math.Round(_active.Look.CityWindowFontSize * Scale * 0.78f));
+
+        if (ManualLayout)
+        {
+            return;
+        }
 
         if (Parent == _cityWindow)
         {

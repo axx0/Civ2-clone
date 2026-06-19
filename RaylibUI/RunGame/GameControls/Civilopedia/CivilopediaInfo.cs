@@ -1,4 +1,6 @@
 using System.Numerics;
+using System.IO;
+using System.Text.RegularExpressions;
 using Civ2engine;
 using Civ2engine.IO;
 using Civ2engine.Terrains;
@@ -370,28 +372,43 @@ public sealed class CivilopediaInfo : BaseControl
 
             case CivilopediaInfoType.Units:
                 var unit = units[pedia.Id];
+                var unitRulesIndex = Array.FindIndex(rules.UnitTypes, row => row == unit);
                 preq = unit.Prereq != -1 ? rules.Advances[unit.Prereq] : null;
 
-                icon = new ImageBox(window, new(active.PicSources["unit"][unit.Type], 2f), true)
-                {
-                    Location = new(12, 7)
-                };
+                var unitImage = GetFossUnitImage(unit) ??
+                                (active.UnitImages.Units is { } unitImages &&
+                                 unit.Type >= 0 && unit.Type < unitImages.Length &&
+                                 unitImages[unit.Type].MapImage is { } mapImage
+                                    ? mapImage
+                                    : active.PicSources["unit"][unit.Type]);
+
+                icon = new ImageBox(window, unitImage, eventTransparent: true);
+                icon.FitIntoSlot(285, 170, padding: 4, maxScale: 0.34f);
+                icon.Location = new(28, 18);
                 Controls.Add(icon);
 
-                prereqLabel = new PediaLabel(window, Labels.For(LabelIndex.Prerequisites) + ":  ",
-                    (int)icon.Location.X + icon.Width + 54, 0);
-                prereqLabel.Location = new(prereqLabel.Location.X, icon.Location.Y + (icon.Height - prereqLabel.Height) / 2f);
+                offsetY = 210;
+                AddUnitStat(window, Labels.For(LabelIndex.Cost) + ":", $"{10 * unit.Cost}", active.ResourceImages.First(i => i.Name == "Shields").LargeImage,
+                    18, ref offsetY);
+                AddUnitStat(window, Labels.For(LabelIndex.AttackStrength) + ":", $"{unit.Attack}", null, 18, ref offsetY);
+                AddUnitStat(window, Labels.For(LabelIndex.DefenseStrength) + ":", $"{unit.Defense}", null, 18, ref offsetY);
+                AddUnitStat(window, Labels.For(LabelIndex.HitPoints) + ":", $"{Math.Max(1, unit.Hitp)}", null, 18, ref offsetY);
+                AddUnitStat(window, Labels.For(LabelIndex.Firepower) + ":", $"{unit.Firepwr}", null, 18, ref offsetY);
+                AddUnitStat(window, Labels.For(LabelIndex.MovementRate) + ":", $"{Math.Max(1, unit.Move / 3)}", null, 18, ref offsetY);
+
+                var rightX = 380;
+                var rightValueX = 555;
+                var topY = 28;
+                prereqLabel = new PediaLabel(window, Labels.For(LabelIndex.Prerequisites) + ":", rightX, topY);
                 Controls.Add(prereqLabel);
 
                 if (preq == null)
                 {
-                    Controls.Add(new PediaLabel(window, Labels.For(LabelIndex.NONE),
-                        (int)prereqLabel.Location.X + prereqLabel.Width, (int)prereqLabel.Location.Y));
+                    Controls.Add(new PediaLabel(window, Labels.For(LabelIndex.NONE), rightValueX, topY));
                 }
                 else
                 {
-                    var preqLabel = new PediaLinkLabel(window, preq.Name, (int)prereqLabel.Location.X + prereqLabel.Width,
-                        (int)prereqLabel.Location.Y);
+                    var preqLabel = new PediaLinkLabel(window, preq.Name, rightValueX, topY);
                     Controls.Add(preqLabel);
                     preqLabel.Click += (_, _) =>
                     {
@@ -401,65 +418,26 @@ public sealed class CivilopediaInfo : BaseControl
                     };
                 }
 
-                offsetY = icon.Location.Y + icon.Height + 16;
-
-                costLabel = new PediaLabel(window, Labels.For(LabelIndex.Cost) + ":",
-                    (int)icon.Location.X, (int)offsetY);
-                Controls.Add(costLabel);
-                var costvLabel = new PediaLabel(window, $"{10 * unit.Cost} ",
-                    (int)icon.Location.X + 210, (int)offsetY);
-                Controls.Add(costvLabel);
-                shieldImg = new ImageBox(window, new(active.ResourceImages.First(i => i.Name == "Shields").LargeImage), true);
-                shieldImg.Location = new((int)costvLabel.Location.X + costvLabel.Width, (int)offsetY + (costvLabel.Height - shieldImg.Height) / 2f);
-                Controls.Add(shieldImg);
-                offsetY += costLabel.Height + 1;
-
-                var attLabel = new PediaLabel(window, Labels.For(LabelIndex.AttackStrength) + ":",
-                    (int)icon.Location.X, (int)offsetY);
-                Controls.Add(attLabel);
-                var attvLabel = new PediaLabel(window, $"{unit.Attack}",
-                    (int)icon.Location.X + 210, (int)offsetY);
-                Controls.Add(attvLabel);
-                offsetY += attLabel.Height + 1;
-
-                var defLabel = new PediaLabel(window, Labels.For(LabelIndex.DefenseStrength) + ":",
-                    (int)icon.Location.X, (int)offsetY);
-                Controls.Add(defLabel);
-                var defvLabel = new PediaLabel(window, $"{unit.Defense}",
-                    (int)icon.Location.X + 210, (int)offsetY);
-                Controls.Add(defvLabel);
-                offsetY += defLabel.Height + 1;
-
-                var hitpLabel = new PediaLabel(window, Labels.For(LabelIndex.HitPoints) + ":",
-                    (int)icon.Location.X, (int)offsetY);
-                Controls.Add(hitpLabel);
-                var hitpvLabel = new PediaLabel(window, $"{unit.Hitp / 10}",
-                    (int)icon.Location.X + 210, (int)offsetY);
-                Controls.Add(hitpvLabel);
-                offsetY += hitpLabel.Height + 1;
-
-                var frpLabel = new PediaLabel(window, Labels.For(LabelIndex.Firepower) + ":",
-                   (int)icon.Location.X, (int)offsetY);
-                Controls.Add(frpLabel);
-                var frpvLabel = new PediaLabel(window, $"{unit.Firepwr}",
-                    (int)icon.Location.X + 210, (int)offsetY);
-                Controls.Add(frpvLabel);
-                offsetY += frpLabel.Height + 1;
-
-                var movLabel = new PediaLabel(window, Labels.For(LabelIndex.MovementRate) + ":",
-                   (int)icon.Location.X, (int)offsetY);
-                Controls.Add(movLabel);
-                var movvLabel = new PediaLabel(window, $"{unit.Move / 3}",
-                    (int)icon.Location.X + 210, (int)offsetY);
-                Controls.Add(movvLabel);
-
-                offsetY = (int)costLabel.Location.Y;
-                text = CivilopediaLoader.GetPediaUnitText(unit.Flags);
-                wrappedTexts = DialogUtils.GetWrappedTexts(text, 310, active.Look.LabelFont, 22);
-                foreach (var txt in wrappedTexts)
+                var descriptionX = rightX;
+                var descriptionY = topY + 54;
+                var descriptionWidth = Math.Max(240, Width - descriptionX - 28);
+                text = NormalizePediaText(CivilopediaLoader.GetDescription(pedia, unitRulesIndex));
+                var factText = NormalizePediaText(CivilopediaLoader.GetPediaUnitText(unit.Flags));
+                if (!string.IsNullOrWhiteSpace(factText))
                 {
-                    Controls.Add(new PediaLabel(window, txt, Width / 2, (int)offsetY));
-                    offsetY += prereqLabel.Height + 1;
+                    text = string.IsNullOrWhiteSpace(text) ? factText : text + " " + factText;
+                }
+
+                if (string.IsNullOrWhiteSpace(text))
+                {
+                    text = unit.Name;
+                }
+
+                wrappedTexts = DialogUtils.GetWrappedTexts(text, descriptionWidth, active.Look.LabelFont, 21);
+                foreach (var txt in wrappedTexts.Take(20))
+                {
+                    Controls.Add(new PediaLabel(window, txt, descriptionX, descriptionY));
+                    descriptionY += 26;
                 }
 
                 break;
@@ -632,8 +610,7 @@ public sealed class CivilopediaInfo : BaseControl
                     }
                     else
                     {
-                        baseTerrain = rules.Terrains[0].FirstOrDefault(t => t.Specials[1] == s)
-                            ?? throw new InvalidOperationException("Unable to find base terrain for special.");
+                        baseTerrain = rules.Terrains[0].FirstOrDefault(t => t.Specials[1] == s);
                         icons[0] = active.PicSources["base1"][(int)baseTerrain.Type];
                         icons[1] = active.PicSources["special2"][(int)baseTerrain.Type];
                     }
@@ -758,4 +735,129 @@ public sealed class CivilopediaInfo : BaseControl
             default: throw new NotImplementedException();
         }
     }
+    private void AddUnitStat(CivilopediaWindow window, string label, string value, IImageSource? valueIcon, int x, ref float y)
+    {
+        var labelControl = new PediaLabel(window, label, x, (int)y);
+        Controls.Add(labelControl);
+
+        var valueControl = new PediaLabel(window, value + " ", x + 190, (int)y);
+        Controls.Add(valueControl);
+
+        if (valueIcon != null)
+        {
+            var image = new ImageBox(window, valueIcon, eventTransparent: true)
+            {
+                Location = new(valueControl.Location.X + valueControl.Width, y + 3)
+            };
+            image.FitIntoSlot(20, 20, maxScale: 1f);
+            Controls.Add(image);
+        }
+
+        y += labelControl.Height + 2;
+    }
+
+    private static string NormalizePediaText(string text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            return string.Empty;
+        }
+
+        return Regex.Replace(text.Replace('_', ' '), @"\s+", " ").Trim();
+    }
+
+    private static IImageSource? GetFossUnitImage(UnitDefinition unit)
+    {
+        var path = FindFossArtFile("Units", GetUnitArtNames(unit.Name), [".gif", ".png", ".jpg", ".jpeg", ".bmp"]);
+        return path == null ? null : new BitmapStorage(path);
+    }
+
+    private static IEnumerable<string> GetUnitArtNames(string unitName)
+    {
+        yield return unitName;
+
+        if (unitName.EndsWith("s", StringComparison.OrdinalIgnoreCase))
+        {
+            yield return unitName[..^1];
+        }
+
+        if (unitName.Equals("Mech. Inf.", StringComparison.OrdinalIgnoreCase) ||
+            unitName.Equals("Mech Inf", StringComparison.OrdinalIgnoreCase))
+        {
+            yield return "mechinfantry";
+        }
+
+        if (unitName.Equals("Stealth Fighter", StringComparison.OrdinalIgnoreCase))
+        {
+            yield return "stealthfighter";
+        }
+
+        if (unitName.Equals("Stealth Bomber", StringComparison.OrdinalIgnoreCase))
+        {
+            yield return "stealthbomber";
+        }
+
+        if (unitName.Equals("Cruise Missile", StringComparison.OrdinalIgnoreCase))
+        {
+            yield return "cruisemissile";
+        }
+
+        if (unitName.Equals("Nuclear Missile", StringComparison.OrdinalIgnoreCase))
+        {
+            yield return "nuclearmissile";
+        }
+    }
+
+    private static string? FindFossArtFile(string category, IEnumerable<string> names, IReadOnlyList<string> extensions)
+    {
+        var normalizedNames = names.Select(NormalizeFossArtName).Where(name => name.Length > 0).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+        foreach (var directory in GetFossArtDirectories(category))
+        {
+            if (!Directory.Exists(directory))
+            {
+                continue;
+            }
+
+            foreach (var file in Directory.EnumerateFiles(directory))
+            {
+                if (!extensions.Contains(Path.GetExtension(file), StringComparer.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                var fileName = NormalizeFossArtName(Path.GetFileNameWithoutExtension(file));
+                if (normalizedNames.Contains(fileName, StringComparer.OrdinalIgnoreCase))
+                {
+                    return file;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private static IEnumerable<string> GetFossArtDirectories(string category)
+    {
+        var roots = new[]
+        {
+            Environment.CurrentDirectory,
+            AppContext.BaseDirectory,
+            Path.Combine(Environment.CurrentDirectory, "RaylibUI"),
+            Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", ".."))
+        };
+
+        foreach (var root in roots.Where(root => !string.IsNullOrWhiteSpace(root)).Distinct(StringComparer.OrdinalIgnoreCase))
+        {
+            yield return Path.Combine(root, "FOSSart", category);
+            yield return Path.Combine(root, "FOSS art", category);
+            yield return Path.Combine(root, "RaylibUI", "FOSSart", category);
+            yield return Path.Combine(root, "RaylibUI", "FOSS art", category);
+        }
+    }
+
+    private static string NormalizeFossArtName(string value)
+    {
+        return Regex.Replace(value, "[^A-Za-z0-9]", string.Empty).ToLowerInvariant();
+    }
+
 }

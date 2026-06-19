@@ -35,7 +35,7 @@ public class Button : BaseControl
         Scale = imageScale;
     }
 
-    private string _text = string.Empty;
+    private string _text;
     public string Text
     {
         get => _text;
@@ -123,7 +123,7 @@ public class Button : BaseControl
         var drawFontSize = GetDrawFontSize();
         var drawTextSize = drawFontSize == _fontSize ? _textSize : TextManager.MeasureTextEx(_font, Text, drawFontSize, 0f);
         var textOffset = _hovered && _backgroundImage == null ? Vector2.One : Vector2.Zero;
-        Graphics.DrawTextEx(_font, Text, new Vector2(Bounds.X + Width / 2 - drawTextSize.X / 2, Bounds.Y + Height / 2 - drawTextSize.Y / 2) + textOffset, drawFontSize, 0f, Enabled ? _textColour : Color.Gray);
+        global::RaylibUI.TextRendering.Draw(_font, Text, new Vector2(Bounds.X + Width / 2 - drawTextSize.X / 2, Bounds.Y + Height / 2 - drawTextSize.Y / 2) + textOffset, drawFontSize, 0f, Enabled ? _textColour : Color.Gray);
 
         base.Draw(pulse);
     }
@@ -223,12 +223,12 @@ public class Button : BaseControl
 
     public override int GetPreferredHeight()
     {
-        return _backgroundImage == null ? 36 : Images.GetImageHeight(_backgroundImage, _active!, Scale);
+        return _backgroundImage == null ? 36 : Images.GetImageHeight(_backgroundImage, _active, Scale);
     }
 
     public override int GetPreferredWidth()
     {
         return _backgroundImage == null ? Math.Max((int)_textSize.X + 10, 160) :
-            Math.Max((int)_textSize.X, Images.GetImageWidth(_backgroundImage, _active!, Scale));
+            Math.Max((int)_textSize.X, Images.GetImageWidth(_backgroundImage, _active, Scale));
     }
 }

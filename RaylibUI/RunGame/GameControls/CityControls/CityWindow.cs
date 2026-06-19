@@ -17,7 +17,8 @@ using System.Threading;
 using Civ2engine.IO;
 using Model.Core.Cities;
 
-namespace RaylibUI.RunGame.GameControls.CityControls;
+using RaylibUI.RunGame.GameControls.CityControls;
+using Raylib_CSharp.UI;
 
 public class CityWindow : BaseDialog
 {

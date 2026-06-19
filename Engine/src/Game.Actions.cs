@@ -11,6 +11,7 @@ using Civ2engine.Units;
 using Model.Constants;
 using Model.Core;
 using Model.Core.Events;
+using Model.Core.Mapping;
 using Model.Core.Player;
 using Model.Core.Units;
 using Neo.IronLua;
@@ -21,7 +22,16 @@ namespace Civ2engine
     {
         public event EventHandler<PlayerEventArgs> OnPlayerEvent;
 
+        private bool _choosingNextCiv;
+        private bool _chooseNextCivAgain;
+
         public void StartNextTurn()
+        {
+            StartNextTurnCore();
+            ChoseNextCiv();
+        }
+
+        private void StartNextTurnCore()
         {
             TurnNumber++;
 
@@ -31,34 +41,70 @@ namespace Civ2engine
             }
 
             _activeCivId = -1;
-            ChoseNextCiv();
         }
 
         public void ChoseNextCiv()
         {
-            if (_activeCivId >= AllCivilizations[^1].Id)
+            if (_choosingNextCiv)
             {
-                StartNextTurn();
+                _chooseNextCivAgain = true;
                 return;
             }
 
-            _activeCivId++;
-
-            _activeCiv = AllCivilizations[_activeCivId];
-
-            if (_activeCiv.Alive)
+            _choosingNextCiv = true;
+            try
             {
+                do
+                {
+                    _chooseNextCivAgain = false;
+                    ChooseNextCivilizationOnce();
+                } while (_chooseNextCivAgain);
+            }
+            finally
+            {
+                _choosingNextCiv = false;
+            }
+        }
+
+        private void ChooseNextCivilizationOnce()
+        {
+            var safety = Math.Max(8, AllCivilizations.Count * 4);
+            while (safety-- > 0)
+            {
+                if (_activeCivId >= AllCivilizations.Count - 1)
+                {
+                    StartNextTurnCore();
+                }
+
+                _activeCivId++;
+                if (_activeCivId < 0 || _activeCivId >= AllCivilizations.Count)
+                {
+                    StartNextTurnCore();
+                    continue;
+                }
+
+                _activeCiv = AllCivilizations[_activeCivId];
+
+                if (!_activeCiv.Alive)
+                {
+                    if (!Options.DontRestartIfEliminated)
+                    {
+                        //Look to restart if possible
+                    }
+                    continue;
+                }
+
                 var activePlayer = Players[_activeCiv.Id];
                 TurnBeginning(_activeCiv, activePlayer);
-                StartPlayerTurn(activePlayer);
-            }
-            else
-            {
-                if (!Options.DontRestartIfEliminated)
+
+                if (_activeCiv.PlayerType == PlayerType.Barbarians)
                 {
-                    //Look to restart if possible
+                    ProcessBarbarianTurn(activePlayer);
+                    continue;
                 }
-                ChoseNextCiv();
+
+                StartPlayerTurn(activePlayer);
+                return;
             }
         }
 
@@ -196,14 +242,141 @@ namespace Civ2engine
         {
             // Adjust reputation
             
-            // Reset turns of all units
+            // Reset turns of all units and let resting wounded units recover.
             foreach (var unit in activeCiv.Units.Where(n => !n.Dead))
             {
+                HealRestingUnit(unit);
                 unit.MovePointsLost = 0;
             }
 
             // Update all cities
             this.CitiesTurn(player);
+        }
+
+        private static void HealRestingUnit(Unit unit)
+        {
+            if (unit.HitPointsLost <= 0)
+            {
+                return;
+            }
+
+            var inFriendlyCity = unit.CurrentLocation.CityHere?.Owner == unit.Owner;
+            var resting = unit.Order is (int)OrderType.Sleep or (int)OrderType.Fortify or (int)OrderType.Fortified;
+            if (!resting && !inFriendlyCity)
+            {
+                return;
+            }
+
+            var healed = inFriendlyCity ? 2 : 1;
+            unit.HitPointsLost = Math.Max(0, unit.HitPointsLost - healed);
+        }
+
+        private void ProcessBarbarianTurn(IPlayer activePlayer)
+        {
+            activePlayer.TurnStart(TurnNumber);
+
+            foreach (var unit in _activeCiv.Units.Where(u => !u.Dead).ToList())
+            {
+                if (unit.AttackBase <= 0)
+                {
+                    unit.SkipTurn();
+                    continue;
+                }
+
+                while (!unit.Dead && unit.MovePoints > 0)
+                {
+                    var currentTile = unit.CurrentLocation;
+                    var adjacentEnemy = FindAdjacentBarbarianTarget(unit, currentTile);
+                    if (adjacentEnemy != null)
+                    {
+                        MovementFunctions.AttackAtTile(unit, this, adjacentEnemy);
+                        if (!unit.Dead && unit.MovePoints <= 0)
+                        {
+                            break;
+                        }
+
+                        if (unit.Dead)
+                        {
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        var target = FindNearestBarbarianTarget(unit, currentTile);
+                        if (target == null)
+                        {
+                            unit.SkipTurn();
+                            break;
+                        }
+
+                        var destination = MovementFunctions.GetPossibleMoves(currentTile, unit)
+                            .Where(t => !t.Terrain.Impassable)
+                            .OrderBy(t => BarbarianDistance(t, target))
+                            .FirstOrDefault();
+
+                        if (destination == null || destination == currentTile)
+                        {
+                            unit.SkipTurn();
+                            break;
+                        }
+
+                        if (IsEnemyTileForBarbarian(unit, destination))
+                        {
+                            MovementFunctions.AttackAtTile(unit, this, destination);
+                        }
+                        else
+                        {
+                            MovementFunctions.MoveC2(this, unit, destination.X - currentTile.X, destination.Y - currentTile.Y);
+                        }
+                    }
+                }
+            }
+        }
+
+        private static Tile? FindAdjacentBarbarianTarget(Unit unit, Tile currentTile)
+        {
+            return currentTile.Neighbours()
+                .Where(tile => IsEnemyTileForBarbarian(unit, tile))
+                .OrderBy(tile => tile.CityHere == null ? 1 : 0)
+                .ThenBy(tile => BarbarianDistance(currentTile, tile))
+                .FirstOrDefault();
+        }
+
+        private Tile? FindNearestBarbarianTarget(Unit unit, Tile currentTile)
+        {
+            Tile? best = null;
+            var bestDistance = int.MaxValue;
+            foreach (var tile in currentTile.Map.Tile)
+            {
+                if (!IsEnemyTileForBarbarian(unit, tile))
+                {
+                    continue;
+                }
+
+                var distance = BarbarianDistance(currentTile, tile);
+                if (distance < bestDistance)
+                {
+                    best = tile;
+                    bestDistance = distance;
+                }
+            }
+
+            return best;
+        }
+
+        private static bool IsEnemyTileForBarbarian(Unit unit, Tile tile)
+        {
+            if (tile.CityHere is { } city && city.Owner != unit.Owner)
+            {
+                return true;
+            }
+
+            return tile.UnitsHere.Any(other => !other.Dead && other.Owner != unit.Owner && other.InShip == null);
+        }
+
+        private static int BarbarianDistance(Tile from, Tile to)
+        {
+            return Math.Abs(from.X - to.X) + Math.Abs(from.Y - to.Y);
         }
     }
 }

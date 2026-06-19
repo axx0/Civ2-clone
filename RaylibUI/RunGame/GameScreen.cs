@@ -8,6 +8,7 @@ using Model.Core;
 using Model.Controls;
 using Model.Core.Cities;
 using Model.Core.Mapping;
+using Model.Core.Units;
 using Raylib_CSharp.Windowing;
 using Raylib_CSharp.Transformations;
 using RaylibUI.RunGame.Commands.Orders;
@@ -168,36 +169,6 @@ public class GameScreen : BaseScreen
 
     private Dictionary<Shortcut, IList<IGameCommand>> GameCommands { get; }
 
-    public override void Draw(bool pulse)
-    {
-        HandleMouseWheelZoom();
-        base.Draw(pulse);
-    }
-
-    private void HandleMouseWheelZoom()
-    {
-        var wheel = Input.GetMouseWheelMove();
-        if (Math.Abs(wheel) < float.Epsilon ||
-            (!Input.IsKeyDown(KeyboardKey.LeftControl) && !Input.IsKeyDown(KeyboardKey.RightControl)))
-        {
-            return;
-        }
-
-        var mousePos = Input.GetMousePosition();
-        var mapBounds = _mapControl.Bounds;
-        if (mousePos.X < mapBounds.X || mousePos.X > mapBounds.X + mapBounds.Width ||
-            mousePos.Y < mapBounds.Y || mousePos.Y > mapBounds.Y + mapBounds.Height)
-        {
-            return;
-        }
-
-        var nextZoom = Math.Clamp(Zoom + (wheel > 0 ? 1 : -1), -7, 8);
-        if (nextZoom != Zoom)
-        {
-            TriggerMapEvent(new MapEventArgs(MapEventType.ZoomChange) { Zoom = nextZoom });
-        }
-    }
-
     private void TryExecuteCommand(IList<IGameCommand> commands)
     {
         foreach (var command in commands)
@@ -328,14 +299,14 @@ public class GameScreen : BaseScreen
     
     public bool ActivateUnits(Tile tile)
     {
-        var unitsHere = tile.UnitsHere;
+        var unitsHere = tile.UnitsHere.Where(u => !u.Dead).ToList();
         if (unitsHere.Count == 0)
         {
             Game.ActivePlayer.ActiveTile = tile;
             return true;
         }
 
-        var unit = unitsHere[0];
+        var unit = unitsHere.FirstOrDefault(u => u.Owner == _player.Civilization) ?? unitsHere[0];
         if (unitsHere.Count > 1)
         {
             //TODO: Multiple units on this square => open unit selection dialogBox
@@ -351,15 +322,40 @@ public class GameScreen : BaseScreen
             // unit = unitsHere[selectUnitDialog.SelectedIndex];
         }
 
-            
-        if (!unit.TurnEnded)
+        Game.ActivePlayer.ActiveTile = tile;
+
+        if (unit.Owner == _player.Civilization)
         {
-            _player.ActiveUnit = unit;
+            ClearManualSelectionOrders(unit);
+            _player.WaitingList.Remove(unit);
+
+            if (!unit.TurnEnded)
+            {
+                _player.ActiveUnit = unit;
+                ActiveMode = Moving;
+            }
+            else
+            {
+                ActiveMode = ViewPiece;
+            }
+        }
+        else
+        {
+            ActiveMode = ViewPiece;
         }
 
-        unit.Order = (int)OrderType.NoOrders; // Always clear order when clicked, no matter if the unit is activated
-        ActiveMode = Moving;
+        ForceRedraw();
         return true;
+    }
+
+    private static void ClearManualSelectionOrders(Unit unit)
+    {
+        unit.Order = (int)OrderType.NoOrders;
+        unit.WaitOrder = false;
+        unit.Building = 0;
+        unit.GoToX = unit.X;
+        unit.GoToY = unit.Y;
+        unit.GoToMapIndex = unit.MapIndex;
     }
 
     public void ForceRedraw()
@@ -384,6 +380,11 @@ public class GameScreen : BaseScreen
     }
     
     
+
+    public void QueueAfterCurrentPopup(Action action)
+    {
+        _queuedPopups.Enqueue(action);
+    }
 
     public void ShowPopup(string dialogName,
         Action<string, int, IList<bool>?, IDictionary<string, string>?>? handleButtonClick = null,

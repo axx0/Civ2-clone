@@ -3,6 +3,7 @@ using Civ2engine.Enums;
 using Civ2engine.IO;
 using Civ2engine.UnitActions;
 using Model.Core.Units;
+using Model.Core.Cities;
 
 namespace RaylibUI.RunGame.GameControls.CityControls;
 
@@ -105,10 +106,30 @@ internal static class CityUnitMenu
             screen.Player.SetUnitActive(null, false);
         }
 
+        ApplyDisbandProductionCredit(cityWindow.City, unit, screen.Game.Rules.Cosmic.RowsShieldBox);
+
         unit.Dead = true;
         unit.Owner.Units.Remove(unit);
-        screen.CloseDialog(cityWindow);
+        cityWindow.UpdateProduction();
         screen.ForceRedraw();
+    }
+
+    private static void ApplyDisbandProductionCredit(City city, Unit unit, int shieldRows)
+    {
+        if (unit.HomeCity != city && unit.CurrentLocation != city.Location)
+        {
+            return;
+        }
+
+        var totalCost = Math.Max(1, city.ItemInProduction.Cost * Math.Max(1, shieldRows));
+        var shieldCredit = Math.Max(1, unit.TypeDefinition.Cost * Math.Max(1, shieldRows) / 2);
+        city.ShieldsProgress = Math.Min(totalCost, city.ShieldsProgress + shieldCredit);
+
+        var queuedItem = city.ConstructionQueue.Current;
+        if (queuedItem != null)
+        {
+            queuedItem.RemainingCost = Math.Max(0, queuedItem.RemainingCost - shieldCredit);
+        }
     }
 
     private static void ZoomToUnit(CityWindow cityWindow, Unit unit)

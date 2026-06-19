@@ -49,7 +49,7 @@ public class UnitsPresentBox : Listbox
             {
                 Elements = [
                     new ListboxGroupElement { Unit = unit, Game = cityWindow.CurrentGameScreen.Game,
-                        ScaleIcon = ImageUtils.ZoomScale(0)},
+                        ScaleIcon = ImageUtils.ZoomScale(0) * 0.82f},
                     new ListboxGroupElement { Text = ShortCityName(cityWindow.City), Xoffset = 0, 
                         HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Bottom }],
                 Height = (int)Math.Ceiling(properties.Box.Height / properties.Rows * cityWindow.Scale)

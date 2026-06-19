@@ -45,6 +45,11 @@ namespace Civ2engine.UnitActions
                 ItemInProduction = initialProduction!,
                 WhoBuiltIt = unit.Owner,
             };
+            // A city replaces whatever village/hut marker was on this tile.  Settlers can start
+            // on a goody hut, and Civ2 allows founding there; if the hut is not cleared the map
+            // renderer continues to draw the hut instead of the newly founded city.
+            tile.HasGoodieHut = false;
+
             tile.WorkedBy = city;
             tile.CityHere = city;
             game.AllCities.Add(tile.CityHere);

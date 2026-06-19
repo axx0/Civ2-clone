@@ -2,7 +2,8 @@
 using Model.Controls;
 using RaylibUI.BasicTypes.Controls;
 
-namespace RaylibUI.RunGame.GameControls.CityControls;
+using RaylibUI.RunGame.GameControls.CityControls;
+using Raylib_CSharp.UI;
 
 public class CityLabel : LabelControl
 {

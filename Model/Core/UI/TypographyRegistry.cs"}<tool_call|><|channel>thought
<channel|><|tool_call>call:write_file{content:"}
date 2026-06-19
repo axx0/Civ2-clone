@@ -1,0 +1,68 @@
+using System;
+using System.Collections.Generic;
+
+namespace Model.Core.UI
+{
+    /// <summary>
+    /// Central registry for all game typography styles.
+    /// This allows us to overhaul the "crispness" of fonts by managing 
+    /// scale, weight, and font choice in one single location.
+    /// </summary>
+    public static class TypographyRegistry
+    {
+        /// <summary>
+        /// Defines how different UI types should be rendered.
+        /// By using a registry, we ensure that "ResourceLabels" are always 
+        /// small/sharp, while "Headers" remain bold/large across all screens.
+        /// </summary>
+        public enum TextStyle
+        {
+            Header,           // Large titles (e.g., City Name)
+            Subtitle,         // Secondary headers (e.g., Production count labels)
+            ResourceLabel,    // Small, dense numbers (Gold, Pop counts) - High priority for "crispness"
+            ActionItem,       // Interactive button text
+            DialogText        // Narrative/Flavor descriptions
+        }
+
+        public struct StyleProfile
+        {
+            public float Scale;
+            public bool IsBold;
+            public int FontSizeOverride;
+
+            // Pre-defined styles to maintain consistency in the Civ2clone UI.
+            public static StyleProfile Header => new() { Scale = 1.5f, IsBold = true, FontSizeOverride = 24 };
+            public static StyleProfile Subtitle => new() { Scale = 1.1f, IsBold = false, FontSizeOverride = 18 };
+            public static StyleProfile ResourceLabel => new() { Scale = 0.9f, IsBold = false, FontSizeOverride = 14 }; // Smaller/sharper for dense data
+            public static StyleProfile ActionItem => new() { Scale = 1.0f, IsBold = true, FontSizeOverride = 16 };
+            public static StyleProfile DialogText => new() { Scale = 1.0f, IsBold = false, FontSizeOverride = 18 };
+        }
+
+        /// <summary>
+        /// Gets the style profile for a specific Typography request.
+        /// UI components should call this to receive their scale/weight parameters.
+        /// </summary>
+        public static StyleProfile GetStyle(TextStyle style)
+        {
+            return style switch
+            {
+                TextStyle.Header => Styles.Header,
+                TextStyle.Subtitle => Styles.Subtitle,
+                TextStyle.ResourceLabel => Styles.ResourceLabel,
+                TextStyle.ActionItem => Styles.ActionItem,
+                TextStyle.DialogText => Styles.DialogText,
+                _ => Styles.Subtitle
+            };
+
+            // Internal static class to hold the profile definitions
+            private static class Styles 
+            {
+                public static StyleProfile Header = new() { Scale = 1.5f, IsBold = true, FontSizeOverride = 24 };
+                public static StyleProfile Subtitle = new() { Scale = 1.1f, IsBold = false, FontSizeOverride = 18 };
+                public static StyleProfile ResourceLabel = new() { Scale = 0.9f, IsBold = false, FontSizeOverride = 14 };
+                public static StyleProfile ActionItem = new() { Scale = 1.0f, IsBold = true, FontSizeOverride = 16 };
+                public static StyleProfile DialogText = new() { Scale = 1.0f, IsBold = false, FontSizeOverride = 18 };
+            }
+        }
+    }
+}

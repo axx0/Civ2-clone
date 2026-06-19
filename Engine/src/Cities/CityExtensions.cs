@@ -206,7 +206,15 @@ namespace Civ2engine
                 //Destroy city
                 city.Location.CityHere = null;
                 city.Owner.Cities.Remove(city);
-                city.WorkedTiles.ForEach(t => t.WorkedBy = null);
+
+                // Setting Tile.WorkedBy removes that tile from City.WorkedTiles as a side-effect.
+                // Enumerate a snapshot so razing/shrinking a city during combat cannot modify the
+                // collection currently being walked.
+                foreach (var workedTile in city.WorkedTiles.ToList())
+                {
+                    workedTile.WorkedBy = null;
+                }
+
                 city.EliminateCityUnits(game);
             }
             else
@@ -218,10 +226,14 @@ namespace Civ2engine
 
         internal static void EliminateCityUnits(this City city, IGame game)
         {
-            var unitsEliminated = city.SupportedUnits;
+            var unitsEliminated = city.SupportedUnits.ToList();
             if (unitsEliminated.Count <= 0) return;
             
-            unitsEliminated.ForEach(u=>u.Dead = true);
+            foreach (var unit in unitsEliminated)
+            {
+                unit.Dead = true;
+            }
+
             game.Players[city.OwnerId].UnitsLost(unitsEliminated);
         }
 

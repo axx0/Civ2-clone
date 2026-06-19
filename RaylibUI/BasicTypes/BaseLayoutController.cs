@@ -89,20 +89,31 @@ public abstract class BaseLayoutController : IControlLayout
 
     protected static IControl? FindControl(IEnumerable<IControl> controls, Func<IControl, bool> matching)
     {
-        IControl? selected = null;
-        var elements = controls;
-        while (elements != null)
+        // Controls are drawn in list order, so the last matching sibling is visually on top.
+        // Walk backwards and keep searching through event-transparent containers so a fitted
+        // image or decorative panel cannot steal mouse focus from a button drawn above it.
+        foreach (var control in controls.Reverse())
         {
-            var candidate = elements.FirstOrDefault(matching);
-
-            elements = candidate?.Controls;
-            
-            if (candidate is { EventTransparent: false })
+            if (!matching(control))
             {
-                selected = candidate;
+                continue;
+            }
+
+            if (control.Controls is { Count: > 0 })
+            {
+                var child = FindControl(control.Controls, matching);
+                if (child != null)
+                {
+                    return child;
+                }
+            }
+
+            if (!control.EventTransparent)
+            {
+                return control;
             }
         }
 
-        return selected;
+        return null;
     }
 }

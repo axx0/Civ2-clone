@@ -14,12 +14,12 @@ namespace RaylibUI.Controls;
 
 public class TextBox : BaseControl
 {
-    public event EventHandler<EventArgs>? TextChanged;
+    public event EventHandler<EventArgs> TextChanged; 
     public override bool CanFocus => true;
-
+    
     private int _editPosition = 0;
 
-    private string _text = string.Empty;
+    private string _text;
     private readonly IControlLayout _controller;
     private readonly IUserInterface? _active;
     private readonly int _minWidth;
@@ -27,10 +27,10 @@ public class TextBox : BaseControl
     private bool _editMode = false;
     private int _editWidth;
 
-    private readonly Vector2 _textOffsetV = new Vector2(5,5);
-    private string _focusText = string.Empty;
+    private readonly Vector2 _textOffsetV = new Vector2(8, 0);
+    private string _focusText;
 
-    private const int TextMargin = 5;
+    private const int TextMargin = 7;
 
     public string Text => _text;
 
@@ -52,22 +52,23 @@ public class TextBox : BaseControl
         var fontSize = TextRendering.LegibleUiFontSize(Styles.BaseFontSize);
         var size = TextRendering.Measure(_active?.Look.DefaultFont ?? Fonts.Tnr, _text, fontSize, 1.0f);
         _editWidth = (int)size.X;
-        Height = (int)(size.Y + TextMargin * 2);
+        Height = Math.Max(34, (int)(size.Y + TextMargin * 2));
         TextChanged?.Invoke(this, EventArgs.Empty);
     }
 
     public override void Draw(bool pulse)
     {
         Graphics.DrawRectangleRec(Bounds, Color.White);
-        Graphics.DrawRectangleLinesEx(Bounds, 1f, Color.Black);
-        TextRendering.Draw(_active?.Look.DefaultFont ?? Fonts.Tnr, _text, new Vector2(Bounds.X, Bounds.Y) + _textOffsetV, TextRendering.LegibleUiFontSize(Styles.BaseFontSize),1.0f, Color.Black);
-
-        if (_editMode)
+        Graphics.DrawRectangleLinesEx(Bounds, 1.5f, Color.Black);
+        var font = _active?.Look.DefaultFont ?? Fonts.Tnr;
+        var fontSize = TextRendering.LegibleUiFontSize(Styles.BaseFontSize);
+        var textSize = TextRendering.Measure(font, _text, fontSize, 1.0f);
+        var textPosition = new Vector2(Bounds.X + _textOffsetV.X, Bounds.Y + MathF.Max(2, (Height - textSize.Y) / 2f));
+        TextRendering.DrawReadable(font, _text, textPosition, fontSize, 1.0f, TextRendering.StrongBlack);
+        
+        if (_editMode && pulse)
         {
-            if (pulse)
-            {
-                Graphics.DrawRectangleRec(new Rectangle(Bounds.X + 5 + _editWidth + 1, Bounds.Y + 5, 1, 20), Color.Black);
-            }
+            Graphics.DrawRectangleRec(new Rectangle(Bounds.X + _textOffsetV.X + _editWidth + 2, Bounds.Y + MathF.Max(4, (Height - fontSize) / 2f), 1.5f, fontSize), Color.Black);
         }
 
         base.Draw(pulse);

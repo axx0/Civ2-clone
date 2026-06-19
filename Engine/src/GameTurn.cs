@@ -125,6 +125,11 @@ namespace Civ2engine
                     if (city.ItemInProduction.CompleteProduction(city, rules))
                     {
                         city.ShieldsProgress = 0;
+
+                        var government = rules.Governments[city.Owner.Government];
+                        city.SetUnitSupport(government);
+                        city.CalculateOutput(city.Owner.Government, game);
+
                         player.CityProductionComplete(city);
                     }
                 }

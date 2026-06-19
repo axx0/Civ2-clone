@@ -1,0 +1,315 @@
+--- a/RaylibUI/BasicTypes/BaseLayoutController.cs
++++ b/RaylibUI/BasicTypes/BaseLayoutController.cs
+@@ -89,20 +89,31 @@
+ 
+     protected static IControl? FindControl(IEnumerable<IControl> controls, Func<IControl, bool> matching)
+     {
+-        IControl? selected = null;
+-        var elements = controls;
+-        while (elements != null)
++        // Controls are drawn in list order, so the last matching sibling is visually on top.
++        // Walk backwards and keep searching through event-transparent containers so a fitted
++        // image or decorative panel cannot steal mouse focus from a button drawn above it.
++        foreach (var control in controls.Reverse())
+         {
+-            var candidate = elements.FirstOrDefault(matching);
++            if (!matching(control))
++            {
++                continue;
++            }
++
++            if (control.Controls is { Count: > 0 })
++            {
++                var child = FindControl(control.Controls, matching);
++                if (child != null)
++                {
++                    return child;
++                }
++            }
+ 
+-            elements = candidate?.Controls;
+-            
+-            if (candidate is { EventTransparent: false })
++            if (!control.EventTransparent)
+             {
+-                selected = candidate;
++                return control;
+             }
+         }
+ 
+-        return selected;
++        return null;
+     }
+ }
+\ No newline at end of file
+--- a/RaylibUI/BasicTypes/Controls/ImageBox.cs
++++ b/RaylibUI/BasicTypes/Controls/ImageBox.cs
+@@ -1,5 +1,6 @@
+ using Raylib_CSharp.Colors;
+ using Raylib_CSharp.Rendering;
++using Raylib_CSharp.Transformations;
+ using Model.Images;
+ using RaylibUtils;
+ using Model.Controls;
+@@ -182,10 +183,7 @@
+                     continue;
+                 }
+ 
+-                Graphics.DrawTextureEx(TextureCache.GetImage(image),
+-                    //new System.Numerics.Vector2((int)Bounds.X + Coords[i, 0] * Scale, (int)Bounds.Y + Coords[i, 1] * Scale),
+-                    new System.Numerics.Vector2((int)Bounds.X + Coords[i, 0], (int)Bounds.Y + Coords[i, 1]),
+-                    0f, _scale, Color.White);
++                DrawImageInsideBounds(image, i);
+             }
+         }
+ 
+@@ -194,4 +192,38 @@
+ 
+         base.Draw(pulse);
+     }
++
++    private void DrawImageInsideBounds(IImageSource image, int index)
++    {
++        var texture = TextureCache.GetImage(image);
++        if (texture.Width <= 0 || texture.Height <= 0)
++        {
++            return;
++        }
++
++        var coordX = index < Coords.GetLength(0) ? Coords[index, 0] : 0;
++        var coordY = index < Coords.GetLength(0) ? Coords[index, 1] : 0;
++        var boxWidth = Math.Max(1, Width);
++        var boxHeight = Math.Max(1, Height);
++        var drawScale = Math.Max(0.01f, _scale);
++        var drawWidth = texture.Width * drawScale;
++        var drawHeight = texture.Height * drawScale;
++
++        // A lot of older UI code constrains ImageBox.Width/Height after construction.
++        // Keep that contract: once a box has a smaller slot, never let high-resolution
++        // FOSS art spill outside it and cover neighboring buttons or panels.
++        if (drawWidth > boxWidth || drawHeight > boxHeight)
++        {
++            drawScale = Math.Max(0.01f, Math.Min(boxWidth / (float)texture.Width, boxHeight / (float)texture.Height));
++            drawWidth = texture.Width * drawScale;
++            drawHeight = texture.Height * drawScale;
++            coordX = Math.Max(0, (int)Math.Round((boxWidth - drawWidth) / 2f));
++            coordY = Math.Max(0, (int)Math.Round((boxHeight - drawHeight) / 2f));
++        }
++
++        Graphics.DrawTexturePro(texture,
++            new Rectangle(0, 0, texture.Width, texture.Height),
++            new Rectangle(Bounds.X + coordX, Bounds.Y + coordY, drawWidth, drawHeight),
++            new System.Numerics.Vector2(0, 0), 0f, Color.White);
++    }
+ }
+--- a/RaylibUI/Bitmaps/ImageUtils.cs
++++ b/RaylibUI/Bitmaps/ImageUtils.cs
+@@ -320,6 +320,10 @@
+         var unitTexture = TextureCache.GetImage(unitImage.Image);
+         var shieldTexture = TextureCache.GetImage(active.UnitImages.Shields, active, unit.Owner.Id);
+ 
++        var logicalSize = GetLogicalUnitSize(active, unitImage, unitTexture);
++        var unitRenderScale = GetUnitRenderScale(unitImage, unitTexture, logicalSize);
++        var unitDrawOffset = GetUnitDrawOffset(unitImage, unitTexture, logicalSize, unitRenderScale);
++
+         var shield = active.UnitShield((int)unit.Type);
+ 
+         var tile = unit.CurrentLocation;
+@@ -329,7 +333,7 @@
+             // Unit
+             viewElements.Add(new TextureElement(location: loc, texture: unitTexture,
+                 tile: tile, isShaded: unit.Order == (int)OrderType.Sleep,
+-                offset: unitImage.DrawOffset, renderScale: unitImage.DrawScale));
++                offset: unitDrawOffset, renderScale: unitRenderScale));
+         }
+ 
+         // Stacked shield
+@@ -376,7 +380,7 @@
+             // Unit
+             viewElements.Add(new TextureElement(location: loc, texture: unitTexture,
+                 tile: tile, isShaded: unit.Order == (int)OrderType.Sleep,
+-                offset: unitImage.DrawOffset, renderScale: unitImage.DrawScale));
++                offset: unitDrawOffset, renderScale: unitRenderScale));
+         }
+ 
+         if (unit.Order == (int)OrderType.Fortified)
+@@ -384,9 +388,57 @@
+             viewElements.Add(new TextureElement(location: loc, texture: TextureCache.GetImage(active.UnitImages.Fortify), tile: tile));
+         }
+ 
+-        return unitImage.LogicalSize == Vector2.Zero
+-            ? new Vector2(unitTexture.Width * unitImage.DrawScale, unitTexture.Height * unitImage.DrawScale)
+-            : unitImage.LogicalSize;
++        return logicalSize;
++    }
++
++    private static Vector2 GetLogicalUnitSize(IUserInterface active, UnitImage unitImage, Texture2D unitTexture)
++    {
++        if (unitImage.LogicalSize != Vector2.Zero)
++        {
++            return unitImage.LogicalSize;
++        }
++
++        var unitRectangle = active.UnitImages.UnitRectangle;
++        if (unitRectangle.Width > 0 && unitRectangle.Height > 0)
++        {
++            return new Vector2(unitRectangle.Width, unitRectangle.Height);
++        }
++
++        return new Vector2(unitTexture.Width, unitTexture.Height);
++    }
++
++    private static float GetUnitRenderScale(UnitImage unitImage, Texture2D unitTexture, Vector2 logicalSize)
++    {
++        var renderScale = unitImage.DrawScale > 0 ? unitImage.DrawScale : 1f;
++        if (unitTexture.Width <= 0 || unitTexture.Height <= 0 || logicalSize.X <= 0 || logicalSize.Y <= 0)
++        {
++            return renderScale;
++        }
++
++        var drawWidth = unitTexture.Width * renderScale;
++        var drawHeight = unitTexture.Height * renderScale;
++        if (drawWidth <= logicalSize.X && drawHeight <= logicalSize.Y)
++        {
++            return renderScale;
++        }
++
++        // Defensive fallback for any UI path that receives a high-resolution FOSS
++        // texture before UnitLoader has populated DrawScale metadata.
++        return MathF.Max(0.01f, MathF.Min(logicalSize.X / unitTexture.Width, logicalSize.Y / unitTexture.Height));
++    }
++
++    private static Vector2 GetUnitDrawOffset(UnitImage unitImage, Texture2D unitTexture, Vector2 logicalSize, float renderScale)
++    {
++        if (unitImage.DrawOffset != Vector2.Zero)
++        {
++            return unitImage.DrawOffset;
++        }
++
++        var drawWidth = unitTexture.Width * renderScale;
++        var drawHeight = unitTexture.Height * renderScale;
++        return new Vector2(
++            MathF.Max(0, (logicalSize.X - drawWidth) / 2f),
++            MathF.Max(0, logicalSize.Y - drawHeight));
+     }
+ 
+     private static string GetOrderShieldText(IUnit unit, IGame game)
+--- a/RaylibUI/RunGame/GameControls/UnitDisplay.cs
++++ b/RaylibUI/RunGame/GameControls/UnitDisplay.cs
+@@ -3,16 +3,12 @@
+ using Model;
+ using Model.Core;
+ using Model.Core.Units;
+-using Raylib_CSharp.Colors;
+-using Raylib_CSharp.Rendering;
+-using Raylib_CSharp.Transformations;
+ using RaylibUI.RunGame.GameControls.Mapping;
+ 
+ namespace RaylibUI.RunGame.GameControls;
+ 
+ public class UnitDisplay : BaseControl
+ {
+-    private Vector2 _previousLocation;
+     private readonly List<IViewElement> _unitTextures;
+     private float _scale;
+     private Vector2 _size;
+@@ -20,37 +16,31 @@
+     public UnitDisplay(IControlLayout controller, IUnit unit, IGame game, Vector2 location,
+         IUserInterface activeInterface, float scale = 1f, bool eventTransparent = false) : base(controller, eventTransparent)
+     {
+-        _previousLocation = location;
+         _scale = scale;
+         _unitTextures = new List<IViewElement>();
+-        _size = ImageUtils.GetUnitTextures(unit, activeInterface, game, _unitTextures, location, true);
++
++        // Keep child texture elements relative to this control. Passing the final UI
++        // location into ImageUtils made high-resolution unit art much easier to draw
++        // outside its parent when the parent later moved the control during layout.
++        _size = ImageUtils.GetUnitTextures(unit, activeInterface, game, _unitTextures, Vector2.Zero, true);
+         Location = location;
+     }
+ 
+-    public override int GetPreferredWidth() => (int)(_size.X * _scale);
+-    public override int GetPreferredHeight() => (int)(_size.Y * _scale);
++    public override int GetPreferredWidth() => (int)Math.Ceiling(_size.X * _scale);
++    public override int GetPreferredHeight() => (int)Math.Ceiling(_size.Y * _scale);
+     public override int Width => GetPreferredWidth();
+     public override int Height => GetPreferredHeight();
+ 
+     public override void Draw(bool pulse)
+     {
+-        if (_previousLocation != Location)
+-        {
+-            var diff = Location - _previousLocation;
+-            foreach (var element in _unitTextures)
+-            {
+-                element.Location += diff;
+-            }
+-            _previousLocation = Location;
+-        }
++        var origin = new Vector2(Bounds.X, Bounds.Y);
+         foreach (var element in _unitTextures)
+         {
+-            var parentLoc = new Vector2(Parent.Bounds.X, Parent.Bounds.Y);
+-            element.Draw(parentLoc + element.Location, scale: _scale, isShaded: element.IsShaded);
++            element.Draw(origin + element.Location, scale: _scale, isShaded: element.IsShaded);
+         }
+ 
+         //Graphics.DrawRectangleLinesEx(Bounds, 1f, Color.Red);
+ 
+         base.Draw(pulse);
+     }
+-}
+\ No newline at end of file
++}
+--- a/RaylibUI/RunGame/GameControls/CityControls/ResourceProductionBar.cs
++++ b/RaylibUI/RunGame/GameControls/CityControls/ResourceProductionBar.cs
+@@ -143,9 +143,9 @@
+         
+         var fontSize = Math.Max(10, (int)Math.Round(LabelFontSize * Math.Min(1.25f, _cityWindow.Scale * 0.85f)));
+         var textDim = TextManager.MeasureTextEx(Fonts.Arial, _sections[0].Label, fontSize, LabelSpacing);
+-        var labely = Bounds.Y + (_resource.LabelBelow ? Bounds.Height : 1-textDim.Y);
++        var labely = GetLabelY(textDim);
+             
+-        Graphics.DrawTextEx(Fonts.Arial, _sections[0].Label, new Vector2(Bounds.X + 1, labely), fontSize, LabelSpacing, Color.White);
++        DrawResourceLabel(_sections[0].Label, new Vector2(Bounds.X + 1, labely), fontSize);
+         var pos = new Vector2(Bounds.X + 1, Bounds.Y + Math.Max(0, (Bounds.Height - _iconTargetHeight) / 2f));
+         for (int i = 0; i < _sections[0].Value; i++)
+         {
+@@ -170,7 +170,7 @@
+             }
+             var midText = _sections[1].Label;
+             var midSize = TextManager.MeasureTextEx(Fonts.Arial, midText, fontSize, LabelSpacing);
+-            Graphics.DrawTextEx(Fonts.Arial, midText, new Vector2(Bounds.X + Width/2f - midSize.X/2, labely), fontSize, LabelSpacing, Color.White);
++            DrawResourceLabel(midText, new Vector2(Bounds.X + Width / 2f - midSize.X / 2, labely), fontSize);
+ 
+             final = 2;
+         }
+@@ -184,10 +184,26 @@
+ 
+         var finalText = _sections[final].Label;
+         var finalSize = TextManager.MeasureTextEx(Fonts.Arial, finalText, fontSize, LabelSpacing);
+-        Graphics.DrawTextEx(Fonts.Arial, finalText, new Vector2(Bounds.X + Width - finalSize.X -1, labely), fontSize, LabelSpacing, Color.White);
++        DrawResourceLabel(finalText, new Vector2(Bounds.X + Width - finalSize.X - 1, labely), fontSize);
+ 
+     }
+ 
++    private float GetLabelY(Vector2 textDim)
++    {
++        if (_resource.LabelBelow)
++        {
++            return Bounds.Y + Bounds.Height + Math.Max(1, _cityWindow.Scale);
++        }
++
++        return Bounds.Y + 1 - textDim.Y;
++    }
++
++    private static void DrawResourceLabel(string text, Vector2 position, int fontSize)
++    {
++        Graphics.DrawTextEx(Fonts.Arial, text, position + Vector2.One, fontSize, LabelSpacing, Color.Black);
++        Graphics.DrawTextEx(Fonts.Arial, text, position, fontSize, LabelSpacing, Color.White);
++    }
++
+     private void DrawIcon(Texture2D icon, Vector2 slotPosition)
+     {
+         var drawWidth = icon.Width * _iconScale;

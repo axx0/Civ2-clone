@@ -23,7 +23,12 @@ public class DialogImageElements
 
     public DialogImageElements(IUnit unit, IUserInterface active)
     {
-        Image = [active.PicSources["unit"][unit.Type]];
+        var unitImage = unit.Type >= 0 && active.UnitImages.Units.Length > unit.Type &&
+                        active.UnitImages.Units[unit.Type].Image is { } highResolutionImage
+            ? highResolutionImage
+            : active.PicSources["unit"][unit.Type];
+
+        Image = [unitImage];
         Coords = new int[,] { { 0, 0 } };
     }
 }

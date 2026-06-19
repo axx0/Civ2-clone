@@ -1,0 +1,300 @@
+diff --git a/Model/Controls/Dialog/DialogImageElements.cs b/Model/Controls/Dialog/DialogImageElements.cs
+index 2584d24..abdceeb 100644
+--- a/Model/Controls/Dialog/DialogImageElements.cs
++++ b/Model/Controls/Dialog/DialogImageElements.cs
+@@ -1,4 +1,4 @@
+-﻿using Model.Core.Units;
++using Model.Core.Units;
+ using Model.Images;
+ 
+ namespace Model.Controls;
+@@ -23,12 +23,28 @@ public class DialogImageElements
+ 
+     public DialogImageElements(IUnit unit, IUserInterface active)
+     {
+-        var unitImage = unit.Type >= 0 && active.UnitImages.Units.Length > unit.Type &&
+-                        active.UnitImages.Units[unit.Type].Image is { } highResolutionImage
+-            ? highResolutionImage
+-            : active.PicSources["unit"][unit.Type];
++        if (unit.Type >= 0 && active.UnitImages.Units.Length > unit.Type &&
++            active.UnitImages.Units[unit.Type] is { } unitImage &&
++            unitImage.Image is { } highResolutionImage)
++        {
++            Image = [highResolutionImage];
++            Scale = GetSafeUnitScale(unitImage.DrawScale);
++            Coords = new[,]
++            {
++                {
++                    (int)MathF.Round(unitImage.DrawOffset.X),
++                    (int)MathF.Round(unitImage.DrawOffset.Y)
++                }
++            };
++            return;
++        }
+ 
+-        Image = [unitImage];
++        Image = [active.PicSources["unit"][unit.Type]];
+         Coords = new int[,] { { 0, 0 } };
+     }
++
++    private static float GetSafeUnitScale(float drawScale)
++    {
++        return drawScale > 0 ? drawScale : 1f;
++    }
+ }
+diff --git a/RaylibUI/RunGame/GameControls/UnitDisplay.cs b/RaylibUI/RunGame/GameControls/UnitDisplay.cs
+index 55b5bf8..7d9cc00 100644
+--- a/RaylibUI/RunGame/GameControls/UnitDisplay.cs
++++ b/RaylibUI/RunGame/GameControls/UnitDisplay.cs
+@@ -4,20 +4,21 @@ using Model;
+ using Model.Core;
+ using Model.Core.Units;
+ using RaylibUI.RunGame.GameControls.Mapping;
++using RaylibUI.RunGame.GameControls.Mapping.Views.ViewElements;
+ 
+ namespace RaylibUI.RunGame.GameControls;
+ 
+ public class UnitDisplay : BaseControl
+ {
+     private readonly List<IViewElement> _unitTextures;
+-    private float _scale;
+-    private Vector2 _size;
++    private readonly float _scale;
++    private readonly Vector2 _size;
+ 
+     public UnitDisplay(IControlLayout controller, IUnit unit, IGame game, Vector2 location,
+         IUserInterface activeInterface, float scale = 1f, bool eventTransparent = false) : base(controller, eventTransparent)
+     {
+         _scale = scale;
+-        _unitTextures = new List<IViewElement>();
++        _unitTextures = [];
+ 
+         // Keep child texture elements relative to this control. Passing the final UI
+         // location into ImageUtils made high-resolution unit art much easier to draw
+@@ -36,11 +37,31 @@ public class UnitDisplay : BaseControl
+         var origin = new Vector2(Bounds.X, Bounds.Y);
+         foreach (var element in _unitTextures)
+         {
+-            element.Draw(origin + element.Location, scale: _scale, isShaded: element.IsShaded);
++            element.Draw(origin + element.Location, scale: GetSafeDrawScale(element), isShaded: element.IsShaded);
+         }
+ 
+-        //Graphics.DrawRectangleLinesEx(Bounds, 1f, Color.Red);
+-
+         base.Draw(pulse);
+     }
++
++    private float GetSafeDrawScale(IViewElement element)
++    {
++        if (element is not TextureElement texture || _size.X <= 0 || _size.Y <= 0)
++        {
++            return _scale;
++        }
++
++        var renderScale = Math.Max(0.0001f, texture.RenderScale);
++        var drawWidth = texture.Texture.Width * renderScale * _scale;
++        var drawHeight = texture.Texture.Height * renderScale * _scale;
++        var maxWidth = Math.Max(1f, _size.X * _scale);
++        var maxHeight = Math.Max(1f, _size.Y * _scale);
++
++        if (drawWidth <= maxWidth && drawHeight <= maxHeight)
++        {
++            return _scale;
++        }
++
++        var fitScale = Math.Min(maxWidth / Math.Max(1f, drawWidth), maxHeight / Math.Max(1f, drawHeight));
++        return _scale * Math.Max(0.01f, fitScale);
++    }
+ }
+diff --git a/RaylibUI/RunGame/GameControls/CityControls/ProductionBox.cs b/RaylibUI/RunGame/GameControls/CityControls/ProductionBox.cs
+index ddb6866..cc26cb7 100644
+--- a/RaylibUI/RunGame/GameControls/CityControls/ProductionBox.cs
++++ b/RaylibUI/RunGame/GameControls/CityControls/ProductionBox.cs
+@@ -30,9 +30,10 @@ public class ProductionBox : BaseControl
+     private readonly City _city;
+     private readonly IList<IProductionOrder> _canProduce;
+     private readonly ImageBox _icon;
+-    private const float TopAreaHeight = 76f;
+-    private const float ButtonAreaHeight = 24f;
+-    private const float Padding = 6f;
++    private const float ShieldBoxTop = 42f;
++    private const float ProductionIconSlotWidth = 42f;
++    private const float ProductionIconSlotHeight = 36f;
++    private const float Padding = 5f;
+ 
+     public ProductionBox(CityWindow cityWindow) : base(cityWindow, eventTransparent: false)
+     {
+@@ -109,74 +110,48 @@ public class ProductionBox : BaseControl
+     private void LayoutProductionHeader(IProductionOrder activeOrder)
+     {
+         var scale = _cityWindow.Scale;
+-        var padding = Padding * scale;
+-        _label.FontSize = Math.Max(12, (int)Math.Round(_active.Look.CityWindowFontSize * scale * 0.82f));
+-        _label.Location = new(padding, 3 * scale);
+-        _label.Width = Width - (int)(2 * padding);
+-        _label.Height = Math.Max(_label.FontSize + 4, (int)(18 * scale));
+-
+-        var iconTop = _label.Location.Y + _label.Height + 5 * scale;
+-        var iconSlotHeight = Math.Max(30 * scale, TopAreaHeight * scale - iconTop - 5 * scale);
+-        var iconSlotWidth = Math.Min(54 * scale, Width * 0.34f);
+-        FitIconInSlot(activeOrder.GetIcon(_active), iconSlotWidth, iconSlotHeight);
+-        _icon.Location = new(padding, iconTop);
+-    }
+ 
+-    private void FitIconInSlot(IImageSource? source, float slotWidth, float slotHeight)
+-    {
+-        _icon.Image = [source];
+-        _icon.Width = Math.Max(1, (int)slotWidth);
+-        _icon.Height = Math.Max(1, (int)slotHeight);
+-        if (source == null)
++        // Match the original Civ2 production header: unit builds show only the
++        // small unit icon between Buy and Change; buildings/wonders can still
++        // show their title in the small top label area.
++        _label.Visible = activeOrder.Type != ItemType.Unit;
++        if (_label.Visible)
+         {
+-            _icon.Scale = 1f;
+-            _icon.Coords = new int[,] { { 0, 0 } };
+-            return;
++            _label.Text = activeOrder.Title;
++            _label.OnResize();
+         }
+ 
+-        var sourceWidth = Images.GetImageWidth(source, _active);
+-        var sourceHeight = Images.GetImageHeight(source, _active);
+-        if (sourceWidth <= 0 || sourceHeight <= 0)
+-        {
+-            _icon.Scale = 1f;
+-            _icon.Coords = new int[,] { { 0, 0 } };
+-            return;
+-        }
++        var slotWidth = Math.Max(1, (int)Math.Round(ProductionIconSlotWidth * scale));
++        var slotHeight = Math.Max(1, (int)Math.Round(ProductionIconSlotHeight * scale));
++        FitIconInSlot(activeOrder.GetIcon(_active), slotWidth, slotHeight);
+ 
+-        var maxWidth = Math.Max(1, slotWidth - 2);
+-        var maxHeight = Math.Max(1, slotHeight - 2);
+-        _icon.Scale = Math.Min(maxWidth / sourceWidth, maxHeight / sourceHeight);
+-        _icon.Width = (int)slotWidth;
+-        _icon.Height = (int)slotHeight;
+-
+-        var imageWidth = Images.GetImageWidth(source, _active, _icon.Scale);
+-        var imageHeight = Images.GetImageHeight(source, _active, _icon.Scale);
+-        var coordX = Math.Max(0, _icon.Width / 2 - imageWidth / 2);
+-        var coordY = Math.Max(0, _icon.Height / 2 - imageHeight / 2);
+-        _icon.Coords = new int[,] { { coordX, coordY } };
++        _icon.Location = new(
++            _properties.IconLocation.X * scale - _icon.Width / 2f,
++            Math.Max(0, _properties.IconLocation.Y * scale - _icon.Height / 2f));
++    }
++
++    private void FitIconInSlot(IImageSource? source, int slotWidth, int slotHeight)
++    {
++        _icon.Image = [source];
++        _icon.FitIntoSlot(slotWidth, slotHeight, padding: Math.Max(1, (int)Math.Round(_cityWindow.Scale)), maxScale: Math.Min(_cityWindow.Scale, 1.25f));
+     }
+ 
+     private void LayoutActionButtons()
+     {
+         var scale = _cityWindow.Scale;
+-        var padding = Padding * scale;
+-        var gap = 6 * scale;
+-        var buttonHeight = Math.Max(24, (int)(ButtonAreaHeight * scale));
+-        var iconRight = _icon.Location.X + _icon.Width;
+-        var buttonX = iconRight + gap;
+-        var availableWidth = Math.Max(1, Width - buttonX - padding);
+-        var buttonWidth = Math.Max(58, (int)((availableWidth - gap) / 2f));
+-        var buttonY = _icon.Location.Y + Math.Max(0, (_icon.Height - buttonHeight) / 2f);
+-
+-        _buyButton.Location = new(buttonX, buttonY);
+-        _buyButton.Width = buttonWidth;
+-        _buyButton.Height = buttonHeight;
+-        _buyButton.FontSize = Math.Max(11, (int)Math.Round(_active.Look.CityWindowFontSize * scale * 0.78f));
+-
+-        _changeButton.Location = new(buttonX + buttonWidth + gap, buttonY);
+-        _changeButton.Width = buttonWidth;
+-        _changeButton.Height = buttonHeight;
+-        _changeButton.FontSize = _buyButton.FontSize;
++        LayoutButton(_buyButton, _cityWindow.CityWindowProps.Buttons["Buy"], scale);
++        LayoutButton(_changeButton, _cityWindow.CityWindowProps.Buttons["Change"], scale);
++
++        var fontSize = Math.Max(10, (int)Math.Round(_active.Look.CityWindowFontSize * scale * 0.78f));
++        _buyButton.FontSize = fontSize;
++        _changeButton.FontSize = fontSize;
++    }
++
++    private static void LayoutButton(CityButton button, CityButtonProperties properties, float scale)
++    {
++        button.Location = new(properties.Box.X * scale, properties.Box.Y * scale);
++        button.Width = Math.Max(1, (int)Math.Round(properties.Box.Width * scale));
++        button.Height = Math.Max(1, (int)Math.Round(properties.Box.Height * scale));
+     }
+ 
+     private IProductionOrder GetDisplayedOrder()
+@@ -236,7 +211,7 @@ public class ProductionBox : BaseControl
+     private void DrawShieldProgress(IProductionOrder activeOrder, int progressShields)
+     {
+         var scale = _cityWindow.Scale;
+-        var shieldTop = TopAreaHeight * scale;
++        var shieldTop = ShieldBoxTop * scale;
+         var shieldBottom = Height - Padding * scale;
+         var lines = (int)((shieldBottom - shieldTop) / _shieldHeight);
+         var requiredLines = activeOrder.Cost;
+diff --git a/RaylibUI/RunGame/GameControls/CityControls/ResourceProductionBar.cs b/RaylibUI/RunGame/GameControls/CityControls/ResourceProductionBar.cs
+index 9dc468a..7759fa8 100644
+--- a/RaylibUI/RunGame/GameControls/CityControls/ResourceProductionBar.cs
++++ b/RaylibUI/RunGame/GameControls/CityControls/ResourceProductionBar.cs
+@@ -14,6 +14,7 @@ public class ResourceProductionBar : BaseControl
+ {
+     private const int LabelFontSize = 11;
+     private const int LabelSpacing = 0;
++    private const int LabelInset = 3;
+     private readonly CityWindow _cityWindow;
+     private readonly ResourceArea _resource;
+     private int _spacing;
+@@ -145,7 +146,7 @@ public class ResourceProductionBar : BaseControl
+         var textDim = TextManager.MeasureTextEx(Fonts.Arial, _sections[0].Label, fontSize, LabelSpacing);
+         var labely = GetLabelY(textDim);
+             
+-        DrawResourceLabel(_sections[0].Label, new Vector2(Bounds.X + 1, labely), fontSize);
++        DrawResourceLabel(_sections[0].Label, Bounds.X + LabelInset, labely, fontSize);
+         var pos = new Vector2(Bounds.X + 1, Bounds.Y + Math.Max(0, (Bounds.Height - _iconTargetHeight) / 2f));
+         for (int i = 0; i < _sections[0].Value; i++)
+         {
+@@ -170,7 +171,7 @@ public class ResourceProductionBar : BaseControl
+             }
+             var midText = _sections[1].Label;
+             var midSize = TextManager.MeasureTextEx(Fonts.Arial, midText, fontSize, LabelSpacing);
+-            DrawResourceLabel(midText, new Vector2(Bounds.X + Width / 2f - midSize.X / 2, labely), fontSize);
++            DrawResourceLabel(midText, Bounds.X + Width / 2f - midSize.X / 2, labely, fontSize);
+ 
+             final = 2;
+         }
+@@ -184,7 +185,7 @@ public class ResourceProductionBar : BaseControl
+ 
+         var finalText = _sections[final].Label;
+         var finalSize = TextManager.MeasureTextEx(Fonts.Arial, finalText, fontSize, LabelSpacing);
+-        DrawResourceLabel(finalText, new Vector2(Bounds.X + Width - finalSize.X - 1, labely), fontSize);
++        DrawResourceLabel(finalText, Bounds.X + Width - finalSize.X - LabelInset, labely, fontSize);
+ 
+     }
+ 
+@@ -198,10 +199,15 @@ public class ResourceProductionBar : BaseControl
+         return Bounds.Y + 1 - textDim.Y;
+     }
+ 
+-    private static void DrawResourceLabel(string text, Vector2 position, int fontSize)
++    private void DrawResourceLabel(string text, float x, float y, int fontSize)
+     {
+-        Graphics.DrawTextEx(Fonts.Arial, text, position + Vector2.One, fontSize, LabelSpacing, Color.Black);
+-        Graphics.DrawTextEx(Fonts.Arial, text, position, fontSize, LabelSpacing, Color.White);
++        var textSize = TextManager.MeasureTextEx(Fonts.Arial, text, fontSize, LabelSpacing);
++        var minX = Bounds.X + LabelInset;
++        var maxX = Bounds.X + Width - textSize.X - LabelInset;
++        var drawX = Math.Clamp(x, minX, Math.Max(minX, maxX));
++
++        Graphics.DrawTextEx(Fonts.Arial, text, new Vector2(drawX + 1, y + 1), fontSize, LabelSpacing, Color.Black);
++        Graphics.DrawTextEx(Fonts.Arial, text, new Vector2(drawX, y), fontSize, LabelSpacing, Color.White);
+     }
+ 
+     private void DrawIcon(Texture2D icon, Vector2 slotPosition)

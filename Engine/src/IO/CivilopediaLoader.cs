@@ -126,7 +126,15 @@ public class CivilopediaLoader
                 }
                 else
                 {
-                    text += line;
+                    var trimmed = line.Trim();
+                    if (trimmed.Length == 0)
+                    {
+                        text += " ";
+                    }
+                    else
+                    {
+                        text = text.Length == 0 ? trimmed : text + " " + trimmed;
+                    }
                 }
             }
 

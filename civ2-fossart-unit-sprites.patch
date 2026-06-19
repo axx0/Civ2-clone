@@ -1,0 +1,319 @@
+diff --git a/Civ2/Civ2Interface.cs b/Civ2/Civ2Interface.cs
+index 20e4420..b7db82c 100644
+--- a/Civ2/Civ2Interface.cs
++++ b/Civ2/Civ2Interface.cs
+@@ -575,6 +575,102 @@ public abstract class Civ2Interface(IMain main) : IUserInterface
+         return new BitmapStorage("icons", x, y, 36, 20);
+     }
+ 
++    public IImageSource? GetFossArtUnitImage(int unitType)
++    {
++        foreach (var candidateName in GetFossArtUnitNames(unitType))
++        {
++            var image = GetFossArtImage("Units", candidateName);
++            if (image != null)
++            {
++                return image;
++            }
++        }
++
++        return null;
++    }
++
++    private static IEnumerable<string> GetFossArtUnitNames(int unitType)
++    {
++        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
++
++        if (Enum.IsDefined(typeof(UnitType), unitType))
++        {
++            var civ2UnitType = (UnitType)unitType;
++
++            if (FossArtUnitAliases.TryGetValue(civ2UnitType, out var aliases))
++            {
++                foreach (var alias in aliases)
++                {
++                    if (seen.Add(NormalizeFossArtName(alias)))
++                    {
++                        yield return alias;
++                    }
++                }
++            }
++
++            var enumName = civ2UnitType.ToString();
++            if (seen.Add(NormalizeFossArtName(enumName)))
++            {
++                yield return enumName;
++            }
++        }
++    }
++
++    private static readonly Dictionary<UnitType, string[]> FossArtUnitAliases = new()
++    {
++        [UnitType.Settlers] = ["settlers"],
++        [UnitType.Engineers] = ["engineers"],
++        [UnitType.Warriors] = ["warriors"],
++        [UnitType.Phalanx] = ["phalanx"],
++        [UnitType.Archers] = ["archers", "archer"],
++        [UnitType.Legions] = ["legions", "legion"],
++        [UnitType.Pikemen] = ["pikemen"],
++        [UnitType.Musketeers] = ["musketeers"],
++        [UnitType.Fanatics] = ["fanatics"],
++        [UnitType.Partisans] = ["partisans"],
++        [UnitType.AlpineTroops] = ["alpinetroops", "alpine troops"],
++        [UnitType.Riflemen] = ["riflemen"],
++        [UnitType.Marines] = ["marines"],
++        [UnitType.Paratroopers] = ["paratroopers"],
++        [UnitType.MechInf] = ["mechinfantry", "mechanized infantry", "mech inf"],
++        [UnitType.Horsemen] = ["horsemen"],
++        [UnitType.Chariot] = ["chariot"],
++        [UnitType.Elephant] = ["elephant"],
++        [UnitType.Crusaders] = ["crusader", "crusaders"],
++        [UnitType.Knights] = ["knight", "knights"],
++        [UnitType.Dragoons] = ["dragoons"],
++        [UnitType.Cavalry] = ["cavalry"],
++        [UnitType.Armor] = ["armor", "armour"],
++        [UnitType.Catapult] = ["catapult"],
++        [UnitType.Cannon] = ["cannon"],
++        [UnitType.Artillery] = ["artillery"],
++        [UnitType.Howitzer] = ["howitzer"],
++        [UnitType.Fighter] = ["fighters", "fighter"],
++        [UnitType.Bomber] = ["bombers", "bomber"],
++        [UnitType.Helicopter] = ["helicopter"],
++        [UnitType.StlthFtr] = ["stealthfighter", "stealth fighter"],
++        [UnitType.StlthBmbr] = ["stealthbomber", "stealth bomber"],
++        [UnitType.Trireme] = ["trireme"],
++        [UnitType.Caravel] = ["caravel"],
++        [UnitType.Galleon] = ["galleon"],
++        [UnitType.Frigate] = ["frigate"],
++        [UnitType.Ironclad] = ["ironclad"],
++        [UnitType.Destroyer] = ["destroyer"],
++        [UnitType.Cruiser] = ["cruiser"],
++        [UnitType.AegisCruiser] = ["aegiscruiser", "aegis cruiser", "cruiser"],
++        [UnitType.Battleship] = ["battleship"],
++        [UnitType.Submarine] = ["submarine"],
++        [UnitType.Carrier] = ["carrier"],
++        [UnitType.Transport] = ["transport"],
++        [UnitType.CruiseMsl] = ["cruisemissile", "cruise missile"],
++        [UnitType.NuclearMsl] = ["nuclearmissile", "nuclear missile"],
++        [UnitType.Diplomat] = ["diplomat"],
++        [UnitType.Spy] = ["spy"],
++        [UnitType.Caravan] = ["caravan"],
++        [UnitType.Freight] = ["freight"],
++        [UnitType.Explorer] = ["explorer"],
++    };
++
+     private static IImageSource? GetFossArtImage(string category, string title)
+     {
+         var directName = NormalizeFossArtName(title);
+@@ -610,7 +706,9 @@ public abstract class Civ2Interface(IMain main) : IUserInterface
+                      {
+                          Path.Combine(rootPath, category),
+                          Path.Combine(rootPath, "FOSSart", category),
+-                         Path.Combine(rootPath, "RaylibUI", "FOSSart", category)
++                         Path.Combine(rootPath, "FOSS art", category),
++                         Path.Combine(rootPath, "RaylibUI", "FOSSart", category),
++                         Path.Combine(rootPath, "RaylibUI", "FOSS art", category)
+                      })
+             {
+                 if (Directory.Exists(candidate))
+diff --git a/Civ2/ImageLoader/UnitLoader.cs b/Civ2/ImageLoader/UnitLoader.cs
+index 091554b..bb44cc4 100644
+--- a/Civ2/ImageLoader/UnitLoader.cs
++++ b/Civ2/ImageLoader/UnitLoader.cs
+@@ -12,26 +12,55 @@ namespace Civ2.ImageLoader
+ {
+     public static class UnitLoader
+     {
++        private const int UnitColumns = 9;
++        private const int OriginalUnitWidth = 64;
++        private const int ShieldWidth = 12;
++
+         public static void LoadUnits(Ruleset ruleset, Civ2Interface active)
+         {
++            var logicalSize = new Vector2(OriginalUnitWidth, active.UnitsPxHeight);
++
+             // Initialize objects
+-            var units = new UnitImage[9 * active.UnitsRows];
++            var units = new UnitImage[UnitColumns * active.UnitsRows];
+ 
+-            for (int i = 0; i < units.Length; i++)
++            for (var i = 0; i < units.Length; i++)
+             {
+-                var props = Images.ExtractBitmapData(active.PicSources["unit"][i], active); // put into cache
++                var originalSource = active.PicSources["unit"][i];
++                var unitSource = active.GetFossArtUnitImage(i) ?? originalSource;
++                var props = Images.ExtractBitmapData(unitSource, active); // put into cache
++
++                var drawScale = GetDrawScale(props.Image.Width, props.Image.Height, logicalSize);
++                var drawSize = new Vector2(props.Image.Width * drawScale, props.Image.Height * drawScale);
++                var drawOffset = new Vector2(
++                    MathF.Max(0, (logicalSize.X - drawSize.X) / 2f),
++                    MathF.Max(0, logicalSize.Y - drawSize.Y));
+ 
+                 units[i] = new UnitImage
+                 {
+-                    Image = active.PicSources["unit"][i],
+-                    FlagLoc = props.Flag1,
++                    Image = unitSource,
++                    FlagLoc = ReferenceEquals(unitSource, originalSource)
++                        ? props.Flag1
++                        : new Vector2(MathF.Max(0, logicalSize.X - ShieldWidth), 0),
++                    LogicalSize = logicalSize,
++                    DrawOffset = drawOffset,
++                    DrawScale = drawScale,
+                 };
+             }
+ 
+-            active.UnitImages.UnitRectangle = new Rectangle(0, 0, 64, active.UnitsPxHeight);
++            active.UnitImages.UnitRectangle = new Rectangle(0, 0, logicalSize.X, logicalSize.Y);
+             active.UnitImages.Units = units;
+ 
+             active.GetShieldImages();
+         }
++
++        private static float GetDrawScale(int sourceWidth, int sourceHeight, Vector2 logicalSize)
++        {
++            if (sourceWidth <= 0 || sourceHeight <= 0)
++            {
++                return 1f;
++            }
++
++            return MathF.Min(logicalSize.X / sourceWidth, logicalSize.Y / sourceHeight);
++        }
+     }
+-}
+\ No newline at end of file
++}
+diff --git a/Model/ImageSets/UnitImage.cs b/Model/ImageSets/UnitImage.cs
+index 6c40045..582c6a7 100644
+--- a/Model/ImageSets/UnitImage.cs
++++ b/Model/ImageSets/UnitImage.cs
+@@ -7,4 +7,26 @@ public class UnitImage
+ {
+     public IImageSource Image { get; set; } = null!;
+     public Vector2 FlagLoc { get; set; }
++
++    /// <summary>
++    /// Size the unit occupies in Civ2's logical map coordinates.
++    /// High-resolution unit textures are drawn into this box instead of at
++    /// their full source pixel size, so they stay the same size at normal zoom
++    /// but keep their detail when the map is zoomed in.
++    /// </summary>
++    public Vector2 LogicalSize { get; set; }
++
++    /// <summary>
++    /// Offset, in logical unit pixels, used to align a source texture inside
++    /// <see cref="LogicalSize"/>. This lets square FOSS unit art sit inside the
++    /// original 64x48/64x64 unit footprint without changing map layout.
++    /// </summary>
++    public Vector2 DrawOffset { get; set; }
++
++    /// <summary>
++    /// Scale applied to the source texture before the current map/UI zoom scale.
++    /// Original Civ2 sprites use 1; 1024px FOSS art uses a small value that fits
++    /// the art into <see cref="LogicalSize"/>.
++    /// </summary>
++    public float DrawScale { get; set; } = 1f;
+ }
+diff --git a/RaylibUI/Bitmaps/ImageUtils.cs b/RaylibUI/Bitmaps/ImageUtils.cs
+index eedb4ae..422b152 100644
+--- a/RaylibUI/Bitmaps/ImageUtils.cs
++++ b/RaylibUI/Bitmaps/ImageUtils.cs
+@@ -316,7 +316,8 @@ public static class ImageUtils
+     public static Vector2 GetUnitTextures(IUnit unit, IUserInterface active, IGame game,
+         List<IViewElement> viewElements, Vector2 loc, bool noStacking = false)
+     {
+-        var unitTexture = TextureCache.GetImage(active.UnitImages.Units[(int)unit.Type].Image);
++        var unitImage = active.UnitImages.Units[(int)unit.Type];
++        var unitTexture = TextureCache.GetImage(unitImage.Image);
+         var shieldTexture = TextureCache.GetImage(active.UnitImages.Shields, active, unit.Owner.Id);
+ 
+         var shield = active.UnitShield((int)unit.Type);
+@@ -327,7 +328,8 @@ public static class ImageUtils
+         {
+             // Unit
+             viewElements.Add(new TextureElement(location: loc, texture: unitTexture,
+-                tile: tile, isShaded: unit.Order == (int)OrderType.Sleep));
++                tile: tile, isShaded: unit.Order == (int)OrderType.Sleep,
++                offset: unitImage.DrawOffset, renderScale: unitImage.DrawScale));
+         }
+ 
+         // Stacked shield
+@@ -373,7 +375,8 @@ public static class ImageUtils
+         {
+             // Unit
+             viewElements.Add(new TextureElement(location: loc, texture: unitTexture,
+-                tile: tile, isShaded: unit.Order == (int)OrderType.Sleep));
++                tile: tile, isShaded: unit.Order == (int)OrderType.Sleep,
++                offset: unitImage.DrawOffset, renderScale: unitImage.DrawScale));
+         }
+ 
+         if (unit.Order == (int)OrderType.Fortified)
+@@ -381,7 +384,9 @@ public static class ImageUtils
+             viewElements.Add(new TextureElement(location: loc, texture: TextureCache.GetImage(active.UnitImages.Fortify), tile: tile));
+         }
+ 
+-        return new Vector2(unitTexture.Width, unitTexture.Height);
++        return unitImage.LogicalSize == Vector2.Zero
++            ? new Vector2(unitTexture.Width * unitImage.DrawScale, unitTexture.Height * unitImage.DrawScale)
++            : unitImage.LogicalSize;
+     }
+ 
+     private static string GetOrderShieldText(IUnit unit, IGame game)
+diff --git a/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/TextureElement.cs b/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/TextureElement.cs
+index 3270a0e..bb27492 100644
+--- a/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/TextureElement.cs
++++ b/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/TextureElement.cs
+@@ -9,7 +9,8 @@ namespace RaylibUI.RunGame.GameControls.Mapping.Views.ViewElements;
+ 
+ public class TextureElement : IViewElement
+ {
+-    public TextureElement(Texture2D texture, Vector2 location, Tile tile, bool isTerrain = false, bool isShaded = false, Vector2? offset = null)
++    public TextureElement(Texture2D texture, Vector2 location, Tile tile, bool isTerrain = false, bool isShaded = false,
++        Vector2? offset = null, float renderScale = 1f)
+     {
+         Texture = texture;
+         Location = location;
+@@ -17,13 +18,22 @@ public class TextureElement : IViewElement
+         IsTerrain = isTerrain;
+         IsShaded = isShaded;
+         Offset = offset ?? Vector2.Zero;
++        RenderScale = renderScale;
+     }
+ 
+     /// <summary>
+-    /// Used for sub elements in a set of elements to scale their locations
++    /// Used for sub elements in a set of elements to scale their locations.
+     /// </summary>
+     public Vector2 Offset { get; set; }
+ 
++    /// <summary>
++    /// Scale applied before the current map/UI zoom scale. Most textures use 1.
++    /// High-resolution unit art uses a smaller value so it keeps Civ2's logical
++    /// unit footprint at normal zoom while still rendering from the high-res
++    /// source texture when zoomed in.
++    /// </summary>
++    public float RenderScale { get; }
++
+     public Texture2D Texture { get; init; }
+     
+     public Vector2 Location { get; set; }
+@@ -42,7 +52,7 @@ public class TextureElement : IViewElement
+         Graphics.DrawTextureEx(Texture,
+             adjustedLocation + Offset * scale,
+             0f,
+-            scale,
++            scale * RenderScale,
+             Color.White);
+ 
+         if (isShaded)
+@@ -53,6 +63,6 @@ public class TextureElement : IViewElement
+ 
+     public IViewElement CloneForLocation(Vector2 newLocation)
+     {
+-        return new TextureElement(Texture, newLocation, Tile, IsTerrain, offset: Offset);
++        return new TextureElement(Texture, newLocation, Tile, IsTerrain, IsShaded, Offset, RenderScale);
+     }
+-}
+\ No newline at end of file
++}

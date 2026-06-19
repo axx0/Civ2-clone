@@ -34,7 +34,7 @@ internal class MoveAnimation : BaseGameView
         if (prevTileUnit != null)
         {
             ImageUtils.GetUnitTextures(prevTileUnit, activeInterface, gameScreen.Game, viewElementsPrevTileUnits,
-                ActivePos with { Y = ActivePos.Y - activeInterface.UnitImages.UnitRectangle.Height.ZoomScale(gameScreen.Zoom) + Dimensions.TileHeight });
+                ActivePos with { Y = ActivePos.Y - activeInterface.UnitImages.UnitRectangle.Height.ZoomScale(gameScreen.Zoom) + Dimensions.TileHeight }, useMapArt: true);
         }
 
         // Get view elements of units on next tile of moving unit
@@ -43,13 +43,13 @@ internal class MoveAnimation : BaseGameView
         if (nextTileUnit != null)
         {
             ImageUtils.GetUnitTextures(nextTileUnit, activeInterface, gameScreen.Game, viewElementsNextTileUnits,
-                new Vector2(unitDrawOffset[0] * (4 * (gameScreen.Zoom + 8)), unitDrawOffset[1] * (2 * (gameScreen.Zoom + 8))) + ActivePos with { Y = ActivePos.Y - activeInterface.UnitImages.UnitRectangle.Height.ZoomScale(gameScreen.Zoom) + Dimensions.TileHeight });
+                new Vector2(unitDrawOffset[0] * (4 * (gameScreen.Zoom + 8)), unitDrawOffset[1] * (2 * (gameScreen.Zoom + 8))) + ActivePos with { Y = ActivePos.Y - activeInterface.UnitImages.UnitRectangle.Height.ZoomScale(gameScreen.Zoom) + Dimensions.TileHeight }, useMapArt: true);
         }
 
         // Moving unit view elements
         var viewElementsActiveUnit = new List<IViewElement>();
         ImageUtils.GetUnitTextures(activeUnit, activeInterface, gameScreen.Game, viewElementsActiveUnit,
-            ActivePos with { Y = ActivePos.Y - activeInterface.UnitImages.UnitRectangle.Height.ZoomScale(gameScreen.Zoom) + Dimensions.TileHeight }, true);
+            ActivePos with { Y = ActivePos.Y - activeInterface.UnitImages.UnitRectangle.Height.ZoomScale(gameScreen.Zoom) + Dimensions.TileHeight }, true, useMapArt: true);
 
         SetAnimation(viewElementsPrevTileUnits.Concat(viewElementsNextTileUnits).Concat(viewElementsActiveUnit).ToList());
 

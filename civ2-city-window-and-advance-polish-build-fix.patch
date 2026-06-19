@@ -1,0 +1,13 @@
+diff --git a/RaylibUI/RunGame/GameControls/Civilopedia/CivilopediaAdvanceInfo.cs b/RaylibUI/RunGame/GameControls/Civilopedia/CivilopediaAdvanceInfo.cs
+--- a/RaylibUI/RunGame/GameControls/Civilopedia/CivilopediaAdvanceInfo.cs
++++ b/RaylibUI/RunGame/GameControls/Civilopedia/CivilopediaAdvanceInfo.cs
+@@ -6,7 +6,9 @@ using Model;
+ using Model.Controls;
+ using Model.Controls.Civilopedia;
+ using Model.Core.Advances;
++using Model.Core.Cities;
+ using Model.Core.GameRules;
++using Model.Core.Mapping;
+ using Model.Core.Units;
+ using Model.Images;
+ using Raylib_CSharp.Colors;

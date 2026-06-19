@@ -575,6 +575,102 @@ public abstract class Civ2Interface(IMain main) : IUserInterface
         return new BitmapStorage("icons", x, y, 36, 20);
     }
 
+    public IImageSource? GetFossArtUnitImage(int unitType)
+    {
+        foreach (var candidateName in GetFossArtUnitNames(unitType))
+        {
+            var image = GetFossArtImage("Units", candidateName);
+            if (image != null)
+            {
+                return image;
+            }
+        }
+
+        return null;
+    }
+
+    private static IEnumerable<string> GetFossArtUnitNames(int unitType)
+    {
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        if (Enum.IsDefined(typeof(UnitType), unitType))
+        {
+            var civ2UnitType = (UnitType)unitType;
+
+            if (FossArtUnitAliases.TryGetValue(civ2UnitType, out var aliases))
+            {
+                foreach (var alias in aliases)
+                {
+                    if (seen.Add(NormalizeFossArtName(alias)))
+                    {
+                        yield return alias;
+                    }
+                }
+            }
+
+            var enumName = civ2UnitType.ToString();
+            if (seen.Add(NormalizeFossArtName(enumName)))
+            {
+                yield return enumName;
+            }
+        }
+    }
+
+    private static readonly Dictionary<UnitType, string[]> FossArtUnitAliases = new()
+    {
+        [UnitType.Settlers] = ["settlers"],
+        [UnitType.Engineers] = ["engineers"],
+        [UnitType.Warriors] = ["warriors"],
+        [UnitType.Phalanx] = ["phalanx"],
+        [UnitType.Archers] = ["archers", "archer"],
+        [UnitType.Legions] = ["legions", "legion"],
+        [UnitType.Pikemen] = ["pikemen"],
+        [UnitType.Musketeers] = ["musketeers"],
+        [UnitType.Fanatics] = ["fanatics"],
+        [UnitType.Partisans] = ["partisans"],
+        [UnitType.AlpineTroops] = ["alpinetroops", "alpine troops"],
+        [UnitType.Riflemen] = ["riflemen"],
+        [UnitType.Marines] = ["marines"],
+        [UnitType.Paratroopers] = ["paratroopers"],
+        [UnitType.MechInf] = ["mechinfantry", "mechanized infantry", "mech inf"],
+        [UnitType.Horsemen] = ["horsemen"],
+        [UnitType.Chariot] = ["chariot"],
+        [UnitType.Elephant] = ["elephant"],
+        [UnitType.Crusaders] = ["crusader", "crusaders"],
+        [UnitType.Knights] = ["knight", "knights"],
+        [UnitType.Dragoons] = ["dragoons"],
+        [UnitType.Cavalry] = ["cavalry"],
+        [UnitType.Armor] = ["armor", "armour"],
+        [UnitType.Catapult] = ["catapult"],
+        [UnitType.Cannon] = ["cannon"],
+        [UnitType.Artillery] = ["artillery"],
+        [UnitType.Howitzer] = ["howitzer"],
+        [UnitType.Fighter] = ["fighters", "fighter"],
+        [UnitType.Bomber] = ["bombers", "bomber"],
+        [UnitType.Helicopter] = ["helicopter"],
+        [UnitType.StlthFtr] = ["stealthfighter", "stealth fighter"],
+        [UnitType.StlthBmbr] = ["stealthbomber", "stealth bomber"],
+        [UnitType.Trireme] = ["trireme"],
+        [UnitType.Caravel] = ["caravel"],
+        [UnitType.Galleon] = ["galleon"],
+        [UnitType.Frigate] = ["frigate"],
+        [UnitType.Ironclad] = ["ironclad"],
+        [UnitType.Destroyer] = ["destroyer"],
+        [UnitType.Cruiser] = ["cruiser"],
+        [UnitType.AegisCruiser] = ["aegiscruiser", "aegis cruiser", "cruiser"],
+        [UnitType.Battleship] = ["battleship"],
+        [UnitType.Submarine] = ["submarine"],
+        [UnitType.Carrier] = ["carrier"],
+        [UnitType.Transport] = ["transport"],
+        [UnitType.CruiseMsl] = ["cruisemissile", "cruise missile"],
+        [UnitType.NuclearMsl] = ["nuclearmissile", "nuclear missile"],
+        [UnitType.Diplomat] = ["diplomat"],
+        [UnitType.Spy] = ["spy"],
+        [UnitType.Caravan] = ["caravan"],
+        [UnitType.Freight] = ["freight"],
+        [UnitType.Explorer] = ["explorer"],
+    };
+
     private static IImageSource? GetFossArtImage(string category, string title)
     {
         var directName = NormalizeFossArtName(title);
@@ -610,7 +706,11 @@ public abstract class Civ2Interface(IMain main) : IUserInterface
                      {
                          Path.Combine(rootPath, category),
                          Path.Combine(rootPath, "FOSSart", category),
-                         Path.Combine(rootPath, "RaylibUI", "FOSSart", category)
+                         Path.Combine(rootPath, "FOSSart", "FOSSart", category),
+                         Path.Combine(rootPath, "FOSS art", category),
+                         Path.Combine(rootPath, "RaylibUI", "FOSSart", category),
+                         Path.Combine(rootPath, "RaylibUI", "FOSSart", "FOSSart", category),
+                         Path.Combine(rootPath, "RaylibUI", "FOSS art", category)
                      })
             {
                 if (Directory.Exists(candidate))
@@ -637,7 +737,7 @@ public abstract class Civ2Interface(IMain main) : IUserInterface
         {
             Listbox = new()
             {
-                Rows = 9,
+                Rows = 14,
                 Columns = 2,
                 RowHeight = 33,
                 VerticalScrollbar = false,
@@ -656,7 +756,7 @@ public abstract class Civ2Interface(IMain main) : IUserInterface
                 var c when c.WindowType == CivilopediaWindowType.Listbox && c.InfoType != CivilopediaInfoType.Advances
                     => ["Info", "Close"],
                 var c when c.WindowType == CivilopediaWindowType.Info && c.InfoType == CivilopediaInfoType.Advances
-                    => ["Go Back", "Tree", "Description", "Close"],
+                    => ["Go Back", "Tree", "Close"],
                 var c when c.WindowType == CivilopediaWindowType.Info && 
                     (c.InfoType == CivilopediaInfoType.Governments || c.InfoType == CivilopediaInfoType.Concepts)
                     => ["Go Back", "Close"],

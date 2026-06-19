@@ -33,13 +33,13 @@ public class TextElement : IViewElement
     public void Draw(Vector2 adjustedLocation, float scale = 1f, bool isShaded = false)
     {
         var loc = adjustedLocation + Offset * scale;
-        var fontSize = _height * scale;
+        var fontSize = Math.Max(1, (int)MathF.Round(_height * scale));
         var size = TextManager.MeasureTextEx(Fonts.Arial, _text, fontSize, 0);
         var textPosition = new Vector2(
             MathF.Round(loc.X - size.X / 2f),
             MathF.Round(loc.Y - size.Y / 2f));
 
-        Graphics.DrawTextEx(Fonts.Arial, _text, textPosition, fontSize, 0, Color.Black);
+        global::RaylibUI.TextRendering.Draw(Fonts.Arial, _text, textPosition, fontSize, 0, Color.Black);
     }
 
     public IViewElement CloneForLocation(Vector2 newLocation)

@@ -23,6 +23,11 @@ namespace RaylibUI;
 
 public static class ImageUtils
 {
+    private const int HighResolutionShieldScale = 4;
+    private static readonly Dictionary<string, Texture2D> HighResolutionUnitShields = new();
+    private static bool _shieldTemplateLoaded;
+    private static Image _shieldTemplate;
+
     private static Image _innerWallpaper;
     private static Image _outerWallpaper;
     private static Image _outerTitleTopWallpaper;
@@ -314,10 +319,19 @@ public static class ImageUtils
     }
 
     public static Vector2 GetUnitTextures(IUnit unit, IUserInterface active, IGame game,
-        List<IViewElement> viewElements, Vector2 loc, bool noStacking = false)
+        List<IViewElement> viewElements, Vector2 loc, bool noStacking = false, bool useMapArt = false)
     {
-        var unitTexture = TextureCache.GetImage(active.UnitImages.Units[(int)unit.Type].Image);
-        var shieldTexture = TextureCache.GetImage(active.UnitImages.Shields, active, unit.Owner.Id);
+        var unitImage = active.UnitImages.Units[(int)unit.Type];
+        var sourceImage = GetUnitSourceImage(unit, active, unitImage, useMapArt);
+        var unitTexture = TextureCache.GetImage(sourceImage);
+        var baseShieldTexture = TextureCache.GetImage(active.UnitImages.Shields, active, unit.Owner.Id);
+        var shieldTexture = GetHighResolutionUnitShieldTexture(active, unit.Owner.Id, baseShieldTexture);
+        var shieldRenderScale = GetHighResolutionShieldRenderScale(baseShieldTexture, shieldTexture);
+        var shieldLogicalSize = new Vector2(baseShieldTexture.Width, baseShieldTexture.Height);
+
+        var logicalSize = GetLogicalUnitSize(active, unitImage, unitTexture);
+        var unitRenderScale = GetUnitRenderScale(unitImage, unitTexture, logicalSize);
+        var unitDrawOffset = GetUnitDrawOffset(unitImage, unitTexture, logicalSize, unitRenderScale);
 
         var shield = active.UnitShield((int)unit.Type);
 
@@ -327,7 +341,8 @@ public static class ImageUtils
         {
             // Unit
             viewElements.Add(new TextureElement(location: loc, texture: unitTexture,
-                tile: tile, isShaded: unit.Order == (int)OrderType.Sleep));
+                tile: tile, isShaded: unit.Order == (int)OrderType.Sleep,
+                offset: unitDrawOffset, renderScale: unitRenderScale, maxDrawSize: logicalSize));
         }
 
         // Stacked shield
@@ -355,9 +370,12 @@ public static class ImageUtils
                 tile: tile, offset: shield.Offset + shield.ShadowOffset));
         }
 
-        // Front shield
+        // Front shield. Draw a generated high-resolution shield scaled back to the
+        // original Civ2 logical shield size so maximum zoom does not magnify the
+        // original low-resolution shield pixels.
         viewElements.Add(new TextureElement(location: loc,
-            texture: shieldTexture, tile: tile, offset: shield.Offset));
+            texture: shieldTexture, tile: tile, offset: shield.Offset,
+            renderScale: shieldRenderScale, maxDrawSize: shieldLogicalSize));
 
         // Health bar
         viewElements.Add(new HealthBar(location: loc,
@@ -373,7 +391,8 @@ public static class ImageUtils
         {
             // Unit
             viewElements.Add(new TextureElement(location: loc, texture: unitTexture,
-                tile: tile, isShaded: unit.Order == (int)OrderType.Sleep));
+                tile: tile, isShaded: unit.Order == (int)OrderType.Sleep,
+                offset: unitDrawOffset, renderScale: unitRenderScale, maxDrawSize: logicalSize));
         }
 
         if (unit.Order == (int)OrderType.Fortified)
@@ -381,7 +400,349 @@ public static class ImageUtils
             viewElements.Add(new TextureElement(location: loc, texture: TextureCache.GetImage(active.UnitImages.Fortify), tile: tile));
         }
 
+        return logicalSize;
+    }
+
+    private static Texture2D GetHighResolutionUnitShieldTexture(IUserInterface active, int ownerId, Texture2D sourceShield)
+    {
+        var width = Math.Max(12, sourceShield.Width) * HighResolutionShieldScale;
+        var height = Math.Max(12, sourceShield.Height) * HighResolutionShieldScale;
+        var key = $"FossUnitShield-{ownerId}-{width}x{height}";
+
+        if (HighResolutionUnitShields.TryGetValue(key, out var cached))
+        {
+            return cached;
+        }
+
+        var fill = ownerId >= 0 && ownerId < active.PlayerColours.Length
+            ? active.PlayerColours[ownerId].LightColour
+            : Color.White;
+        var shade = ownerId >= 0 && ownerId < active.PlayerColours.Length
+            ? active.PlayerColours[ownerId].DarkColour
+            : new Color(64, 64, 64, 255);
+
+        var image = Image.GenColor(width, height, new Color(0, 0, 0, 0));
+        PaintHighResolutionShield(ref image, fill, shade);
+
+        var texture = Texture2D.LoadFromImage(image);
+        texture.SetFilter(TextureFilter.Bilinear);
+        HighResolutionUnitShields[key] = texture;
+        return texture;
+    }
+
+    private static bool TryGetHighResolutionShieldTemplate(out Image template)
+    {
+        if (!_shieldTemplateLoaded)
+        {
+            _shieldTemplateLoaded = true;
+            var path = FindHighResolutionShieldTemplatePath();
+            if (!string.IsNullOrWhiteSpace(path) && File.Exists(path))
+            {
+                try
+                {
+                    _shieldTemplate = Images.LoadImageFromFile(path).Image;
+                }
+                catch
+                {
+                    _shieldTemplate = default;
+                }
+            }
+        }
+
+        template = _shieldTemplate;
+        return template.Width > 0 && template.Height > 0;
+    }
+
+    private static string? FindHighResolutionShieldTemplatePath()
+    {
+        var names = new[]
+        {
+            "shield.png",
+            "unitshield.png",
+            "unit-shield.png",
+            "unit_shield.png",
+            "shields.png"
+        };
+
+        foreach (var root in Settings.SearchPaths.Where(Directory.Exists).Concat(CandidateArtRoots()))
+        {
+            foreach (var name in names)
+            {
+                var direct = System.IO.Path.Combine(root, name);
+                if (File.Exists(direct))
+                {
+                    return direct;
+                }
+
+                var foss = System.IO.Path.Combine(root, "FOSSart", name);
+                if (File.Exists(foss))
+                {
+                    return foss;
+                }
+
+                var raylibFoss = System.IO.Path.Combine(root, "RaylibUI", "FOSSart", name);
+                if (File.Exists(raylibFoss))
+                {
+                    return raylibFoss;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private static IEnumerable<string> CandidateArtRoots()
+    {
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var start in new[] { Settings.BasePath, Directory.GetCurrentDirectory() }.Where(Directory.Exists))
+        {
+            var directory = new DirectoryInfo(start);
+            for (var i = 0; i < 8 && directory != null; i++, directory = directory.Parent)
+            {
+                if (seen.Add(directory.FullName))
+                {
+                    yield return directory.FullName;
+                }
+            }
+        }
+    }
+
+    private static void PaintFossShield(ref Image image, Image template, Color fill, Color shade)
+    {
+        PaintShieldBody(ref image, fill, shade);
+        var width = image.Width;
+        var height = image.Height;
+        for (var y = 0; y < height; y++)
+        {
+            var sourceY = Math.Clamp((int)MathF.Round(y * (template.Height - 1) / MathF.Max(1, height - 1)), 0, template.Height - 1);
+            for (var x = 0; x < width; x++)
+            {
+                var sourceX = Math.Clamp((int)MathF.Round(x * (template.Width - 1) / MathF.Max(1, width - 1)), 0, template.Width - 1);
+                var outline = template.GetColor(sourceX, sourceY);
+                if (outline.A == 0)
+                {
+                    continue;
+                }
+
+                var current = image.GetColor(x, y);
+                image.DrawPixel(x, y, AlphaBlend(current, outline));
+            }
+        }
+    }
+
+    private static void PaintShieldBody(ref Image image, Color fill, Color shade)
+    {
+        var width = image.Width;
+        var height = image.Height;
+        var border = Math.Max(1, Math.Min(width, height) / 22);
+        for (var y = 0; y < height; y++)
+        {
+            var ny = (y + 0.5f) / height;
+            var halfWidth = ShieldHalfWidthAt(ny);
+            for (var x = 0; x < width; x++)
+            {
+                var nx = (x + 0.5f) / width;
+                var distanceFromCentre = MathF.Abs(nx - 0.5f);
+                if (distanceFromCentre > halfWidth - border / (float)Math.Max(1, width))
+                {
+                    continue;
+                }
+
+                var amount = Math.Clamp((ny - 0.20f) * 0.45f, 0f, 0.32f);
+                image.DrawPixel(x, y, Blend(fill, shade, amount));
+            }
+        }
+    }
+
+    private static Color AlphaBlend(Color below, Color above)
+    {
+        var alpha = above.A / 255f;
+        var inverse = 1f - alpha;
+        return new Color(
+            (byte)Math.Clamp(above.R * alpha + below.R * inverse, 0, 255),
+            (byte)Math.Clamp(above.G * alpha + below.G * inverse, 0, 255),
+            (byte)Math.Clamp(above.B * alpha + below.B * inverse, 0, 255),
+            (byte)Math.Clamp(above.A + below.A * inverse, 0, 255));
+    }
+
+    private static float GetHighResolutionShieldRenderScale(Texture2D sourceShield, Texture2D highResolutionShield)
+    {
+        if (highResolutionShield.Width <= 0 || highResolutionShield.Height <= 0)
+        {
+            return 1f;
+        }
+
+        var widthScale = sourceShield.Width / (float)highResolutionShield.Width;
+        var heightScale = sourceShield.Height / (float)highResolutionShield.Height;
+        return MathF.Max(0.01f, MathF.Min(widthScale, heightScale));
+    }
+
+    private static void PaintHighResolutionShield(ref Image image, Color fill, Color shade)
+    {
+        var width = image.Width;
+        var height = image.Height;
+        var border = Math.Max(1.25f, Math.Min(width, height) / 22f);
+        var rim = Math.Max(border * 2.2f, Math.Min(width, height) / 9f);
+        var black = new Color(8, 8, 12, 255);
+        var bright = new Color(255, 255, 255, 235);
+
+        for (var y = 0; y < height; y++)
+        {
+            var ny = (y + 0.5f) / height;
+            var halfWidth = ShieldHalfWidthAt(ny);
+            for (var x = 0; x < width; x++)
+            {
+                var nx = (x + 0.5f) / width;
+                var distanceFromCentre = MathF.Abs(nx - 0.5f);
+                if (distanceFromCentre > halfWidth)
+                {
+                    continue;
+                }
+
+                var edgeDistance = (halfWidth - distanceFromCentre) * width;
+                var topDistance = y;
+                var bottomDistance = height - y - 1;
+                var outline = Math.Min(Math.Min(edgeDistance, topDistance), bottomDistance);
+
+                if (outline <= border)
+                {
+                    image.DrawPixel(x, y, black);
+                }
+                else if (outline <= rim)
+                {
+                    image.DrawPixel(x, y, bright);
+                }
+                else
+                {
+                    var verticalShade = Math.Clamp((ny - 0.22f) * 0.45f, 0f, 0.34f);
+                    var highlight = MathF.Max(0f, 1f - MathF.Abs(nx - 0.38f) * 5f) * MathF.Max(0f, 1f - MathF.Abs(ny - 0.32f) * 6f);
+                    var color = Blend(fill, shade, verticalShade);
+                    if (highlight > 0)
+                    {
+                        color = Blend(color, Color.White, Math.Min(0.22f, highlight * 0.18f));
+                    }
+                    image.DrawPixel(x, y, color);
+                }
+            }
+        }
+
+        var barY = (int)(height * 0.22f);
+        var barHeight = Math.Max(1, (int)MathF.Round(height * 0.09f));
+        for (var y = barY; y < Math.Min(height, barY + barHeight); y++)
+        {
+            var ny = (y + 0.5f) / height;
+            var halfWidth = ShieldHalfWidthAt(ny);
+            var left = Math.Max(0, (int)MathF.Floor((0.5f - halfWidth) * width));
+            var right = Math.Min(width - 1, (int)MathF.Ceiling((0.5f + halfWidth) * width));
+            for (var x = left; x <= right; x++)
+            {
+                var outline = y == barY || y == barY + barHeight - 1 ? black : bright;
+                if (image.GetColor(x, y).A != 0)
+                {
+                    image.DrawPixel(x, y, outline);
+                }
+            }
+        }
+    }
+
+    private static float ShieldHalfWidthAt(float normalizedY)
+    {
+        if (normalizedY < 0.14f)
+        {
+            return 0.44f;
+        }
+
+        if (normalizedY < 0.68f)
+        {
+            return 0.44f - (normalizedY - 0.14f) * 0.08f;
+        }
+
+        return MathF.Max(0.02f, 0.40f * (1f - (normalizedY - 0.68f) / 0.32f));
+    }
+
+    private static Color Blend(Color start, Color end, float amount)
+    {
+        amount = Math.Clamp(amount, 0f, 1f);
+        return new Color(
+            (byte)Math.Clamp(start.R + (end.R - start.R) * amount, 0, 255),
+            (byte)Math.Clamp(start.G + (end.G - start.G) * amount, 0, 255),
+            (byte)Math.Clamp(start.B + (end.B - start.B) * amount, 0, 255),
+            255);
+    }
+
+    private static IImageSource GetUnitSourceImage(IUnit unit, IUserInterface active, UnitImage unitImage, bool useMapArt)
+    {
+        if (useMapArt)
+        {
+            return unitImage.MapImage ?? unitImage.Image;
+        }
+
+        // UI controls need the small classic unit sheet even if map rendering uses
+        // 1024px FOSS art. UnitLoader keeps UnitImage.Image/UiImage on the classic
+        // Civ2 sprite and stores FOSS art separately in UnitImage.MapImage.
+        if (unitImage.UiImage is { } uiImage)
+        {
+            return uiImage;
+        }
+
+        var unitIndex = (int)unit.Type;
+        if (active.PicSources.TryGetValue("unit", out var unitIcons) &&
+            unitIndex >= 0 && unitIndex < unitIcons.Length)
+        {
+            return unitIcons[unitIndex];
+        }
+
+        return unitImage.Image;
+    }
+
+    private static Vector2 GetLogicalUnitSize(IUserInterface active, UnitImage unitImage, Texture2D unitTexture)
+    {
+        if (unitImage.LogicalSize != Vector2.Zero)
+        {
+            return unitImage.LogicalSize;
+        }
+
+        var unitRectangle = active.UnitImages.UnitRectangle;
+        if (unitRectangle.Width > 0 && unitRectangle.Height > 0)
+        {
+            return new Vector2(unitRectangle.Width, unitRectangle.Height);
+        }
+
         return new Vector2(unitTexture.Width, unitTexture.Height);
+    }
+
+    private static float GetUnitRenderScale(UnitImage unitImage, Texture2D unitTexture, Vector2 logicalSize)
+    {
+        var renderScale = unitImage.DrawScale > 0 ? unitImage.DrawScale : 1f;
+        if (unitTexture.Width <= 0 || unitTexture.Height <= 0 || logicalSize.X <= 0 || logicalSize.Y <= 0)
+        {
+            return renderScale;
+        }
+
+        var drawWidth = unitTexture.Width * renderScale;
+        var drawHeight = unitTexture.Height * renderScale;
+        if (drawWidth <= logicalSize.X && drawHeight <= logicalSize.Y)
+        {
+            return renderScale;
+        }
+
+        // Defensive fallback for any UI path that receives a high-resolution FOSS
+        // texture before UnitLoader has populated DrawScale metadata.
+        return MathF.Max(0.01f, MathF.Min(logicalSize.X / unitTexture.Width, logicalSize.Y / unitTexture.Height));
+    }
+
+    private static Vector2 GetUnitDrawOffset(UnitImage unitImage, Texture2D unitTexture, Vector2 logicalSize, float renderScale)
+    {
+        if (unitImage.DrawOffset != Vector2.Zero)
+        {
+            return unitImage.DrawOffset;
+        }
+
+        var drawWidth = unitTexture.Width * renderScale;
+        var drawHeight = unitTexture.Height * renderScale;
+        return new Vector2(
+            MathF.Max(0, (logicalSize.X - drawWidth) / 2f),
+            MathF.Max(0, logicalSize.Y - drawHeight));
     }
 
     private static string GetOrderShieldText(IUnit unit, IGame game)

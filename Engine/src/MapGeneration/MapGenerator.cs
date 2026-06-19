@@ -139,9 +139,8 @@ namespace Civ2engine
 
             var landUsed = 0;
 
-            var minIslandSize = 3;
-                    
-            var maxIslandSize = 30;
+            var (majorLandmasses, minIslandSize, maxIslandSize, minContinentSize, maxContinentSize) = GetLandmassSettings(config, landRequired);
+            var landmassIndex = 0;
 
             var oceans = new HashSet<Tile>();
 
@@ -154,11 +153,16 @@ namespace Civ2engine
                 land.Add(candidate);
 
                 var edgeSet = new HashSet<Tile>();
+                var island = new IslandDetails {Tiles = {candidate}, Id = islands.Count + 1};
+                candidate.Island = island.Id;
                 SetGeneratedLandTerrain(candidate, config, terrains[0], yMax);
-                var island = new IslandDetails {Tiles = {candidate}, Id = islands.Count +1};
                 islands.Add(island);
                         
-                var size = config.Random.Next(minIslandSize, maxIslandSize);
+                var size = landmassIndex < majorLandmasses
+                    ? config.Random.Next(minContinentSize, maxContinentSize + 1)
+                    : config.Random.Next(minIslandSize, maxIslandSize + 1);
+                size = Math.Min(size, Math.Max(1, landRequired - landUsed));
+                landmassIndex++;
 
                 foreach (var tile in mainMap.DirectNeighbours(candidate))
                 {
@@ -175,7 +179,7 @@ namespace Civ2engine
                     island.Tiles.Add(choice);
                     land.Add(choice);
 
-                    choice.Island = candidate.Island;
+                    choice.Island = island.Id;
                     SetGeneratedLandTerrain(choice, config, terrains[0], yMax);
                     foreach (var tile in mainMap.DirectNeighbours(choice))
                     {
@@ -226,6 +230,38 @@ namespace Civ2engine
             mainMap.CalculateFertility(terrains[0]);
 
             return mainMap;
+        }
+
+
+        private static (int MajorLandmasses, int MinIslandSize, int MaxIslandSize, int MinContinentSize, int MaxContinentSize)
+            GetLandmassSettings(GameInitializationConfig config, int landRequired)
+        {
+            var safeLand = Math.Max(24, landRequired);
+            return config.Landform switch
+            {
+                // Archipelago still gets one moderate starting landmass, but keeps
+                // the rest of the world broken into smaller islands.
+                0 => (1,
+                    4,
+                    Math.Max(12, safeLand / 18),
+                    Math.Max(24, safeLand / 10),
+                    Math.Max(36, safeLand / 6)),
+
+                // Large land mass: Civ2-style continent-heavy maps.
+                2 => (3,
+                    12,
+                    Math.Max(45, safeLand / 12),
+                    Math.Max(90, safeLand / 5),
+                    Math.Max(150, safeLand / 3)),
+
+                // Normal: bias toward a couple of playable continents instead of
+                // many tiny island clusters.
+                _ => (2,
+                    8,
+                    Math.Max(32, safeLand / 14),
+                    Math.Max(70, safeLand / 7),
+                    Math.Max(120, safeLand / 4))
+            };
         }
 
         private static void SetGeneratedLandTerrain(Tile tile, GameInitializationConfig config, Terrain[] terrains, int yMax)

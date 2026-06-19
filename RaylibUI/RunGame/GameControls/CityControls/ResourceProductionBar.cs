@@ -14,6 +14,7 @@ public class ResourceProductionBar : BaseControl
 {
     private const int LabelFontSize = 11;
     private const int LabelSpacing = 0;
+    private const int LabelInset = 2;
     private readonly CityWindow _cityWindow;
     private readonly ResourceArea _resource;
     private int _spacing;
@@ -143,9 +144,9 @@ public class ResourceProductionBar : BaseControl
         
         var fontSize = Math.Max(10, (int)Math.Round(LabelFontSize * Math.Min(1.25f, _cityWindow.Scale * 0.85f)));
         var textDim = TextManager.MeasureTextEx(Fonts.Arial, _sections[0].Label, fontSize, LabelSpacing);
-        var labely = Bounds.Y + (_resource.LabelBelow ? Bounds.Height : 1-textDim.Y);
+        var labely = GetLabelY(textDim);
             
-        Graphics.DrawTextEx(Fonts.Arial, _sections[0].Label, new Vector2(Bounds.X + 1, labely), fontSize, LabelSpacing, Color.White);
+        DrawResourceLabel(_sections[0].Label, new Vector2(Bounds.X + LabelInset * _cityWindow.Scale, labely), fontSize);
         var pos = new Vector2(Bounds.X + 1, Bounds.Y + Math.Max(0, (Bounds.Height - _iconTargetHeight) / 2f));
         for (int i = 0; i < _sections[0].Value; i++)
         {
@@ -170,7 +171,7 @@ public class ResourceProductionBar : BaseControl
             }
             var midText = _sections[1].Label;
             var midSize = TextManager.MeasureTextEx(Fonts.Arial, midText, fontSize, LabelSpacing);
-            Graphics.DrawTextEx(Fonts.Arial, midText, new Vector2(Bounds.X + Width/2f - midSize.X/2, labely), fontSize, LabelSpacing, Color.White);
+            DrawResourceLabel(midText, new Vector2(Bounds.X + Width / 2f - midSize.X / 2, labely), fontSize);
 
             final = 2;
         }
@@ -183,9 +184,30 @@ public class ResourceProductionBar : BaseControl
         }
 
         var finalText = _sections[final].Label;
-        var finalSize = TextManager.MeasureTextEx(Fonts.Arial, finalText, fontSize, LabelSpacing);
-        Graphics.DrawTextEx(Fonts.Arial, finalText, new Vector2(Bounds.X + Width - finalSize.X -1, labely), fontSize, LabelSpacing, Color.White);
+        var finalLabelInset = (_resource.LabelBelow ? 8 : LabelInset) * _cityWindow.Scale;
+        DrawRightAlignedResourceLabel(finalText, Bounds.X + Width - finalLabelInset, labely, fontSize);
 
+    }
+
+    private float GetLabelY(Vector2 textDim)
+    {
+        if (_resource.LabelBelow)
+        {
+            return Bounds.Y + Bounds.Height + Math.Max(1, _cityWindow.Scale);
+        }
+
+        return Bounds.Y + 1 - textDim.Y;
+    }
+
+    private static void DrawResourceLabel(string text, Vector2 position, int fontSize)
+    {
+        global::RaylibUI.TextRendering.DrawWithShadow(Fonts.Arial, text, position, fontSize, LabelSpacing, Color.White, Color.Black, Vector2.One);
+    }
+
+    private static void DrawRightAlignedResourceLabel(string text, float rightEdge, float y, int fontSize)
+    {
+        var textSize = TextManager.MeasureTextEx(Fonts.Arial, text, fontSize, LabelSpacing);
+        DrawResourceLabel(text, new Vector2(rightEdge - textSize.X, y), fontSize);
     }
 
     private void DrawIcon(Texture2D icon, Vector2 slotPosition)

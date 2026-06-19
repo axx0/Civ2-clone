@@ -1,4 +1,4 @@
-﻿using Civ2engine;
+using Civ2engine;
 using Raylib_CSharp.Images;
 using Raylib_CSharp.Colors;
 using System;
@@ -184,7 +184,26 @@ public static partial class Images
         else if (bytes.Length > 2 && bytes[0] == 0xff && bytes[1] == 0xd8)
         {
             bpp = 24;
-            img = Image.LoadFromMemory(Path.GetExtension(filename).ToLowerInvariant(), bytes);
+
+            // The FOSSart JPEGs are progressive JPEGs. The packaged raylib native
+            // loader rejects those and prints repeated noisy "IMAGE: Data format not
+            // supported" warnings. Skip raylib for progressive JPEGs and decode them
+            // through common system decoders instead.
+            if (IsProgressiveJpeg(bytes))
+            {
+                if (!TryLoadJpegWithExternalDecoder(filename, out img))
+                {
+                    img = Image.GenColor(1, 1, new Color(0, 0, 0, 0));
+                }
+            }
+            else
+            {
+                img = Image.LoadFromMemory(Path.GetExtension(filename).ToLowerInvariant(), bytes);
+                if ((img.Width <= 0 || img.Height <= 0) && !TryLoadJpegWithExternalDecoder(filename, out img))
+                {
+                    img = Image.GenColor(1, 1, new Color(0, 0, 0, 0));
+                }
+            }
         }
 
         return new Image_and_bpp
@@ -192,6 +211,244 @@ public static partial class Images
             Image = img,
             ColourDepth = bpp
         };
+    }
+
+
+
+    private static bool TryLoadJpegWithExternalDecoder(string filename, out Image image)
+    {
+        image = new Image();
+
+        // Try several common decoders. Any of these is enough to turn the
+        // progressive JPEG into a simple PPM stream that this file can parse
+        // without adding a new NuGet dependency.
+        if (TryDecodeJpegToPpm(["djpeg", "-ppm", "-outfile", "-", filename], out var ppmBytes) ||
+            TryDecodeJpegToPpm(["ffmpeg", "-v", "error", "-i", filename, "-f", "image2pipe", "-vcodec", "ppm", "-"], out ppmBytes) ||
+            TryDecodeJpegToPpm(["magick", filename, "ppm:-"], out ppmBytes) ||
+            TryDecodeJpegToPpm(["convert", filename, "ppm:-"], out ppmBytes) ||
+            TryDecodeJpegToPpm(["python3", "-c",
+                "from PIL import Image; import sys; im=Image.open(sys.argv[1]).convert('RGB'); sys.stdout.buffer.write(('P6\\n%d %d\\n255\\n' % im.size).encode('ascii')); sys.stdout.buffer.write(im.tobytes())",
+                filename], out ppmBytes))
+        {
+            return TryCreateImageFromPpm(ppmBytes, out image);
+        }
+
+        return false;
+    }
+
+    private static bool TryDecodeJpegToPpm(string[] command, out byte[] ppmBytes)
+    {
+        ppmBytes = [];
+        if (command.Length == 0)
+        {
+            return false;
+        }
+
+        try
+        {
+            var startInfo = new ProcessStartInfo(command[0])
+            {
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                CreateNoWindow = true
+            };
+
+            for (var i = 1; i < command.Length; i++)
+            {
+                startInfo.ArgumentList.Add(command[i]);
+            }
+
+            using var process = Process.Start(startInfo);
+            if (process == null)
+            {
+                return false;
+            }
+
+            using var output = new MemoryStream();
+            process.StandardOutput.BaseStream.CopyTo(output);
+            _ = process.StandardError.ReadToEnd();
+
+            if (!process.WaitForExit(15000))
+            {
+                try
+                {
+                    process.Kill(entireProcessTree: true);
+                }
+                catch
+                {
+                    // ignored
+                }
+                return false;
+            }
+
+            if (process.ExitCode != 0)
+            {
+                return false;
+            }
+
+            ppmBytes = output.ToArray();
+            return ppmBytes.Length > 0;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private static bool TryCreateImageFromPpm(byte[] ppmBytes, out Image image)
+    {
+        image = new Image();
+        var offset = 0;
+        if (!TryReadPpmToken(ppmBytes, ref offset, out var magic) || magic != "P6" ||
+            !TryReadPpmToken(ppmBytes, ref offset, out var widthText) ||
+            !TryReadPpmToken(ppmBytes, ref offset, out var heightText) ||
+            !TryReadPpmToken(ppmBytes, ref offset, out var maxText) ||
+            !int.TryParse(widthText, out var width) ||
+            !int.TryParse(heightText, out var height) ||
+            !int.TryParse(maxText, out var maxValue) ||
+            width <= 0 || height <= 0 || maxValue <= 0)
+        {
+            return false;
+        }
+
+        if (offset < ppmBytes.Length && char.IsWhiteSpace((char)ppmBytes[offset]))
+        {
+            offset++;
+        }
+
+        var requiredRgbBytes = checked(width * height * 3);
+        if (ppmBytes.Length - offset < requiredRgbBytes)
+        {
+            return false;
+        }
+
+        var rgbaBytes = new byte[width * height * 4];
+        for (var source = offset; source < offset + requiredRgbBytes; source += 3)
+        {
+            var target = ((source - offset) / 3) * 4;
+            rgbaBytes[target] = ScalePpmChannel(ppmBytes[source], maxValue);
+            rgbaBytes[target + 1] = ScalePpmChannel(ppmBytes[source + 1], maxValue);
+            rgbaBytes[target + 2] = ScalePpmChannel(ppmBytes[source + 2], maxValue);
+            rgbaBytes[target + 3] = 255;
+        }
+
+        image = CreateImageFromRgbaBytes(rgbaBytes, width, height);
+        return image.Width > 0 && image.Height > 0;
+    }
+
+    private static bool TryReadPpmToken(byte[] bytes, ref int offset, out string token)
+    {
+        token = string.Empty;
+
+        while (offset < bytes.Length)
+        {
+            var value = bytes[offset];
+            if (value == '#')
+            {
+                while (offset < bytes.Length && bytes[offset] != '\n')
+                {
+                    offset++;
+                }
+                continue;
+            }
+
+            if (!char.IsWhiteSpace((char)value))
+            {
+                break;
+            }
+
+            offset++;
+        }
+
+        if (offset >= bytes.Length)
+        {
+            return false;
+        }
+
+        var start = offset;
+        while (offset < bytes.Length && !char.IsWhiteSpace((char)bytes[offset]))
+        {
+            offset++;
+        }
+
+        token = System.Text.Encoding.ASCII.GetString(bytes, start, offset - start);
+        return token.Length > 0;
+    }
+
+    private static byte ScalePpmChannel(byte value, int maxValue)
+    {
+        return maxValue == 255 ? value : (byte)Math.Clamp(value * 255 / maxValue, 0, 255);
+    }
+
+    private static Image CreateImageFromRgbaBytes(byte[] rgbaBytes, int width, int height)
+    {
+        unsafe
+        {
+            fixed (byte* ptr = rgbaBytes)
+            {
+                var image = new Image
+                {
+                    Data = (nint)ptr,
+                    Format = PixelFormat.UncompressedR8G8B8A8,
+                    Width = width,
+                    Height = height,
+                    Mipmaps = 1
+                };
+                return image.Copy();
+            }
+        }
+    }
+
+    private static bool IsProgressiveJpeg(byte[] bytes)
+    {
+        var index = 2;
+
+        while (index + 3 < bytes.Length)
+        {
+            if (bytes[index] != 0xff)
+            {
+                index++;
+                continue;
+            }
+
+            while (index < bytes.Length && bytes[index] == 0xff)
+            {
+                index++;
+            }
+
+            if (index >= bytes.Length)
+            {
+                return false;
+            }
+
+            var marker = bytes[index++];
+
+            if (marker == 0xc2 || marker == 0xc6 || marker == 0xca || marker == 0xce)
+            {
+                return true;
+            }
+
+            if (marker == 0xd8 || marker == 0xd9 || (marker >= 0xd0 && marker <= 0xd7) || marker == 0x01)
+            {
+                continue;
+            }
+
+            if (index + 1 >= bytes.Length)
+            {
+                return false;
+            }
+
+            var segmentLength = (bytes[index] << 8) | bytes[index + 1];
+            if (segmentLength < 2)
+            {
+                return false;
+            }
+
+            index += segmentLength;
+        }
+
+        return false;
     }
 
     /// <summary>

@@ -31,8 +31,7 @@ public static class Helpers
 
             implementors.AddRange(currentAssembly.GetTypes()
                 .Where(t => t != userInterfaceType && userInterfaceType.IsAssignableFrom(t) && !t.IsAbstract)
-                .Select(x => Activator.CreateInstance(x, main) as IUserInterface)
-                .OfType<IUserInterface>());
+                .Select(x => (IUserInterface)Activator.CreateInstance(x, main)));
         }
         return implementors.ToArray();
     }
@@ -51,11 +50,11 @@ public static class Helpers
 
     public static void LoadFonts()
     {
-        var tnr = Utils.GetFilePath("times-new-roman.ttf") ?? throw new FileNotFoundException("times-new-roman.ttf not found");
-        Fonts.SetTnr(Font.LoadEx(tnr, 56, null));
-        var bold = Utils.GetFilePath("times-new-roman-bold.ttf") ?? throw new FileNotFoundException("times-new-roman-bold.ttf not found");
-        Fonts.SetBold(Font.LoadEx(bold, 64, null));
-        var alternative = Utils.GetFilePath("ARIAL.ttf") ?? tnr;
-        Fonts.SetArial(Font.LoadEx(alternative, 56, null));
+        var tnr = Utils.GetFilePath("times-new-roman.ttf");
+        Fonts.SetTnr(Font.LoadEx(tnr, 96, null));
+        var bold = Utils.GetFilePath("times-new-roman-bold.ttf");
+        Fonts.SetBold(Font.LoadEx(bold, 112, null));
+        var alternative = Utils.GetFilePath("ARIAL.ttf");
+        Fonts.SetArial(Font.LoadEx(alternative, 96, null));
     }
 }
