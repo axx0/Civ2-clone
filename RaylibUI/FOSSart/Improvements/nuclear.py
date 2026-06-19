@@ -1,0 +1,1 @@
+# Nuclear Plant Optimization\ndef nuclear_fuel_efficiency(reactor_type, fuel_age):\n    Calculates fuel efficiency based on reactor type and fuel age\n    if reactor_type == 'pressurized':\n        return 350 - 2 * fuel_age\n    elif reactor_type == 'boiling':\n        return 320 - 1.5 * fuel_age\n    else:\n        return 300 - fuel_age

@@ -1,3 +1,4 @@
+n// VERSION_TAG: SerializationMigration_v1.0
 using System;
 using System.Linq;
 using Civ2engine.Enums;

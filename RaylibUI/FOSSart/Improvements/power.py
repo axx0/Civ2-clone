@@ -1,0 +1,1 @@
+# Power Grid Optimization\ndef power_distribution(load_profile, generators):\n    Optimizes power distribution using linear programming\n    # Simplified LP solution\n    return {g: min(l, g) for g,l in zip(generators, load_profile)}

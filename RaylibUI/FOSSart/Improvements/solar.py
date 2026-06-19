@@ -1,0 +1,1 @@
+# Solar Plant Optimization\nimport math\n\ndef solar_efficiency(latitude, longitude, time_of_day):\n    # Calculate optimal panel angle and energy output\n    angle = math.degrees(math.atan(0.5 * math.sin(math.radians(latitude))))\n    output = 100 * (1 - 0.05 * abs(angle - 45))\n    return max(0, output)
