@@ -1,4 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+        <TargetFramework>net9.0-android</TargetFramework>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <OutputPath>bin/Release/net9.0-android</OutputPath>
+    </PropertyGroup>
+    <PropertyGroup>
+        <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+        <TargetFramework>net9.0-android</TargetFramework>
+    </PropertyGroup>
 
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>

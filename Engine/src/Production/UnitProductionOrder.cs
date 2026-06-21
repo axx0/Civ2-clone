@@ -1,15 +1,9 @@
-n// VERSION_TAG: SerializationMigration_v1.0
-using System;
-using System.Linq;
-using Civ2engine.Enums;
-using Model;
-using Model.Constants;
-using Model.Controls;
-using Model.Core.Cities;
-using Model.Core.GameRules;
+using Model.Core;
 using Model.Core.Production;
 using Model.Core.Units;
-using Model.Images;
+using Model.Core.Cities;
+using Model.Core.Rules;
+using Model.Interfaces;
 
 namespace Civ2engine.Production
 {
@@ -48,6 +42,17 @@ namespace Civ2engine.Production
         public override string GetDescription()
         {
             return unitDefinition.Name;
+        }
+
+        public override void CompleteProduction(City city, Rules rules)
+        {
+            // Basic implementation - extend as needed
+            Console.WriteLine($"Completing production of {unitDefinition.Name} in city {city.Name}");
+        }
+
+        public override string GetBuildListEntry(IUserInterface activeInterface, City city)
+        {
+            return $"{unitDefinition.Name} ({unitDefinition.Type})";
         }
     }
 }
