@@ -77,4 +77,5 @@ public static class CommandIds
     public const string CheatEditCity = "CHEAT_EDIT_CITY";
     public const string CheatEditKing = "CHEAT_EDIT_KING";
     public const string CheatSetScenarioParameters = "CHEAT_SET_SCENARIO_PARAMETERS";
+    public const string CheatMasterControl = "CHEAT_MASTER_CONTROL";
 }
