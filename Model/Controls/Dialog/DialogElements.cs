@@ -56,7 +56,7 @@ public class DialogElements
 
     public List<TextBoxDefinition>? TextBoxes { get; set; }
     public ListboxDefinition? ListboxDef { get; set; }
-    public OptionsDefinition? Options { get; set; }
+    public OptionsDefinition? OptionsDef { get; set; }
     public IList<int>? ReplaceNumbers { get; set; }
     public IList<string>? ReplaceStrings { get; set; }
     public DialogImageElements? Image { get; set; }
@@ -68,17 +68,17 @@ public class DialogElements
         Title = popupBox?.Title;
         if (popupBox?.Default is not null)
         {
-            Options ??= new();
-            Options.SelectedId = popupBox.Default ?? 0;
+            OptionsDef ??= new();
+            OptionsDef.SelectedId = popupBox.Default ?? 0;
         }
         X = popupBox?.X;
         Y = popupBox?.Y;
         Button = popupBox?.Button;
         if (popupBox?.Options is not null)
         {
-            Options ??= new();
-            Options.Texts = popupBox?.Options ?? [];
-            Options.IsCheckbox = popupBox?.Checkbox ?? false;
+            OptionsDef ??= new();
+            OptionsDef.Texts = popupBox?.Options ?? [];
+            OptionsDef.IsCheckbox = popupBox?.Checkbox ?? false;
         }
         if (popupBox?.ListboxLines is not null)
         {

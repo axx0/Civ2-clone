@@ -23,7 +23,7 @@ public class DifficultyHandler : BaseDialogHandler
         var config = Initialization.ConfigObject;
 
         if (config.IsScenario)
-            Dialog.Options.SelectedId = config.DifficultyLevel;
+            Dialog.OptionsDef.SelectedId = config.DifficultyLevel;
 
         return base.Show(activeInterface);
     }

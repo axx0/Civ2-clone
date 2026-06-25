@@ -1,7 +1,6 @@
 using System.Numerics;
 using Model;
 using Model.Interface;
-using Raylib_CSharp;
 using Raylib_CSharp.Fonts;
 using Raylib_CSharp.Colors;
 using Raylib_CSharp.Rendering;
@@ -12,11 +11,7 @@ namespace RaylibUI.BasicTypes.Controls;
 public class LabelControl : BaseControl
 {
     private readonly int _minWidth;
-    private readonly int _defaultHeight;
     private readonly float _spacing;
-    private readonly IUserInterface _active;
-    private bool _switch;
-    private readonly Color[]? _switchColors;
 
     public LabelControl(IControlLayout controller,
         string text,
@@ -25,7 +20,6 @@ public class LabelControl : BaseControl
         Padding padding = default,
         HorizontalAlignment horizontalAlignment = HorizontalAlignment.Left,
         VerticalAlignment verticalAlignment = VerticalAlignment.Top,
-        int defaultHeight = 32,
         Font? font = null,
         int fontSize = 20,
         float spacing = 0f,
@@ -40,7 +34,6 @@ public class LabelControl : BaseControl
         HorizontalAlignment = horizontalAlignment;
         VerticalAlignment = verticalAlignment;
         _minWidth = minWidth;
-        _defaultHeight = defaultHeight;
         _fontSize = fontSize;
         _spacing = spacing;
         _font = font ?? controller.MainWindow.ActiveInterface?.Look.LabelFont ?? Fonts.Tnr;
@@ -48,7 +41,6 @@ public class LabelControl : BaseControl
         ColorShadow = colorShadow ?? Color.Black;
         ShadowOffset = shadowOffset ?? Vector2.Zero;
 
-        _active = controller.MainWindow.ActiveInterface;
         BackgroundColor = colorBack;
         _textSize = TextManager.MeasureTextEx(_font, _text, _fontSize, _spacing);
     }

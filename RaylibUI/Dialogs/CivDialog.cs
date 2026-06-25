@@ -137,10 +137,11 @@ public class CivDialog : DynamicSizingDialog
         {
             _textBoxes = new List<LabeledTextBox>();
             List<string> textBoxLabels;
-            if (dialog.TextBoxes.Any(t => string.IsNullOrWhiteSpace(t.Description)) && dialog.Options != null && dialog.Options.Texts.Count == dialog.TextBoxes.Count)
+            if (dialog.TextBoxes.Any(t => string.IsNullOrWhiteSpace(t.Description)) && 
+                dialog.OptionsDef != null && dialog.OptionsDef.Texts.Count == dialog.TextBoxes.Count)
             {
-                textBoxLabels = new List<string>(dialog.Options.Texts);
-                dialog.Options = null;
+                textBoxLabels = new List<string>(dialog.OptionsDef.Texts);
+                dialog.OptionsDef = null;
             }
             else
             {
@@ -159,14 +160,24 @@ public class CivDialog : DynamicSizingDialog
             }
         }
 
-        if (dialog.Options is not null)
+        if (dialog.OptionsDef is not null)
         {
-            dialog.Options.ReplacedTexts = [];
-            for (int i = 0; i < dialog.Options.Texts.Count; i++)
+            dialog.OptionsDef.ReplacedTexts = [];
+            for (int i = 0; i < dialog.OptionsDef.Texts.Count; i++)
             {
-                dialog.Options.ReplacedTexts.Add(DialogUtils.ReplacePlaceholders(dialog.Options.Texts[i], dialog.ReplaceStrings, dialog.ReplaceNumbers));
+                dialog.OptionsDef.ReplacedTexts.Add(DialogUtils.ReplacePlaceholders(
+                    dialog.OptionsDef.Texts[i], dialog.ReplaceStrings, dialog.ReplaceNumbers));
             }
-            _optionsPanel = new OptionsPanel(this, dialog.Options);
+            _optionsPanel = new OptionsPanel(this);
+            _optionsPanel.Texts = dialog.OptionsDef.ReplacedTexts;
+            _optionsPanel.IsCheckbox = dialog.OptionsDef.IsCheckbox ?? _optionsPanel.IsCheckbox;
+            _optionsPanel.CheckboxStates = dialog.OptionsDef.CheckboxStates ?? _optionsPanel.CheckboxStates;
+            _optionsPanel.Columns = dialog.OptionsDef.Columns ?? _optionsPanel.Columns;
+            _optionsPanel.MaxVisibleCols = dialog.OptionsDef.MaxVisibleCols ?? _optionsPanel.MaxVisibleCols;
+            _optionsPanel.MaxVisibleRows = dialog.OptionsDef.MaxVisibleRows ?? _optionsPanel.MaxVisibleRows;
+            _optionsPanel.SelectedId = dialog.OptionsDef.SelectedId ?? _optionsPanel.SelectedId;
+            _optionsPanel.Icons = dialog.OptionsDef.Icons ?? _optionsPanel.Icons;
+            _optionsPanel.Type = OptionsType.Default;
 
             innerLayout.Add(_optionsPanel, layoutRow++, 1);
         }

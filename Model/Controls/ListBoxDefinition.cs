@@ -1,5 +1,8 @@
 namespace Model.Controls;
 
+/// <summary>
+/// Use this for customizing listbox in dialogs from game.txt.
+/// </summary>
 public class ListboxDefinition
 {
     public List<ListboxGroup>? Groups { get; set; }

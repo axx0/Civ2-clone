@@ -3,5 +3,6 @@
 public enum ListboxType
 {
     Default = 0,
-    Civilopedia = 1
+    Civilopedia = 1,
+    Small = 2
 }

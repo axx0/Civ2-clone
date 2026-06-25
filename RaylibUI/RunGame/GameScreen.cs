@@ -364,14 +364,14 @@ public class GameScreen : BaseScreen
             var dialog = new DialogElements(popupBox);
             if (options != null)
             {
-                dialog.Options = new()
+                dialog.OptionsDef = new()
                 {
                     Texts = options
                 };
             }
             if (checkboxStates != null)
             {
-                dialog.Options.CheckboxStates = checkboxStates;
+                dialog.OptionsDef.CheckboxStates = checkboxStates;
             }
             if (replaceNumbers != null)
             {

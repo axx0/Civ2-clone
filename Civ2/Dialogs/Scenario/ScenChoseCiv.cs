@@ -56,7 +56,7 @@ public class ScenChoseCiv : ICivDialogHandler
     {
         //activeInterface.ScenTitleImage = 
 
-        Dialog.Options = new()
+        Dialog.OptionsDef = new()
         {
             Texts = Enumerable.Range(0, 7).Where(i => Initialization.ConfigObject.CivsInPlay[i + 1]).Select(i => $"{Initialization.ConfigObject.CivNames[i + 1]} ({Initialization.ConfigObject.LeaderNames[i + 1]})").ToList()
         };

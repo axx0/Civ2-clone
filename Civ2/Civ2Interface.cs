@@ -233,6 +233,7 @@ public abstract class Civ2Interface(IMain main) : IUserInterface
     }
 
     public abstract ListboxLooks GetListboxLooks(ListboxType? type);
+    public abstract OptionsLooks GetOptionsLooks(OptionsType? type);
 
     public CityWindowLayout GetCityWindowDefinition()
     {

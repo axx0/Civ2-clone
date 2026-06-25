@@ -519,7 +519,10 @@ public class Civ2GoldInterface(IMain main) : Civ2Interface(main)
                     new Shortcut(Key.P, ctrl: true, shift: true),
                     Key.None, CheatSetScenarioParameters),
                 new("Save As Scenario|Ctrl+Shift+S",
-                    new Shortcut(Key.S, ctrl: true, shift: true), Key.None)
+                    new Shortcut(Key.S, ctrl: true, shift: true), Key.None),
+                new("-", Shortcut.None, Key.None),
+                new("Master Control|Ctrl+F1", new Shortcut(Key.F1, ctrl: true), Key.None,
+                    omitIfNoCommand: true, commandId: CheatMasterControl),
             },
         },
 
@@ -596,6 +599,19 @@ public class Civ2GoldInterface(IMain main) : Civ2Interface(main)
                 SelectedTextColorFront = Color.White,
                 SelectedTextColorShadow = Color.Black
             },
+            ListboxType.Small => new ListboxLooks
+            {
+                BoxBackgroundColor = new Color(207, 207, 207, 255),
+                BoxLineColor = new Color(67, 67, 67, 255),
+                Font = Look.DefaultFont,
+                FontSize = 16,
+                TextColorFront = Color.Black,
+                TextColorShadow = Color.Blank,
+                SelectedTextFont = Fonts.TnRbold,
+                SelectedTextBackgroundColor = new Color(107, 107, 107, 255),
+                SelectedTextColorFront = Color.White,
+                SelectedTextColorShadow = Color.Black
+            },
             ListboxType.Civilopedia => new ListboxLooks
             {
                 BoxBackgroundColor = new Color(240, 240, 240, 255),
@@ -605,6 +621,30 @@ public class Civ2GoldInterface(IMain main) : Civ2Interface(main)
                 TextColorShadow = Color.Blank
             },
             _ => new ListboxLooks(),
+        };
+    }
+
+    public override OptionsLooks GetOptionsLooks(OptionsType? type)
+    {
+        return type switch
+        {
+            OptionsType.Default => new OptionsLooks
+            {
+                Font = Look.DefaultFont,
+                FontSize = Look.LabelFontSize,
+                TextColorFront = Look.LabelColour,
+                TextColorShadow = Look.LabelShadowColour,
+                IconScale = 1.0f
+            },
+            OptionsType.Small => new OptionsLooks
+            {
+                Font = Look.DefaultFont,
+                FontSize = 16,
+                TextColorFront = Look.LabelColour,
+                TextColorShadow = Look.LabelShadowColour,
+                IconScale = 0.5f
+            },
+            _ => new OptionsLooks(),
         };
     }
 

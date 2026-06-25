@@ -48,6 +48,7 @@ public interface IUserInterface
     
     CityWindowLayout GetCityWindowDefinition();
     ListboxLooks GetListboxLooks(ListboxType? type);
+    OptionsLooks GetOptionsLooks(OptionsType? type);
 
     List<CityViewTiles> GetCityViewTiles();
     List<BinaryStorage> GetCityViewAltTiles();

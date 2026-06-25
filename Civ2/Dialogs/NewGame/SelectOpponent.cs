@@ -43,8 +43,8 @@ public class SelectOpponent : BaseDialogHandler
                 .Where(leader =>
                     Initialization.ConfigObject.Civilizations.All(civ => civ.Adjective != leader.Adjective)).ToList();
 
-        Dialog.Options.Texts =
-            new[] { Dialog.Options.Texts[0] }.Concat(_tribes.Select(leader =>
+        Dialog.OptionsDef.Texts =
+            new[] { Dialog.OptionsDef.Texts[0] }.Concat(_tribes.Select(leader =>
                 $"{leader.Plural} ({(leader.Female ? leader.NameFemale : leader.NameMale)})")).ToList();
         return base.Show(activeInterface);
     }

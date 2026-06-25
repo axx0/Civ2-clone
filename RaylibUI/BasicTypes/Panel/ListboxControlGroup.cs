@@ -13,11 +13,13 @@ public class ListboxControlGroup : ControlGroup
     private readonly List<ListboxGroupElement> _elements;
     private bool _softSelection;    // true = don't make final selection based on this
     private readonly IUserInterface _active;
+    private readonly IControlLayout _controller;
 
     public ListboxControlGroup(IControlLayout controller, ListboxGroup group, ListboxLooks looks) :
         base(controller, eventTransparent: false)
     {
         _active = controller.MainWindow.ActiveInterface;
+        _controller = controller;
         _elements = group.Elements;
 
         if (group.Height != null)
@@ -108,10 +110,10 @@ public class ListboxControlGroup : ControlGroup
         set { _height = value; }
     }
 
-
     private void OnClick(object? sender, MouseEventArgs e)
     {
         SelectThis(false);
+        _controller.Focused = (Listbox)Parent!;
     }
 
     public void SelectThis(bool softSelection)

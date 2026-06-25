@@ -24,14 +24,14 @@ public class SelectTribe : BaseDialogHandler
             res.Dialog.Button.Add(Labels.Cancel);
         }
 
-        res.Dialog.Options = new();
-        res.Dialog.Options.Columns = 3;
+        res.Dialog.OptionsDef = new();
+        res.Dialog.OptionsDef.Columns = 3;
         return res;
     }
 
     public override IInterfaceAction Show(Civ2Interface activeInterface)
     {
-        Dialog.Options.Texts = Initialization.ConfigObject.Rules.Leaders.Select(l => l.Adjective).ToList();
+        Dialog.OptionsDef.Texts = Initialization.ConfigObject.Rules.Leaders.Select(l => l.Adjective).ToList();
         return base.Show(activeInterface);
     }
 

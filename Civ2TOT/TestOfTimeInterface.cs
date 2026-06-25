@@ -170,10 +170,10 @@ public class TestOfTimeInterface(IMain main) : Civ2Interface(main)
         if (Dialogs.TryGetValue(MainMenu.Title + "2", out var menu2))
         {
             //var existingDialog = DialogHandlers[MainMenu.Title].Dialog;
-            //existingDialog.Options.Texts = menu2.Options.Concat(existingDialog.Options.Texts.Skip(5)).ToList();
+            //existingDialog.OptionsDef.Texts = menu2.OptionsDef.Concat(existingDialog.OptionsDef.Texts.Skip(5)).ToList();
             var existingDialog = DialogHandlers[MainMenu.Title].Dialog;
-            if (existingDialog?.Options != null && menu2?.Options != null)
-                existingDialog.Options.Texts = menu2.Options.Concat(existingDialog.Options.Texts.Skip(5)).ToList();
+            if (existingDialog?.OptionsDef != null && menu2?.Options != null)
+                existingDialog.OptionsDef.Texts = menu2.Options.Concat(existingDialog.OptionsDef.Texts.Skip(5)).ToList();
         }
 
 
@@ -579,6 +579,22 @@ public class TestOfTimeInterface(IMain main) : Civ2Interface(main)
 
     public override List<CityViewTiles> GetCityViewTiles() => [];
     public override List<BinaryStorage> GetCityViewAltTiles() => [];
+
+    public override OptionsLooks GetOptionsLooks(OptionsType? type)
+    {
+        return type switch
+        {
+            OptionsType.Default => new OptionsLooks
+            {
+                Font = Look.DefaultFont,
+                FontSize = Look.LabelFontSize,
+                TextColorFront = Look.LabelColour,
+                TextColorShadow = Look.LabelShadowColour,
+                IconScale = 1.0f
+            },
+            _ => new OptionsLooks(),
+        };
+    }
 
     public override ListboxLooks GetListboxLooks(ListboxType? type)
     {

@@ -37,12 +37,12 @@ public class CustomTribe : BaseDialogHandler
                 }
             };
              
-            if (Dialog.Options is not null)
+            if (Dialog.OptionsDef is not null)
             {
-                Dialog.TextBoxes[0].Description = Dialog.Options.Texts[0];
-                Dialog.TextBoxes[1].Description = Dialog.Options.Texts[1];
-                Dialog.TextBoxes[2].Description = Dialog.Options.Texts[2];
-                Dialog.Options = null;
+                Dialog.TextBoxes[0].Description = Dialog.OptionsDef.Texts[0];
+                Dialog.TextBoxes[1].Description = Dialog.OptionsDef.Texts[1];
+                Dialog.TextBoxes[2].Description = Dialog.OptionsDef.Texts[2];
+                Dialog.OptionsDef = null;
             }
         }
         else

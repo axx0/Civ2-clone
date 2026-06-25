@@ -16,11 +16,11 @@ public class NoOfCivs : SimpleSettingsDialog
     public override IInterfaceAction Show(Civ2Interface activeInterface)
     {
         var possibleCivs = activeInterface.PlayerColours.Length - 1;
-        if(Dialog.Options == null || Dialog.Options.Texts.Count +2 != possibleCivs)
+        if(Dialog.OptionsDef == null || Dialog.OptionsDef.Texts.Count +2 != possibleCivs)
         {
-            var suffix = Dialog.Options?.Texts[0].Split(" ", 2,
+            var suffix = Dialog.OptionsDef?.Texts[0].Split(" ", 2,
                 StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)[1] ?? "Civilizations";
-            Dialog.Options.Texts = Enumerable.Range(0, possibleCivs - 2)
+            Dialog.OptionsDef.Texts = Enumerable.Range(0, possibleCivs - 2)
                 .Select(v => $"{(possibleCivs - v)} {suffix}").ToArray();
         }
         return base.Show(activeInterface);
@@ -28,7 +28,7 @@ public class NoOfCivs : SimpleSettingsDialog
 
     protected override string SetConfigValue(DialogResult result, DialogElements? dialog)
     {
-        Initialization.ConfigObject.NumberOfCivs = dialog.Options.Texts.Count + 2 - result.SelectedIndex;
+        Initialization.ConfigObject.NumberOfCivs = dialog.OptionsDef.Texts.Count + 2 - result.SelectedIndex;
         return Barbarity.Title;
     }
 }

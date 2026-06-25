@@ -20,7 +20,7 @@ public class SelectGender : BaseDialogHandler
         var config = Initialization.ConfigObject;
 
         if (config.IsScenario) 
-            Dialog.Options.SelectedId = config.CivGenders[config.ScenPlayerCivId] == 0 ? 0 : 1;
+            Dialog.OptionsDef.SelectedId = config.CivGenders[config.ScenPlayerCivId] == 0 ? 0 : 1;
 
         return base.Show(activeInterface);
     }

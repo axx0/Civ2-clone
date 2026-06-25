@@ -3,8 +3,10 @@ using Raylib_CSharp;
 using Raylib_CSharp.Collision;
 using Raylib_CSharp.Interact;
 using Raylib_CSharp.Windowing;
+using RaylibUI.BasicTypes;
 using RaylibUI.BasicTypes.Controls;
 using RaylibUI.Controls;
+using RaylibUI.RunGame.GameControls;
 using System.Diagnostics;
 using System.Numerics;
 

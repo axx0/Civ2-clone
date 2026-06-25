@@ -16,7 +16,7 @@ public class CustomisePercentageLand : SimpleSettingsDialog
     protected override string SetConfigValue(DialogResult result, DialogElements? dialog)
     {
         Initialization.ConfigObject.PropLand = result.SelectedButton == dialog.Button[0]
-            ? Initialization.ConfigObject.Random.Next(dialog.Options.Texts.Count)
+            ? Initialization.ConfigObject.Random.Next(dialog.OptionsDef.Texts.Count)
             : result.SelectedIndex;
         return CustomiseLandform.Title;
     }

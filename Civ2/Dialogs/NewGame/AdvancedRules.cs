@@ -18,15 +18,15 @@ public class AdvancedRules : BaseDialogHandler
     public override ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox> popups)
     {
         var res = base.UpdatePopupData(popups);
-        res.Dialog.Options.CheckboxStates = new[]
-        {
+        res.Dialog.OptionsDef.CheckboxStates =
+        [
             Initialization.ConfigObject.SimplifiedCombat,
             Initialization.ConfigObject.FlatWorld, 
             Initialization.ConfigObject.SelectComputerOpponents,
             Initialization.ConfigObject.AcceleratedStartup > 0,
             Initialization.ConfigObject.Bloodlust,
             Initialization.ConfigObject.DontRestartEliminatedPlayers
-        };
+        ];
         return res;
     }
 

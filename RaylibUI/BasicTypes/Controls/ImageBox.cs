@@ -102,10 +102,13 @@ public class ImageBox : BaseControl
         {
             for (int i = 0; i < _image.Length; i++)
             {
-                Graphics.DrawTextureEx(TextureCache.GetImage(_image[i]),
-                    //new System.Numerics.Vector2((int)Bounds.X + Coords[i, 0] * Scale, (int)Bounds.Y + Coords[i, 1] * Scale),
-                    new System.Numerics.Vector2((int)Bounds.X + Coords[i, 0], (int)Bounds.Y + Coords[i, 1]),
-                    0f, _scale, Color.White);
+                if (_image[i] != null)
+                {
+                    Graphics.DrawTextureEx(TextureCache.GetImage(_image[i]),
+                        //new System.Numerics.Vector2((int)Bounds.X + Coords[i, 0] * Scale, (int)Bounds.Y + Coords[i, 1] * Scale),
+                        new System.Numerics.Vector2((int)Bounds.X + Coords[i, 0], (int)Bounds.Y + Coords[i, 1]),
+                        0f, _scale, Color.White);
+                }
             }
         }
 

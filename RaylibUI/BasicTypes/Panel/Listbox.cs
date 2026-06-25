@@ -38,10 +38,19 @@ public class Listbox : BaseControl
     /// </summary>
     public bool HorizontalStacking { get; set; } = false;
 
+    private int _selectedId;
     /// <summary>
     /// Selected control id.
     /// </summary>
-    public int SelectedId { get; set; } = 0;
+    public int SelectedId 
+    {
+        get => _selectedId;
+        set
+        {
+            _selectedId = value;
+            Update();
+        }
+    }
 
     /// <summary>
     /// Meaning you can also move through the controls with keys.
@@ -79,9 +88,8 @@ public class Listbox : BaseControl
         get => _groups;
         set
         {
-            if (value.Count == 0) return;
-
             _groups = value;
+            _selectedId = 0;
             Update();
         }
     }
@@ -103,7 +111,9 @@ public class Listbox : BaseControl
 
         for (int i = 0; i < _groups.Count; i++)
         {
-            Controls.Add(new ListboxControlGroup(_controller, _groups[i], Looks));
+            var entry = new ListboxControlGroup(_controller, _groups[i], Looks);
+            entry.Selected = Selected;
+            Controls.Add(entry);
         }
         _entries = Controls.OfType<ListboxControlGroup>().ToList();
 
@@ -141,12 +151,6 @@ public class Listbox : BaseControl
             Controls.Add(_HscrollBar);
         }
 
-        foreach (var control in _entries)
-        {
-            control.Selected = Selected;
-            Controls.Add(control);
-        }
-
         _tableLayout = new TableLayout();
         for (var dir1 = 0; dir1 < (HorizontalStacking ? _totalRows : _totalColumns); dir1++)
         {
@@ -166,11 +170,11 @@ public class Listbox : BaseControl
         // Select control at start
         if (_entries.Count > 0 && Selectable)
         {
-            if (SelectedId == -1)  // If this is true there's something wrong
+            if (_selectedId == -1)  // If this is true there's something wrong
             {
-                SelectedId = 0;
+                _selectedId = 0;
             }
-            _entries[SelectedId].SelectThis(true);
+            _entries[_selectedId].SelectThis(true);
         }
     }
 
@@ -213,19 +217,19 @@ public class Listbox : BaseControl
 
     private void Selected(ListboxControlGroup control, bool soft)
     {
-        SelectedId = _entries.IndexOf(control);
+        _selectedId = _entries.IndexOf(control);
 
         // If the selected control is beyond the view
         int selectedRow, selectedCol;
         if (HorizontalStacking)
         {
-            selectedRow = SelectedId / _totalColumns;
-            selectedCol = SelectedId % _totalColumns;
+            selectedRow = _selectedId / _totalColumns;
+            selectedCol = _selectedId % _totalColumns;
         }
         else
         {
-            selectedRow = SelectedId % _totalRows;
-            selectedCol = SelectedId / _totalRows;
+            selectedRow = _selectedId % _totalRows;
+            selectedCol = _selectedId / _totalRows;
         }
 
         if (_viewStartingRow + Rows <= selectedRow)
@@ -267,7 +271,7 @@ public class Listbox : BaseControl
         }
 
         ItemSelected?.Invoke(control,
-            new ListboxSelectionEventArgs(SelectedId, soft));
+            new ListboxSelectionEventArgs(_selectedId, soft));
     }
 
     public void ScrollToEnd()
@@ -278,7 +282,7 @@ public class Listbox : BaseControl
 
     public void EnterPressed()
     {
-        _entries[SelectedId].SelectThis(false);
+        _entries[_selectedId].SelectThis(false);
     }
 
     public override bool OnKeyPressed(KeyboardKey key)
@@ -289,44 +293,44 @@ public class Listbox : BaseControl
         switch (key)
         {
             case KeyboardKey.Down or KeyboardKey.Kp2:
-                SelectedId = Math.Min(SelectedId + 1, _entries.Count - 1);
-                _entries[SelectedId].SelectThis(true);
+                _selectedId = Math.Min(_selectedId + 1, _entries.Count - 1);
+                _entries[_selectedId].SelectThis(true);
                 return true;
             case KeyboardKey.Up or KeyboardKey.Kp8:
-                SelectedId = Math.Max(SelectedId - 1, 0);
-                _entries[SelectedId].SelectThis(true);
+                _selectedId = Math.Max(_selectedId - 1, 0);
+                _entries[_selectedId].SelectThis(true);
                 return true;
             case KeyboardKey.End:
-                SelectedId = _entries.Count - 1;
-                _entries[SelectedId].SelectThis(true);
+                _selectedId = _entries.Count - 1;
+                _entries[_selectedId].SelectThis(true);
                 return true;
             case KeyboardKey.Home:
-                SelectedId = 0;
-                _entries[SelectedId].SelectThis(true);
+                _selectedId = 0;
+                _entries[_selectedId].SelectThis(true);
                 return true;
             case KeyboardKey.Left or KeyboardKey.Kp4:
-                selectedCol = SelectedId / _totalRows;
+                selectedCol = _selectedId / _totalRows;
                 if (selectedCol > 0)
                 {
-                    SelectedId -= Rows;
-                    _entries[SelectedId].SelectThis(true);
+                    _selectedId -= Rows;
+                    _entries[_selectedId].SelectThis(true);
                 }
                 return true;
             case KeyboardKey.Right or KeyboardKey.Kp6:
-                selectedCol = SelectedId / _totalRows;
-                if (selectedCol < _totalColumns - 1 && SelectedId + Rows <= _entries.Count - 1)
+                selectedCol = _selectedId / _totalRows;
+                if (selectedCol < _totalColumns - 1 && _selectedId + Rows <= _entries.Count - 1)
                 {
-                    SelectedId += Rows;
-                    _entries[SelectedId].SelectThis(true);
+                    _selectedId += Rows;
+                    _entries[_selectedId].SelectThis(true);
                 }
                 return true;
             case KeyboardKey.PageDown:
-                SelectedId = Math.Min(SelectedId + Rows, _entries.Count - 1);
-                _entries[SelectedId].SelectThis(true);
+                _selectedId = Math.Min(_selectedId + Rows, _entries.Count - 1);
+                _entries[_selectedId].SelectThis(true);
                 return true;
             case KeyboardKey.PageUp:
-                SelectedId = Math.Max(SelectedId - Rows, 0);
-                _entries[SelectedId].SelectThis(true);
+                _selectedId = Math.Max(_selectedId - Rows, 0);
+                _entries[_selectedId].SelectThis(true);
                 return true;
         }
 
