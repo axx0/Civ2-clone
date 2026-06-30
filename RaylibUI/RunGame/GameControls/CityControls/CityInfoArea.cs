@@ -87,7 +87,7 @@ public class CityInfoArea : BaseControl
         for (var i = 0; i < noRoutes; i++)
         {
             var route = _city.TradeRoutes[i];
-            var tradeCity = _game.AllCities[route.Destination];
+            var tradeCity = _game.AllCities.ElementAt(route.Destination);
             var box = new Rectangle(demandsProp.Box.X, demandsProp.Box.Y + 15 + 13 * i, demandsProp.Box.Width, demandsProp.Box.Height);
             _tradeLabels[i] = new CityLabel(controller, new CityLabelProperties($"{tradeCity.Name} {route.Commodity.Name} +xx", 
                 box, demandsProp.Color, demandsProp.ColorShadow, HorizontalAlignment.Left, new Vector2(1, 1)));

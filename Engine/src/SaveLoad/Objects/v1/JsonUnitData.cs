@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Civ2engine.Units;
 using Model.Core.Cities;
 using Model.Core.Units;
@@ -12,7 +13,7 @@ public class JsonUnitData
     {
         
     }
-    public JsonUnitData(Unit unit, List<City> cities)
+    public JsonUnitData(Unit unit, IEnumerable<City> cities)
     {
         X = unit.X;
         Y = unit.Y;
@@ -31,7 +32,10 @@ public class JsonUnitData
         Order = unit.Order;
         if (unit.HomeCity != null)
         {
-            HomeCity = cities.IndexOf(unit.HomeCity) +1;
+            HomeCity = cities
+                .Select((city, index) => (city, index))
+                .FirstOrDefault(x => x.city == unit.HomeCity)
+                .index + 1;
         }
         GoToY = unit.GoToY;
         GoToX = unit.GoToX;

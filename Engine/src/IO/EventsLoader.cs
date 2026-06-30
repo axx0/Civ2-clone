@@ -57,9 +57,12 @@ namespace Civ2engine.IO
                     defenderCiv = ReadString(contents, "defender");
                     trigger = new CityTaken
                     {
-                        City = _gameObjects.Cities.Find(c => StringEquals(c.Name, ReadString(contents, "city"))),
-                        AttackerCivId = StringEquals(attackerCiv, "ANYBODY") ? 0 : _gameObjects.Civilizations.FindIndex(c => StringEquals(c.TribeName, attackerCiv)),
-                        DefenderCivId = StringEquals(defenderCiv, "ANYBODY") ? 0 : _gameObjects.Civilizations.FindIndex(c => StringEquals(c.TribeName, defenderCiv)),
+                        City = _gameObjects.Civilizations.SelectMany(civ => civ.Cities)
+                            .FirstOrDefault(c => StringEquals(c.Name, ReadString(contents, "city"))),
+                        AttackerCivId = StringEquals(attackerCiv, "ANYBODY") ? 
+                            0 : _gameObjects.Civilizations.FindIndex(c => StringEquals(c.TribeName, attackerCiv)),
+                        DefenderCivId = StringEquals(defenderCiv, "ANYBODY") ? 
+                            0 : _gameObjects.Civilizations.FindIndex(c => StringEquals(c.TribeName, defenderCiv)),
                     };
                     break;
                 case "TURN":
@@ -257,7 +260,8 @@ namespace Civ2engine.IO
                             CreatedUnitId = _rules.UnitTypes.ToList().FindIndex(u => StringEquals(u.Name, ReadString(contents, "unit", indx + 1))),
                             OwnerCivId = civId,
                             Veteran = StringEquals(ReadString(contents, "veteran", indx + 1), "yes"),
-                            HomeCity = _gameObjects.Cities.Find(c => StringEquals(c.Name, ReadString(contents, "homecity", indx + 1))),
+                            HomeCity = _gameObjects.Civilizations.SelectMany(civ => civ.Cities)
+                                .FirstOrDefault(c => StringEquals(c.Name, ReadString(contents, "homecity", indx + 1))),
                             Locations = locations
                         };
                         break;
@@ -292,9 +296,10 @@ namespace Civ2engine.IO
                     case "MAKEAGGRESSION":
                         action = new MakeAggression
                         {
-                            WhoCivId = _gameObjects.Civilizations.FindIndex(c => StringEquals(c.TribeName, ReadString(contents, "who", indx + 1))),
-                            WhomCivId = StringEquals("triggerreceiver", ReadString(contents, "whom", indx + 1)) ? 
-                            -1 : _gameObjects.Civilizations.FindIndex(c => StringEquals(c.TribeName, ReadString(contents, "whom", indx + 1))),
+                            WhoCivId = _gameObjects.Civilizations
+                                .FindIndex(c => StringEquals(c.TribeName, ReadString(contents, "who", indx + 1))),
+                            WhomCivId = StringEquals("triggerreceiver", ReadString(contents, "whom", indx + 1)) ?
+                                -1 : _gameObjects.Civilizations.FindIndex(c => StringEquals(c.TribeName, ReadString(contents, "whom", indx + 1))),
                         };
                         break;
                     case "JUSTONCE":

@@ -47,7 +47,6 @@ namespace Civ2engine.UnitActions
             };
             tile.WorkedBy = city;
             tile.CityHere = city;
-            game.AllCities.Add(tile.CityHere);
             unit.Owner.Cities.Add(tile.CityHere);
 
             game.SetImprovementsForCity(city);

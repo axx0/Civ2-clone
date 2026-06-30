@@ -1,17 +1,10 @@
-﻿using Civ2engine.Advances;
-using Civ2engine.Enums;
-using Civ2engine.IO;
+﻿using Civ2engine.IO;
 using Civ2engine.MapObjects;
 using Civ2engine.Production;
-using Civ2engine.Statistics;
-using Civ2engine.Terrains;
-using Civ2engine.Units;
-using Model;
 using Model.Core;
 using Model.Core.Advances;
 using Model.Core.Cities;
 using Model.Core.Mapping;
-using Raylib_CSharp.Geometry;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -830,7 +823,7 @@ public class Read
             _ => 92         // ToT
         };
 
-        objects.Cities = new();
+        List<City> allCities = [];
         var productionItems = ProductionOrder.GetAll(rules);
         var totalUnitOrders = productionItems.Count(o => o is UnitProductionOrder);
         for (int i = 0; i < numberOfCities; i++)
@@ -1020,6 +1013,8 @@ public class Read
                 Location = tile
             };
 
+            owner.Cities.Add(city);
+
             for (int j = 1; j < 8; j++)
             {
                 if (whoKnowsAboutIt[j])
@@ -1032,8 +1027,6 @@ public class Read
                     };
                 }
             }
-
-            owner.Cities.Add(city);
 
             foreach (var (first, second) in objects.Maps[mapIndex].CityRadius(tile, true).Zip(distributionWorkers))
             {
@@ -1048,13 +1041,13 @@ public class Read
             for (var improvementNo = 0; improvementNo < noImprovements; improvementNo++)
                 if (improvements[improvementNo]) city.AddImprovement(rules.Improvements[improvementNo + 1]);
 
-            objects.Cities.Add(city);
+            allCities.Add(city);
         }
 
         // Set home cities of units
         foreach (var civ in objects.Civilizations)
             foreach (var unit in civ.Units)
-                unit.HomeCity = unitHomeCity[unit.Id] == 255 ? null : objects.Cities[unitHomeCity[unit.Id]];
+                unit.HomeCity = unitHomeCity[unit.Id] == 255 ? null : allCities[unitHomeCity[unit.Id]];
         #endregion
         #region Data for finding next city name
         //=========================
@@ -1604,7 +1597,9 @@ public class Read
             case 0x2:
                 trigger = new CityTaken
                 {
-                    City = objects.Cities.Find(c => c.Name == strings[0]),
+                    City = objects.Civilizations
+                        .SelectMany(civ => civ.Cities)
+                        .FirstOrDefault(c => c.Name == strings[0]),
                     AttackerCivId = triggerParam[16],
                     DefenderCivId = version <= 44 ? triggerParam[28] : triggerParam[20],
                     IsUnitSpy = modifiers[6],
@@ -1617,8 +1612,8 @@ public class Read
                 trigger = new TurnTrigger()
                 {
                     Turn = version <= 44 ?
-                            BitConverter.ToUInt16(new byte[2] { triggerParam[36], triggerParam[37] }) :
-                            BitConverter.ToUInt16(new byte[2] { triggerParam[30], triggerParam[31] })
+                            BitConverter.ToUInt16([triggerParam[36], triggerParam[37]]) :
+                            BitConverter.ToUInt16([triggerParam[30], triggerParam[31]])
                 };
                 break;
 
@@ -1626,8 +1621,8 @@ public class Read
                 trigger = new TurnInterval
                 {
                     Interval = version <= 44 ?
-                            BitConverter.ToUInt16(new byte[2] { triggerParam[36], triggerParam[37] }) :
-                            BitConverter.ToUInt16(new byte[2] { triggerParam[30], triggerParam[31] })
+                            BitConverter.ToUInt16([triggerParam[36], triggerParam[37]]) :
+                            BitConverter.ToUInt16([triggerParam[30], triggerParam[31]])
                 };
                 break;
 
@@ -1650,8 +1645,8 @@ public class Read
                 {
                     trigger = new Negotiation2
                     {
-                        TalkerMask = BitConverter.ToInt32(new byte[4] { triggerParam[16], triggerParam[17], triggerParam[18], triggerParam[19] }),
-                        ListenerMask = BitConverter.ToInt32(new byte[4] { triggerParam[20], triggerParam[21], triggerParam[22], triggerParam[23] })
+                        TalkerMask = BitConverter.ToInt32([triggerParam[16], triggerParam[17], triggerParam[18], triggerParam[19]]),
+                        ListenerMask = BitConverter.ToInt32([triggerParam[20], triggerParam[21], triggerParam[22], triggerParam[23]])
                     };
                 }
                 break;
@@ -1735,7 +1730,7 @@ public class Read
                     CountUsed = modifiers[15],
                     TechnologyUsed = modifiers[18],
                     WhoId = triggerParam[16],
-                    FlagMask = BitConverter.ToInt32(new byte[4] { triggerParam[24], triggerParam[25], triggerParam[26], triggerParam[27] }),
+                    FlagMask = BitConverter.ToInt32([triggerParam[24], triggerParam[25], triggerParam[26], triggerParam[27]]),
                     TechnologyId = triggerParam[36],
                     CountThreshold = triggerParam[38],
                     Strings = strings.GetRange(0, 1)
@@ -1787,35 +1782,34 @@ public class Read
                         MapCoords = version <= 44 ?
                             new int[4, 2]
                             {
-                                    { BitConverter.ToInt16(new byte[2] { actionParam[100], actionParam[101] }),
-                                      BitConverter.ToInt16(new byte[2] { actionParam[104], actionParam[105] }) },
-                                    { BitConverter.ToInt16(new byte[2] { actionParam[108], actionParam[109] }),
-                                      BitConverter.ToInt16(new byte[2] { actionParam[112], actionParam[113] }) },
-                                    { BitConverter.ToInt16(new byte[2] { actionParam[116], actionParam[117] }),
-                                      BitConverter.ToInt16(new byte[2] { actionParam[120], actionParam[121] }) },
-                                    { BitConverter.ToInt16(new byte[2] { actionParam[124], actionParam[125] }),
-                                      BitConverter.ToInt16(new byte[2] { actionParam[128], actionParam[129] }) }
+                                    { BitConverter.ToInt16([actionParam[100], actionParam[101]]),
+                                      BitConverter.ToInt16([actionParam[104], actionParam[105]]) },
+                                    { BitConverter.ToInt16([actionParam[108], actionParam[109]]),
+                                      BitConverter.ToInt16([actionParam[112], actionParam[113]]) },
+                                    { BitConverter.ToInt16([actionParam[116], actionParam[117]]),
+                                      BitConverter.ToInt16([actionParam[120], actionParam[121]]) },
+                                    { BitConverter.ToInt16([actionParam[124], actionParam[125]]),
+                                      BitConverter.ToInt16([actionParam[128], actionParam[129]]) }
                             } : new int[4, 2]
                             {
-                                    { BitConverter.ToInt16(new byte[2] { actionParam[93], actionParam[94] }),
-                                      BitConverter.ToInt16(new byte[2] { actionParam[95], actionParam[96] }) },
-                                    { BitConverter.ToInt16(new byte[2] { actionParam[97], actionParam[98] }),
-                                      BitConverter.ToInt16(new byte[2] { actionParam[99], actionParam[100] }) },
-                                    { BitConverter.ToInt16(new byte[2] { actionParam[101], actionParam[102] }),
-                                      BitConverter.ToInt16(new byte[2] { actionParam[103], actionParam[104] }) },
-                                    { BitConverter.ToInt16(new byte[2] { actionParam[105], actionParam[106] }),
-                                      BitConverter.ToInt16(new byte[2] { actionParam[107], actionParam[108] }) }
+                                    { BitConverter.ToInt16([actionParam[93], actionParam[94]]),
+                                      BitConverter.ToInt16([actionParam[95], actionParam[96]]) },
+                                    { BitConverter.ToInt16([actionParam[97], actionParam[98]]),
+                                      BitConverter.ToInt16([actionParam[99], actionParam[100]]) },
+                                    { BitConverter.ToInt16([actionParam[101], actionParam[102]]),
+                                      BitConverter.ToInt16([actionParam[103], actionParam[104]]) },
+                                    { BitConverter.ToInt16([actionParam[105], actionParam[106]]),
+                                      BitConverter.ToInt16([actionParam[107], actionParam[108]]) }
                             },
                         MapDest = version <= 44 ?
-                            new int[2]
-                            {
+                            [
                                     BitConverter.ToInt16(new byte[2] { actionParam[132], actionParam[133] }),
                                     BitConverter.ToInt16(new byte[2] { actionParam[136], actionParam[137] })
-                            } : new int[2]
-                            {
+                            ] :
+                            [
                                     BitConverter.ToInt16(new byte[2] { actionParam[125], actionParam[126] }),
                                     BitConverter.ToInt16(new byte[2] { actionParam[127], actionParam[128] })
-                            },
+                            ],
                         Strings = strings.GetRange(0, 2),
                     });
                     strings.RemoveRange(0, 2);
@@ -1831,73 +1825,75 @@ public class Read
                         Locations = version <= 44 ?
                         new int[10, 3]
                         {
-                                { BitConverter.ToInt16(new byte[2] { actionParam[172], actionParam[173] }),
-                                  BitConverter.ToInt16(new byte[2] { actionParam[176], actionParam[177] }),
+                                { BitConverter.ToInt16([actionParam[172], actionParam[173]]),
+                                  BitConverter.ToInt16([actionParam[176], actionParam[177]]),
                                   0 },
-                                { BitConverter.ToInt16(new byte[2] { actionParam[180], actionParam[181] }),
-                                  BitConverter.ToInt16(new byte[2] { actionParam[184], actionParam[185] }),
+                                { BitConverter.ToInt16([actionParam[180], actionParam[181]]),
+                                  BitConverter.ToInt16([actionParam[184], actionParam[185]]),
                                   0 },
-                                { BitConverter.ToInt16(new byte[2] { actionParam[188], actionParam[189] }),
-                                  BitConverter.ToInt16(new byte[2] { actionParam[192], actionParam[193] }),
+                                { BitConverter.ToInt16([actionParam[188], actionParam[189]]),
+                                  BitConverter.ToInt16([actionParam[192], actionParam[193]]),
                                   0 },
-                                { BitConverter.ToInt16(new byte[2] { actionParam[196], actionParam[197] }),
-                                  BitConverter.ToInt16(new byte[2] { actionParam[200], actionParam[201] }),
+                                { BitConverter.ToInt16([actionParam[196], actionParam[197]]),
+                                  BitConverter.ToInt16([actionParam[200], actionParam[201]]),
                                   0 },
-                                { BitConverter.ToInt16(new byte[2] { actionParam[204], actionParam[205] }),
-                                  BitConverter.ToInt16(new byte[2] { actionParam[208], actionParam[209] }),
+                                { BitConverter.ToInt16([actionParam[204], actionParam[205]]),
+                                  BitConverter.ToInt16([actionParam[208], actionParam[209]]),
                                   0 },
-                                { BitConverter.ToInt16(new byte[2] { actionParam[212], actionParam[213] }),
-                                  BitConverter.ToInt16(new byte[2] { actionParam[216], actionParam[217] }),
+                                { BitConverter.ToInt16([actionParam[212], actionParam[213]]),
+                                  BitConverter.ToInt16([actionParam[216], actionParam[217]]),
                                   0 },
-                                { BitConverter.ToInt16(new byte[2] { actionParam[220], actionParam[221] }),
-                                  BitConverter.ToInt16(new byte[2] { actionParam[224], actionParam[225] }),
+                                { BitConverter.ToInt16([actionParam[220], actionParam[221]]),
+                                  BitConverter.ToInt16([actionParam[224], actionParam[225]]),
                                   0 },
-                                { BitConverter.ToInt16(new byte[2] { actionParam[228], actionParam[229] }),
-                                  BitConverter.ToInt16(new byte[2] { actionParam[232], actionParam[233] }),
+                                { BitConverter.ToInt16([actionParam[228], actionParam[229]]),
+                                  BitConverter.ToInt16([actionParam[232], actionParam[233]]),
                                   0 },
-                                { BitConverter.ToInt16(new byte[2] { actionParam[236], actionParam[237] }),
-                                  BitConverter.ToInt16(new byte[2] { actionParam[240], actionParam[241] }),
+                                { BitConverter.ToInt16([actionParam[236], actionParam[237]]),
+                                  BitConverter.ToInt16([actionParam[240], actionParam[241]]),
                                   0 },
-                                { BitConverter.ToInt16(new byte[2] { actionParam[244], actionParam[245] }),
-                                  BitConverter.ToInt16(new byte[2] { actionParam[248], actionParam[249] }),
+                                { BitConverter.ToInt16([actionParam[244], actionParam[245]]),
+                                  BitConverter.ToInt16([actionParam[248], actionParam[249]]),
                                   0 },
                         } : new int[10, 3]
                         {
-                                { BitConverter.ToInt16(new byte[2] { actionParam[133], actionParam[134] }),
-                                  BitConverter.ToInt16(new byte[2] { actionParam[135], actionParam[136] }),
-                                  BitConverter.ToInt16(new byte[2] { actionParam[137], actionParam[138] }) },
-                                { BitConverter.ToInt16(new byte[2] { actionParam[139], actionParam[140] }),
-                                  BitConverter.ToInt16(new byte[2] { actionParam[141], actionParam[142] }),
-                                  BitConverter.ToInt16(new byte[2] { actionParam[143], actionParam[144] }) },
-                                { BitConverter.ToInt16(new byte[2] { actionParam[145], actionParam[146] }),
-                                  BitConverter.ToInt16(new byte[2] { actionParam[147], actionParam[148] }),
-                                  BitConverter.ToInt16(new byte[2] { actionParam[149], actionParam[150] }) },
-                                { BitConverter.ToInt16(new byte[2] { actionParam[151], actionParam[152] }),
-                                  BitConverter.ToInt16(new byte[2] { actionParam[153], actionParam[154] }),
-                                  BitConverter.ToInt16(new byte[2] { actionParam[155], actionParam[156] }) },
-                                { BitConverter.ToInt16(new byte[2] { actionParam[157], actionParam[158] }),
-                                  BitConverter.ToInt16(new byte[2] { actionParam[159], actionParam[160] }),
-                                  BitConverter.ToInt16(new byte[2] { actionParam[161], actionParam[162] }) },
-                                { BitConverter.ToInt16(new byte[2] { actionParam[163], actionParam[164] }),
-                                  BitConverter.ToInt16(new byte[2] { actionParam[165], actionParam[166] }),
-                                  BitConverter.ToInt16(new byte[2] { actionParam[167], actionParam[168] }) },
-                                { BitConverter.ToInt16(new byte[2] { actionParam[169], actionParam[170] }),
-                                  BitConverter.ToInt16(new byte[2] { actionParam[171], actionParam[172] }),
-                                  BitConverter.ToInt16(new byte[2] { actionParam[173], actionParam[174] }) },
-                                { BitConverter.ToInt16(new byte[2] { actionParam[175], actionParam[176] }),
-                                  BitConverter.ToInt16(new byte[2] { actionParam[177], actionParam[178] }),
-                                  BitConverter.ToInt16(new byte[2] { actionParam[179], actionParam[180] }) },
-                                { BitConverter.ToInt16(new byte[2] { actionParam[181], actionParam[182] }),
-                                  BitConverter.ToInt16(new byte[2] { actionParam[183], actionParam[184] }),
-                                  BitConverter.ToInt16(new byte[2] { actionParam[185], actionParam[186] }) },
-                                { BitConverter.ToInt16(new byte[2] { actionParam[187], actionParam[188] }),
-                                  BitConverter.ToInt16(new byte[2] { actionParam[189], actionParam[190] }),
-                                  BitConverter.ToInt16(new byte[2] { actionParam[191], actionParam[192] }) }
+                                { BitConverter.ToInt16([actionParam[133], actionParam[134]]),
+                                  BitConverter.ToInt16([actionParam[135], actionParam[136]]),
+                                  BitConverter.ToInt16([actionParam[137], actionParam[138]]) },
+                                { BitConverter.ToInt16([actionParam[139], actionParam[140]]),
+                                  BitConverter.ToInt16([actionParam[141], actionParam[142]]),
+                                  BitConverter.ToInt16([actionParam[143], actionParam[144]]) },
+                                { BitConverter.ToInt16([actionParam[145], actionParam[146]]),
+                                  BitConverter.ToInt16([actionParam[147], actionParam[148]]),
+                                  BitConverter.ToInt16([actionParam[149], actionParam[150]]) },
+                                { BitConverter.ToInt16([actionParam[151], actionParam[152]]),
+                                  BitConverter.ToInt16([actionParam[153], actionParam[154]]),
+                                  BitConverter.ToInt16([actionParam[155], actionParam[156]]) },
+                                { BitConverter.ToInt16([actionParam[157], actionParam[158]]),
+                                  BitConverter.ToInt16([actionParam[159], actionParam[160]]),
+                                  BitConverter.ToInt16([actionParam[161], actionParam[162]]) },
+                                { BitConverter.ToInt16([actionParam[163], actionParam[164]]),
+                                  BitConverter.ToInt16([actionParam[165], actionParam[166]]),
+                                  BitConverter.ToInt16([actionParam[167], actionParam[168]]) },
+                                { BitConverter.ToInt16([actionParam[169], actionParam[170]]),
+                                  BitConverter.ToInt16([actionParam[171], actionParam[172]]),
+                                  BitConverter.ToInt16([actionParam[173], actionParam[174]]) },
+                                { BitConverter.ToInt16([actionParam[175], actionParam[176]]),
+                                  BitConverter.ToInt16([actionParam[177], actionParam[178]]),
+                                  BitConverter.ToInt16([actionParam[179], actionParam[180]]) },
+                                { BitConverter.ToInt16([actionParam[181], actionParam[182]]),
+                                  BitConverter.ToInt16([actionParam[183], actionParam[184]]),
+                                  BitConverter.ToInt16([actionParam[185], actionParam[186]]) },
+                                { BitConverter.ToInt16([actionParam[187], actionParam[188]]),
+                                  BitConverter.ToInt16([actionParam[189], actionParam[190]]),
+                                  BitConverter.ToInt16([actionParam[191], actionParam[192]]) }
                         },
                         NoLocations = version <= 44 ? 10 : actionParam[203],    // TODO: where is this read for MGE?
                         Veteran = version <= 44 ? actionParam[256] == 1 : actionParam[204] == 1,
                         Count = version <= 44 ? 1 : actionParam[205],    // TODO: where is this read for MGE?
-                        HomeCity = objects.Cities.Find(c => c.Name == strings[2]),
+                        HomeCity = objects.Civilizations
+                            .SelectMany(civ => civ.Cities)
+                            .FirstOrDefault(c => c.Name == strings[2]),
                         Strings = strings.GetRange(0, 3)
                     });
                     strings.RemoveRange(0, 3);
@@ -1950,28 +1946,28 @@ public class Read
                         MapCoords = version <= 44 ?
                             new int[4, 2]
                             {
-                                    { BitConverter.ToInt16(new byte[2] { actionParam[344], actionParam[345] }),
-                                      BitConverter.ToInt16(new byte[2] { actionParam[348], actionParam[349] }) },
-                                    { BitConverter.ToInt16(new byte[2] { actionParam[352], actionParam[353] }),
-                                      BitConverter.ToInt16(new byte[2] { actionParam[356], actionParam[357] }) },
-                                    { BitConverter.ToInt16(new byte[2] { actionParam[360], actionParam[361] }),
-                                      BitConverter.ToInt16(new byte[2] { actionParam[364], actionParam[365] }) },
-                                    { BitConverter.ToInt16(new byte[2] { actionParam[368], actionParam[369] }),
-                                      BitConverter.ToInt16(new byte[2] { actionParam[372], actionParam[373] }) }
+                                    { BitConverter.ToInt16([actionParam[344], actionParam[345]]),
+                                      BitConverter.ToInt16([actionParam[348], actionParam[349]]) },
+                                    { BitConverter.ToInt16([actionParam[352], actionParam[353]]),
+                                      BitConverter.ToInt16([actionParam[356], actionParam[357]]) },
+                                    { BitConverter.ToInt16([actionParam[360], actionParam[361]]),
+                                      BitConverter.ToInt16([actionParam[364], actionParam[365]]) },
+                                    { BitConverter.ToInt16([actionParam[368], actionParam[369]]),
+                                      BitConverter.ToInt16([actionParam[372], actionParam[373]]) }
                             } : new int[4, 2]
                             {
-                                    { BitConverter.ToInt16(new byte[2] { actionParam[109], actionParam[110] }),
-                                      BitConverter.ToInt16(new byte[2] { actionParam[111], actionParam[112] }) },
-                                    { BitConverter.ToInt16(new byte[2] { actionParam[113], actionParam[114] }),
-                                      BitConverter.ToInt16(new byte[2] { actionParam[115], actionParam[116] }) },
-                                    { BitConverter.ToInt16(new byte[2] { actionParam[117], actionParam[118] }),
-                                      BitConverter.ToInt16(new byte[2] { actionParam[119], actionParam[120] }) },
-                                    { BitConverter.ToInt16(new byte[2] { actionParam[121], actionParam[122] }),
-                                      BitConverter.ToInt16(new byte[2] { actionParam[123], actionParam[124] }) }
+                                    { BitConverter.ToInt16([actionParam[109], actionParam[110]]),
+                                      BitConverter.ToInt16([actionParam[111], actionParam[112]]) },
+                                    { BitConverter.ToInt16([actionParam[113], actionParam[114]]),
+                                      BitConverter.ToInt16([actionParam[115], actionParam[116]]) },
+                                    { BitConverter.ToInt16([actionParam[117], actionParam[118]]),
+                                      BitConverter.ToInt16([actionParam[119], actionParam[120]]) },
+                                    { BitConverter.ToInt16([actionParam[121], actionParam[122]]),
+                                      BitConverter.ToInt16([actionParam[123], actionParam[124]]) }
                             },
                         MapId = version <= 44 ? 0 : actionParam[209],
                         ExceptionMask = version <= 44 ? (short)0 :
-                            BitConverter.ToInt16(new byte[2] { actionParam[193], actionParam[194] })
+                            BitConverter.ToInt16([actionParam[193], actionParam[194]])
                     });
                     break;
 
@@ -2025,7 +2021,7 @@ public class Read
                     actions.Add(new TransportAction
                     {
                         UnitId = actionParam[221],
-                        TransportMask = BitConverter.ToInt16(new byte[2] { actionParam[89], actionParam[90] }),
+                        TransportMask = BitConverter.ToInt16([actionParam[89], actionParam[90]]),
                         TransportMode = actionParam[92],
                     });
                     break;
@@ -2065,7 +2061,7 @@ public class Read
                         Continuous = modifiers[12],
                         MaskUsed = modifiers[16],
                         Flag = actionParam[85],
-                        Mask = BitConverter.ToInt32(new byte[4] { actionParam[85], actionParam[86], actionParam[87], actionParam[88] }),
+                        Mask = BitConverter.ToInt32([actionParam[85], actionParam[86], actionParam[87], actionParam[88]]),
                         WhoId = actionParam[220],
                     });
                     break;

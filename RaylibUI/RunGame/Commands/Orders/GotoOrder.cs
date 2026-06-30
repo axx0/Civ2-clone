@@ -61,7 +61,7 @@ public class GotoOrder(GameScreen gameScreen) : Order(gameScreen, new Shortcut(K
         }
     }
 
-    private void Show(List<City> cities, Unit activeUnit)
+    private void Show(IEnumerable<City> cities, Unit activeUnit)
     {
         var islands = MovementFunctions.GetIslandsFor(activeUnit);
         _cities = cities.Where(c => c.Location != activeUnit.CurrentLocation &&

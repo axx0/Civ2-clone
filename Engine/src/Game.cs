@@ -27,7 +27,7 @@ namespace Civ2engine
         private int _difficultyLevel;
         private readonly BarbarianActivityType _barbarianActivity;
         public FastRandom Random { get; set; } = new();
-        public List<City> AllCities { get; } = new();
+        public IEnumerable<City> AllCities => AllCivilizations.SelectMany(civ => civ.Cities);
 
         public IHistory History { get; }
 

@@ -2,10 +2,10 @@
 using Model.Controls;
 using Model.Core.Cities;
 using Model.Interface;
+using Raylib_CSharp.Colors;
 using RaylibUI.BasicTypes;
 using RaylibUI.BasicTypes.Controls;
 using RaylibUtils;
-using Raylib_CSharp.Colors;
 
 namespace RaylibUI.RunGame.GameControls;
 
@@ -57,14 +57,15 @@ public class CitiesCheatTab : BaseControl
         _ownersPanel.Type = OptionsType.Small;
         _ownersPanel.ItemSelected += (_, args) => 
         {
-            _cheatEntries.Cities[_cityBox.SelectedId].OwnerId = args.Index;
+            var cityIndex = _gameScreen.Game.AllCities.ToList().IndexOf(_selectedCity);
+            _cheatEntries.Cities[cityIndex].OwnerId = args.Index;
         };
         
         Controls.Add(_ownersPanel);
 
         _civBox.ItemSelected += CivSelected;
         _cityBox.ItemSelected += CitySelected;
-        _citiesList = _gameScreen.Game.AllCities;
+        _citiesList = _gameScreen.Game.AllCities.ToList();
 
         dialog.Focused = _civBox;
     }
@@ -90,10 +91,9 @@ public class CitiesCheatTab : BaseControl
     private void CivSelected(object? sender, ListboxSelectionEventArgs args)
     {
         _citiesList = args.Index == 0 ?
-            _gameScreen.Game.AllCities :
-            _gameScreen.Game.AllCities.Where(c => c.OwnerId == args.Index - 1 && c.Owner.Alive).ToList();
+            _gameScreen.Game.AllCities.ToList() :
+            _gameScreen.Game.AllCivilizations[args.Index - 1].Cities;
         _cityBox.Groups = _citiesList.Select(c => c.Name).Select(t => new ListboxGroup(t)).ToList();
-
 
         if (_citiesList.Count == 0)
         {
@@ -124,7 +124,8 @@ public class CitiesCheatTab : BaseControl
             _cityImage.Coords = new int[,] { { 0, 0 }, 
                 { 2 * (int)cityImage.FlagLoc.X, 2 * (int)cityImage.FlagLoc.Y - flagH } };
 
-            _ownersPanel.SelectedId = _cheatEntries.Cities[_cityBox.SelectedId].OwnerId;
+            var index = _gameScreen.Game.AllCities.ToList().IndexOf(_selectedCity);
+            _ownersPanel.SelectedId = _cheatEntries.Cities[index].OwnerId;
         }
         
         OnResize();

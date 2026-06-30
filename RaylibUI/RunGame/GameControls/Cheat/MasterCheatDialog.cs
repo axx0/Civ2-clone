@@ -27,11 +27,11 @@ public class MasterCheatDialog : BaseDialog
         _game = _gameScreen.Game;
 
         // Copy properties to new object
-        for (int i = 0; i < _game.AllCities.Count; i++)
+        for (int i = 0; i < _game.AllCities.Count(); i++)
         {
             CheatEntries.Cities.Add(new()
             {
-                OwnerId = _game.AllCities[i].OwnerId
+                OwnerId = _game.AllCities.ElementAt(i).OwnerId
             });
         }
 
@@ -95,9 +95,9 @@ public class MasterCheatDialog : BaseDialog
 
     private void ChangeCityOwners()
     {
-        for (var i = 0; i < _game.AllCities.Count; i++)
+        for (var i = 0; i < _game.AllCities.Count(); i++)
         {
-            var city = _game.AllCities[i];
+            var city = _game.AllCities.ElementAt(i);
             var currentCityOwnerId = city.Owner.Id;
             var newOwner = _game.AllCivilizations[CheatEntries.Cities[i].OwnerId];
             var newOwnerId = CheatEntries.Cities[i].OwnerId;
@@ -107,7 +107,9 @@ public class MasterCheatDialog : BaseDialog
             var cityTile = city.Location;
 
             // Change city's owner
+            city.Owner.Cities.Remove(city);
             city.Owner = newOwner;
+            newOwner.Cities.Add(city);
 
             // Current & new owner should have knowledge of this event
             cityTile.PlayerKnowledge[currentCityOwnerId].CityHere.OwnerId = newOwnerId;

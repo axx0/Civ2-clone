@@ -34,7 +34,6 @@ namespace Civ2engine
             var tile0 = _maps[0].Tile[0, 0];
             
             AllCivilizations.AddRange(civilizations);
-
             CityNames = NameLoader.LoadCityNames(gamePaths);
 
             Players = civilizations.Select(c => new AiPlayer(_difficultyLevel, c, tile0, this, new AiInterface( this,c, _difficultyLevel, Script))).Cast<IPlayer>()
@@ -98,7 +97,6 @@ namespace Civ2engine
             }
 
             _activeCiv = playerCiv;
-            AllCities.AddRange(objects.Cities);
             if (gameData.CitiesBuiltSoFar == null)
             {
                 foreach (Civilization civ in AllCivilizations)
@@ -123,10 +121,10 @@ namespace Civ2engine
                 var map = _maps[index];
                 map.NormalizeIslands();
                 map.CalculateFertility(Rules.Terrains[index]);
-                AllCities.ForEach(c =>
+                foreach (var city in AllCities)
                 {
-                    map.AdjustFertilityForCity(c.Location);
-                });
+                    map.AdjustFertilityForCity(city.Location);
+                }
             }
 
             foreach (var civilization in AllCivilizations)

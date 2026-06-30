@@ -14,7 +14,6 @@ namespace Civ2engine.OriginalSaves
     {
         public Unit ActiveUnit { get; set; } = null!;
         public Scenario Scenario { get; set; }
-        public List<City> Cities { get; set; }
         public List<Transporter> Transporters { get; set; }
         public List<Civilization> Civilizations { get; set; }
         public List<Map> Maps { get; set; }

@@ -37,7 +37,7 @@ public interface IGame
     IGameDate Date { get; }
     
     int TurnNumber { get; set; }
-    List<City> AllCities { get; }
+    IEnumerable<City> AllCities { get; }
     IPlayer[] Players { get; }
     int PollutionSkulls { get; }
     int GlobalTempRiseOccured { get; }
