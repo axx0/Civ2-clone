@@ -18,14 +18,16 @@ public abstract class BaseControl : IControl
     private bool _clickStart;
     private MouseButton _clickButton;
     private bool _visible;
+    private readonly ControlCollection _controls;
     protected IControlLayout Controller { get; }
-    
+
     public bool EventTransparent { get; }
 
     protected BaseControl(IControlLayout controller, bool eventTransparent = false)
     {
         Controller = controller;
         EventTransparent = eventTransparent;
+        _controls = new ControlCollection(this);
         Visible = true;
     }
 
@@ -43,16 +45,21 @@ public abstract class BaseControl : IControl
     public virtual int Height { get; set; }
 
     public Rectangle Bounds => new(
-        Parent.Bounds.X + Location.X, 
-        Parent.Bounds.Y + Location.Y,
+        (Parent?.Bounds.X ?? 0) + Location.X,
+        (Parent?.Bounds.Y ?? 0) + Location.Y,
         Width,
         Height);
 
     public bool Visible
     {
-        get 
+        get
         {
-            if (Location.X + Width <= 0 ||
+            // A control that hasn't been added to a container isn't shown
+            if (Parent == null)
+            {
+                return false;
+            }
+            else if (Location.X + Width <= 0 ||
                 Location.X > Parent.Bounds.Width ||
                 Location.Y + Height <= 0 ||
                 Location.Y > Parent.Bounds.Height)
@@ -73,32 +80,19 @@ public abstract class BaseControl : IControl
     }
 
     public virtual bool CanFocus => false;
-    public IList<IControl> Controls { get; protected set; } = [];
-
-    private IComponent _parent;
-    public IComponent? Parent => _parent ??= SearchForParent(Controller);
+    /// <summary>
+    /// Child controls. Adding a control here sets its <see cref="Parent"/>; assigning a new list replaces all children.
+    /// </summary>
+    public IList<IControl> Controls
+    {
+        get => _controls;
+        protected set => _controls.ReplaceWith(value);
+    }
 
     /// <summary>
-    /// Search for this control's parent control.
+    /// Container this control was added to (a control or a layout controller). Set by <see cref="ControlCollection"/>.
     /// </summary>
-    private IComponent SearchForParent(IComponent parent)
-    {
-        foreach (IControl c in parent.Controls)
-        {
-            if (c == this)
-            {
-                return parent;
-            }
-            else
-            {
-                var candidate = SearchForParent(c);
-                if (candidate != null)
-                    return candidate;
-            }
-        }
-
-        return null;
-    }
+    public IComponent? Parent { get; internal set; }
 
 
     public virtual bool OnKeyPressed(KeyboardKey key)

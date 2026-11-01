@@ -17,11 +17,12 @@ public abstract class BaseLayoutController : IControlLayout
         LayoutPadding = layoutPadding;
         MainWindow = main;
         Location = new Vector2(0);
+        Controls = new ControlCollection(this);
     }
-    
+
     private IControl? _focused;
-    
-    public IList<IControl> Controls { get; } = [];
+
+    public IList<IControl> Controls { get; }
 
     public Rectangle Bounds => new(Location.X, Location.Y, Width, Height);
 
