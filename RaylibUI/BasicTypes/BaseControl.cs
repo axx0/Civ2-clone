@@ -194,6 +194,48 @@ public abstract class BaseControl : IControl
         return -1;
     }
 
+    /// <summary>
+    /// Size this control wants, as calculated by the last <see cref="Measure"/> call.
+    /// </summary>
+    public Size DesiredSize { get; private set; } = new(0, 0);
+
+    /// <summary>
+    /// First layout pass: work out how big this control wants to be within the available space.
+    /// </summary>
+    public Size Measure(Size available)
+    {
+        DesiredSize = MeasureCore(available);
+        return DesiredSize;
+    }
+
+    /// <summary>
+    /// Second layout pass: place this control at its final position and size (relative to its parent).
+    /// </summary>
+    public void Arrange(Rectangle finalRect)
+    {
+        Location = new Vector2(finalRect.X, finalRect.Y);
+        Width = (int)finalRect.Width;
+        Height = (int)finalRect.Height;
+        ArrangeCore(finalRect);
+    }
+
+    /// <summary>
+    /// Override to calculate the desired size. Containers should measure their children here.
+    /// Defaults to the preferred width/height so existing controls keep working.
+    /// </summary>
+    protected virtual Size MeasureCore(Size available)
+    {
+        return new Size(GetPreferredWidth(), GetPreferredHeight());
+    }
+
+    /// <summary>
+    /// Override to arrange children inside this control. Defaults to <see cref="OnResize"/>.
+    /// </summary>
+    protected virtual void ArrangeCore(Rectangle finalRect)
+    {
+        OnResize();
+    }
+
     protected Vector2 GetRelativeMousePosition()
     {
         return Input.GetMousePosition() - new Vector2(Bounds.X, Bounds.Y);

@@ -49,6 +49,21 @@ public interface IControl : IComponent
 
     int GetPreferredHeight();
     void OnResize();
+
+    /// <summary>
+    /// Size this control wants, as calculated by the last <see cref="Measure"/> call.
+    /// </summary>
+    Size DesiredSize { get; }
+
+    /// <summary>
+    /// First layout pass: work out how big this control wants to be within the available space.
+    /// </summary>
+    Size Measure(Size available);
+
+    /// <summary>
+    /// Second layout pass: place this control at its final position and size (relative to its parent).
+    /// </summary>
+    void Arrange(Rectangle finalRect);
     
     bool EventTransparent { get; }
     bool Visible { get; set; }
