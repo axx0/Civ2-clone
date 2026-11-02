@@ -1,5 +1,6 @@
 using System.Numerics;
 using Model;
+using Raylib_CSharp.Transformations;
 using RaylibUI.BasicTypes;
 using RaylibUI.BasicTypes.Controls;
 using Button = RaylibUI.Controls.Button;
@@ -81,9 +82,9 @@ public class DynamicSizingDialog : BaseDialog
         var menu = Controls.OfType<ControlGroup>().FirstOrDefault();
         if (menu is not null)
         {
-            menu.ResizeChildWidths(_innerPanel.Width);
-            menu.OnResize();
-            menu.Location = new Vector2(LayoutPadding.Left, _innerPanel.Location.Y + _maxHeight + 3);
+            menu.Measure(new Size(_innerPanel.Width, int.MaxValue));
+            menu.Arrange(new Rectangle(LayoutPadding.Left, _innerPanel.Location.Y + _maxHeight + 3,
+                _innerPanel.Width, menu.DesiredSize.Height));
         }
 
         // Adjust header label position

@@ -14,6 +14,11 @@ public interface IControl : IComponent
     int Height { get; set; }
 
     /// <summary>
+    /// Empty space around the control. Containers include it when measuring and arranging their children.
+    /// </summary>
+    Padding Margin { get; set; }
+
+    /// <summary>
     /// Bounds of control relative to game window.
     /// </summary>
     Rectangle Bounds { get; }

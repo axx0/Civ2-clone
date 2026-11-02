@@ -1,4 +1,5 @@
 using Civ2engine;
+using Model;
 using Raylib_CSharp.Colors;
 using Raylib_CSharp.Interact;
 using Raylib_CSharp.Rendering;
@@ -43,6 +44,11 @@ public abstract class BaseControl : IControl
     public virtual int Width { get; set; }
 
     public virtual int Height { get; set; }
+
+    /// <summary>
+    /// Empty space around the control. Containers include it when measuring and arranging their children.
+    /// </summary>
+    public Padding Margin { get; set; }
 
     public Rectangle Bounds => new(
         (Parent?.Bounds.X ?? 0) + Location.X,

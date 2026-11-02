@@ -43,38 +43,31 @@ public class Button : BaseControl
         {
             _text = value;
             _textSize = TextManager.MeasureTextEx(_font, _text, _fontSize, 0f);
+            _preferredSize = null;
         }
     }
 
-    private int _width;
+    // Size set by a parent/Arrange; null = follow the preferred size
+    private int? _width;
     public override int Width
     {
-        get
-        {
-            if (_width == 0)
-            {
-                _width = GetPreferredWidth();
-            }
-
-            return _width;
-        }
-        set { _width = value; }
+        get => _width ?? GetPreferredWidth();
+        set => _width = value;
     }
 
-    private int _height;
+    private int? _height;
     public override int Height
     {
-        get
-        {
-            if (_height == 0)
-            {
-                _height = GetPreferredHeight();
-            }
-
-            return _height;
-        }
-        set { _height = value; }
+        get => _height ?? GetPreferredHeight();
+        set => _height = value;
     }
+
+    // Cached because image buttons have to look up their image size
+    private Size? _preferredSize;
+    private Size PreferredSize => _preferredSize ??= _backgroundImage == null
+        ? new Size(Math.Max((int)_textSize.X + 10, 160), 36)
+        : new Size(Math.Max((int)_textSize.X, Images.GetImageWidth(_backgroundImage, _active, Scale)),
+            Images.GetImageHeight(_backgroundImage, _active, Scale));
 
     public override void Draw(bool pulse)
     {
@@ -111,19 +104,27 @@ public class Button : BaseControl
     {
         get { return _fontSize; }
         set
-        { 
+        {
             _fontSize = value;
             _textSize = TextManager.MeasureTextEx(_font, _text, _fontSize, 0f);
+            _preferredSize = null;
         }
     }
 
     private Texture2D _texture;
+    /// <summary>
+    /// Button background, repainted whenever the button's size changes.
+    /// </summary>
     public Texture2D Texture
     {
         get
         {
-            if (_texture.Width == 0)
+            if ((_texture.Width != Width || _texture.Height != Height) && Width > 0 && Height > 0)
             {
+                if (_texture.Width != 0)
+                {
+                    _texture.Unload();
+                }
                 _texture = ImageUtils.PaintButtonBase(Width, Height);
             }
             return _texture;
@@ -132,7 +133,16 @@ public class Button : BaseControl
 
     public bool Enabled { get; set; } = true;
 
-    public float Scale { get; set; }
+    private float _scale;
+    public float Scale
+    {
+        get => _scale;
+        set
+        {
+            _scale = value;
+            _preferredSize = null;
+        }
+    }
 
     public override void OnMouseEnter()
     {
@@ -150,14 +160,9 @@ public class Button : BaseControl
         base.OnMouseLeave();
     }
 
-    public override int GetPreferredHeight()
-    {
-        return _backgroundImage == null ? 36 : Images.GetImageHeight(_backgroundImage, _active, Scale);
-    }
+    public override int GetPreferredHeight() => PreferredSize.Height;
 
-    public override int GetPreferredWidth()
-    {
-        return _backgroundImage == null ? Math.Max((int)_textSize.X + 10, 160) :
-            Math.Max((int)_textSize.X, Images.GetImageWidth(_backgroundImage, _active, Scale));
-    }
+    public override int GetPreferredWidth() => PreferredSize.Width;
+
+    protected override Size MeasureCore(Size available) => PreferredSize;
 }
