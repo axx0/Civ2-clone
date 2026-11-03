@@ -13,11 +13,17 @@ public class Cell
     public Vector2 Location { get; set; }
     public Padding Padding { get; set; } = Padding.None;
 
-    public Cell(IControl control, int row, int col, Padding? padding = null)
+    /// <summary>
+    /// Control fills the column's full width (minus padding) instead of keeping its own width.
+    /// </summary>
+    public bool Stretch { get; set; }
+
+    public Cell(IControl control, int row, int col, Padding? padding = null, bool stretch = false)
     {
         Control = control;
         Row = row;
         Column = col;
+        Stretch = stretch;
         if (padding != null)
         {
             Padding = (Padding)padding;

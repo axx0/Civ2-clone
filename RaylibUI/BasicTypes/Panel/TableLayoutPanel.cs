@@ -103,6 +103,64 @@ public class TableLayoutPanel : BaseControl
         }
     }
 
+    /// <summary>
+    /// Desired size = columns and rows built from the cells' desired sizes (plus cell padding),
+    /// limited to the visible rows/columns, plus room for the horizontal scrollbar if needed.
+    /// </summary>
+    protected override Size MeasureCore(Size available)
+    {
+        if (_tableLayout == null) return new Size(0, 0);
+
+        foreach (var cell in _tableLayout.Cells.Where(c => c.Control is not null))
+        {
+            cell.Control!.Measure(new Size(
+                Math.Max(0, available.Width - cell.Padding.Left - cell.Padding.Right),
+                Math.Max(0, available.Height - cell.Padding.Top - cell.Padding.Bottom)));
+        }
+
+        var columnWidths = _tableLayout.GetColumnWidths(c => c.DesiredSize.Width);
+        var rowHeights = _tableLayout.GetRowHeights(c => c.DesiredSize.Height);
+
+        var width = columnWidths.Skip(_startingControlCol).Take(MaxControlColumns).Sum();
+        var height = rowHeights.Skip(_startingControlRow).Take(MaxControlRows).Sum();
+        if (MaxControlColumns < _tableLayout.ColumnCount)
+        {
+            height += _HscrollBar.Height;
+        }
+
+        return new Size(width, height);
+    }
+
+    /// <summary>
+    /// Size each control from its desired size (stretched cells fill their column; extra width goes
+    /// to the last column), then position them and the scrollbars as in <see cref="OnResize"/>.
+    /// </summary>
+    protected override void ArrangeCore(Rectangle finalRect)
+    {
+        if (_tableLayout == null) return;
+
+        var columnWidths = _tableLayout.GetColumnWidths(c => c.DesiredSize.Width);
+        var extra = Width - columnWidths.Skip(_startingControlCol).Take(MaxControlColumns).Sum();
+        if (extra > 0)
+        {
+            columnWidths[^1] += extra;
+        }
+
+        foreach (var cell in _tableLayout.Cells.Where(c => c.Control is not null))
+        {
+            var control = cell.Control!;
+            var width = cell.Stretch
+                ? Math.Max(0, columnWidths[cell.Column] - cell.Padding.Left - cell.Padding.Right)
+                : control.DesiredSize.Width;
+            // Location is set by OnResize below
+            control.Arrange(new Rectangle(0, 0, width, control.DesiredSize.Height));
+        }
+
+        // Rows are built from the arranged heights, since a stretched control
+        // (e.g. a listbox) may change its height when its width changes
+        OnResize();
+    }
+
     public override void Draw(bool pulse)
     {
         //Graphics.DrawRectangleRec(Bounds, BackgroundColour);

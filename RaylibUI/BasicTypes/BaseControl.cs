@@ -227,11 +227,14 @@ public abstract class BaseControl : IControl
 
     /// <summary>
     /// Override to calculate the desired size. Containers should measure their children here.
-    /// Defaults to the preferred width/height so existing controls keep working.
+    /// Defaults to the preferred width/height so existing controls keep working;
+    /// controls without a preference (-1) keep their current size.
     /// </summary>
     protected virtual Size MeasureCore(Size available)
     {
-        return new Size(GetPreferredWidth(), GetPreferredHeight());
+        var width = GetPreferredWidth();
+        var height = GetPreferredHeight();
+        return new Size(width < 0 ? Width : width, height < 0 ? Height : height);
     }
 
     /// <summary>

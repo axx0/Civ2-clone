@@ -15,38 +15,53 @@ public class TableLayout
         Cells = [];
     }
 
-    public void Add(IControl control, int row, int column, Padding? padding = null)
+    public void Add(IControl control, int row, int column, Padding? padding = null, bool stretch = false)
     {
-        Cells.Add(new Cell(control, row, column, padding));
+        Cells.Add(new Cell(control, row, column, padding, stretch));
         RowCount = Math.Max(RowCount, row + 1);
         ColumnCount = Math.Max(ColumnCount, column + 1);
+    }
+
+    /// <summary>
+    /// Height of each row = tallest cell in it (control height + cell padding).
+    /// </summary>
+    public int[] GetRowHeights(Func<IControl, int> controlHeight)
+    {
+        var heights = new int[RowCount];
+        for (int row = 0; row < RowCount; row++)
+        {
+            var cells = Cells.Where(c => c.Row == row && c.Control is not null);
+            if (cells.Any())
+            {
+                heights[row] = cells.Max(c => controlHeight(c.Control!) + c.Padding.Top + c.Padding.Bottom);
+            }
+        }
+        return heights;
+    }
+
+    /// <summary>
+    /// Width of each column = widest cell in it (control width + cell padding).
+    /// </summary>
+    public int[] GetColumnWidths(Func<IControl, int> controlWidth)
+    {
+        var widths = new int[ColumnCount];
+        for (int col = 0; col < ColumnCount; col++)
+        {
+            var cells = Cells.Where(c => c.Column == col && c.Control is not null);
+            if (cells.Any())
+            {
+                widths[col] = cells.Max(c => controlWidth(c.Control!) + c.Padding.Left + c.Padding.Right);
+            }
+        }
+        return widths;
     }
 
 
     // StartingRow&Col determines which control has Location=(0,0)
     public void CalculateDimensions(int startingRow, int startingCol, int visibleRows, int visibleCols)
     {
-        // Get max heights of each row
-        _maxHeights = new int[RowCount];
-        for (int row = 0; row < RowCount; row++)
-        {
-            var cells = Cells.Where(c => c.Row == row && c.Control is not null);
-            if (cells.Any())
-            {
-                _maxHeights[row] = cells.Max(c => c.Control.Height + c.Padding.Top + c.Padding.Bottom);
-            }
-        }
-
-        // Get max widths of each column
-        _maxWidths = new int[ColumnCount];
-        for (int col = 0; col < ColumnCount; col++)
-        {
-            var cells = Cells.Where(c => c.Column == col && c.Control is not null);
-            if (cells.Any())
-            {
-                _maxWidths[col] = cells.Max(c => c.Control.Width + c.Padding.Left + c.Padding.Right);
-            }
-        }
+        _maxHeights = GetRowHeights(c => c.Height);
+        _maxWidths = GetColumnWidths(c => c.Width);
 
         // Get locations of cells
         foreach (var cell in Cells)
