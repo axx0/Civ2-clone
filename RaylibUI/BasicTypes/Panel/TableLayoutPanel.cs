@@ -118,8 +118,8 @@ public class TableLayoutPanel : BaseControl
                 Math.Max(0, available.Height - cell.Padding.Top - cell.Padding.Bottom)));
         }
 
-        var columnWidths = _tableLayout.GetColumnWidths(c => c.DesiredSize.Width);
-        var rowHeights = _tableLayout.GetRowHeights(c => c.DesiredSize.Height);
+        var columnWidths = _tableLayout.GetColumnWidths(MeasuredWidth);
+        var rowHeights = _tableLayout.GetRowHeights(c => c.Control!.DesiredSize.Height);
 
         var width = columnWidths.Skip(_startingControlCol).Take(MaxControlColumns).Sum();
         var height = rowHeights.Skip(_startingControlRow).Take(MaxControlRows).Sum();
@@ -139,7 +139,7 @@ public class TableLayoutPanel : BaseControl
     {
         if (_tableLayout == null) return;
 
-        var columnWidths = _tableLayout.GetColumnWidths(c => c.DesiredSize.Width);
+        var columnWidths = _tableLayout.GetColumnWidths(MeasuredWidth);
         var extra = Width - columnWidths.Skip(_startingControlCol).Take(MaxControlColumns).Sum();
         if (extra > 0)
         {
@@ -159,6 +159,16 @@ public class TableLayoutPanel : BaseControl
         // Rows are built from the arranged heights, since a stretched control
         // (e.g. a listbox) may change its height when its width changes
         OnResize();
+    }
+
+    /// <summary>
+    /// Width a cell asks for. A stretched control without a width of its own (listbox, options panel)
+    /// only fills the column, so it doesn't make the column wider.
+    /// </summary>
+    private static int MeasuredWidth(Cell cell)
+    {
+        var control = cell.Control!;
+        return cell.Stretch && control.GetPreferredWidth() < 0 ? 0 : control.DesiredSize.Width;
     }
 
     public override void Draw(bool pulse)

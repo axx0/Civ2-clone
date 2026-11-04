@@ -13,6 +13,8 @@ public class DynamicSizingDialog : BaseDialog
 
     private readonly HeaderLabel? _headerLabel;
     private TableLayoutPanel _innerPanel;
+    private ImageBox? _image;
+    private int _contentWidth;
     private int _maxHeight;
 
     private ControlGroup? _buttons;
@@ -37,68 +39,56 @@ public class DynamicSizingDialog : BaseDialog
     }
 
 
+    /// <summary>
+    /// Standard dialog layout: header on top, optional image left of the content table, buttons below.
+    /// Width = max(header, image + max(table content, requested width)); buttons never widen the dialog.
+    /// </summary>
     public override void Resize(int width, int height)
     {
-        _innerPanel = Controls.OfType<TableLayoutPanel>().FirstOrDefault();
+        _innerPanel = Controls.OfType<TableLayoutPanel>().First();
         _innerPanel.MaxControlRows = 999;
 
-        var imageBox = _innerPanel.Controls.OfType<ImageBox>().FirstOrDefault();
-        if (imageBox != null)
-        {
-            imageBox.Height = 1;
-        }
-        var imageWidth = imageBox?.GetPreferredWidth() ?? 0;
-        int maxTextWidth = 0;
-        var labels = _innerPanel.Controls.OfType<LabelControl>();
-        if (labels.Any())
-        {
-            maxTextWidth = labels.Max(c => c.Width);
-        }
-        _innerPanel.Width = Math.Max(_headerLabel?.Width ?? 0 - PaddingSide, imageWidth + Math.Max(maxTextWidth, _requestedWidth));
+        var unlimited = new Size(int.MaxValue, int.MaxValue);
+        var imageWidth = _image?.GetPreferredWidth() ?? 0;
+        var imageHeight = _image?.GetPreferredHeight() ?? 0;
+        var headerWidth = _headerLabel?.Measure(unlimited).Width ?? 0;
+        var table = _innerPanel.Measure(unlimited);
 
-        var options = _innerPanel.Controls.OfType<OptionsPanel>().FirstOrDefault();
-        if (options is not null)
-        {
-            options.Width = _innerPanel.Width - imageWidth;
-            options.OnResize();
-        }
+        _contentWidth = Math.Max(headerWidth, imageWidth + Math.Max(table.Width, _requestedWidth));
 
-        var listbox = _innerPanel.Controls.OfType<Listbox>().FirstOrDefault();
-        if (listbox is not null)
-        {
-            var cell = _innerPanel.TableLayout.Cells.FirstOrDefault(c => c.Control == listbox);
-            listbox.Width = _innerPanel.Width - cell.Padding.Left - cell.Padding.Right - imageWidth;
-            listbox.OnResize();
-        }
+        _image?.Arrange(new Rectangle(LayoutPadding.Left, LayoutPadding.Top, imageWidth, imageHeight));
+        _innerPanel.Arrange(new Rectangle(LayoutPadding.Left + imageWidth, LayoutPadding.Top,
+            _contentWidth - imageWidth, table.Height));
 
-        _innerPanel.OnResize();
-
-        _maxHeight = _innerPanel.Height;
-        if (imageBox != null && _innerPanel.Height < imageBox.GetPreferredHeight())
-        {
-            _maxHeight = imageBox.GetPreferredHeight();
-        }
+        // A stretched listbox may get taller when it gets wider, so use the arranged height
+        _maxHeight = Math.Max(_innerPanel.Height, imageHeight);
 
         var menu = Controls.OfType<ControlGroup>().FirstOrDefault();
         if (menu is not null)
         {
-            menu.Measure(new Size(_innerPanel.Width, int.MaxValue));
-            menu.Arrange(new Rectangle(LayoutPadding.Left, _innerPanel.Location.Y + _maxHeight + 3,
-                _innerPanel.Width, menu.DesiredSize.Height));
+            menu.Measure(new Size(_contentWidth, int.MaxValue));
+            menu.Arrange(new Rectangle(LayoutPadding.Left, LayoutPadding.Top + _maxHeight + 3,
+                _contentWidth, menu.DesiredSize.Height));
         }
 
-        // Adjust header label position
-        if (_headerLabel is not null)
-        {
-            _headerLabel.Location = new Vector2((_innerPanel.Width + PaddingSide) / 2 - _headerLabel.Width / 2, _headerLabel.Location.Y);
-        }
+        // Header spans the whole dialog width; its text is centered within it
+        _headerLabel?.Arrange(new Rectangle(0, 0, Width, LayoutPadding.Top));
 
         SetLocation(width, Width, height, Height);
         BackgroundImage = ImageUtils.PaintDialogBase(_active, Width, Height, LayoutPadding);
     }
 
-    public override int Width => _innerPanel.Width + PaddingSide;
+    public override int Width => _contentWidth + PaddingSide;
     public override int Height => _maxHeight + LayoutPadding.Top + LayoutPadding.Bottom;
+
+    /// <summary>
+    /// Image shown left of the content table.
+    /// </summary>
+    protected void SetImage(ImageBox image)
+    {
+        _image = image;
+        Controls.Add(image);
+    }
 
 
     protected void SetButtons(ControlGroup buttons)

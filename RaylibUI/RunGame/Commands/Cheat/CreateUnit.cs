@@ -85,7 +85,7 @@ public class CreateUnit(GameScreen gameScreen)
             var innerLayout = new TableLayout();
 
             _chooseUnitListbox = MakeUnitsListBox(ui, unitNames);
-            innerLayout.Add(_chooseUnitListbox, 1, 1, new Padding(2, 2, 2, 2));
+            innerLayout.Add(_chooseUnitListbox, 1, 1, new Padding(2, 2, 2, 2), stretch: true);
             _chooseUnitListbox.ItemSelected += ChooseUnitListboxOnItemSelected;
 
             _chooseCivPanel = new OptionsPanel(this)
@@ -93,11 +93,10 @@ public class CreateUnit(GameScreen gameScreen)
                 Texts = createUnitController._selectableCivilizations.Select(civ => civ.Adjective).ToList(),
                 Type = OptionsType.Default
             };
-            innerLayout.Add(_chooseCivPanel, 2, 1, new Padding(2, 2, 2, 2));
+            innerLayout.Add(_chooseCivPanel, 2, 1, new Padding(2, 2, 2, 2), stretch: true);
 
             var innerPanel = new TableLayoutPanel(this)
             {
-                Location = new Vector2(LayoutPadding.Left, LayoutPadding.Top),
                 TableLayout = innerLayout
             };
             Controls.Add(innerPanel);
