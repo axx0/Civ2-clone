@@ -73,15 +73,46 @@ public class MapControl : BaseControl
 
         gameScreen.OnMapEvent += MapEventTriggered;
         player.OnUnitEvent += UnitEventTriggered;
-        Click += OnClick;
-        MouseDown += OnMouseDown;
     }
 
-    private void OnMouseDown(object? sender, MouseEventArgs e)
+    // Button that was pressed on the map; orders are only issued when that press is released
+    private MouseButton? _pressedButton;
+
+    public override void OnMouseDown(MouseEventArgs e)
     {
+        base.OnMouseDown(e);
+        _pressedButton = e.Button;
+
         var tile = GetTileAtMousePosition();
         if(tile == null) return;
         _gameScreen.ActiveMode.MouseDown(tile);
+    }
+
+    public override void OnMouseUp(MouseEventArgs e)
+    {
+        base.OnMouseUp(e);
+        if (e.Button == null || e.Button != _pressedButton) return;
+        _pressedButton = null;
+
+        try
+        {
+            _gameScreen.Focused = this;
+            var tile = GetTileAtMousePosition();
+            if (tile == null)
+            {
+                return;
+            }
+
+            if (_gameScreen.ActiveMode.MapClicked(tile, e.Button.Value))
+            {
+                _gameScreen.ForceRedraw();
+                MapViewChange(tile);
+            }
+        }
+        finally
+        {
+            _gameScreen.ActiveMode.MouseClear();
+        }
     }
 
     private void UnitEventTriggered(object sender, UnitEventArgs e)
@@ -157,29 +188,6 @@ public class MapControl : BaseControl
     }
 
     
-
-    private void OnClick(object? sender, MouseEventArgs mouseEventArgs)
-    {
-        try
-        {
-            _gameScreen.Focused = this;
-            var tile = GetTileAtMousePosition();
-            if (tile == null)
-            {
-                return;
-            }
-
-            if (_gameScreen.ActiveMode.MapClicked(tile, mouseEventArgs.Button ?? MouseButton.Left))
-            {
-                _gameScreen.ForceRedraw();
-                MapViewChange(tile);
-            }
-        }
-        finally
-        {
-            _gameScreen.ActiveMode.MouseClear();
-        }
-    }
 
     private Tile? GetTileAtMousePosition()
     {
