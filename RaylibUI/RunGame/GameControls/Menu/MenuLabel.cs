@@ -27,6 +27,9 @@ public class MenuLabel : LabelControl
 
     public Key Hotkey { get; set; }
 
+    // No capture, so sliding along the menu bar with the button held still switches menus (see OnMouseEnter)
+    public override bool CapturesMouse => false;
+
     public override void OnFocus()
     {
         base.OnFocus();
@@ -53,15 +56,6 @@ public class MenuLabel : LabelControl
     }
 
     public int Index { get; }
-
-    public override void OnMouseMove(Vector2 moveAmount)
-    {
-        base.OnMouseMove(moveAmount);
-        if (Input.IsMouseButtonDown(MouseButton.Left))
-        {
-            //Activate();
-        }
-    }
 
     public override bool OnKeyPressed(KeyboardKey key)
     {

@@ -24,11 +24,13 @@ public class HeaderLabel : LabelControl
     {
     }
 
-    public override void OnMouseMove(Vector2 moveAmount)
+    // Drag the dialog by its title bar (the mouse is captured while the button is held)
+    public override void OnMouseMove(MouseEventArgs e)
     {
-        if (Input.IsMouseButtonDown(MouseButton.Left))
+        base.OnMouseMove(e);
+        if (e.Button == MouseButton.Left)
         {
-            Controller.Move(moveAmount);
+            Controller.Move(e.Movement);
         }
     }
 

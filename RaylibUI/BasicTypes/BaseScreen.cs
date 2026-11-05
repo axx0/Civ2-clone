@@ -81,44 +81,7 @@ public abstract class BaseScreen : BaseLayoutController, IScreen
             }
         }
 
-        var mousePos = Input.GetMousePosition();
-        var control = layoutController.Hovered;
-        if (control != null)
-        {
-            control.OnMouseMove(Input.GetMouseDelta());
-            if (control.Controls != null)
-            {
-                var hoverChild = FindControl(control.Controls,
-                    child => ShapeHelper.CheckCollisionPointRec(mousePos, child.Bounds) && child.Visible);
-                if (hoverChild != null)
-                {
-                    control.OnMouseLeave();
-                    layoutController.Hovered = hoverChild;
-                    hoverChild.OnMouseEnter();
-                }
-            }
-            if (!ShapeHelper.CheckCollisionPointRec(mousePos, control.Bounds))
-            {
-                control.OnMouseLeave();
-                FindHovered(layoutController, mousePos);
-            }
-        }
-        else
-        {
-            FindHovered(layoutController, mousePos);
-        }
-
-        if (layoutController.Hovered == null)
-        {
-            layoutController.MouseOutsideControls(mousePos);
-        }
-    }
-
-    private static void FindHovered(IControlLayout layoutController, Vector2 mousePos)
-    {
-        layoutController.Hovered = FindControl(layoutController.Controls,
-            control => ShapeHelper.CheckCollisionPointRec(mousePos, control.Bounds) && control.Visible);
-        layoutController.Hovered?.OnMouseEnter();
+        _mouse.Process(layoutController);
     }
 
     public void CloseDialog(IControlLayout? dialog)
@@ -149,6 +112,7 @@ public abstract class BaseScreen : BaseLayoutController, IScreen
     private int _renderedWidth;
     private int _renderedHeight;
     private readonly KeyboardKey[] _keys;
+    private readonly MouseDispatcher _mouse = new();
 
     protected BaseScreen(Main main) : base(main, Padding.None)
     {

@@ -169,7 +169,7 @@ public class MapControl : BaseControl
                 return;
             }
 
-            if (_gameScreen.ActiveMode.MapClicked(tile, mouseEventArgs.Button))
+            if (_gameScreen.ActiveMode.MapClicked(tile, mouseEventArgs.Button ?? MouseButton.Left))
             {
                 _gameScreen.ForceRedraw();
                 MapViewChange(tile);

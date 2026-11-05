@@ -15,9 +15,6 @@ namespace RaylibUI;
 public abstract class BaseControl : IControl
 {
     private Vector2 _location;
-    private bool _clickPossible;
-    private bool _clickStart;
-    private MouseButton _clickButton;
     private bool _visible;
     private readonly ControlCollection _controls;
     protected IControlLayout Controller { get; }
@@ -111,53 +108,70 @@ public abstract class BaseControl : IControl
         return false;
     }
 
-    public virtual void OnMouseMove(Vector2 moveAmount)
-    {
-        if (!Visible) return;
+    // Mouse handling. The MouseDispatcher calls these; override them
+    // to react to the mouse, or subscribe to the matching events.
 
-        if (_clickStart)
+    /// <summary>
+    /// Whether pressing a mouse button on this control captures the mouse, so that the control keeps
+    /// getting mouse events until the button is released, even outside its bounds.
+    /// </summary>
+    public virtual bool CapturesMouse => true;
+
+    /// <summary>
+    /// True while this control has captured the mouse. Set to false to release the capture early.
+    /// </summary>
+    public bool Capture
+    {
+        get => Controller.Captured == this;
+        set
         {
-            if (!Input.IsMouseButtonDown(_clickButton))
+            if (value)
             {
-                _clickStart = false;
-                Click?.Invoke(this, new MouseEventArgs { Button = _clickButton});
-            }   
-        }
-        if (_clickPossible)
-        {
-            _clickStart = Input.IsMouseButtonDown(MouseButton.Left);
-            if (_clickStart)
-            {
-                _clickButton = MouseButton.Left;
-                MouseDown?.Invoke(this, new MouseEventArgs { Button = _clickButton});
+                Controller.Captured = this;
             }
-            else
+            else if (Controller.Captured == this)
             {
-                _clickStart = Input.IsMouseButtonDown(MouseButton.Right);
-                if (_clickStart)
-                {
-                    _clickButton = MouseButton.Right;
-                    MouseDown?.Invoke(this, new MouseEventArgs { Button = _clickButton});
-                }
+                Controller.Captured = null;
             }
         }
-    }
-
-    public virtual void OnMouseLeave()
-    {
-        if (!Visible) return;
-
-        _clickPossible = false;
-        _clickStart = false;
     }
 
     public virtual void OnMouseEnter()
     {
-        if (!Visible) return;
+        MouseEnter?.Invoke(this, EventArgs.Empty);
+    }
 
-        _clickPossible = !Input.IsMouseButtonDown(MouseButton.Left) && !Input.IsMouseButtonDown(MouseButton.Right);
+    public virtual void OnMouseLeave()
+    {
+        MouseLeave?.Invoke(this, EventArgs.Empty);
+    }
 
-        _clickStart = false;
+    public virtual void OnMouseMove(MouseEventArgs e)
+    {
+        MouseMove?.Invoke(this, e);
+    }
+
+    public virtual void OnMouseDown(MouseEventArgs e)
+    {
+        MouseDown?.Invoke(this, e);
+    }
+
+    public virtual void OnMouseUp(MouseEventArgs e)
+    {
+        MouseUp?.Invoke(this, e);
+    }
+
+    /// <summary>
+    /// Mouse button was pressed and released on this control.
+    /// </summary>
+    public virtual void OnClick(MouseEventArgs e)
+    {
+        Click?.Invoke(this, e);
+    }
+
+    public virtual void OnMouseWheel(MouseEventArgs e)
+    {
+        MouseWheel?.Invoke(this, e);
     }
 
     public virtual void OnFocus()
@@ -173,9 +187,19 @@ public abstract class BaseControl : IControl
     {
     }
 
-    public event EventHandler<MouseEventArgs> MouseDown;
+    public event EventHandler? MouseEnter;
 
-    public event EventHandler<MouseEventArgs> Click;
+    public event EventHandler? MouseLeave;
+
+    public event EventHandler<MouseEventArgs>? MouseMove;
+
+    public event EventHandler<MouseEventArgs>? MouseDown;
+
+    public event EventHandler<MouseEventArgs>? MouseUp;
+
+    public event EventHandler<MouseEventArgs>? Click;
+
+    public event EventHandler<MouseEventArgs>? MouseWheel;
 
     public virtual void Draw(bool pulse)
     {
@@ -249,9 +273,4 @@ public abstract class BaseControl : IControl
     {
         return Input.GetMousePosition() - new Vector2(Bounds.X, Bounds.Y);
     }
-}
-
-public class MouseEventArgs
-{
-    public MouseButton Button { get; set; }
 }

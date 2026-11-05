@@ -41,9 +41,21 @@ public interface IControl : IComponent
      * This is used by textboxes; most Controls should hook into OnKeyPressed rather than OnCharPressed.
      */
     bool OnCharPressed(char charPressed);
-    void OnMouseMove(Vector2 moveAmount);
-    void OnMouseLeave();
+
+    /// <summary>
+    /// Whether pressing a mouse button on this control captures the mouse until the button is released.
+    /// </summary>
+    bool CapturesMouse { get; }
     void OnMouseEnter();
+    void OnMouseLeave();
+    void OnMouseMove(MouseEventArgs e);
+    void OnMouseDown(MouseEventArgs e);
+    void OnMouseUp(MouseEventArgs e);
+    /// <summary>
+    /// Mouse button was pressed and released on this control.
+    /// </summary>
+    void OnClick(MouseEventArgs e);
+    void OnMouseWheel(MouseEventArgs e);
 
     void OnFocus();
 

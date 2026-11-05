@@ -39,6 +39,12 @@ public abstract class BaseLayoutController : IControlLayout
     }
 
     public IControl? Hovered { get; set; }
+
+    /// <summary>
+    /// Control that currently gets all mouse events (between a mouse press and its release).
+    /// </summary>
+    public IControl? Captured { get; set; }
+
     public abstract void Resize(int width, int height);
     public abstract void Draw(bool pulse);
     public abstract void Move(Vector2 moveAmount);
