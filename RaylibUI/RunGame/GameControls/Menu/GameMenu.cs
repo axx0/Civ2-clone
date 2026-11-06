@@ -32,6 +32,11 @@ public class GameMenu : ControlGroup
     }
 
     /// <summary>
+    /// Control that had keyboard focus before a menu opened; it gets the focus back when the menu closes.
+    /// </summary>
+    public IControl? FocusBeforeMenu { get; set; }
+
+    /// <summary>
     /// Index of the open menu (-1 = no menu open).
     /// </summary>
     public int OpenIndex => Dropdown.Current;

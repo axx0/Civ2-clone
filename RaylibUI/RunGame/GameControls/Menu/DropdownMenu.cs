@@ -27,6 +27,8 @@ public class DropdownMenu(GameScreen gameScreen) : BaseDialog(gameScreen.Main)
         _separatorOffsets.Clear();
         Location = location;
         _current = menuIndex;
+        // The selection belongs to the previous menu's items
+        Focused = null;
         Controls.Clear();
         var childWidths = new List<int>{ 20,10};
         foreach (var command in elements)
@@ -150,81 +152,33 @@ public class DropdownMenu(GameScreen gameScreen) : BaseDialog(gameScreen.Main)
                 MenuBar.Activate(_current + 1);
                 return;
             case KeyboardKey.Down:
-                if (Focused == null)
-                {
-                    Focused = Controls[0];
-                }
-                else if (Focused == Controls[^1])
-                {
-                    Focused = null;
-                }
-                else
-                {
-                    var idx = Controls.IndexOf(Focused);
-                    Focused = Controls[idx + 1];
-                }
-
+            {
+                // Wraps around from the last item to the first
+                if (Controls.Count == 0) return;
+                var idx = Focused == null ? -1 : Controls.IndexOf(Focused);
+                Focused = Controls[(idx + 1) % Controls.Count];
                 return;
+            }
             case KeyboardKey.Up:
-                if (Focused == null)
-                {
-                    Focused = Controls[^1];
-                }
-                else if (Focused == Controls[0])
-                {
-                    Focused = null;
-                }
-                else
-                {
-                    var idx = Controls.IndexOf(Focused);
-                    Focused = Controls[idx - 1];
-                }
-
-                return;
-        }
-
-
-
-
-        if (Focused == null)
-        {
-            var hotControl = Controls.FirstOrDefault(c => c is DropDownItem dd && dd.HotKey == key.ToModelKey());
-            if (hotControl != null)
             {
-                Focused = hotControl;
-                return;
-            }
-        }
-        else
-        {
-            var idx = Controls.IndexOf(Focused);
-            for (int i = idx +1; i != idx; i++)
-            {
-                if (i >= Controls.Count)
-                {
-                    if (idx == -1) break;
-                    i = -1;
-                    continue;
-                }
-
-                if (Controls[i] is DropDownItem dd && dd.HotKey == key.ToModelKey())
-                {
-                    Focused = Controls[i];
-                    return;
-                }
-            }
-
-            if (idx != -1 && Controls[idx] is DropDownItem cdd && cdd.HotKey == key.ToModelKey())
-            {
-                //Do nothing as they pressed the hotkey for this element and there is no conflict
+                // Wraps around from the first item to the last
+                if (Controls.Count == 0) return;
+                var idx = Focused == null ? -1 : Controls.IndexOf(Focused);
+                Focused = idx <= 0 ? Controls[^1] : Controls[idx - 1];
                 return;
             }
         }
 
-        if (MenuBar.Activate(_current, key))
+        // Letters do nothing in an open menu, except Alt+letter, which opens the menu with that title letter
+        // (Alt has already opened the first menu by the time the letter arrives)
+        if (Input.IsKeyDown(KeyboardKey.LeftAlt) || Input.IsKeyDown(KeyboardKey.RightAlt))
         {
-            return;
-        }   
+            if (MenuBar.Activate(_current, key))
+            {
+                return;
+            }
+        }
+
         base.OnKeyPress(key);
     }
 
@@ -258,6 +212,8 @@ public class DropdownMenu(GameScreen gameScreen) : BaseDialog(gameScreen.Main)
     {
         _shown = false;
         gameScreen.CloseDialog(this);
-        gameScreen.Focused = null;
+        // Give the focus back to where it was before the menu opened (e.g. the map)
+        gameScreen.Focused = MenuBar.FocusBeforeMenu;
+        MenuBar.FocusBeforeMenu = null;
     }
 }

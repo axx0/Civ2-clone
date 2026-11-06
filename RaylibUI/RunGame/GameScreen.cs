@@ -202,7 +202,8 @@ public class GameScreen : BaseScreen
     {
         if (key is KeyboardKey.LeftAlt or KeyboardKey.RightAlt)
         {
-            Focused = MenuBar.Controls!.First();
+            // Opens the first menu (and remembers the current focus for when the menu closes)
+            MenuBar.Open(0);
             return;
         }
         var command = new Shortcut(key.ToModelKey(), Input.IsKeyDown(KeyboardKey.RightShift) ||

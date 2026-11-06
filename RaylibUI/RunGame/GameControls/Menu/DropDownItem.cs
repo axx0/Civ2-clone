@@ -38,6 +38,15 @@ internal class DropDownItem : ControlGroup
     public override bool CapturesMouse => false;
 
     /// <summary>
+    /// Hovering selects the item, so mouse and keyboard share one selection (Up/Down continue from here).
+    /// </summary>
+    public override void OnMouseEnter()
+    {
+        base.OnMouseEnter();
+        Controller.Focused = this;
+    }
+
+    /// <summary>
     /// Items run on mouse up; disabled items do nothing and the menu stays open.
     /// </summary>
     public override void OnMouseUp(MouseEventArgs e)
@@ -73,10 +82,7 @@ internal class DropDownItem : ControlGroup
     {
         //Graphics.DrawRectangleLinesEx(Bounds, 1f, Color.Red);
 
-        if (Controller.Hovered == this)
-        {
-            Graphics.DrawRectangle((int)Bounds.X + 1, (int)Bounds.Y + 1, Width - 2, Height - 2, new Color(145, 201, 247, 255));
-        }
+        // The selected item's highlight is drawn by the DropdownMenu
         if (_command.GameCommand != null && _command.GameCommand.Checked)
         {
             Graphics.DrawRectangle((int)Bounds.X + 1, (int)Bounds.Y + 1, 22, Height - 2, new Color(86, 176, 250, 255));

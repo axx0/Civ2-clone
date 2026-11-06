@@ -51,6 +51,11 @@ public class MenuLabel : LabelControl
     {
         if (_gameMenu.Dropdown.Current == Index) return;
 
+        // Remember where the focus was before the menu bar took it, to restore it when the menu closes
+        if (_gameMenu.OpenIndex == -1 && Controller.Focused is not MenuLabel)
+        {
+            _gameMenu.FocusBeforeMenu = Controller.Focused;
+        }
         Controller.Focused = this;
         _gameMenu.Dropdown.Show(Location with { Y = Location.Y + Height }, Index,
             _menuElements.Commands, _menuElements.SeparatorRows);
