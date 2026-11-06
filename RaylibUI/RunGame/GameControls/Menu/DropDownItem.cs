@@ -31,7 +31,19 @@ internal class DropDownItem : ControlGroup
         var textHeight = (int)TextManager.MeasureTextEx(look.MenuFont, texts[0], look.MenuFontSize, 0f).Y;
         Controls.Add(new LabelControl(dropdownMenu, texts[0].Replace("&", ""), true, font: look.MenuFont, fontSize: look.MenuFontSize, padding: new Padding(0, _paddingLeft, 0, 0)));
         Controls.Add(new LabelControl(dropdownMenu, texts.Length > 1 ? texts[1] : string.Empty, true, font: look.MenuFont, fontSize: look.MenuFontSize, horizontalAlignment: HorizontalAlignment.Right, padding: new Padding(0, 0, 0, _paddingRight)));
-        Click += (_, _) => Activate();
+    }
+
+    // No capture: the item under the mouse at release is the one that runs
+    // (e.g. press on a menu title, drag down, release on an item)
+    public override bool CapturesMouse => false;
+
+    /// <summary>
+    /// Items run on mouse up; disabled items do nothing and the menu stays open.
+    /// </summary>
+    public override void OnMouseUp(MouseEventArgs e)
+    {
+        base.OnMouseUp(e);
+        Activate();
     }
 
     public override bool OnKeyPressed(KeyboardKey key)

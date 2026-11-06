@@ -28,4 +28,20 @@ public interface IControlLayout : IComponent
     int Width { get; }
     int Height { get; }
     void MouseOutsideControls(Vector2 mousePos);
+
+    /// <summary>
+    /// A mouse button was pressed outside all controls of this dialog.
+    /// Return true to pass the press on to the dialog/screen underneath (e.g. after closing this dialog).
+    /// </summary>
+    bool OnMouseDownOutside(MouseEventArgs e);
+
+    /// <summary>
+    /// The mouse moved outside all controls of this dialog (and nothing is captured).
+    /// </summary>
+    void OnMouseMoveOutside(MouseEventArgs e);
+
+    /// <summary>
+    /// A mouse button was released outside all controls of this dialog (and nothing is captured).
+    /// </summary>
+    void OnMouseUpOutside(MouseEventArgs e);
 }

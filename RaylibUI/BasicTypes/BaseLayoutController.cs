@@ -91,7 +91,20 @@ public abstract class BaseLayoutController : IControlLayout
 
     public virtual void MouseOutsideControls(Vector2 mousePos)
     {
-        
+
+    }
+
+    public virtual bool OnMouseDownOutside(MouseEventArgs e)
+    {
+        return false;
+    }
+
+    public virtual void OnMouseMoveOutside(MouseEventArgs e)
+    {
+    }
+
+    public virtual void OnMouseUpOutside(MouseEventArgs e)
+    {
     }
 
     protected static IControl? FindControl(IEnumerable<IControl> controls, Func<IControl, bool> matching)

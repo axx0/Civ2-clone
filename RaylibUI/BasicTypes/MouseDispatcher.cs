@@ -19,8 +19,14 @@ public class MouseDispatcher
     private IControl? _pressedControl;
     private MouseButton _pressedButton;
 
-    public void Process(IControlLayout layout)
+    /// <summary>
+    /// Handle this frame's mouse input for the given (topmost) dialog or screen.
+    /// Returns true if the dialog passed a mouse press on to whatever is underneath it
+    /// (see <see cref="IControlLayout.OnMouseDownOutside"/>); the caller then processes the new topmost one.
+    /// </summary>
+    public bool Process(IControlLayout layout)
     {
+        var passPressThrough = false;
         var position = Input.GetMousePosition();
         var movement = Input.GetMouseDelta();
         var wheel = Input.GetMouseWheelMove();
@@ -47,7 +53,11 @@ public class MouseDispatcher
         foreach (var button in Buttons.Where(Input.IsMouseButtonPressed))
         {
             var receiver = layout.Captured ?? target;
-            if (receiver == null) continue;
+            if (receiver == null)
+            {
+                passPressThrough |= layout.OnMouseDownOutside(MakeOutsideArgs(layout, button, position, movement));
+                continue;
+            }
 
             if (_pressedControl == null)
             {
@@ -65,13 +75,28 @@ public class MouseDispatcher
         if (movement != Vector2.Zero)
         {
             var receiver = layout.Captured ?? target;
-            receiver?.OnMouseMove(MakeArgs(receiver, _pressedControl != null ? _pressedButton : null, position, movement));
+            var held = _pressedControl != null ? _pressedButton : (MouseButton?)null;
+            if (receiver != null)
+            {
+                receiver.OnMouseMove(MakeArgs(receiver, held, position, movement));
+            }
+            else
+            {
+                layout.OnMouseMoveOutside(MakeOutsideArgs(layout, held, position, movement));
+            }
         }
 
         foreach (var button in Buttons.Where(Input.IsMouseButtonReleased))
         {
             var receiver = layout.Captured ?? target;
-            receiver?.OnMouseUp(MakeArgs(receiver, button, position, movement));
+            if (receiver != null)
+            {
+                receiver.OnMouseUp(MakeArgs(receiver, button, position, movement));
+            }
+            else
+            {
+                layout.OnMouseUpOutside(MakeOutsideArgs(layout, button, position, movement));
+            }
 
             if (_pressedControl == null || button != _pressedButton) continue;
 
@@ -98,6 +123,8 @@ public class MouseDispatcher
         {
             layout.MouseOutsideControls(position);
         }
+
+        return passPressThrough;
     }
 
     private void ClearPress()
@@ -135,6 +162,17 @@ public class MouseDispatcher
         }
 
         return hit;
+    }
+
+    private static MouseEventArgs MakeOutsideArgs(IControlLayout layout, MouseButton? button, Vector2 position, Vector2 movement)
+    {
+        return new MouseEventArgs
+        {
+            Button = button,
+            Location = position - layout.Location,
+            ScreenLocation = position,
+            Movement = movement
+        };
     }
 
     private static MouseEventArgs MakeArgs(IControl control, MouseButton? button, Vector2 position, Vector2 movement, float wheel = 0)

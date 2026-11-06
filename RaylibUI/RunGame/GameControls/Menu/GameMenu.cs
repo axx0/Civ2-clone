@@ -31,6 +31,47 @@ public class GameMenu : ControlGroup
         Controls = _labels.Cast<IControl>().ToList();
     }
 
+    /// <summary>
+    /// Index of the open menu (-1 = no menu open).
+    /// </summary>
+    public int OpenIndex => Dropdown.Current;
+
+    public void Open(int index)
+    {
+        _labels[index].Activate();
+    }
+
+    public void Close()
+    {
+        if (OpenIndex != -1)
+        {
+            Dropdown.Hide();
+        }
+    }
+
+    /// <summary>
+    /// Open the menu, or close it if it's already open (mouse down on a menu title).
+    /// </summary>
+    public void Toggle(int index)
+    {
+        if (OpenIndex == index)
+        {
+            Close();
+        }
+        else
+        {
+            Open(index);
+        }
+    }
+
+    /// <summary>
+    /// Index of the menu title at the given window position (-1 = none).
+    /// </summary>
+    public int TitleIndexAt(System.Numerics.Vector2 position)
+    {
+        return _labels.FindIndex(l => l.Visible && Raylib_CSharp.Collision.ShapeHelper.CheckCollisionPointRec(position, l.Bounds));
+    }
+
     public void Activate(int index)
     {
         if (index == -1)

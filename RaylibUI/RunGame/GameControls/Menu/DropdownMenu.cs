@@ -14,8 +14,6 @@ public class DropdownMenu(GameScreen gameScreen) : BaseDialog(gameScreen.Main)
     private bool _shown;
     private int _current = -1;
     private readonly IUserInterface _active = gameScreen.MainWindow.ActiveInterface;
-    private bool _clickInMenu;
-    private bool _clickOutSide;
     private readonly List<int> _separatorOffsets = [];
     private int _width, _height;
 
@@ -72,67 +70,67 @@ public class DropdownMenu(GameScreen gameScreen) : BaseDialog(gameScreen.Main)
 
         _width = dropdownWidth;
         _height = (int)(currentY - location.Y + 10);
-        gameScreen.ShowDialog(this,true);
+        // Switching menus re-uses this dialog; it must only be on the dialog stack once
+        if (!_shown)
+        {
+            gameScreen.ShowDialog(this, true);
+        }
         _shown = true;
-        _clickInMenu = false;
-        _clickOutSide = false;
     }
-    
-    
-    // What happens when mouse is outside the active dropdown menu
-    public override void MouseOutsideControls(Vector2 mousePos)
-    {
-        if (Input.IsMouseButtonDown(MouseButton.Left))
-        {
-            if (ShapeHelper.CheckCollisionPointRec(mousePos, MenuBar.Bounds))
-            {
-                _clickInMenu = true;
-                _clickOutSide = false;
-            }
-            else
-            {
-                _clickOutSide = true;
-                _clickInMenu = false;
-            }
-        }
-        else
-        {
-            // Hide the active menu if it's clicked
-            if (_clickInMenu)
-            {
-                foreach (var control in MenuBar.Controls!.OfType<MenuLabel>())
-                {
-                    if (ShapeHelper.CheckCollisionPointRec(mousePos, control.Bounds))
-                    {
-                        if (control.Index == _current)
-                        {
-                            Hide();
-                            //_gameScreen.Focused = control;
-                        }
-                        return;
-                    }
-                }
-            }
 
-            if (_clickOutSide)
-            {
-                Hide();
-                gameScreen.Hovered = null;
-            }
-            
-            // Activate another menu if the mouse hovers over it
-            foreach (var control in MenuBar.Controls!.OfType<MenuLabel>())
-            {
-                if (ShapeHelper.CheckCollisionPointRec(mousePos, control.Bounds))
-                {
-                    if (control.Index != _current)
-                    {
-                        control.Activate();
-                    }
-                    return;
-                }
-            }
+    // Mouse outside the dropdown's items (while open this dialog gets all mouse input)
+
+    /// <summary>
+    /// Mouse down on the open menu's title closes it, on another title opens that one.
+    /// Anywhere else (outside the dropdown) the menu closes and the click still acts on what's underneath.
+    /// </summary>
+    public override bool OnMouseDownOutside(MouseEventArgs e)
+    {
+        var title = MenuBar.TitleIndexAt(e.ScreenLocation);
+        if (title == _current)
+        {
+            Hide();
+            return false;
         }
+        if (title != -1)
+        {
+            MenuBar.Open(title);
+            return false;
+        }
+        if (ShapeHelper.CheckCollisionPointRec(e.ScreenLocation, Bounds))
+        {
+            return false;
+        }
+
+        Hide();
+        return true;
+    }
+
+    /// <summary>
+    /// Moving over another menu title switches to that menu.
+    /// </summary>
+    public override void OnMouseMoveOutside(MouseEventArgs e)
+    {
+        var title = MenuBar.TitleIndexAt(e.ScreenLocation);
+        if (title != -1 && title != _current)
+        {
+            MenuBar.Open(title);
+        }
+    }
+
+    /// <summary>
+    /// Releasing over a menu title keeps the menu open (normal click on a title);
+    /// releasing anywhere else outside the dropdown closes it.
+    /// </summary>
+    public override void OnMouseUpOutside(MouseEventArgs e)
+    {
+        if (MenuBar.TitleIndexAt(e.ScreenLocation) != -1 ||
+            ShapeHelper.CheckCollisionPointRec(e.ScreenLocation, Bounds))
+        {
+            return;
+        }
+
+        Hide();
     }
 
     public override int Height => _height;

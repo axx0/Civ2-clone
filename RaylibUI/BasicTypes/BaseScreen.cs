@@ -81,7 +81,16 @@ public abstract class BaseScreen : BaseLayoutController, IScreen
             }
         }
 
-        _mouse.Process(layoutController);
+        if (_mouse.Process(layoutController))
+        {
+            // The dialog passed a press on (e.g. a dropdown menu that closed on a click outside it):
+            // let the new topmost dialog/screen handle the same press in this frame
+            var next = _dialogs.LastOrDefault(this);
+            if (next != layoutController)
+            {
+                _mouse.Process(next);
+            }
+        }
     }
 
     public void CloseDialog(IControlLayout? dialog)
