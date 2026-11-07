@@ -41,7 +41,7 @@ public class CitiesCheatTab : BaseControl
             Type = ListboxType.Small,
             Groups = civs.Select(t => new ListboxGroup(t)).ToList(),
         };
-        _civBox.Width = _civBox.Controls.OfType<ListboxControlGroup>().Max(w => w.Width) + 15;
+        _civBox.Width = _civBox.PreferredItemWidth + 15;
         Controls.Add(_civBox);
 
         _cityBox = new Listbox(dialog)
@@ -49,7 +49,7 @@ public class CitiesCheatTab : BaseControl
             Type = ListboxType.Small,
             Groups = gameScreen.Game.AllCities.Select(c => c.Name).Select(t => new ListboxGroup(t)).ToList()
         };
-        _cityBox.Width = _cityBox.Controls.OfType<ListboxControlGroup>().Max(w => w.Width) + 15;
+        _cityBox.Width = _cityBox.PreferredItemWidth + 15;
         Controls.Add(_cityBox);
 
         _ownersPanel = new OptionsPanel(dialog);
