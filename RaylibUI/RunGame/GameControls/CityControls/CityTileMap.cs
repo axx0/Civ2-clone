@@ -44,7 +44,7 @@ public class CityTileMap : BaseControl
 
     private void OnClick(object? sender, MouseEventArgs e)
     {
-        var originalClickPos = GetRelativeMousePosition();
+        var originalClickPos = e.Location;
         var removeOffset = originalClickPos - _offset;
         var restoreScale = removeOffset / _scaleFactor;
         

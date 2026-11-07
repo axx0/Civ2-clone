@@ -83,7 +83,7 @@ public class MapControl : BaseControl
         base.OnMouseDown(e);
         _pressedButton = e.Button;
 
-        var tile = GetTileAtMousePosition();
+        var tile = GetTileAt(e.Location);
         if(tile == null) return;
         _gameScreen.ActiveMode.MouseDown(tile);
     }
@@ -97,7 +97,7 @@ public class MapControl : BaseControl
         try
         {
             _gameScreen.Focused = this;
-            var tile = GetTileAtMousePosition();
+            var tile = GetTileAt(e.Location);
             if (tile == null)
             {
                 return;
@@ -189,9 +189,11 @@ public class MapControl : BaseControl
 
     
 
-    private Tile? GetTileAtMousePosition()
+    /// <summary>
+    /// Tile at a position relative to this control (null outside the map area).
+    /// </summary>
+    private Tile? GetTileAt(Vector2 clickPosition)
     {
-        var clickPosition = GetRelativeMousePosition();
         if (clickPosition.X < _padding.Left + _padding.Right || clickPosition.X > _viewWidth + _padding.Left + _padding.Right || clickPosition.Y < _padding.Top || clickPosition.Y > _padding.Top + _viewHeight)
         {
             return null;

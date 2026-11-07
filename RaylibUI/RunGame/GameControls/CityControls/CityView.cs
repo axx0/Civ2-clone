@@ -140,10 +140,13 @@ public class CityView : FullscreenView
         base.Close();
     }
 
-    public override void MouseOutsideControls(Vector2 mousePos)
+    /// <summary>
+    /// Releasing the left button over the picture closes the view.
+    /// </summary>
+    public override void OnMouseUpOutside(MouseEventArgs e)
     {
-        if (Input.IsMouseButtonReleased(MouseButton.Left) &&
-            ShapeHelper.CheckCollisionPointRec(mousePos, new(_offsetX, _offsetY, _picWidth, _picHeight)))
+        if (e.Button == MouseButton.Left &&
+            ShapeHelper.CheckCollisionPointRec(e.ScreenLocation, new(_offsetX, _offsetY, _picWidth, _picHeight)))
         {
             base.Close();
         }

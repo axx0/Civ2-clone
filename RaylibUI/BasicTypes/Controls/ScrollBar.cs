@@ -43,7 +43,7 @@ public class ScrollBar : BaseControl
 
     public void OnClick(object? sender, MouseEventArgs mouseEventArgs)
     {
-        var pos = GetRelativeMousePosition();
+        var pos = mouseEventArgs.Location;
 
         if ((_vertical && pos.Y < _scrollbarDim) ||
             (!_vertical && pos.X < _scrollbarDim))   // Up or left arrow clicked

@@ -119,11 +119,6 @@ public class MouseDispatcher
             target?.OnMouseWheel(MakeArgs(target, null, position, movement, wheel));
         }
 
-        if (target == null && layout.Captured == null)
-        {
-            layout.MouseOutsideControls(position);
-        }
-
         return passPressThrough;
     }
 

@@ -27,7 +27,6 @@ public interface IControlLayout : IComponent
     Vector2 Location { get; }
     int Width { get; }
     int Height { get; }
-    void MouseOutsideControls(Vector2 mousePos);
 
     /// <summary>
     /// A mouse button was pressed outside all controls of this dialog.

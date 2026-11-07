@@ -131,7 +131,7 @@ public class MinimapPanel : BaseControl
         else
         {
             var padding = _active.GetPadding(_gameScreen.MinimapGlobe ? 0 : _headerLabel.TextSize.Y, false);
-            var clickPosition = GetRelativeMousePosition() - new Vector2(padding.Left, padding.Top); // click position relative to drawing area
+            var clickPosition = mouseEventArgs.Location - new Vector2(padding.Left, padding.Top); // click position relative to drawing area
 
             // Clicked outside drawing area
             if (clickPosition.X < 0 || clickPosition.X > _drawArea.Width ||

@@ -268,9 +268,4 @@ public abstract class BaseControl : IControl
     {
         OnResize();
     }
-
-    protected Vector2 GetRelativeMousePosition()
-    {
-        return Input.GetMousePosition() - new Vector2(Bounds.X, Bounds.Y);
-    }
 }

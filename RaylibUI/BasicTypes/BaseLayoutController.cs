@@ -89,11 +89,6 @@ public abstract class BaseLayoutController : IControlLayout
     public virtual int Height { get; }
     public bool Visible => true;
 
-    public virtual void MouseOutsideControls(Vector2 mousePos)
-    {
-
-    }
-
     public virtual bool OnMouseDownOutside(MouseEventArgs e)
     {
         return false;

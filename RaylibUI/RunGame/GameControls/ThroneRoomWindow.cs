@@ -91,11 +91,15 @@ public class ThroneRoomWindow : FullscreenView
         _upgradeIntroScreen = timeToUpgrade;
     }
 
-    public override void MouseOutsideControls(Vector2 mousePos)
+    /// <summary>
+    /// Releasing the left button over the picture closes the window, or picks the section to upgrade.
+    /// </summary>
+    public override void OnMouseUpOutside(MouseEventArgs e)
     {
         if (_timer.Enabled) return;
 
-        if (Input.IsMouseButtonReleased(MouseButton.Left) &&
+        var mousePos = e.ScreenLocation;
+        if (e.Button == MouseButton.Left &&
             ShapeHelper.CheckCollisionPointRec(mousePos, new(_offsetX, _offsetY, PicWidth, PicHeight)))
         {
             if (!_timeToUpgrade)
