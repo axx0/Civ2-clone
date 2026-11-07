@@ -67,7 +67,7 @@ public class MasterCheatDialog : BaseDialog
         };
         Controls.Add(okBtn);
 
-        var tabs = new TabControl(this, new Dictionary<string, IControl> { 
+        var tabs = new TabControl(this, new Dictionary<string, IControl?> {
             { "General", null },
             { "Civilizations", null },
             { "Cities", new CitiesCheatTab(this, gameScreen) },
@@ -75,7 +75,8 @@ public class MasterCheatDialog : BaseDialog
         {
             Width = InnerWidth - 4,
             Height = InnerHeight - 4,
-            Location = new(LayoutPadding.Left + 2, LayoutPadding.Top + 2)
+            Location = new(LayoutPadding.Left + 2, LayoutPadding.Top + 2),
+            SelectedIndex = 2   // the only tab with a page so far
         };
         Controls.Add(tabs);
     }

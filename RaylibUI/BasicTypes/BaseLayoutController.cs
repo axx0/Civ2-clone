@@ -56,7 +56,37 @@ public abstract class BaseLayoutController : IControlLayout
         if (key == KeyboardKey.Tab)
         {
             var backwards = Input.IsKeyDown(KeyboardKey.LeftShift) || Input.IsKeyDown(KeyboardKey.RightShift);
+            var ctrl = Input.IsKeyDown(KeyboardKey.LeftControl) || Input.IsKeyDown(KeyboardKey.RightControl);
+
+            // Ctrl+Tab switches the tabs of the tab control the focus is in (as in Windows)
+            if (ctrl && FindTabControl() is { } tabs)
+            {
+                tabs.SelectNextTab(!backwards);
+                return;
+            }
             SelectNextControl(!backwards);
+        }
+    }
+
+    /// <summary>
+    /// Tab control holding the focused control (or focused itself); with nothing focused, the first one in the dialog.
+    /// </summary>
+    private BasicTypes.TabControl? FindTabControl()
+    {
+        for (var control = _focused; control != null; control = control.Parent as IControl)
+        {
+            if (control is BasicTypes.TabControl tabs) return tabs;
+        }
+        return _focused == null ? FindFirst(Controls) : null;
+
+        static BasicTypes.TabControl? FindFirst(IEnumerable<IControl>? controls)
+        {
+            foreach (var control in controls ?? [])
+            {
+                if (control is BasicTypes.TabControl tabs) return tabs;
+                if (FindFirst(control.Controls) is { } inner) return inner;
+            }
+            return null;
         }
     }
 
