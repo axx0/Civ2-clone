@@ -77,7 +77,8 @@ public class UnitsPresentBox : Listbox
                         ScaleIcon = ImageUtils.ZoomScale(-2 + (int)(6 * (cityWindow.Scale - 1)))},    // zoom = -5 / -2 / 1
                     new ListboxGroupElement { Text = ShortCityName(cityWindow.City), Xoffset = 0, 
                         HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Bottom }],
-                Height = (int)Math.Ceiling(properties.Box.Height / properties.Rows * cityWindow.Scale)
+                // Rounded down, so all the rows fit in the box's height
+                Height = (int)(properties.Box.Height / properties.Rows * cityWindow.Scale)
             };
             groups.Add(group);
         }

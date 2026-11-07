@@ -14,7 +14,7 @@ namespace RaylibUI.BasicTypes;
 
 /// <summary>
 /// List of items (rows of texts, icons and units) that the listbox draws itself.
-/// Items are laid out on a grid of <see cref="Rows"/> x <see cref="Columns"/> visible cells; the rest is reached by scrolling.
+/// Items are laid out on a grid of visible rows (as many as fit the height) x <see cref="Columns"/> cells; the rest is reached by scrolling.
 /// The only child control is the scrollbar.
 /// </summary>
 public class Listbox : BaseControl
@@ -37,7 +37,8 @@ public class Listbox : BaseControl
     }
 
     /// <summary>
-    /// No of rows visible in the box.
+    /// No of rows the box asks for (its preferred height). The rows actually shown follow the height
+    /// it's given: as many whole rows as fit, at least one.
     /// </summary>
     public int Rows { get; set; } = 10;
 
@@ -115,6 +116,7 @@ public class Listbox : BaseControl
     private readonly ScrollBar _vScrollBar, _hScrollBar;
     private List<ItemLayout> _items = [];
     private int _rowHeight;
+    private int _visibleRows;   // worked out from the height in LayoutBox
     private int _viewStartingRow, _viewStartingCol;
     private int _pressedIndex = -1;
 
@@ -130,9 +132,14 @@ public class Listbox : BaseControl
 
     private ScrollBar ActiveScrollBar => _verticalScrollbar ? _vScrollBar : _hScrollBar;
 
+    /// <summary>
+    /// Rows shown in the box (before the first layout: the rows asked for).
+    /// </summary>
+    private int VisibleRows => _visibleRows > 0 ? _visibleRows : Math.Max(1, Rows);
+
     // Grid of all items (visible and not)
-    private int TotalColumns => _verticalScrollbar ? Math.Max(1, Columns) : (int)Math.Ceiling(_items.Count / (double)Math.Max(1, Rows));
-    private int TotalRows => _verticalScrollbar ? (int)Math.Ceiling(_items.Count / (double)Math.Max(1, Columns)) : Math.Max(1, Rows);
+    private int TotalColumns => _verticalScrollbar ? Math.Max(1, Columns) : (int)Math.Ceiling(_items.Count / (double)VisibleRows);
+    private int TotalRows => _verticalScrollbar ? (int)Math.Ceiling(_items.Count / (double)Math.Max(1, Columns)) : VisibleRows;
 
     private (int row, int col) CellOf(int index) => HorizontalStacking
         ? (index / TotalColumns, index % TotalColumns)
@@ -146,7 +153,9 @@ public class Listbox : BaseControl
         return index < _items.Count ? index : -1;
     }
 
-    private int ScrollBarWidth => _verticalScrollbar && _items.Count > Rows * Columns ? _vScrollBar.Width : 0;
+    private int ScrollBarWidth => _verticalScrollbar && _items.Count > VisibleRows * Columns ? _vScrollBar.Width : 0;
+
+    private int HScrollBarHeight => _verticalScrollbar ? 0 : _hScrollBar.Height;
 
     private int ColumnWidth => (Width - ScrollBarWidth) / Math.Max(1, Columns);
 
@@ -184,27 +193,44 @@ public class Listbox : BaseControl
         }
     }
 
+    /// <summary>
+    /// Height the box asks for: the rows it wants (<see cref="Rows"/>), plus the horizontal scrollbar.
+    /// </summary>
+    public override int GetPreferredHeight()
+    {
+        if (_items.Count == 0) return -1;
+
+        return Math.Max(1, Rows) * _rowHeight + HScrollBarHeight;
+    }
+
     public override void OnResize()
     {
         LayoutBox();
     }
 
     /// <summary>
-    /// Box height from the rows, and the scrollbar's range and place.
+    /// Rows shown from the height given (whole rows only, at least one; the box shrinks to them),
+    /// and the scrollbar's range and place. A box nobody gave a height gets its preferred height.
     /// </summary>
     private void LayoutBox()
     {
-        if (_items.Count == 0) return;
+        if (_items.Count == 0 || _rowHeight <= 0) return;
 
-        Height = Rows * _rowHeight + (_verticalScrollbar ? 0 : _hScrollBar.Height);
+        if (Height <= 0)
+        {
+            Height = GetPreferredHeight();
+        }
+
+        _visibleRows = Math.Max(1, (Height - HScrollBarHeight) / _rowHeight);
+        Height = _visibleRows * _rowHeight + HScrollBarHeight;
 
         if (_verticalScrollbar)
         {
-            _vScrollBar.Maximum = Math.Max(0, TotalRows - Rows);
-            _vScrollBar.LargeChange = Rows;     // a click on the track pages by the visible rows
+            _vScrollBar.Maximum = Math.Max(0, TotalRows - VisibleRows);
+            _vScrollBar.LargeChange = VisibleRows;  // a click on the track pages by the visible rows
             _vScrollBar.Location = new(Width - _vScrollBar.Width - 2, 2);
             _vScrollBar.Height = Height - 4;
-            _vScrollBar.Visible = Rows < TotalRows;
+            _vScrollBar.Visible = VisibleRows < TotalRows;
         }
         else
         {
@@ -232,9 +258,9 @@ public class Listbox : BaseControl
     {
         var (row, col) = CellOf(index);
 
-        if (row >= _viewStartingRow + Rows)
+        if (row >= _viewStartingRow + VisibleRows)
         {
-            _vScrollBar.SetScrollPosition(row - Rows + 1);
+            _vScrollBar.SetScrollPosition(row - VisibleRows + 1);
         }
         else if (row < _viewStartingRow)
         {
@@ -253,7 +279,7 @@ public class Listbox : BaseControl
 
     public void ScrollToEnd()
     {
-        _vScrollBar.SetScrollPosition(Math.Max(0, TotalRows - Rows));
+        _vScrollBar.SetScrollPosition(Math.Max(0, TotalRows - VisibleRows));
     }
 
     public void EnterPressed()
@@ -272,7 +298,7 @@ public class Listbox : BaseControl
 
         var visibleCol = (int)(pos.X / ColumnWidth);
         var visibleRow = (int)(pos.Y / _rowHeight);
-        if (visibleCol >= Columns || visibleRow >= Rows) return -1;
+        if (visibleCol >= Columns || visibleRow >= VisibleRows) return -1;
 
         return IndexOf(_viewStartingRow + visibleRow, _viewStartingCol + visibleCol);
     }
@@ -307,7 +333,7 @@ public class Listbox : BaseControl
         // Moving along the stacking direction goes item by item; across it, a whole row/column at a time
         var along = 1;
         var across = HorizontalStacking ? TotalColumns : TotalRows;
-        var page = HorizontalStacking ? Rows * TotalColumns : Rows;
+        var page = HorizontalStacking ? VisibleRows * TotalColumns : VisibleRows;
         int? target = key switch
         {
             KeyboardKey.Down or KeyboardKey.Kp2 => _selectedId + (HorizontalStacking ? across : along),
@@ -360,9 +386,9 @@ public class Listbox : BaseControl
             var columnWidth = ColumnWidth;
 
             // Tall icons may reach into neighbouring rows; they're only cut off at the edge of the box
-            Graphics.BeginScissorMode((int)Bounds.X, (int)Bounds.Y, columnWidth * Columns, _rowHeight * Rows);
+            Graphics.BeginScissorMode((int)Bounds.X, (int)Bounds.Y, columnWidth * Columns, _rowHeight * VisibleRows);
 
-            for (var visibleRow = 0; visibleRow < Rows; visibleRow++)
+            for (var visibleRow = 0; visibleRow < VisibleRows; visibleRow++)
             {
                 for (var visibleCol = 0; visibleCol < Columns; visibleCol++)
                 {

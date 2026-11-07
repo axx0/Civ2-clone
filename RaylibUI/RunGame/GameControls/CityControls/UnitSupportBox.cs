@@ -66,7 +66,8 @@ public class UnitSupportBox : Listbox
             var group = new ListboxGroup()
             {
                 Elements = [new ListboxGroupElement { Unit = unit, Game = cityWindow.CurrentGameScreen.Game, ScaleIcon = ImageUtils.ZoomScale(-3 + (int)(6 * (cityWindow.Scale - 1)))}],    // zoom = -6 / -3 / 0
-                Height = (int)Math.Ceiling(properties.Box.Height / properties.Rows * cityWindow.Scale)
+                // Rounded down, so all the rows fit in the box's height
+                Height = (int)(properties.Box.Height / properties.Rows * cityWindow.Scale)
             };
             groups.Add(group);
         }
