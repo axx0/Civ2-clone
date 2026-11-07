@@ -32,4 +32,10 @@ public class MouseEventArgs : EventArgs
     /// Mouse wheel movement (positive = away from the user).
     /// </summary>
     public float WheelDelta { get; init; }
+
+    /// <summary>
+    /// Mouse wheel only: set to true by a control that used the wheel. Otherwise the wheel
+    /// goes on to the control's parent (e.g. from a listbox row to the listbox).
+    /// </summary>
+    public bool Handled { get; set; }
 }

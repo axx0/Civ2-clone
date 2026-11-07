@@ -167,13 +167,12 @@ public class Listbox : BaseControl
             }
         }
 
+        // Keep the selection inside the list (0 when the list is empty)
+        _selectedId = Math.Clamp(_selectedId, 0, Math.Max(0, _entries.Count - 1));
+
         // Select control at start
         if (_entries.Count > 0 && Selectable)
         {
-            if (_selectedId == -1)  // If this is true there's something wrong
-            {
-                _selectedId = 0;
-            }
             _entries[_selectedId].SelectThis(true);
         }
     }
@@ -201,6 +200,7 @@ public class Listbox : BaseControl
         if (_verticalScrollbar)
         {
             _VscrollBar.Maximum = _tableLayout.RowCount - Rows;
+            _VscrollBar.LargeChange = Rows;     // a click on the track pages by the visible rows
             _VscrollBar.Location = new(Width - _VscrollBar.Width - 2, 2);
             _VscrollBar.Height = Height - 4;
             _VscrollBar.Visible = Rows < _tableLayout.RowCount;
@@ -209,6 +209,7 @@ public class Listbox : BaseControl
         {
             _HscrollBar.Location = new(2, Height - _HscrollBar.Height - 2);
             _HscrollBar.Maximum = _tableLayout.ColumnCount - Columns;
+            _HscrollBar.LargeChange = Columns;  // a click on the track pages by the visible columns
             _HscrollBar.Width = Width - 4;
             _HscrollBar.Visible = Columns < _tableLayout.ColumnCount;
             _HscrollBar.Location = new(_HscrollBar.Location.X, Height - _HscrollBar.Height);
@@ -277,17 +278,20 @@ public class Listbox : BaseControl
     public void ScrollToEnd()
     {
         _viewStartingRow = Math.Max(0, _totalRows - Rows);
-        _VscrollBar.SetScrollPosition(_viewStartingRow);
+        _VscrollBar?.SetScrollPosition(_viewStartingRow);
     }
 
     public void EnterPressed()
     {
+        if (_entries.Count == 0) return;
+
         _entries[_selectedId].SelectThis(false);
     }
 
     public override bool OnKeyPressed(KeyboardKey key)
     {
-        if (!Selectable) return base.OnKeyPressed(key);
+        // Nothing to move through in a read-only or empty list
+        if (!Selectable || _entries.Count == 0) return base.OnKeyPressed(key);
 
         int selectedCol;
         switch (key)
@@ -335,6 +339,19 @@ public class Listbox : BaseControl
         }
 
         return base.OnKeyPressed(key);
+    }
+
+    /// <summary>
+    /// The wheel over the list (or one of its rows) scrolls it, like its scrollbar.
+    /// </summary>
+    public override void OnMouseWheel(MouseEventArgs e)
+    {
+        base.OnMouseWheel(e);
+        var scrollBar = _verticalScrollbar ? _VscrollBar : _HscrollBar;
+        if (scrollBar != null && scrollBar.ScrollByWheel(e.WheelDelta))
+        {
+            e.Handled = true;
+        }
     }
 
     public override void Draw(bool pulse)

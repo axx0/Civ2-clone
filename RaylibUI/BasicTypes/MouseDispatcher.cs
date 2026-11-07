@@ -119,9 +119,17 @@ public class MouseDispatcher
             UpdateHover(layout, target);
         }
 
+        // The wheel goes to the control under the mouse, then up its parents until one handles it
         if (wheel != 0)
         {
-            target?.OnMouseWheel(MakeArgs(target, null, position, movement, wheel));
+            for (var control = target; control != null; control = control.Parent as IControl)
+            {
+                if (!control.Visible || !control.Enabled) break;
+
+                var args = MakeArgs(control, null, position, movement, wheel);
+                control.OnMouseWheel(args);
+                if (args.Handled) break;
+            }
         }
 
         return passPressThrough;

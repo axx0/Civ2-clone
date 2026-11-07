@@ -74,14 +74,17 @@ namespace RaylibUI
                 var frameTime = Time.GetFrameTime();
                 Graphics.BeginDrawing();
 
-                for (int i = 0; i < _events.Count; i++)
+                // Loop over a copy and remove an event before running it, so its action
+                // can safely schedule itself again (repeating timers) or clear other events
+                foreach (var timedEvent in _events.ToList())
                 {
-                    _events[i].Remaining -= frameTime;
-                    if (_events[i].Remaining < 0)
+                    if (!_events.Contains(timedEvent)) continue;   // cleared by an earlier action this frame
+
+                    timedEvent.Remaining -= frameTime;
+                    if (timedEvent.Remaining < 0)
                     {
-                        _events[i].Action();
-                        _events.RemoveAt(i);
-                        i--;
+                        _events.Remove(timedEvent);
+                        timedEvent.Action();
                     }
                 }
 
