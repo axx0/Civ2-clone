@@ -99,10 +99,7 @@ public class CityInfoArea : BaseControl
 
     public override void OnResize()
     {
-        var pos = _props.InfoPanel.Box.ScaleAll(_cityWindow.Scale);
-        Location = new(_cityWindow.LayoutPadding.Left + pos.X, _cityWindow.LayoutPadding.Top + pos.Y);
-        Width = (int)pos.Width;
-        Height = (int)pos.Height;
+        _cityWindow.Place(this, _props.InfoPanel.Box);
         base.OnResize();
 
         _label.Text = _mode switch

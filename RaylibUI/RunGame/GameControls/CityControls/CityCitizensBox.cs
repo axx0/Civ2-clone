@@ -43,10 +43,7 @@ public class CityCitizensBox : BaseControl
 
     public override void OnResize()
     {
-        var pos = _props.CitizensBox.ScaleAll(_cityWindow.Scale);
-        Location = new(_cityWindow.LayoutPadding.Left + pos.X, _cityWindow.LayoutPadding.Top + pos.Y);
-        Width = (int)pos.Width;
-        Height = (int)pos.Height;
+        _cityWindow.Place(this, _props.CitizensBox);
         base.OnResize();
 
         var iconWidth = Images.GetImageWidth(_active.PicSources["people"][0], _active);

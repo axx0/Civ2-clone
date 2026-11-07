@@ -29,7 +29,7 @@ public class UnitSupportBox : Listbox
         Looks = new ListboxLooks()
         {
             Font = active.Look.CityWindowFont,
-            FontSize = active.Look.CityWindowFontSize + (int)(12 * (_cityWindow.Scale - 1)),
+            FontSize = _cityWindow.ScaledFontSize,
             TextColorFront = Color.Black,
             TextColorShadow = Color.Gray
         };
@@ -40,12 +40,9 @@ public class UnitSupportBox : Listbox
             _oldScale = _cityWindow.Scale;
         }
 
-        var pos = _cityWindow.CityWindowProps.UnitSupport.Box;
-        Location = new(_cityWindow.LayoutPadding.Left + pos.X * _cityWindow.Scale,
-            _cityWindow.LayoutPadding.Top + pos.Y * _cityWindow.Scale);
-        Width = (int)(pos.Width * _cityWindow.Scale);
-        Height = (int)(pos.Height * _cityWindow.Scale);
+        _cityWindow.Place(this, properties.Box);
 
+        // All units fit in one row: half the height, centred vertically in the box
         if (Groups.Count <= Columns)
         {
             Height = Height / 2;

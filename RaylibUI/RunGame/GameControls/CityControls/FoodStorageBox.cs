@@ -36,10 +36,7 @@ public class FoodStorageBox : BaseControl
 
     public override void OnResize()
     {
-        Location = new(_cityWindow.LayoutPadding.Left + _panelBounds.X * _cityWindow.Scale, 
-            _cityWindow.LayoutPadding.Top + _panelBounds.Y * _cityWindow.Scale);
-        Width = (int)(_panelBounds.Width * _cityWindow.Scale);
-        Height = (int)(_panelBounds.Height * _cityWindow.Scale);
+        _cityWindow.Place(this, _panelBounds);
         base.OnResize();
 
         _iconWidth = _foodIcon.Width * _cityWindow.Scale;

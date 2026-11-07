@@ -35,7 +35,7 @@ public class UnitsPresentBox : Listbox
         Looks = new()
         {
             Font = active.Look.CityWindowFont,
-            FontSize = active.Look.CityWindowFontSize + (int)(12 * (_cityWindow.Scale - 1)),
+            FontSize = _cityWindow.ScaledFontSize,
             TextColorFront = Raylib_CSharp.Colors.Color.Black,
             TextColorShadow = new Raylib_CSharp.Colors.Color(135, 135, 135, 255)
         };
@@ -46,11 +46,9 @@ public class UnitsPresentBox : Listbox
             _oldScale = _cityWindow.Scale;
         }
 
-        var pos = _cityWindow.CityWindowProps.InfoPanel.UnitsPresent.Box;
-        Location = new(pos.X * _cityWindow.Scale, pos.Y * _cityWindow.Scale);
-        Width = (int)(pos.Width * _cityWindow.Scale);
-        Height = (int)(pos.Height * _cityWindow.Scale);
+        _cityWindow.Place(this, properties.Box);     // inside the info area, so relative to it
 
+        // All units fit in one row: half the height, centred vertically in the box
         if (Groups.Count <= Columns)
         {
             Height /= 2;

@@ -33,15 +33,7 @@ public class ResourceProductionBar : BaseControl
 
     public override void OnResize()
     {
-        Location = new(_cityWindow.LayoutPadding.Left + _resource.Bounds.X * _cityWindow.Scale,
-            _cityWindow.LayoutPadding.Top + _resource.Bounds.Y * _cityWindow.Scale);
-        Width = (int)(_resource.Bounds.Width * _cityWindow.Scale);
-        Height = (int)(_resource.Bounds.Height * _cityWindow.Scale);
-
-        //var pos = _resource.Bounds.ScaleAll(_cityWindow.Scale);
-        //Location = new(pos.X, pos.Y);
-        //Width = (int)pos.Width;
-        //Height = (int)pos.Height;
+        _cityWindow.Place(this, _resource.Bounds);
         base.OnResize();
         CalculateContents();
     }

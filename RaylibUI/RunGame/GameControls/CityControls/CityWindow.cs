@@ -144,10 +144,11 @@ public class CityWindow : BaseDialog
     /// </summary>
     public Rectangle ScaledBox(Rectangle box)
     {
-        var x0 = (int)Math.Round(box.X * _scale);
-        var y0 = (int)Math.Round(box.Y * _scale);
-        var x1 = (int)Math.Round((box.X + box.Width) * _scale);
-        var y1 = (int)Math.Round((box.Y + box.Height) * _scale);
+        static int R(float v) => (int)Math.Round(v, MidpointRounding.AwayFromZero);
+        var x0 = R(box.X * _scale);
+        var y0 = R(box.Y * _scale);
+        var x1 = R((box.X + box.Width) * _scale);
+        var y1 = R((box.Y + box.Height) * _scale);
         return new Rectangle(x0, y0, x1 - x0, y1 - y0);
     }
 
