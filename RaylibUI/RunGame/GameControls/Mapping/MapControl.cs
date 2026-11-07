@@ -79,9 +79,16 @@ public class MapControl : BaseControl
 
     private void OnMouseDown(object? sender, MouseEventArgs e)
     {
+        if (e.Button != MouseButton.Left) return;
         var tile = GetTileAtMousePosition();
         if(tile == null) return;
         _gameScreen.ActiveMode.MouseDown(tile);
+    }
+
+    public override void OnMouseLeave()
+    {
+        _gameScreen.ActiveMode.MouseClear();
+        base.OnMouseLeave();
     }
 
     private void UnitEventTriggered(object sender, UnitEventArgs e)
@@ -160,6 +167,7 @@ public class MapControl : BaseControl
 
     private void OnClick(object? sender, MouseEventArgs mouseEventArgs)
     {
+        var clickedMode = _gameScreen.ActiveMode;
         try
         {
             _gameScreen.Focused = this;
@@ -169,7 +177,7 @@ public class MapControl : BaseControl
                 return;
             }
 
-            if (_gameScreen.ActiveMode.MapClicked(tile, mouseEventArgs.Button))
+            if (clickedMode.MapClicked(tile, mouseEventArgs.Button))
             {
                 _gameScreen.ForceRedraw();
                 MapViewChange(tile);
@@ -177,7 +185,7 @@ public class MapControl : BaseControl
         }
         finally
         {
-            _gameScreen.ActiveMode.MouseClear();
+            clickedMode.MouseClear();
         }
     }
 
