@@ -634,25 +634,16 @@ namespace Civ2engine.UnitActions
                     unit.Order = (int)OrderType.NoOrders;
                 }
                 
-                for (var civId = 0; civId < unit.CurrentLocation.Visibility.Length; civId++)
-                {
-                    if (unit.CurrentLocation.Visibility[civId])
-                    {
-                        game.Players[civId].UnitMoved(unit, tileTo, tileFrom);
-                    }
-                }
-                
                 game.ActivePlayer.ActiveTile = tileTo;
-                var mapUpdates = new List<Tile>();
+                // Reveal the destination itself as well as the surrounding terrain.
+                tileTo.SetVisible(unit.Owner.Id);
+                var mapUpdates = new List<Tile> { tileFrom, tileTo };
                 foreach (var neighbourTile in tileTo.Neighbours(unit.TwoSpaceVisibility))
                 {
                     mapUpdates.Add(neighbourTile);
-                    if(!neighbourTile.IsVisible(unit.Owner.Id))
-                    {
-                        neighbourTile.SetVisible(unit.Owner.Id);
-                    }
+                    neighbourTile.SetVisible(unit.Owner.Id);
                 }
-                
+
                 if(tileTo.CityHere != null && tileTo.CityHere.Owner.Id != unit.Owner.Id)
                 {
                     var loser = tileTo.CityHere.Owner;
@@ -688,7 +679,15 @@ namespace Civ2engine.UnitActions
 
                 if (mapUpdates.Count > 0)
                 {
-                    game.UpdateTiles(mapUpdates);
+                    game.UpdateTiles(mapUpdates.Distinct().ToList());
+                }
+                // Animation listeners must see the revealed, refreshed map state.
+                for (var civId = 0; civId < unit.CurrentLocation.Visibility.Length; civId++)
+                {
+                    if (unit.CurrentLocation.Visibility[civId])
+                    {
+                        game.Players[civId].UnitMoved(unit, tileTo, tileFrom);
+                    }
                 }
             }
         }
