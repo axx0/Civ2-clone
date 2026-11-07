@@ -162,8 +162,9 @@ public class TableLayoutPanel : BaseControl
     }
 
     /// <summary>
-    /// Width a cell asks for. A stretched control without a width of its own (listbox, options panel)
-    /// only fills the column, so it doesn't make the column wider.
+    /// Width a cell asks for. A stretched control without a width of its own (e.g. a listbox)
+    /// only fills the column, so it doesn't make the column wider. One with a preferred width
+    /// (e.g. an options panel) widens the column to it, and fills it if it's wider.
     /// </summary>
     private static int MeasuredWidth(Cell cell)
     {
