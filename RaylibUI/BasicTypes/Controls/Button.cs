@@ -131,8 +131,6 @@ public class Button : BaseControl
         }
     }
 
-    public bool Enabled { get; set; } = true;
-
     private float _scale;
     public float Scale
     {

@@ -32,6 +32,8 @@ public abstract class BaseLayoutController : IControlLayout
         set
         {
             if(_focused == value) return;
+            // Disabled controls can't have the focus
+            if (value is { Enabled: false }) return;
             _focused?.OnBlur();
             _focused = value;
             _focused?.OnFocus();

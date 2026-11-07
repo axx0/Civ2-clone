@@ -24,6 +24,11 @@ public interface IControl : IComponent
     Rectangle Bounds { get; }
 
     bool CanFocus { get; }
+
+    /// <summary>
+    /// Whether the control reacts to the mouse and keyboard (false also when its parent is disabled).
+    /// </summary>
+    bool Enabled { get; set; }
     IList<IControl>? Controls { get; }
 
     IComponent Parent { get; }

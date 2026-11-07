@@ -38,13 +38,14 @@ public class MouseDispatcher
             ClearPress();
         }
 
-        // Leftover capture without a held button
-        if (layout.Captured != null && !Buttons.Any(Input.IsMouseButtonDown) && !Buttons.Any(Input.IsMouseButtonReleased))
+        // Leftover capture without a held button, or the captured control got disabled
+        if (layout.Captured != null &&
+            ((!Buttons.Any(Input.IsMouseButtonDown) && !Buttons.Any(Input.IsMouseButtonReleased)) || !layout.Captured.Enabled))
         {
             layout.Captured = null;
         }
 
-        var target = HitTest(layout.Controls, position);
+        var (target, overDisabled) = FindTarget(layout, position);
         if (layout.Captured == null)
         {
             UpdateHover(layout, target);
@@ -55,7 +56,11 @@ public class MouseDispatcher
             var receiver = layout.Captured ?? target;
             if (receiver == null)
             {
-                passPressThrough |= layout.OnMouseDownOutside(MakeOutsideArgs(layout, button, position, movement));
+                // A disabled control swallows the press; it isn't "outside" the dialog's controls
+                if (!overDisabled)
+                {
+                    passPressThrough |= layout.OnMouseDownOutside(MakeOutsideArgs(layout, button, position, movement));
+                }
                 continue;
             }
 
@@ -80,7 +85,7 @@ public class MouseDispatcher
             {
                 receiver.OnMouseMove(MakeArgs(receiver, held, position, movement));
             }
-            else
+            else if (!overDisabled)
             {
                 layout.OnMouseMoveOutside(MakeOutsideArgs(layout, held, position, movement));
             }
@@ -93,7 +98,7 @@ public class MouseDispatcher
             {
                 receiver.OnMouseUp(MakeArgs(receiver, button, position, movement));
             }
-            else
+            else if (!overDisabled)
             {
                 layout.OnMouseUpOutside(MakeOutsideArgs(layout, button, position, movement));
             }
@@ -105,12 +110,12 @@ public class MouseDispatcher
             layout.Captured = null;
             ClearPress();
 
-            if (pressed.Visible && ShapeHelper.CheckCollisionPointRec(position, pressed.Bounds))
+            if (pressed.Visible && pressed.Enabled && ShapeHelper.CheckCollisionPointRec(position, pressed.Bounds))
             {
                 pressed.OnClick(MakeArgs(pressed, button, position, movement));
             }
 
-            target = HitTest(layout.Controls, position);
+            (target, overDisabled) = FindTarget(layout, position);
             UpdateHover(layout, target);
         }
 
@@ -135,6 +140,16 @@ public class MouseDispatcher
         layout.Hovered?.OnMouseLeave();
         layout.Hovered = target;
         target?.OnMouseEnter();
+    }
+
+    /// <summary>
+    /// Control that gets the mouse events at this position. A disabled control under the mouse gets none,
+    /// but still blocks the mouse from what's behind it (overDisabled = true).
+    /// </summary>
+    private static (IControl? target, bool overDisabled) FindTarget(IControlLayout layout, Vector2 position)
+    {
+        var hit = HitTest(layout.Controls, position);
+        return hit is { Enabled: false } ? (null, true) : (hit, false);
     }
 
     /// <summary>

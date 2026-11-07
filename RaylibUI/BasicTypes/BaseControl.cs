@@ -82,6 +82,39 @@ public abstract class BaseControl : IControl
         set => _visible = value;
     }
 
+    private bool _enabled = true;
+
+    /// <summary>
+    /// Whether the control reacts to the mouse and keyboard. A control is disabled when its 
+    /// parent is disabled. Disabled controls get no mouse events and can't have the focus.
+    /// </summary>
+    public bool Enabled
+    {
+        get => _enabled && (Parent is not IControl parent || parent.Enabled);
+        set
+        {
+            _enabled = value;
+            if (!value && Controller.Focused != null && ContainsOrIs(Controller.Focused))
+            {
+                Controller.Focused = null;
+            }
+        }
+    }
+
+    /// <summary>
+    /// True if the given control is this control or one of its (nested) children.
+    /// </summary>
+    private bool ContainsOrIs(IControl control)
+    {
+        IComponent? current = control;
+        while (current is IControl c)
+        {
+            if (c == this) return true;
+            current = c.Parent;
+        }
+        return false;
+    }
+
     public virtual bool CanFocus => false;
     /// <summary>
     /// Child controls. Adding a control here sets its <see cref="Parent"/>; assigning a new list replaces all children.
