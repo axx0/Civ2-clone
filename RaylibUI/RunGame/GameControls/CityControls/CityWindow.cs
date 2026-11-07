@@ -138,6 +138,38 @@ public class CityWindow : BaseDialog
     public float Scale => _scale;
     public City City { get; }
 
+    /// <summary>
+    /// A box of the city picture at the current scale, relative to the picture.
+    /// The edges are rounded, not the size, so boxes that touch at scale 1 still touch when zoomed.
+    /// </summary>
+    public Rectangle ScaledBox(Rectangle box)
+    {
+        var x0 = (int)Math.Round(box.X * _scale);
+        var y0 = (int)Math.Round(box.Y * _scale);
+        var x1 = (int)Math.Round((box.X + box.Width) * _scale);
+        var y1 = (int)Math.Round((box.Y + box.Height) * _scale);
+        return new Rectangle(x0, y0, x1 - x0, y1 - y0);
+    }
+
+    /// <summary>
+    /// Font size of the city window's texts at the current scale.
+    /// </summary>
+    public int ScaledFontSize => _active.Look.CityWindowFontSize + (int)(12 * (_scale - 1));
+
+    /// <summary>
+    /// Put a control on a box of the city picture. A direct child of the window is offset by the
+    /// window's padding; a control inside another one (e.g. the info area) uses the box as it is,
+    /// relative to its parent.
+    /// </summary>
+    public void Place(BaseControl control, Rectangle box)
+    {
+        var scaled = ScaledBox(box);
+        var offset = control.Parent == this ? new Vector2(LayoutPadding.Left, LayoutPadding.Top) : Vector2.Zero;
+        control.Location = new Vector2(scaled.X, scaled.Y) + offset;
+        control.Width = (int)scaled.Width;
+        control.Height = (int)scaled.Height;
+    }
+
     public override void Resize(int width, int height)
     {
         _headerLabel.FontSize = Math.Max(_active.Look.CityHeaderLabelFontSizeSmall, (int)(_active.Look.CityHeaderLabelFontSizeNormal * _scale));
