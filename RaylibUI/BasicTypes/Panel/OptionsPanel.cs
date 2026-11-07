@@ -251,11 +251,13 @@ public class OptionsPanel : BaseControl
 
         _vScrollBar.Visible = NeedsVScrollBar;
         _vScrollBar.Maximum = Math.Max(0, TotalRows - MaxVisibleRows);
+        _vScrollBar.LargeChange = VisibleRows;     // a click on the track pages by the visible rows
         _vScrollBar.Location = new(Width - _vScrollBar.Width - 2, 2);
         _vScrollBar.Height = Math.Max(0, Height - HScrollBarSpace - 4);
 
         _hScrollBar.Visible = NeedsHScrollBar;
         _hScrollBar.Maximum = Math.Max(0, _columns - MaxVisibleCols);
+        _hScrollBar.LargeChange = VisibleCols;     // ... and by the visible columns
         _hScrollBar.Location = new(2, Height - _hScrollBar.Height);
         _hScrollBar.Width = Math.Max(0, Width - 4);
     }
@@ -269,9 +271,50 @@ public class OptionsPanel : BaseControl
             _optionControls[_selectedId]?.Clear();
         }
         _selectedId = newSelection.Index;
+        EnsureVisible(_selectedId);
 
         ItemSelected?.Invoke(newSelection,
             new OptionsSelectionEventArgs(_selectedId));
+    }
+
+    /// <summary>
+    /// Scroll so that this option is shown (e.g. after moving the selection with keys).
+    /// </summary>
+    private void EnsureVisible(int index)
+    {
+        var totalRows = Math.Max(1, TotalRows);
+        var row = index % totalRows;
+        var col = index / totalRows;
+
+        if (row < _startingControlRow)
+        {
+            _vScrollBar.SetScrollPosition(row);
+        }
+        else if (row >= _startingControlRow + VisibleRows)
+        {
+            _vScrollBar.SetScrollPosition(row - VisibleRows + 1);
+        }
+
+        if (col < _startingControlCol)
+        {
+            _hScrollBar.SetScrollPosition(col);
+        }
+        else if (col >= _startingControlCol + VisibleCols)
+        {
+            _hScrollBar.SetScrollPosition(col - VisibleCols + 1);
+        }
+    }
+
+    /// <summary>
+    /// The wheel over the options scrolls them (up/down if there are hidden rows, else left/right).
+    /// </summary>
+    public override void OnMouseWheel(MouseEventArgs e)
+    {
+        base.OnMouseWheel(e);
+        if (_vScrollBar.ScrollByWheel(e.WheelDelta) || _hScrollBar.ScrollByWheel(e.WheelDelta))
+        {
+            e.Handled = true;
+        }
     }
 
     private void ToggleCheckBox(OptionControl checkBox)
