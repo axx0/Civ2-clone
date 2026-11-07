@@ -111,21 +111,23 @@ public abstract class BaseControl : IControl
         return false;
     }
 
+    protected virtual bool IsMouseButtonDown(MouseButton button) => Input.IsMouseButtonDown(button);
+
     public virtual void OnMouseMove(Vector2 moveAmount)
     {
         if (!Visible) return;
 
         if (_clickStart)
         {
-            if (!Input.IsMouseButtonDown(_clickButton))
+            if (!IsMouseButtonDown(_clickButton))
             {
                 _clickStart = false;
                 Click?.Invoke(this, new MouseEventArgs { Button = _clickButton});
             }   
         }
-        if (_clickPossible)
+        if (_clickPossible && !_clickStart)
         {
-            _clickStart = Input.IsMouseButtonDown(MouseButton.Left);
+            _clickStart = IsMouseButtonDown(MouseButton.Left);
             if (_clickStart)
             {
                 _clickButton = MouseButton.Left;
@@ -133,7 +135,7 @@ public abstract class BaseControl : IControl
             }
             else
             {
-                _clickStart = Input.IsMouseButtonDown(MouseButton.Right);
+                _clickStart = IsMouseButtonDown(MouseButton.Right);
                 if (_clickStart)
                 {
                     _clickButton = MouseButton.Right;
@@ -155,7 +157,7 @@ public abstract class BaseControl : IControl
     {
         if (!Visible) return;
 
-        _clickPossible = !Input.IsMouseButtonDown(MouseButton.Left) && !Input.IsMouseButtonDown(MouseButton.Right);
+        _clickPossible = !IsMouseButtonDown(MouseButton.Left) && !IsMouseButtonDown(MouseButton.Right);
 
         _clickStart = false;
     }

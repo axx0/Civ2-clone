@@ -1,4 +1,5 @@
 using Model.Input;
+using System.Diagnostics;
 using System.Numerics;
 using Civ2engine;
 using Civ2engine.Enums;
@@ -22,8 +23,8 @@ public class MovingPieces : IGameMode
 {
     private readonly GameScreen _gameScreen;
     private readonly LabelControl _title;
-    private DateTime? _downTime;
-    private readonly TimeSpan _holdTime = TimeSpan.FromMilliseconds(15);
+    private long? _downTime;
+    private readonly TimeSpan _holdTime = TimeSpan.FromMilliseconds(350);
 
     public MovingPieces(GameScreen gameScreen)
     {
@@ -79,10 +80,12 @@ public class MovingPieces : IGameMode
         if (mouseButton == MouseButton.Left)
         {
             // GOTO support
-            if (_downTime.HasValue && DateTime.Now - _downTime.Value > _holdTime && !(Input.IsKeyDown(KeyboardKey.LeftControl) || Input.IsKeyDown(KeyboardKey.RightControl)))
+            if (_downTime.HasValue && Stopwatch.GetElapsedTime(_downTime.Value) >= _holdTime && !(Input.IsKeyDown(KeyboardKey.LeftControl) || Input.IsKeyDown(KeyboardKey.RightControl)))
             {
-                var unit = _gameScreen.Player.ActiveUnit!;
-                var path = Path.CalculatePathBetween(_gameScreen.Game, _gameScreen.Player.ActiveTile, tile, unit.Domain, unit.MaxMovePoints,
+                var unit = _gameScreen.Player.ActiveUnit;
+                if (unit == null || MovementFunctions.ActiveUnitCannotMove(unit)) return false;
+                if (tile == unit.CurrentLocation) return false;
+                var path = Path.CalculatePathBetween(_gameScreen.Game, unit.CurrentLocation, tile, unit.Domain, unit.MaxMovePoints,
                     unit.Owner, unit.Alpine, unit.IgnoreZonesOfControl);
                 if (path != null)
                 {
@@ -96,6 +99,19 @@ public class MovingPieces : IGameMode
                     }
                     return false;
                 }
+                var message = tile.IsVisible(unit.Owner.Id)
+                    ? "No route to that destination."
+                    : "Goto requires an explored destination. Use the arrow keys to explore first.";
+                CivDialog? dialog = null;
+                dialog = new CivDialog(_gameScreen.Main, new DialogElements(new PopupBox
+                {
+                    Title = "Goto",
+                    Text = [message],
+                    LineStyles = [TextStyles.Left],
+                    Button = [Labels.Ok]
+                }), (_, _, _, _) => _gameScreen.CloseDialog(dialog));
+                _gameScreen.ShowDialog(dialog);
+                return false;
             }
             var city = tile.CityHere;
             if (city == null)
@@ -425,7 +441,7 @@ public class MovingPieces : IGameMode
     private const string GotoCursor = "GOTO_TO";
     public void MouseDown(Tile tile)
     {
-        _downTime = DateTime.Now;
+        _downTime = Stopwatch.GetTimestamp();
         _gameScreen.Main.Schedule(GotoCursor, _holdTime, () =>
         {
             Input.SetMouseCursor(MouseCursor.Crosshair);
