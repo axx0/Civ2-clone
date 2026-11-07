@@ -57,7 +57,7 @@ internal class MockGame : IGame
         set => throw new NotImplementedException();
     }
 
-    public List<City> AllCities => throw new NotImplementedException();
+    public IEnumerable<City> AllCities => throw new NotImplementedException();
     public IPlayer[] Players { get; set; }
 
     public int PollutionSkulls => throw new NotImplementedException();

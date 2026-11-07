@@ -19,6 +19,8 @@ namespace Core.Tests.Mocks;
 
 internal class MockInterface : IUserInterface
 {
+    public OptionsLooks GetOptionsLooks(OptionsType? type) => throw new NotImplementedException();
+
     public InterfaceStyle Look => throw new NotImplementedException();
 
     public string Title => throw new NotImplementedException();

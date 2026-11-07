@@ -87,7 +87,6 @@ public static class ApiTestHarness
 
         tile.CityHere = city;
         civ.Cities.Add(city);
-        game.AllCities.Add(city);
 
         return city;
     }

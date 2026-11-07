@@ -113,7 +113,7 @@ public class CityActionsTest
         ProductionPossibilities.InitializeProductionLists([civ], rules.ProductionOrders);
         
         game.Setup(g => g.Rules).Returns(rules);
-        game.Setup(g => g.AllCities).Returns(new List<City>());
+        game.Setup(g => g.AllCities).Returns(() => civ.Cities);
         game.Setup(g => g.CitiesBuiltSoFar).Returns(new Dictionary<Civilization, int>());
         game.Setup(g => g.History).Returns(new Mock<IHistory>().Object);
         game.Setup(g => g.Maps).Returns(new List<Map> { map });
