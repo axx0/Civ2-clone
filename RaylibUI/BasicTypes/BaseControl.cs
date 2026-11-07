@@ -94,7 +94,9 @@ public abstract class BaseControl : IControl
         set
         {
             _enabled = value;
-            if (!value && Controller.Focused != null && ContainsOrIs(Controller.Focused))
+            // The focus moves on to the next control in tab order (or nowhere, if there's none)
+            if (!value && Controller.Focused != null && ContainsOrIs(Controller.Focused) &&
+                !Controller.SelectNextControl())
             {
                 Controller.Focused = null;
             }

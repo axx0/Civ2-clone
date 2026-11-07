@@ -52,28 +52,60 @@ public abstract class BaseLayoutController : IControlLayout
     public abstract void Move(Vector2 moveAmount);
 
     public virtual void OnKeyPress(KeyboardKey key)
-    { 
+    {
         if (key == KeyboardKey.Tab)
         {
-            if (_focused is null)
-            {
-                Focused = FindControl(Controls, (c) => c.CanFocus);
-            }
-            else
-            {
-                var allControls = Controls.SelectMany(c => c.Controls ?? new[] { c }).ToArray();
-                var pos = Array.IndexOf(allControls, Focused);
-                do
-                {
-                    pos++;
-                    if (pos == allControls.Length)
-                    {
-                        pos = 0;
-                    }
-                } while (!allControls[pos].CanFocus);
+            var backwards = Input.IsKeyDown(KeyboardKey.LeftShift) || Input.IsKeyDown(KeyboardKey.RightShift);
+            SelectNextControl(!backwards);
+        }
+    }
 
-                Focused = allControls[pos];
+    /// <summary>
+    /// Move the focus to the next (or previous) control in tab order, wrapping around at the ends.
+    /// Tab order = all controls that can take the focus, in the order they were added (searching the whole tree);
+    /// invisible and disabled controls are skipped. With nothing focused it starts at the first (or last) one.
+    /// Returns false if no control can take the focus.
+    /// </summary>
+    public bool SelectNextControl(bool forward = true)
+    {
+        var all = new List<IControl>();
+        CollectFocusable(Controls, all);
+        if (all.Count == 0) return false;
+
+        var n = all.Count;
+        var start = _focused == null ? -1 : all.IndexOf(_focused);
+        if (start == -1 && !forward)
+        {
+            start = n;
+        }
+
+        for (var i = 1; i <= n; i++)
+        {
+            var candidate = all[((start + (forward ? i : -i)) % n + n) % n];
+            if (candidate.Visible && candidate.Enabled)
+            {
+                Focused = candidate;
+                return true;
             }
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// All controls that can take the focus (visible or not), depth-first in the order they were added.
+    /// </summary>
+    private static void CollectFocusable(IEnumerable<IControl>? controls, List<IControl> result)
+    {
+        if (controls == null) return;
+
+        foreach (var control in controls)
+        {
+            if (control.CanFocus)
+            {
+                result.Add(control);
+            }
+            CollectFocusable(control.Controls, result);
         }
     }
 
@@ -102,24 +134,5 @@ public abstract class BaseLayoutController : IControlLayout
 
     public virtual void OnMouseUpOutside(MouseEventArgs e)
     {
-    }
-
-    protected static IControl? FindControl(IEnumerable<IControl> controls, Func<IControl, bool> matching)
-    {
-        IControl? selected = null;
-        var elements = controls;
-        while (elements != null)
-        {
-            var candidate = elements.FirstOrDefault(matching);
-
-            elements = candidate?.Controls;
-            
-            if (candidate is { EventTransparent: false })
-            {
-                selected = candidate;
-            }
-        }
-
-        return selected;
     }
 }

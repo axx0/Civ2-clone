@@ -116,6 +116,8 @@ public class ScienceAdvisorWindow : BaseDialog
 
         Controls.Add(goalBtn);
         Controls.Add(closeBtn);
+
+        Focused = closeBtn;
     }
 
     public override int Width => _width;

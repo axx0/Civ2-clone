@@ -99,6 +99,8 @@ public class AttitudeAdvisorWindow : BaseDialog
         };
         btn.Click += CloseButtonOnClick;
         Controls.Add(btn);
+
+        Focused = btn;
     }
 
     public override int Width => _width;

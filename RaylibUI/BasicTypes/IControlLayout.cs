@@ -21,6 +21,12 @@ public interface IControlLayout : IComponent
     void Draw(bool pulse);
     void Move(Vector2 moveAmount);
     void OnKeyPress(KeyboardKey key);
+
+    /// <summary>
+    /// Move the focus to the next (or previous) control in tab order, wrapping around at the ends.
+    /// Returns false if no control can take the focus.
+    /// </summary>
+    bool SelectNextControl(bool forward = true);
     
     Padding LayoutPadding { get; set; }
     

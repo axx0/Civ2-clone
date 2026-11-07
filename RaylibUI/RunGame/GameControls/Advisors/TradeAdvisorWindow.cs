@@ -189,6 +189,8 @@ public class TradeAdvisorWindow : BaseDialog
 
         Controls.Add(supplyBtn);
         Controls.Add(okBtn);
+
+        Focused = okBtn;
     }
 
     public override int Width => _width;

@@ -143,6 +143,8 @@ public class DefenseMinisterWindow : BaseDialog
 
         Controls.Add(_casualtBtn);
         Controls.Add(okBtn);
+
+        Focused = okBtn;
     }
 
     public override int Width => _width;

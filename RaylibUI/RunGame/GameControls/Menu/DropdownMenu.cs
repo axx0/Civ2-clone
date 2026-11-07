@@ -27,8 +27,6 @@ public class DropdownMenu(GameScreen gameScreen) : BaseDialog(gameScreen.Main)
         _separatorOffsets.Clear();
         Location = location;
         _current = menuIndex;
-        // The selection belongs to the previous menu's items
-        Focused = null;
         Controls.Clear();
         var childWidths = new List<int>{ 20,10};
         foreach (var command in elements)
@@ -78,6 +76,9 @@ public class DropdownMenu(GameScreen gameScreen) : BaseDialog(gameScreen.Main)
             gameScreen.ShowDialog(this, true);
         }
         _shown = true;
+        // A menu opens with nothing selected (the old selection belongs to the previous menu's items,
+        // and ShowDialog's starting focus doesn't apply to menus)
+        Focused = null;
     }
 
     // Mouse outside the dropdown's items (while open this dialog gets all mouse input)

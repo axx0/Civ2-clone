@@ -112,6 +112,8 @@ public class CityStatusWindow : BaseDialog
         };
         btn.Click += (_, _) => _gameScreen.CloseDialog(this); ;
         Controls.Add(btn);
+
+        Focused = btn;
     }
 
     public override int Width => _width;

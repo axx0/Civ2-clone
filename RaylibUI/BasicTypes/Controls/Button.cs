@@ -3,6 +3,7 @@ using Model;
 using Model.Interface;
 using Raylib_CSharp.Fonts;
 using Raylib_CSharp.Colors;
+using Raylib_CSharp.Interact;
 using Raylib_CSharp.Rendering;
 using Raylib_CSharp.Textures;
 using Raylib_CSharp.Transformations;
@@ -21,8 +22,11 @@ public class Button : BaseControl
     private readonly IImageSource? _backgroundImage;
     private readonly Color _textColour;
     private readonly IUserInterface? _active;
-    private bool _hovered;
     public override bool CanFocus => true;
+
+    // Focus rectangle: a thin dark line just inside the button's bevel
+    private const int FocusInset = 4;
+    private static readonly Color FocusColour = new(80, 80, 80, 255);
 
     public Button(IControlLayout controller, string text, Font? font = null, int? fontSize = null, IImageSource? backgroundImage = null, float imageScale = 1.0f) : base(controller)
     {
@@ -84,9 +88,10 @@ public class Button : BaseControl
                 Graphics.DrawTexture(Texture, (int)Bounds.X, (int)Bounds.Y, Color.White);
             }
 
-            if (_hovered)
+            if (Controller.Focused == this && Width > 2 * FocusInset && Height > 2 * FocusInset)
             {
-                Graphics.DrawRectangleLinesEx(Bounds, 0.5f, Color.Magenta);
+                Graphics.DrawRectangleLinesEx(new Rectangle(Bounds.X + FocusInset, Bounds.Y + FocusInset,
+                    Width - 2 * FocusInset, Height - 2 * FocusInset), 1f, FocusColour);
             }
         }
         else
@@ -142,20 +147,22 @@ public class Button : BaseControl
         }
     }
 
-    public override void OnMouseEnter()
+    /// <summary>
+    /// Enter or Space on the focused button presses it, the same as a mouse click
+    /// (so the dialog doesn't treat Enter as OK when e.g. Cancel is focused).
+    /// </summary>
+    public override bool OnKeyPressed(KeyboardKey key)
     {
-        if (!Visible) return;
+        if (key is KeyboardKey.Enter or KeyboardKey.KpEnter or KeyboardKey.Space)
+        {
+            if (Enabled)
+            {
+                OnClick(new MouseEventArgs());
+            }
+            return true;
+        }
 
-        _hovered = true;
-        base.OnMouseEnter();
-    }
-
-    public override void OnMouseLeave()
-    {
-        if (!Visible) return;
-
-        _hovered = false;
-        base.OnMouseLeave();
+        return base.OnKeyPressed(key);
     }
 
     public override int GetPreferredHeight() => PreferredSize.Height;

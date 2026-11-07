@@ -25,6 +25,13 @@ public abstract class BaseScreen : BaseLayoutController, IScreen
             _renderedWidth = width;
             _renderedHeight = height;
             Resize(width, height);
+
+            // Dialogs shown before the first frame only now have their layout (and visible controls)
+            foreach (var dialog in _dialogsWaitingForFocus.Where(d => _dialogs.Contains(d) && d.Focused == null))
+            {
+                dialog.SelectNextControl();
+            }
+            _dialogsWaitingForFocus.Clear();
         }
         else
         {
@@ -102,6 +109,11 @@ public abstract class BaseScreen : BaseLayoutController, IScreen
     }
     
 
+    /// <summary>
+    /// Show a dialog (on top of the others if stack = true, otherwise replacing them).
+    /// Starting focus: a dialog that sets <see cref="IControlLayout.Focused"/> itself (e.g. in its constructor)
+    /// keeps that control; otherwise the first control in tab order gets the focus.
+    /// </summary>
     public void ShowDialog(IControlLayout dialog, bool stack = false)
     {
         if (!stack)
@@ -113,10 +125,23 @@ public abstract class BaseScreen : BaseLayoutController, IScreen
         if (_renderedWidth > 0 && _renderedHeight > 0)
         {
             dialog.Resize(_renderedWidth, _renderedHeight);
+
+            // Starting focus: the first control in tab order (e.g. the options panel, otherwise the first button),
+            // unless the dialog already chose one
+            if (dialog.Focused == null)
+            {
+                dialog.SelectNextControl();
+            }
+        }
+        else
+        {
+            // No layout yet, so no control is visible; focus it after the first resize
+            _dialogsWaitingForFocus.Add(dialog);
         }
     }
 
     private readonly List<IControlLayout> _dialogs = new();
+    private readonly List<IControlLayout> _dialogsWaitingForFocus = new();
     
     private int _renderedWidth;
     private int _renderedHeight;
