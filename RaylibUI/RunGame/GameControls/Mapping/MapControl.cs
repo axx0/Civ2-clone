@@ -83,6 +83,9 @@ public class MapControl : BaseControl
         base.OnMouseDown(e);
         _pressedButton = e.Button;
 
+        // Only a held left button can become a go-to order (and show the go-to cursor)
+        if (e.Button != MouseButton.Left) return;
+
         var tile = GetTileAt(e.Location);
         if(tile == null) return;
         _gameScreen.ActiveMode.MouseDown(tile);
