@@ -7,11 +7,14 @@ namespace RaylibUI.RunGame.GameControls.CityControls;
 public class UnitSupportBox : Listbox
 {
     private readonly CityWindow _cityWindow;
+    private readonly CityLabel _label;
     private float _oldScale = 0f;
 
-    public UnitSupportBox(CityWindow cityWindow) : base(cityWindow)
+    /// <param name="label">The "Units supported" label; shown only when the units fit in one row.</param>
+    public UnitSupportBox(CityWindow cityWindow, CityLabel label) : base(cityWindow)
     {
         _cityWindow = cityWindow;
+        _label = label;
 
         HorizontalStacking = true;
         Selectable = false;
@@ -42,7 +45,8 @@ public class UnitSupportBox : Listbox
 
         _cityWindow.Place(this, properties.Box);
 
-        // All units fit in one row: half the height, centred vertically in the box
+        // All units fit in one row: half the height, centred vertically in the box, and the label shows
+        _label.Visible = Groups.Count <= Columns;
         if (Groups.Count <= Columns)
         {
             Height = Height / 2;

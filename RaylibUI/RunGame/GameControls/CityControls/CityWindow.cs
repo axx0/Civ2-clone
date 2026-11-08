@@ -32,8 +32,6 @@ public class CityWindow : BaseDialog
     private const float _scaleMax = 1.5f;
     private const float _scaleMin = 0.5f;
     private const float _scaleDelta = 0.5f;
-    private readonly UnitSupportBox _unitSupportBox;
-    private readonly CityLabel _supportLabel;
 
     public CityWindow(GameScreen gameScreen, City city) : base(gameScreen.Main)
     {
@@ -98,10 +96,9 @@ public class CityWindow : BaseDialog
         Controls.Add(new CityLabel(this, _cityWindowProps.Labels["FoodStorage"]));
         Controls.Add(new FoodStorageBox(this));
         Controls.Add(new ProductionBox(this));
-        _supportLabel = new CityLabel(this, _cityWindowProps.Labels["UnitsSupported"]);
-        Controls.Add(_supportLabel);
-        _unitSupportBox = new UnitSupportBox(this);
-        Controls.Add(_unitSupportBox);
+        var supportLabel = new CityLabel(this, _cityWindowProps.Labels["UnitsSupported"]);
+        Controls.Add(supportLabel);
+        Controls.Add(new UnitSupportBox(this, supportLabel));
         Controls.Add(new CityLabel(this, _cityWindowProps.Labels["CityImprovements"]));
         Controls.Add(new ImprovementsBox(this));
         Controls.Add(new CityLabel(this, _cityWindowProps.Labels["Citizens"]));
@@ -180,27 +177,30 @@ public class CityWindow : BaseDialog
         BackgroundImage = ImageUtils.PaintDialogBase(_active, Width, Height, LayoutPadding,
             Images.ExtractBitmap(_cityWindowProps.Image, _active));
 
-        _exitIcon.Location = new(11, 5);
-        _shrinkIcon.Location = new(11 + (_iconW + 2) * _scale, 5);
-        _expandIcon.Location = new(11 + (2 * _iconW + 2 * 2) * _scale, 5);
-        _exitIcon.Scale = _scale;
-        _shrinkIcon.Scale = _scale;
-        _expandIcon.Scale = _scale;
-        
         SetLocation(width, Width, height, Height);
-        var headerOffset = 11 + (3 * _iconW + 3 * 2) * _scale;
-        _headerLabel.Location = new(headerOffset, 0);
-        _headerLabel.Width = Width - 2 * (int)headerOffset;
-        _headerLabel.Height = LayoutPadding.Top;
-
+        LayoutTitleBar();
 
         foreach (var control in Controls)
         {
             control.OnResize();
         }
+    }
 
-        _supportLabel.Visible = _unitSupportBox.Groups.Count <= _unitSupportBox.Columns;
+    private void LayoutTitleBar()
+    {
+        const int left = 11, top = 5, gap = 2;
 
+        Button[] icons = [_exitIcon, _shrinkIcon, _expandIcon];
+        for (var i = 0; i < icons.Length; i++)
+        {
+            icons[i].Location = new(left + i * (_iconW + gap) * _scale, top);
+            icons[i].Scale = _scale;
+        }
+
+        var headerOffset = (int)(left + icons.Length * (_iconW + gap) * _scale);
+        _headerLabel.Location = new(headerOffset, 0);
+        _headerLabel.Width = Width - 2 * headerOffset;
+        _headerLabel.Height = LayoutPadding.Top;
     }
 
     public override void OnKeyPress(KeyboardKey key)
@@ -215,8 +215,8 @@ public class CityWindow : BaseDialog
     public void UpdateProduction()
     {
         City.CalculateOutput(City.Owner.Government, CurrentGameScreen.Game);
-        ResourceProductionChanged(this, EventArgs.Empty);
+        ResourceProductionChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    public event EventHandler ResourceProductionChanged;
+    public event EventHandler? ResourceProductionChanged;
 }
