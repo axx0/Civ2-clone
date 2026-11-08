@@ -13,6 +13,7 @@ public class ScrollBar : BaseControl
     private int _scrollbarDim;
     private readonly Action<int> _scrollAction;
     private readonly Texture2D[] _images;
+    private readonly Texture2D[] _pressedImages;    // arrows drawn while held down
     private readonly bool _vertical;
     private int _scrollPos;
 
@@ -21,7 +22,8 @@ public class ScrollBar : BaseControl
         _scrollAction = scrollAction;
         _vertical = vertical;
         _scrollbarDim = scrollbarDim == null ? ScrollbarDimDefault : (int)scrollbarDim;
-        _images = GetTextures(_scrollbarDim, _vertical);
+        _images = GetTextures(_scrollbarDim, _vertical, pressed: false);
+        _pressedImages = GetTextures(_scrollbarDim, _vertical, pressed: true);
         if (_vertical)
         {
             Width = _scrollbarDim;
@@ -35,19 +37,19 @@ public class ScrollBar : BaseControl
 
     // The arrow and thumb pictures depend only on the bar's thickness and direction, so all
     // scrollbars of the same kind share one set of textures. They live as long as the game.
-    private static readonly Dictionary<(int dim, bool vertical), Texture2D[]> TextureSets = new();
+    private static readonly Dictionary<(int dim, bool vertical, bool pressed), Texture2D[]> TextureSets = new();
 
-    private static Texture2D[] GetTextures(int dim, bool vertical)
+    private static Texture2D[] GetTextures(int dim, bool vertical, bool pressed)
     {
-        if (TextureSets.TryGetValue((dim, vertical), out var textures)) return textures;
+        if (TextureSets.TryGetValue((dim, vertical, pressed), out var textures)) return textures;
 
-        var images = ImageUtils.GetScrollImages(dim, vertical);
+        var images = ImageUtils.GetScrollImages(dim, vertical, pressed);
         textures = images.Select(Texture2D.LoadFromImage).ToArray();
         foreach (var image in images)
         {
             image.Unload();     // the pictures are on the GPU now
         }
-        TextureSets[(dim, vertical)] = textures;
+        TextureSets[(dim, vertical, pressed)] = textures;
         return textures;
     }
 
@@ -287,17 +289,22 @@ public class ScrollBar : BaseControl
 
         Graphics.DrawRectangleRec(Bounds, Color.White);
 
+        // A held arrow looks pressed while the mouse is over it (it pops up when the mouse slides off)
+        var pressedArrow = _held == HeldPart.Arrow && Capture && OverHeldPart() ? _heldDirection : 0;
+        var upLeft = pressedArrow == -1 ? _pressedImages[0] : _images[0];
+        var downRight = pressedArrow == 1 ? _pressedImages[2] : _images[2];
+
         if (_vertical)
         {
-            Graphics.DrawTexture(_images[0], (int)Bounds.X, (int)Bounds.Y, Color.White);
+            Graphics.DrawTexture(upLeft, (int)Bounds.X, (int)Bounds.Y, Color.White);
             Graphics.DrawTexture(_images[1], (int)Bounds.X, (int)Bounds.Y + ButtonLength + ThumbOffset(), Color.White);
-            Graphics.DrawTexture(_images[2], (int)Bounds.X, (int)Bounds.Y + Height - ButtonLength, Color.White);
+            Graphics.DrawTexture(downRight, (int)Bounds.X, (int)Bounds.Y + Height - ButtonLength, Color.White);
         }
         else
         {
-            Graphics.DrawTexture(_images[0], (int)Bounds.X, (int)Bounds.Y, Color.White);
+            Graphics.DrawTexture(upLeft, (int)Bounds.X, (int)Bounds.Y, Color.White);
             Graphics.DrawTexture(_images[1], (int)Bounds.X + ButtonLength + ThumbOffset(), (int)Bounds.Y, Color.White);
-            Graphics.DrawTexture(_images[2], (int)Bounds.X + Width - ButtonLength, (int)Bounds.Y, Color.White);
+            Graphics.DrawTexture(downRight, (int)Bounds.X + Width - ButtonLength, (int)Bounds.Y, Color.White);
         }
     }
 }

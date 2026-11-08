@@ -227,7 +227,7 @@ public static class ImageUtils
 
     private static InterfaceStyle _look;
 
-    public static Image[] GetScrollImages(int dim, bool vertical)
+    public static Image[] GetScrollImages(int dim, bool vertical, bool pressed)
     {
         Image image = vertical ? 
             Image.GenColor(dim, ScrollBar.ScrollbarDimDefault, new Color(240, 240, 240, 255)) :
@@ -235,55 +235,65 @@ public static class ImageUtils
         var w = image.Width;
         var h = image.Height;
 
+        var presOffset = pressed ? 1 : 0;
+
         var color1 = new Color(227, 227, 227, 255);
-        image.DrawLine(0, 0, w - 1, 0, color1);
-        image.DrawLine(0, 0, 0, h - 1, color1);
-
         var color2 = Color.White;
-        image.DrawLine(1, 1, w - 2, 1, color2);
-        image.DrawLine(1, 1, 1, h - 2, color2);
-
         var color3 = new Color(240, 240, 240, 255);
-        image.DrawLine(3, 3, w - 4, h - 4, color3);
-
         var color4 = new Color(160, 160, 160, 255);
-        image.DrawLine(w - 2, 1, w - 2, h - 1, color4);
-        image.DrawLine(1, h - 2, w - 2, h - 2, color4);
-
         var color5 = new Color(105, 105, 105, 255);
-        image.DrawLine(0, h - 1, w, h - 1, color5);
-        image.DrawLine(w - 1, 0, w - 1, h - 1, color5);
-
-        var left = image.Copy();
-        if (vertical)
+        if (!pressed)
         {
-            left.DrawPixel(w / 2, 6, Color.Black);
-            left.DrawLine(w / 2 - 1, 7, w / 2 + 2, 7, Color.Black);
-            left.DrawLine(w / 2 - 2, 8, w / 2 + 3, 8, Color.Black);
-            left.DrawLine(w / 2 - 3, 9, w / 2 + 4, 9, Color.Black);
+            image.DrawLine(0, 0, w - 1, 0, color1);
+            image.DrawLine(0, 0, 0, h - 1, color1);
+
+            image.DrawLine(1, 1, w - 2, 1, color2);
+            image.DrawLine(1, 1, 1, h - 2, color2);
+
+            image.DrawLine(3, 3, w - 4, h - 4, color3);
+
+            image.DrawLine(w - 2, 1, w - 2, h - 1, color4);
+            image.DrawLine(1, h - 2, w - 2, h - 2, color4);
+
+            image.DrawLine(0, h - 1, w, h - 1, color5);
+            image.DrawLine(w - 1, 0, w - 1, h - 1, color5);
         }
         else
         {
-            left.DrawPixel(6, h / 2, Color.Black);
-            left.DrawLine(7, h / 2 - 1, 7, h / 2 + 2, Color.Black);
-            left.DrawLine(8, h / 2 - 2, 8, h / 2 + 3, Color.Black);
-            left.DrawLine(9, h / 2 - 3, 9, h / 2 + 4, Color.Black);
+            image.DrawRectangle(0, 0, w, h, color3);
+            image.DrawRectangleLines(new Rectangle(0, 0, w, h), 1, color4);
+        }
+        
+        var left = image.Copy();
+        if (vertical)
+        {
+            left.DrawPixel(w / 2 + presOffset, 6 + presOffset, Color.Black);
+            left.DrawLine(w / 2 - 1 + presOffset, 7 + presOffset, w / 2 + 2 + presOffset, 7 + presOffset, Color.Black);
+            left.DrawLine(w / 2 - 2 + presOffset, 8 + presOffset, w / 2 + 3 + presOffset, 8 + presOffset, Color.Black);
+            left.DrawLine(w / 2 - 3 + presOffset, 9 + presOffset, w / 2 + 4 + presOffset, 9 + presOffset, Color.Black);
+        }
+        else
+        {
+            left.DrawPixel(6 + presOffset, h / 2 + presOffset, Color.Black);
+            left.DrawLine(7 + presOffset, h / 2 - 1 + presOffset, 7 + presOffset, h / 2 + 2 + presOffset, Color.Black);
+            left.DrawLine(8 + presOffset, h / 2 - 2 + presOffset, 8 + presOffset, h / 2 + 3 + presOffset, Color.Black);
+            left.DrawLine(9 + presOffset, h / 2 - 3 + presOffset, 9 + presOffset, h / 2 + 4 + presOffset, Color.Black);
         }
 
         var right = image.Copy();
         if (vertical)
         {
-            right.DrawPixel(w / 2, h - 7, Color.Black);
-            right.DrawLine(w / 2 - 1, h - 8, w / 2 + 2, h - 8, Color.Black);
-            right.DrawLine(w / 2 - 2, h - 9, w / 2 + 3, h - 9, Color.Black);
-            right.DrawLine(w / 2 - 3, h - 10, w / 2 + 4, h - 10, Color.Black);
+            right.DrawPixel(w / 2 + presOffset, h - 7 + presOffset, Color.Black);
+            right.DrawLine(w / 2 - 1 + presOffset, h - 8 + presOffset, w / 2 + 2 + presOffset, h - 8 + presOffset, Color.Black);
+            right.DrawLine(w / 2 - 2 + presOffset, h - 9 + presOffset, w / 2 + 3 + presOffset, h - 9 + presOffset, Color.Black);
+            right.DrawLine(w / 2 - 3 + presOffset, h - 10 + presOffset, w / 2 + 4 + presOffset, h - 10 + presOffset, Color.Black);
         }
         else
         {
-            right.DrawPixel(w - 7, h / 2, Color.Black);
-            right.DrawLine(w - 8, h / 2 - 1, w - 8, h / 2 + 2, Color.Black);
-            right.DrawLine(w - 9, h / 2 - 2, w - 9, h / 2 + 3, Color.Black);
-            right.DrawLine(w - 10, h / 2 - 3, w - 10, h / 2 + 4, Color.Black);
+            right.DrawPixel(w - 7 + presOffset, h / 2 + presOffset, Color.Black);
+            right.DrawLine(w - 8 + presOffset, h / 2 - 1 + presOffset, w - 8 + presOffset, h / 2 + 2 + presOffset, Color.Black);
+            right.DrawLine(w - 9 + presOffset, h / 2 - 2 + presOffset, w - 9 + presOffset, h / 2 + 3 + presOffset, Color.Black);
+            right.DrawLine(w - 10 + presOffset, h / 2 - 3 + presOffset, w - 10 + presOffset, h / 2 + 4 + presOffset, Color.Black);
         }
 
         return [left, image, right];
