@@ -21,7 +21,7 @@ public class ScrollBar : BaseControl
         _scrollAction = scrollAction;
         _vertical = vertical;
         _scrollbarDim = scrollbarDim == null ? ScrollbarDimDefault : (int)scrollbarDim;
-        _images = ImageUtils.GetScrollImages(_scrollbarDim, _vertical).Select(Texture2D.LoadFromImage).ToArray();
+        _images = GetTextures(_scrollbarDim, _vertical);
         if (_vertical)
         {
             Width = _scrollbarDim;
@@ -31,6 +31,24 @@ public class ScrollBar : BaseControl
             Height = _scrollbarDim;
         }
         _scrollPos = 0;
+    }
+
+    // The arrow and thumb pictures depend only on the bar's thickness and direction, so all
+    // scrollbars of the same kind share one set of textures. They live as long as the game.
+    private static readonly Dictionary<(int dim, bool vertical), Texture2D[]> TextureSets = new();
+
+    private static Texture2D[] GetTextures(int dim, bool vertical)
+    {
+        if (TextureSets.TryGetValue((dim, vertical), out var textures)) return textures;
+
+        var images = ImageUtils.GetScrollImages(dim, vertical);
+        textures = images.Select(Texture2D.LoadFromImage).ToArray();
+        foreach (var image in images)
+        {
+            image.Unload();     // the pictures are on the GPU now
+        }
+        TextureSets[(dim, vertical)] = textures;
+        return textures;
     }
 
     /// <summary>
