@@ -32,11 +32,16 @@ public class CityWindow : BaseDialog
     private const float _scaleMax = 1.5f;
     private const float _scaleMin = 0.5f;
     private const float _scaleDelta = 0.5f;
+    private Vector2? _startLocation;    // used once, on the first layout (switching cities keeps the window in place)
 
-    public CityWindow(GameScreen gameScreen, City city) : base(gameScreen.Main)
+    /// <param name="scale">Zoom level to open at (0.5, 1 or 1.5).</param>
+    /// <param name="location">Where to open the window; null = centred.</param>
+    public CityWindow(GameScreen gameScreen, City city, float scale = 1.0f, Vector2? location = null) : base(gameScreen.Main)
     {
         CurrentGameScreen = gameScreen;
         City = city;
+        _scale = Math.Clamp(scale, _scaleMin, _scaleMax);
+        _startLocation = location;
         _active = gameScreen.MainWindow.ActiveInterface;
         var game = CurrentGameScreen.Game;
 
@@ -123,6 +128,8 @@ public class CityWindow : BaseDialog
         Controls.Add(_shrinkIcon);
         Controls.Add(_expandIcon);
         Controls.Add(_exitIcon);
+
+        Focused = exitButton;
     }
 
     private void CloseButtonOnClick(object? sender, MouseEventArgs e)
@@ -178,6 +185,12 @@ public class CityWindow : BaseDialog
             Images.ExtractBitmap(_cityWindowProps.Image, _active));
 
         SetLocation(width, Width, height, Height);
+        if (_startLocation is { } start)
+        {
+            Location = new(Math.Clamp(start.X, 0, Math.Max(0, width - Width)),
+                Math.Clamp(start.Y, 0, Math.Max(0, height - Height)));
+            _startLocation = null;
+        }
         LayoutTitleBar();
 
         foreach (var control in Controls)
@@ -205,11 +218,30 @@ public class CityWindow : BaseDialog
 
     public override void OnKeyPress(KeyboardKey key)
     {
-        if (key == KeyboardKey.Escape)
+        switch (key)
         {
-            CurrentGameScreen.CloseDialog(this);
+            case KeyboardKey.Escape:
+                CurrentGameScreen.CloseDialog(this);
+                return;
+            case KeyboardKey.Left:
+                SwitchCity(-1);
+                return;
+            case KeyboardKey.Right:
+                SwitchCity(1);
+                return;
         }
         base.OnKeyPress(key);
+    }
+
+    private void SwitchCity(int direction)
+    {
+        var cities = City.Owner.Cities;
+        var index = cities.IndexOf(City);
+        if (cities.Count < 2 || index < 0) return;
+
+        var next = cities[((index + direction) % cities.Count + cities.Count) % cities.Count];
+        CurrentGameScreen.CloseDialog(this);
+        CurrentGameScreen.ShowDialog(new CityWindow(CurrentGameScreen, next, _scale, Location), stack: true);
     }
 
     public void UpdateProduction()
