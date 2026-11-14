@@ -211,9 +211,18 @@ public class CityTileMap : BaseControl
         var target = _target.Value;
         Graphics.BeginTextureMode(target);
         Graphics.ClearBackground(new Color(0, 0, 0, 0));
+        var tileCache = _cityWindow.CurrentGameScreen.TileCache;
         foreach (var sprite in _sprites)
         {
-            Graphics.DrawTexturePro(sprite.Texture, sprite.Source, sprite.Dest, Vector2.Zero, 0f, sprite.Tint);
+            if (sprite.Terrain != null)
+            {
+                var tileDetails = tileCache.GetTileDetails(sprite.Terrain, _cityWindow.City.Owner.Id);
+                Graphics.DrawTexturePro(tileDetails.Texture, tileDetails.Source, sprite.Dest, Vector2.Zero, 0f, sprite.Tint);
+            }
+            else
+            {
+                Graphics.DrawTexturePro(sprite.Texture, sprite.Source, sprite.Dest, Vector2.Zero, 0f, sprite.Tint);
+            }
         }
         Graphics.EndTextureMode();
 
@@ -273,13 +282,13 @@ public class CityTileMap : BaseControl
             // We use the active civ here not the city owner as we may be viewing other players cities
             if (tile.IsVisible(activeCiv.Id))
             {
-                var tileImage = tileCache.GetTileDetails(tile, city.Owner.Id);
                 var locationX = xcentre + (tile.X - city.Location.X) * dim.HalfWidth;
                 var locationY = ycentre + (tile.Y - city.Location.Y) * dim.HalfHeight;
                 var dstRec = new Rectangle(locationX,
                     locationY, dim.TileWidth, dim.TileHeight);
-                
-                sprites.Add(new CityMapSprite(tileImage.Texture, MapImage.TileRec, dstRec, Color.White));
+
+                // Terrain is looked up in the tile cache when drawn (its atlas slot changes if the tile is redrawn)
+                sprites.Add(new CityMapSprite(default, default, dstRec, Color.White, tile));
                 if (tile.CityHere != null)
                 {
                     var cityStyleIndex = tile.CityHere.Owner.CityStyle;
@@ -373,6 +382,8 @@ public class CityTileMap : BaseControl
 }
 
 /// <summary>
-/// One texture drawn on the city tile map, in map-space coordinates (before scaling to the control)
+/// One texture drawn on the city tile map, in map-space coordinates (before scaling to the control).
+/// With <paramref name="Terrain"/> set, the tile's terrain from the tile cache is drawn instead of Texture/Source.
 /// </summary>
-public readonly record struct CityMapSprite(Texture2D Texture, Rectangle Source, Rectangle Dest, Color Tint);
+public readonly record struct CityMapSprite(Texture2D Texture, Rectangle Source, Rectangle Dest, Color Tint,
+    Tile? Terrain = null);

@@ -395,6 +395,10 @@ public class MapControl : BaseControl
     /// </summary>
     private RenderTexture2D? _terrainTarget;
 
+    private const int TargetSizeStep = 256;
+
+    private static int RoundUp(int value, int step) => (value + step - 1) / step * step;
+
     /// <summary>
     /// Draw the terrain tiles of the current view from tile cache.
     /// Tiles are first put together at 1:1 in a render texture, where they fit exactly, and then the whole
@@ -423,9 +427,12 @@ public class MapControl : BaseControl
         // Tile positions differ by whole half tiles, so their 1:1 positions relative to the top-left tile are exact
         var origin = new Vector2(tiles.Min(t => t.Location.X), tiles.Min(t => t.Location.Y));
 
-        // Tiles start at most one tile before the view and end inside it
-        var targetWidth = (int)MathF.Ceiling(viewWidth / scale) + 2 * baseDim.TileWidth + 2;
-        var targetHeight = (int)MathF.Ceiling(viewHeight / scale) + 2 * baseDim.TileHeight + 2;
+        // Just big enough for the visible tiles; zoomed far out that is the map itself, not the view divided by zoom.
+        // Rounded up so small changes (e.g. near map edges) don't recreate it.
+        var usedWidth = (int)MathF.Round((tiles.Max(t => t.Location.X) - origin.X) / scale) + baseDim.TileWidth;
+        var usedHeight = (int)MathF.Round((tiles.Max(t => t.Location.Y) - origin.Y) / scale) + baseDim.TileHeight;
+        var targetWidth = RoundUp(usedWidth, TargetSizeStep);
+        var targetHeight = RoundUp(usedHeight, TargetSizeStep);
         if (_terrainTarget is not { } existing || existing.Texture.Width != targetWidth ||
             existing.Texture.Height != targetHeight)
         {
@@ -444,7 +451,7 @@ public class MapControl : BaseControl
             var tileDetails = _gameScreen.TileCache.GetTileDetails(mapTile.Tile, _currentView.CivilizationId);
             var dest = new Rectangle(MathF.Round((mapTile.Location.X - origin.X) / scale),
                 MathF.Round((mapTile.Location.Y - origin.Y) / scale), baseDim.TileWidth, baseDim.TileHeight);
-            Graphics.DrawTexturePro(tileDetails.Texture, MapImage.TileRec, dest, Vector2.Zero, 0f, Color.White);
+            Graphics.DrawTexturePro(tileDetails.Texture, tileDetails.Source, dest, Vector2.Zero, 0f, Color.White);
 
             if (mapTile.GridLabel != null)
             {

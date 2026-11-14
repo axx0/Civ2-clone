@@ -16,6 +16,11 @@ public class TileTextureCache
     private readonly List<TerrainSet> _tileSets = new();
     private readonly List<MapDimensions> _dimensions = new();
 
+    /// <summary>
+    /// GPU storage for all composed tiles (all maps share it, tiles have the same size)
+    /// </summary>
+    private readonly TileAtlas _atlas = new((int)MapImage.TileRec.Width, (int)MapImage.TileRec.Height);
+
     public TileTextureCache(GameScreen parentScreen)
     {
         _parentScreen = parentScreen;
@@ -29,8 +34,14 @@ public class TileTextureCache
             mapIndex = SetupMap(tile.Map);
         }
 
-        return _mapTileTextures[mapIndex][tile.XIndex, tile.Y] ??=
-            MapImage.MakeTileGraphic(tile, tile.Map, _tileSets[mapIndex], _parentScreen.Game, civilizationId);
+        return _mapTileTextures[mapIndex][tile.XIndex, tile.Y] ??= MakeTile(tile, mapIndex, civilizationId);
+    }
+
+    private TileDetails MakeTile(Tile tile, int mapIndex, int civilizationId)
+    {
+        var details = MapImage.MakeTileGraphic(tile, tile.Map, _tileSets[mapIndex], _parentScreen.Game, civilizationId);
+        details.Atlas = _atlas;
+        return details;
     }
 
     private int SetupMap(Map map)
@@ -87,22 +98,7 @@ public class TileTextureCache
 
         _mapTileTextures[mapIndex][tile.XIndex, tile.Y]?.Unload();
 
-        _mapTileTextures[mapIndex][tile.XIndex, tile.Y] =
-            MapImage.MakeTileGraphic(tile, tile.Map, _tileSets[mapIndex], _parentScreen.Game, civilizationId);
-    }
-
-    /// <summary>
-    /// Re-apply the map scaling setting to all tile textures after it changed
-    /// </summary>
-    public void ApplyMapScaling()
-    {
-        foreach (var tiles in _mapTileTextures)
-        {
-            foreach (var tile in tiles)
-            {
-                tile?.RefreshFilter();
-            }
-        }
+        _mapTileTextures[mapIndex][tile.XIndex, tile.Y] = MakeTile(tile, mapIndex, civilizationId);
     }
 
     public void Clear()
@@ -115,6 +111,7 @@ public class TileTextureCache
             }
         }
 
+        _atlas.Clear();
         _seenMaps.Clear();
         _mapTileTextures.Clear();
         _dimensions.Clear();

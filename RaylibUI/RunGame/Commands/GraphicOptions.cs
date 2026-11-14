@@ -58,8 +58,8 @@ public class GraphicOptions(GameScreen gameScreen) : IGameCommand
             if (scaling != Settings.MapScaling)
             {
                 Settings.SetMapScaling(scaling);
+                // Terrain tiles are always drawn at 1:1; the composed terrain picks up the setting when it is scaled
                 TextureCache.ApplyMapScaling();
-                gameScreen.TileCache.ApplyMapScaling();
             }
         }
     }

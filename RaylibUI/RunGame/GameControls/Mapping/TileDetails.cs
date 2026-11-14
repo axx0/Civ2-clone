@@ -1,55 +1,84 @@
-using Civ2engine;
 using Civ2engine.Enums;
 using Model.Images;
 using Raylib_CSharp.Images;
 using Raylib_CSharp.Textures;
+using Raylib_CSharp.Transformations;
 
 namespace RaylibUI.RunGame.GameControls.Mapping;
 
 public class TileDetails
 {
     /// <summary>
-    /// Composed tile graphic in CPU memory
+    /// Composed tile graphic in CPU memory, freed once it is copied into the tile atlas
     /// </summary>
     public Image Image { get; set; }
 
-    private Texture2D? _texture;
+    /// <summary>
+    /// Atlas the tile goes into the first time it is drawn (set by the tile cache)
+    /// </summary>
+    internal TileAtlas? Atlas { get; set; }
+
+    private int _slot = -1;
+    private Texture2D _page;
+    private Rectangle _source;
 
     /// <summary>
-    /// GPU copy of <see cref="Image"/>, uploaded the first time the tile is drawn on the map
+    /// Atlas page holding this tile; use together with <see cref="Source"/>
     /// </summary>
     public Texture2D Texture
     {
         get
         {
-            if (_texture == null)
-            {
-                var texture = Texture2D.LoadFromImage(Image);
-                texture.ApplyMapScaling();
-                _texture = texture;
-            }
-            return _texture.Value;
+            Upload();
+            return _page;
         }
     }
 
     /// <summary>
-    /// Re-apply the map scaling setting to the texture, if it has been uploaded
+    /// The tile's rectangle in <see cref="Texture"/>
     /// </summary>
-    public void RefreshFilter()
+    public Rectangle Source
     {
-        _texture?.ApplyMapScaling();
+        get
+        {
+            Upload();
+            return _source;
+        }
+    }
+
+    /// <summary>
+    /// Copy the image into the atlas (on first use, so it happens while drawing) and free the CPU copy
+    /// </summary>
+    private void Upload()
+    {
+        if (_slot != -1 || Atlas == null || Image.Data == IntPtr.Zero) return;
+
+        var image = Image;
+        (_slot, _page, _source) = Atlas.Add(ref image);
+        image.Unload();
+        Image = default;
     }
 
     public ForegroundImprovement? ForegroundElement { get; set; }
 
     /// <summary>
-    /// Free the tile image and its texture (native/GPU memory)
+    /// Free the tile image or its atlas slot
     /// </summary>
     public void Unload()
     {
-        Image.Unload();
-        _texture?.Unload();
-        _texture = null;
+        if (_slot != -1)
+        {
+            Atlas?.Free(_slot);
+            _slot = -1;
+        }
+        else if (Image.Data != IntPtr.Zero)
+        {
+            Image.Unload();
+            Image = default;
+        }
+
+        // An unloaded tile must not take a slot again
+        Atlas = null;
     }
 }
 
