@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
+using Civ2engine.Enums;
 using Model.Utils;
 
 namespace Civ2engine
@@ -21,7 +22,20 @@ namespace Civ2engine
         
         public static string[] SearchPaths { get; internal set; }
 
-        public static int TextureFilter { get; private set; }
+        /// <summary>
+        /// How map graphics are filtered when scaled by zoom (Graphic Options).
+        /// </summary>
+        public static MapScaling MapScaling { get; private set; } = MapScaling.Smooth;
+
+        /// <summary>
+        /// Change the map scaling and remember it for the next start
+        /// </summary>
+        public static void SetMapScaling(MapScaling scaling)
+        {
+            if (MapScaling == scaling) return;
+            MapScaling = scaling;
+            Save();
+        }
 
         public static bool LoadConfigSettings()
         {
@@ -81,7 +95,21 @@ namespace Civ2engine
                 SearchPaths = [Civ2Path, BasePath];
             }
 
-            TextureFilter = root.TryGetProperty(nameof(TextureFilter), out var textureFilter) ? textureFilter.GetInt32() : 0;
+            ReadMapScaling(root);
+        }
+
+        /// <summary>
+        /// Read the choice saved from Graphic Options ("Pixelated"/"Smooth"); keeps the current value when there is none
+        /// </summary>
+        private static void ReadMapScaling(JsonElement root)
+        {
+            if (root.TryGetProperty(nameof(MapScaling), out var scaling) &&
+                scaling.ValueKind == JsonValueKind.String &&
+                Enum.TryParse<MapScaling>(scaling.GetString(), ignoreCase: true, out var parsed) &&
+                Enum.IsDefined(parsed))
+            {
+                MapScaling = parsed;
+            }
         }
 
         public static bool IsValidRoot(string? civ2Path)
@@ -126,15 +154,17 @@ namespace Civ2engine
             {
                 Directory.CreateDirectory(ApplicationDataFolder);
             }
-            using var writer = new Utf8JsonWriter(File.OpenWrite(SettingsFilePath));
+            using var stream = File.Create(SettingsFilePath);
+            using var writer = new Utf8JsonWriter(stream);
             writer.WriteStartObject();
             writer.WriteString(nameof(Civ2Path),Civ2Path);
             writer.WriteStartArray(nameof(SearchPaths));
-            foreach (var searchPath in SearchPaths)
+            foreach (var searchPath in SearchPaths ?? [])
             {
                 writer.WriteStringValue(searchPath);
             }
             writer.WriteEndArray();
+            writer.WriteString(nameof(MapScaling), MapScaling.ToString());
             writer.WriteEndObject();
             writer.Flush();
         }

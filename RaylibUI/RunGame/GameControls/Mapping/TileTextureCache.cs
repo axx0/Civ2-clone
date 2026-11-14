@@ -91,6 +91,20 @@ public class TileTextureCache
             MapImage.MakeTileGraphic(tile, tile.Map, _tileSets[mapIndex], _parentScreen.Game, civilizationId);
     }
 
+    /// <summary>
+    /// Re-apply the map scaling setting to all tile textures after it changed
+    /// </summary>
+    public void ApplyMapScaling()
+    {
+        foreach (var tiles in _mapTileTextures)
+        {
+            foreach (var tile in tiles)
+            {
+                tile?.RefreshFilter();
+            }
+        }
+    }
+
     public void Clear()
     {
         foreach (var tiles in _mapTileTextures)

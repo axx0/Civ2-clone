@@ -357,7 +357,8 @@ public class GameScreen : BaseScreen
         List<string>? options = null,
         List<TextBoxDefinition>? textBoxes = null,
         DialogImageElements? dialogImage = null,
-        ListboxDefinition? listBox = null)
+        ListboxDefinition? listBox = null,
+        IList<string>? extraOptions = null)
     {
         var popupBox = MainWindow.ActiveInterface.GetDialog(dialogName);
         if (popupBox != null)
@@ -369,6 +370,11 @@ public class GameScreen : BaseScreen
                 {
                     Texts = options
                 };
+            }
+            if (extraOptions != null && dialog.OptionsDef?.Texts != null)
+            {
+                // Options of our own added after the ones from the game's text files
+                dialog.OptionsDef.Texts = dialog.OptionsDef.Texts.Concat(extraOptions).ToList();
             }
             if (checkboxStates != null)
             {

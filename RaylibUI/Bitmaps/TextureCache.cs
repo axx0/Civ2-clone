@@ -38,9 +38,29 @@ public static class TextureCache
         {
             var img = Images.ExtractBitmapData(source, activeInterface, civ).Image;
             Textures[key] = Texture2D.LoadFromImage(img);
-            Textures[key].SetFilter((TextureFilter)Settings.TextureFilter);
+            Textures[key].ApplyMapScaling();
+            MapScaled.Add(key);
         }
         return Textures[key];
+    }
+
+    /// <summary>
+    /// Keys of textures that follow the map scaling setting (bordered panels don't)
+    /// </summary>
+    private static readonly HashSet<string> MapScaled = new();
+
+    /// <summary>
+    /// Re-apply the map scaling setting to the cached textures after it changed
+    /// </summary>
+    public static void ApplyMapScaling()
+    {
+        foreach (var key in MapScaled)
+        {
+            if (Textures.TryGetValue(key, out var texture))
+            {
+                texture.ApplyMapScaling();
+            }
+        }
     }
 
     public static void Clear()
@@ -49,6 +69,7 @@ public static class TextureCache
         {
             texture.Value.Unload();
             Textures.Remove(texture.Key);
+            MapScaled.Remove(texture.Key);
         }
         Images.ClearCache();
     }

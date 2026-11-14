@@ -391,24 +391,59 @@ public class MapControl : BaseControl
     }
 
     /// <summary>
-    /// Draw the terrain tiles of the current view from tile cache
+    /// Terrain of the view composed at 1:1 (zoom 0), redrawn every frame
+    /// </summary>
+    private RenderTexture2D? _terrainTarget;
+
+    /// <summary>
+    /// Draw the terrain tiles of the current view from tile cache.
+    /// Tiles are first put together at 1:1 in a render texture, where they fit exactly, and then the whole
+    /// picture is scaled to the zoom. Scaling each tile on its own would leave half-transparent tile edges
+    /// (gray lines between tiles) with smooth scaling.
     /// </summary>
     private void DrawTerrain(Vector2 paddedLoc)
     {
         var viewWidth = _currentView.ViewWidth;
         var viewHeight = _currentView.ViewHeight;
-        var dim = _gameScreen.TileCache.GetDimensions(_currentView.Location.Map, _gameScreen.Zoom);
+        var map = _currentView.Location.Map;
+        var zoom = _gameScreen.Zoom;
+        var scale = ImageUtils.ZoomScale(zoom);
+        var dim = _gameScreen.TileCache.GetDimensions(map, zoom);
+        var baseDim = _gameScreen.TileCache.GetDimensions(map, 0);
 
-        // tiles at view edges are clipped to the view area
         Graphics.DrawRectangle((int)paddedLoc.X, (int)paddedLoc.Y, viewWidth, viewHeight, Color.Black);
-        Graphics.BeginScissorMode((int)paddedLoc.X, (int)paddedLoc.Y, viewWidth, viewHeight);
+
+        // Only tiles touching the view; on wrapping maps the view can also hold tiles far outside it,
+        // which would push the visible ones out of the render texture
+        var tiles = _currentView.Tiles.Where(t =>
+            t.Location.X > -dim.TileWidth && t.Location.X < viewWidth &&
+            t.Location.Y > -dim.TileHeight && t.Location.Y < viewHeight).ToList();
+        if (tiles.Count == 0) return;
+
+        // Tile positions differ by whole half tiles, so their 1:1 positions relative to the top-left tile are exact
+        var origin = new Vector2(tiles.Min(t => t.Location.X), tiles.Min(t => t.Location.Y));
+
+        // Tiles start at most one tile before the view and end inside it
+        var targetWidth = (int)MathF.Ceiling(viewWidth / scale) + 2 * baseDim.TileWidth + 2;
+        var targetHeight = (int)MathF.Ceiling(viewHeight / scale) + 2 * baseDim.TileHeight + 2;
+        if (_terrainTarget is not { } existing || existing.Texture.Width != targetWidth ||
+            existing.Texture.Height != targetHeight)
+        {
+            _terrainTarget?.Unload();
+            _terrainTarget = RenderTexture2D.Load(targetWidth, targetHeight);
+        }
+
+        var target = _terrainTarget.Value;
+
+        Graphics.BeginTextureMode(target);
+        Graphics.ClearBackground(new Color(0, 0, 0, 0));
 
         Texture2D? gridlines = null;
-        foreach (var mapTile in _currentView.Tiles)
+        foreach (var mapTile in tiles)
         {
             var tileDetails = _gameScreen.TileCache.GetTileDetails(mapTile.Tile, _currentView.CivilizationId);
-            var dest = new Rectangle(paddedLoc.X + mapTile.Location.X, paddedLoc.Y + mapTile.Location.Y,
-                dim.TileWidth, dim.TileHeight);
+            var dest = new Rectangle(MathF.Round((mapTile.Location.X - origin.X) / scale),
+                MathF.Round((mapTile.Location.Y - origin.Y) / scale), baseDim.TileWidth, baseDim.TileHeight);
             Graphics.DrawTexturePro(tileDetails.Texture, MapImage.TileRec, dest, Vector2.Zero, 0f, Color.White);
 
             if (mapTile.GridLabel != null)
@@ -416,12 +451,29 @@ public class MapControl : BaseControl
                 gridlines ??= TextureCache.GetImage(_active.PicSources["gridlines"][0]);
                 Graphics.DrawTexturePro(gridlines.Value, new Rectangle(0, 0, gridlines.Value.Width, gridlines.Value.Height),
                     dest, Vector2.Zero, 0f, Color.White);
-
-                // Show coords for debugging
-                var textSize = TextManager.MeasureTextEx(Font.GetDefault(), mapTile.GridLabel, 10, 1f);
-                Graphics.DrawText(mapTile.GridLabel, (int)(dest.X + dim.TileWidth / 2f - textSize.X / 2),
-                    (int)(dest.Y + dim.TileHeight / 2f - textSize.Y / 2), 10, Color.Yellow);
             }
+        }
+
+        Graphics.EndTextureMode();
+
+        // Scale the composed terrain to the zoom; tiles at view edges are clipped to the view area
+        target.Texture.ApplyMapScaling();
+        Graphics.BeginScissorMode((int)paddedLoc.X, (int)paddedLoc.Y, viewWidth, viewHeight);
+
+        // Render textures are stored upside down, hence the negative source height
+        Graphics.DrawTexturePro(target.Texture,
+            new Rectangle(0, 0, targetWidth, -targetHeight),
+            new Rectangle(paddedLoc.X + origin.X, paddedLoc.Y + origin.Y, targetWidth * scale, targetHeight * scale),
+            Vector2.Zero, 0f, Color.White);
+
+        // Show coords for debugging (drawn at screen size so they stay sharp)
+        foreach (var mapTile in tiles)
+        {
+            if (mapTile.GridLabel == null) continue;
+            var textSize = TextManager.MeasureTextEx(Font.GetDefault(), mapTile.GridLabel, 10, 1f);
+            Graphics.DrawText(mapTile.GridLabel,
+                (int)(paddedLoc.X + mapTile.Location.X + dim.TileWidth / 2f - textSize.X / 2),
+                (int)(paddedLoc.Y + mapTile.Location.Y + dim.TileHeight / 2f - textSize.Y / 2), 10, Color.Yellow);
         }
 
         Graphics.EndScissorMode();

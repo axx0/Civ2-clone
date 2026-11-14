@@ -55,7 +55,7 @@ public class CityTileMap : BaseControl
         var tileCache = gameScreen.TileCache;
 
         Map map = city.Location.Map;
-        var dim = tileCache.GetDimensions(map, _cityWindow.CurrentGameScreen.Zoom);
+        var dim = tileCache.GetDimensions(map, 0);
 
         var zeroY = city.Location.Y - 3;
         var (ydim, yrem )= Math.DivRem((int)restoreScale.Y, dim.HalfHeight);
@@ -197,15 +197,31 @@ public class CityTileMap : BaseControl
     {
         var adjustedLocation = new Vector2(Parent.Bounds.X, Parent.Bounds.Y) + Location + _offset;
 
-        // Clip to the 4x4 tile area, like the edges of the old composed image did
-        Graphics.BeginScissorMode((int)adjustedLocation.X, (int)adjustedLocation.Y,
-            (int)MathF.Round(_mapSize.X * _scaleFactor), (int)MathF.Round(_mapSize.Y * _scaleFactor));
+        // Put the 4x4 tile area together at 1:1 (tiles fit exactly), then scale the whole picture to the control.
+        // Scaling each tile on its own would leave half-transparent tile edges (gray lines) with smooth scaling.
+        var targetWidth = (int)_mapSize.X;
+        var targetHeight = (int)_mapSize.Y;
+        if (_target is not { } existing || existing.Texture.Width != targetWidth ||
+            existing.Texture.Height != targetHeight)
+        {
+            _target?.Unload();
+            _target = RenderTexture2D.Load(targetWidth, targetHeight);
+        }
+
+        var target = _target.Value;
+        Graphics.BeginTextureMode(target);
+        Graphics.ClearBackground(new Color(0, 0, 0, 0));
         foreach (var sprite in _sprites)
         {
-            Graphics.DrawTexturePro(sprite.Texture, sprite.Source, ScaleRect(sprite.Dest, adjustedLocation),
-                Vector2.Zero, 0f, sprite.Tint);
+            Graphics.DrawTexturePro(sprite.Texture, sprite.Source, sprite.Dest, Vector2.Zero, 0f, sprite.Tint);
         }
-        Graphics.EndScissorMode();
+        Graphics.EndTextureMode();
+
+        target.Texture.ApplyMapScaling();
+        // Render textures are stored upside down, hence the negative source height
+        Graphics.DrawTexturePro(target.Texture, new Rectangle(0, 0, targetWidth, -targetHeight),
+            new Rectangle(adjustedLocation.X, adjustedLocation.Y, targetWidth * _scaleFactor, targetHeight * _scaleFactor),
+            Vector2.Zero, 0f, Color.White);
 
         foreach (var element in _viewElements)
         {
@@ -224,17 +240,10 @@ public class CityTileMap : BaseControl
     }
 
     /// <summary>
-    /// Scale a rectangle from map space to screen space. Edges are rounded separately so neighbouring tiles
-    /// share their edges and no seams appear between them.
+    /// Shared by all city windows (one is drawn at a time); composed again every frame, so it never goes stale
+    /// and isn't left behind when a city window closes
     /// </summary>
-    private Rectangle ScaleRect(Rectangle rect, Vector2 origin)
-    {
-        var x0 = MathF.Round(origin.X + rect.X * _scaleFactor);
-        var y0 = MathF.Round(origin.Y + rect.Y * _scaleFactor);
-        var x1 = MathF.Round(origin.X + (rect.X + rect.Width) * _scaleFactor);
-        var y1 = MathF.Round(origin.Y + (rect.Y + rect.Height) * _scaleFactor);
-        return new Rectangle(x0, y0, x1 - x0, y1 - y0);
-    }
+    private static RenderTexture2D? _target;
 
     private void Redraw()
     {
@@ -246,7 +255,8 @@ public class CityTileMap : BaseControl
         var tileCache = gameScreen.TileCache;
 
         Map map = city.Location.Map;
-        var dim = tileCache.GetDimensions(map, gameScreen.Zoom);
+        // Composed at 1:1 (zoom 0) and then scaled to fit the control, so the main map's zoom doesn't matter
+        var dim = tileCache.GetDimensions(map, 0);
         var width = dim.TileWidth * 4;
         var height = dim.TileHeight * 4;
         var xcentre = width / 2 - dim.HalfWidth;

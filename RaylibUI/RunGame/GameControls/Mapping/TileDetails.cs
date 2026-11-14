@@ -25,11 +25,19 @@ public class TileDetails
             if (_texture == null)
             {
                 var texture = Texture2D.LoadFromImage(Image);
-                texture.SetFilter((TextureFilter)Settings.TextureFilter);
+                texture.ApplyMapScaling();
                 _texture = texture;
             }
             return _texture.Value;
         }
+    }
+
+    /// <summary>
+    /// Re-apply the map scaling setting to the texture, if it has been uploaded
+    /// </summary>
+    public void RefreshFilter()
+    {
+        _texture?.ApplyMapScaling();
     }
 
     public ForegroundImprovement? ForegroundElement { get; set; }
