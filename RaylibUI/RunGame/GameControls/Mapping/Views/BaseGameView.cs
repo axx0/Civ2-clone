@@ -28,7 +28,6 @@ public abstract class BaseGameView : IGameView
     private int _currentIndex;
 
     private IList<IList<IViewElement>> _animations = new List<IList<IViewElement>>();
-    private bool _preserve;
     
     protected readonly Vector2 ActivePos;
     protected MapDimensions Dimensions;
@@ -69,11 +68,12 @@ public abstract class BaseGameView : IGameView
         
         var cities = activeInterface.CityImages;
         var civilizationId = _gameScreen.VisibleCivId;
-        // Force redraw should be checked last as IsSameArea will set offsets 
+        CivilizationId = civilizationId;
+        // Force redraw should be checked last as IsSameArea will set offsets
         if (previousView != null && IsInSameArea(previousView, location, Dimensions, forceRedraw) && !forceRedraw)
         {
             ActivePos = GetPosForTile(location);
-            BaseImage = previousView.BaseImage;
+            Tiles = previousView.Tiles;
             
             //Update elements where action just happened if any
             var previousAction = previousView.ActionTiles.Where(t=>!_actionTiles.Contains(t)).ToList();
@@ -86,18 +86,16 @@ public abstract class BaseGameView : IGameView
                 CalculateElementsAtTile(gameScreen, tile, newElements, activeInterface,cities,pos,tileDetails, civilizationId);
             }
             Elements = previousView.Elements.Where(e=> !previousAction.Contains(e.Tile)).Concat(newElements).ToArray();
-            
-            previousView.Preserve();
         }
         else
         {
             var elements = new List<IViewElement>();
+            var tiles = new List<MapTileDraw>();
             if (_offsets == Vector2.Zero)
             {
                 CalculateOffsets(null, location, Dimensions, force: true);
             }
 
-            var image = Image.GenColor(ViewWidth, ViewHeight, Color.Black);
             var dim = _gameScreen.TileCache.GetDimensions(map, gameScreen.Zoom);
             var ypos = -_offsets.Y;
 
@@ -143,43 +141,14 @@ public abstract class BaseGameView : IGameView
                             if (tile.IsVisible(civilizationId) || map.MapRevealed)
                             {
                                 var tileDetails = _gameScreen.TileCache.GetTileDetails(tile, civilizationId);
-                                if (gameScreen.Zoom == 0)
-                                {
-                                    image.Draw(tileDetails.Image, MapImage.TileRec,
-                                        new Rectangle(xpos, ypos, dim.TileWidth, dim.TileHeight),
-                                        Color.White);
-                                }
-                                else
-                                {
-                                    var resizedImg = tileDetails.Image.Copy();
-                                    if (Settings.TextureFilter == 0)
-                                    {
-                                        resizedImg.ResizeNN(resizedImg.Width.ZoomScale(gameScreen.Zoom),
-                                            resizedImg.Height.ZoomScale(gameScreen.Zoom));
-                                    }
-                                    else
-                                    {
-                                        resizedImg.Resize(resizedImg.Width.ZoomScale(gameScreen.Zoom),
-                                            resizedImg.Height.ZoomScale(gameScreen.Zoom));
-                                    }
-                                    image.Draw(resizedImg, MapImage.TileRec.ZoomScale(gameScreen.Zoom),
-                                        new Rectangle(xpos, ypos, dim.TileWidth, dim.TileHeight),
-                                        Color.White);
-                                    resizedImg.Unload();
-                                }
-
-                                if (_gameScreen.ShowGrid)
-                                {
-                                    image.Draw(Images.ExtractBitmap(activeInterface.PicSources["gridlines"][0]), MapImage.TileRec.ZoomScale(gameScreen.Zoom), new Rectangle(xpos, ypos, dim.TileWidth, dim.TileHeight),
-                                        Color.White);
-
-                                    // Show coords for debugging
-                                    var text = $"({2 * col % (2 * map.XDim) + row % 2},{row})";
-                                    var meas = TextManager.MeasureTextEx(Font.GetDefault(), text, 10, 0f);
-                                    image.DrawText(text, (int)xpos + dim.TileWidth / 2 - (int)meas.X / 2, (int)ypos + dim.TileHeight / 2 - (int)meas.Y / 2, 10, Color.Yellow);
-                                }
-
                                 var posVector = new Vector2(xpos, ypos);
+
+                                // Tile is drawn every frame by MapControl; with the grid on, also show coords (for debugging)
+                                var gridLabel = _gameScreen.ShowGrid
+                                    ? $"({2 * col % (2 * map.XDim) + row % 2},{row})"
+                                    : null;
+                                tiles.Add(new MapTileDraw(tile, posVector, gridLabel));
+
                                 CalculateElementsAtTile(gameScreen, tile, elements, activeInterface, cities, posVector, tileDetails, civilizationId);
                             }
                         }
@@ -195,10 +164,8 @@ public abstract class BaseGameView : IGameView
                 }
             }
 
-            this.BaseImage = Texture2D.LoadFromImage(image);
-            this.Elements = elements.ToArray();
-
-            image.Unload();
+            Tiles = tiles;
+            Elements = elements.ToArray();
 
             gameScreen.TriggerMapEvent(new MapEventArgs(MapEventType.MapViewChanged)
             {
@@ -316,7 +283,9 @@ public abstract class BaseGameView : IGameView
                    tile.Y * Dimensions.HalfHeight) - _offsets;
     }
 
-    public Texture2D BaseImage { get; set; }
+    public IReadOnlyList<MapTileDraw> Tiles { get; }
+
+    public int CivilizationId { get; }
 
     private bool IsInSameArea(IGameView previousView, Tile location, MapDimensions dimensions, bool force = false)
     {
@@ -447,19 +416,6 @@ public abstract class BaseGameView : IGameView
     public void Next()
     {
         _currentIndex++;
-    }
-
-    public void Preserve()
-    {
-        _preserve = true;
-    }
-
-    public void Dispose()
-    {
-        if (!_preserve)
-        {
-            BaseImage.Unload();
-        }
     }
 
     protected void SetAnimation(IList<IViewElement> frameSet)

@@ -2,14 +2,31 @@ using System.Collections;
 using System.Numerics;
 using Civ2engine.MapObjects;
 using Model.Core.Mapping;
-using Raylib_CSharp.Textures;
 
 namespace RaylibUI.RunGame.GameControls.Mapping.Views;
 
-public interface IGameView : IDisposable
+/// <summary>
+/// A terrain tile to draw in the map view
+/// </summary>
+/// <param name="Tile">Map tile</param>
+/// <param name="Location">Top-left corner of the tile, relative to the map view (px)</param>
+/// <param name="GridLabel">Coordinates shown when the grid is on (null when off)</param>
+public readonly record struct MapTileDraw(Tile Tile, Vector2 Location, string? GridLabel);
+
+public interface IGameView
 {
     Tile Location { get; }
-    Texture2D BaseImage { get; }
+
+    /// <summary>
+    /// Visible terrain tiles of this view, drawn every frame from the tile cache
+    /// </summary>
+    IReadOnlyList<MapTileDraw> Tiles { get; }
+
+    /// <summary>
+    /// Civilization whose view of the map is shown
+    /// </summary>
+    int CivilizationId { get; }
+
     IViewElement[] Elements { get; }
     IEnumerable<IViewElement> CurrentAnimations { get; }
     int ViewHeight { get; }
@@ -22,6 +39,5 @@ public interface IGameView : IDisposable
     bool Finished();
 
     void Reset();
-    void Preserve();
     void Next();
 }

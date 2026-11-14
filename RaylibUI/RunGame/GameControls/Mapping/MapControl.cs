@@ -341,8 +341,7 @@ public class MapControl : BaseControl
         }
 
         var paddedLoc = new Vector2(Location.X + _padding.Left, Location.Y + _padding.Top);
-        Graphics.DrawTextureEx(_currentView.BaseImage, paddedLoc, 0f, 1f,
-            Color.White);
+        DrawTerrain(paddedLoc);
 
         var cityDetails = new List<CityData>();
 
@@ -391,16 +390,48 @@ public class MapControl : BaseControl
         base.Draw(pulse);
     }
 
+    /// <summary>
+    /// Draw the terrain tiles of the current view from tile cache
+    /// </summary>
+    private void DrawTerrain(Vector2 paddedLoc)
+    {
+        var viewWidth = _currentView.ViewWidth;
+        var viewHeight = _currentView.ViewHeight;
+        var dim = _gameScreen.TileCache.GetDimensions(_currentView.Location.Map, _gameScreen.Zoom);
+
+        // tiles at view edges are clipped to the view area
+        Graphics.DrawRectangle((int)paddedLoc.X, (int)paddedLoc.Y, viewWidth, viewHeight, Color.Black);
+        Graphics.BeginScissorMode((int)paddedLoc.X, (int)paddedLoc.Y, viewWidth, viewHeight);
+
+        Texture2D? gridlines = null;
+        foreach (var mapTile in _currentView.Tiles)
+        {
+            var tileDetails = _gameScreen.TileCache.GetTileDetails(mapTile.Tile, _currentView.CivilizationId);
+            var dest = new Rectangle(paddedLoc.X + mapTile.Location.X, paddedLoc.Y + mapTile.Location.Y,
+                dim.TileWidth, dim.TileHeight);
+            Graphics.DrawTexturePro(tileDetails.Texture, MapImage.TileRec, dest, Vector2.Zero, 0f, Color.White);
+
+            if (mapTile.GridLabel != null)
+            {
+                gridlines ??= TextureCache.GetImage(_active.PicSources["gridlines"][0]);
+                Graphics.DrawTexturePro(gridlines.Value, new Rectangle(0, 0, gridlines.Value.Width, gridlines.Value.Height),
+                    dest, Vector2.Zero, 0f, Color.White);
+
+                // Show coords for debugging
+                var textSize = TextManager.MeasureTextEx(Font.GetDefault(), mapTile.GridLabel, 10, 1f);
+                Graphics.DrawText(mapTile.GridLabel, (int)(dest.X + dim.TileWidth / 2f - textSize.X / 2),
+                    (int)(dest.Y + dim.TileHeight / 2f - textSize.Y / 2), 10, Color.Yellow);
+            }
+        }
+
+        Graphics.EndScissorMode();
+    }
+
     private void NextView()
     {
-        var nextView = _animationQueue.Count > 0
+        _currentView = _animationQueue.Count > 0
             ? _animationQueue.Dequeue()
             : _gameScreen.ActiveMode.GetDefaultView(_gameScreen, _currentView, _viewHeight, _viewWidth, ForceRedraw);
-        if (nextView != _currentView)
-        {
-            _currentView.Dispose();
-            _currentView = nextView;
-        }
     }
 
     private bool _forceRedraw;

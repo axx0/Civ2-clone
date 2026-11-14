@@ -20,7 +20,8 @@ namespace RaylibUI.RunGame.GameControls.CityControls;
 public class CityTileMap : BaseControl
 {
     private readonly CityWindow _cityWindow;
-    private Texture2D? _texture;
+    private IList<CityMapSprite> _sprites = new List<CityMapSprite>();
+    private Vector2 _mapSize;
     private float _scaleFactor;
     private Vector2 _offset;
     private readonly string _text;
@@ -195,7 +196,16 @@ public class CityTileMap : BaseControl
     public override void Draw(bool pulse)
     {
         var adjustedLocation = new Vector2(Parent.Bounds.X, Parent.Bounds.Y) + Location + _offset;
-        Graphics.DrawTextureEx(_texture.Value, adjustedLocation, 0, _scaleFactor, Color.White);
+
+        // Clip to the 4x4 tile area, like the edges of the old composed image did
+        Graphics.BeginScissorMode((int)adjustedLocation.X, (int)adjustedLocation.Y,
+            (int)MathF.Round(_mapSize.X * _scaleFactor), (int)MathF.Round(_mapSize.Y * _scaleFactor));
+        foreach (var sprite in _sprites)
+        {
+            Graphics.DrawTexturePro(sprite.Texture, sprite.Source, ScaleRect(sprite.Dest, adjustedLocation),
+                Vector2.Zero, 0f, sprite.Tint);
+        }
+        Graphics.EndScissorMode();
 
         foreach (var element in _viewElements)
         {
@@ -213,6 +223,19 @@ public class CityTileMap : BaseControl
         Redraw();
     }
 
+    /// <summary>
+    /// Scale a rectangle from map space to screen space. Edges are rounded separately so neighbouring tiles
+    /// share their edges and no seams appear between them.
+    /// </summary>
+    private Rectangle ScaleRect(Rectangle rect, Vector2 origin)
+    {
+        var x0 = MathF.Round(origin.X + rect.X * _scaleFactor);
+        var y0 = MathF.Round(origin.Y + rect.Y * _scaleFactor);
+        var x1 = MathF.Round(origin.X + (rect.X + rect.Width) * _scaleFactor);
+        var y1 = MathF.Round(origin.Y + (rect.Y + rect.Height) * _scaleFactor);
+        return new Rectangle(x0, y0, x1 - x0, y1 - y0);
+    }
+
     private void Redraw()
     {
         var city = _cityWindow.City;
@@ -228,10 +251,12 @@ public class CityTileMap : BaseControl
         var height = dim.TileHeight * 4;
         var xcentre = width / 2 - dim.HalfWidth;
         var ycentre = height / 2 - dim.HalfHeight;
-        var image = Image.GenColor(width, height, new Color(0, 0, 0, 0));
+
+        var sprites = new List<CityMapSprite>();
+        var viewPiece = TextureCache.GetImage(gameScreen.Main.ActiveInterface.MapImages.ViewPiece, _active);
 
         var elements = new List<IViewElement>();
-        var cityData = new List<Element>();
+        var cityData = new List<CityMapSprite>();
         var activeCiv = _cityWindow.CurrentGameScreen.Player.Civilization;
         foreach (var tile in city.Location.CityRadius())
         {
@@ -244,10 +269,7 @@ public class CityTileMap : BaseControl
                 var dstRec = new Rectangle(locationX,
                     locationY, dim.TileWidth, dim.TileHeight);
                 
-                image.Draw(tileImage.Image,
-                    MapImage.TileRec,
-                    dstRec,
-                    Color.White);
+                sprites.Add(new CityMapSprite(tileImage.Texture, MapImage.TileRec, dstRec, Color.White));
                 if (tile.CityHere != null)
                 {
                     var cityStyleIndex = tile.CityHere.Owner.CityStyle;
@@ -262,12 +284,9 @@ public class CityTileMap : BaseControl
                     var sizeIncrement =
                         gameScreen.Main.ActiveInterface.GetCityIndexForStyle(cityStyleIndex,
                             tile.CityHere, tile.CityHere.Size);
-                    cityData.Add(new Element
-                    {
-                        Image = Images.ExtractBitmap(cities.Sets[cityStyleIndex][sizeIncrement]
-                            .Image, gameScreen.Main.ActiveInterface),
-                        DestRec = dstRec
-                    });
+                    cityData.Add(new CityMapSprite(
+                        TextureCache.GetImage(cities.Sets[cityStyleIndex][sizeIncrement].Image, _active),
+                        cities.CityRectangle, dstRec, Color.White));
                 }
                 else if (tile.UnitsHere.Any(u => u.Owner != city.Owner))
                 {
@@ -283,24 +302,17 @@ public class CityTileMap : BaseControl
 
                 if (tile.WorkedBy != null && tile.WorkedBy != city)
                 {
-                    image.Draw(Images.ExtractBitmap(gameScreen.Main.ActiveInterface.MapImages.ViewPiece, _active),
-                        MapImage.TileRec, dstRec, Color.Red);
+                    sprites.Add(new CityMapSprite(viewPiece, MapImage.TileRec, dstRec, Color.Red));
                 }
             }
         }
 
         //Cities must be drawn after terrain since they sometimes overdraw onto later tiles
-        foreach (var cityDetails in cityData)
-        {
-            image.Draw(cityDetails.Image, cities.CityRectangle,
-                cityDetails.DestRec,
-                Color.White);
-        }
-
+        sprites.AddRange(cityData);
 
         var resources =
             gameScreen.Main.ActiveInterface.ResourceImages.ToDictionary(k => k.Name,
-                v => Images.ExtractBitmap(v.SmallImage, gameScreen.Main.ActiveInterface));
+                v => TextureCache.GetImage(v.SmallImage, _active));
 
         var lowOrganisation = _organizationLevel == 0;
         var totalDrawWidth = dim.TileWidth - 20;
@@ -324,39 +336,33 @@ public class CityTileMap : BaseControl
                 var destRect = resourceRect with { X = locationX, Y = locationY };
                 for (var i = 0; i < food; i++)
                 {
-                    image.Draw(resources["Food"], resourceRect, destRect, Color.White);
+                    sprites.Add(new CityMapSprite(resources["Food"], resourceRect, destRect, Color.White));
                     destRect.X += spacing;
                 }
                 for (var i = 0; i < shields; i++)
                 {
-                    image.Draw(resources["Shields"], resourceRect, destRect, Color.White);
+                    sprites.Add(new CityMapSprite(resources["Shields"], resourceRect, destRect, Color.White));
                     destRect.X += spacing;
                 }
                 for (var i = 0; i < trade; i++)
                 {
-                    image.Draw(resources["Trade"], resourceRect, destRect, Color.White);
+                    sprites.Add(new CityMapSprite(resources["Trade"], resourceRect, destRect, Color.White));
                     destRect.X += spacing;
                 }
             }
         }
 
-        if (_texture.HasValue)
-        {
-            _texture.Value.Unload();
-        }
-
+        _sprites = sprites;
         _viewElements = elements;
 
-        _texture = Texture2D.LoadFromImage(image);
-        _scaleFactor = Width / (float)_texture.Value.Width;
-        
+        _mapSize = new Vector2(width, height);
+        _scaleFactor = Width / (float)width;
+
         _offset = new Vector2(0, (Height - height * _scaleFactor) / 2f);
-        image.Unload();
     }
 }
 
-public struct Element
-{
-    public Image Image { get; init; }
-    public Rectangle DestRec { get; init; }
-}
+/// <summary>
+/// One texture drawn on the city tile map, in map-space coordinates (before scaling to the control)
+/// </summary>
+public readonly record struct CityMapSprite(Texture2D Texture, Rectangle Source, Rectangle Dest, Color Tint);
