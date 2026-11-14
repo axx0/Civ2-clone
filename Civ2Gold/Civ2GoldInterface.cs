@@ -764,7 +764,7 @@ public class Civ2GoldInterface(IMain main) : Civ2Interface(main)
         Color shadowColour = new(51, 51, 51, 255);
         Color replacementColour = new(255, 0, 0, 255);
 
-        var shield = Images.ExtractBitmap(PicSources["backShield1"][0], this);
+        var shield = Images.ExtractBitmap(PicSources["backShield1"][0], this).Copy();
         var shieldFront = shield.Copy();
         var shieldBack = shield.Copy();
         shieldFront.DrawRectangle(0, 0, shieldFront.Width, 7, Color.Black);

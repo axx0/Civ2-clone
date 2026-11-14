@@ -26,4 +26,22 @@ public class Wallpaper
     public Image[] ButtonClicked { get; set; }
     public Texture2D OuterTexture { get; set; }
     public Texture2D InnerTexture { get; set; }
+
+    /// <summary>
+    /// Free the native memory of all wallpaper images (they are copies owned by this wallpaper)
+    /// </summary>
+    public void Unload()
+    {
+        Image[] singles = [Outer, InnerAlt, OuterTitleTopLeft, OuterTitleTopRight, OuterThinTopLeft, OuterThinTopRight,
+            OuterMiddleLeft, OuterMiddleRight, OuterBottomLeft, OuterBottomRight];
+        Image[]?[] arrays = [Inner, OuterTitleTop, OuterThinTop, OuterBottom, OuterMiddle, OuterLeft, OuterRight, Button, ButtonClicked];
+
+        foreach (var image in singles.Concat(arrays.Where(a => a != null).SelectMany(a => a!)))
+        {
+            if (image.Data != IntPtr.Zero)
+            {
+                image.Unload();
+            }
+        }
+    }
 }

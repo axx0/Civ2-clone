@@ -647,7 +647,7 @@ public class TestOfTimeInterface(IMain main) : Civ2Interface(main)
         var shieldFront = shield.Copy();
 
         UnitImages.Shields = new MemoryStorage(shieldFront, "Unit-Shield", replacementColour);
-        UnitImages.ShieldBack = new MemoryStorage(shield, "Unit-Shield-Back", replacementColour, true);
+        UnitImages.ShieldBack = new MemoryStorage(shield.Copy(), "Unit-Shield-Back", replacementColour, true);
     }
 
     public override UnitShield UnitShield(int unitType) => new()
