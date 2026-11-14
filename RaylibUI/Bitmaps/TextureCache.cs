@@ -20,6 +20,7 @@ public static class TextureCache
             copy.ResizeCanvas(copy.Width + padding.Left + padding.Right, copy.Height + padding.Left + padding.Right, padding.Left, padding.Top, Color.White);
             ImageUtils.PaintPanelBorders(active, ref copy, copy.Width, copy.Height, padding);
             Textures[name] = Texture2D.LoadFromImage(copy);
+            copy.Unload();
         }
 
         return Textures[name];

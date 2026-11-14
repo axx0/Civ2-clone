@@ -165,6 +165,7 @@ public abstract class BaseGameView : IGameView
                                     image.Draw(resizedImg, MapImage.TileRec.ZoomScale(gameScreen.Zoom),
                                         new Rectangle(xpos, ypos, dim.TileWidth, dim.TileHeight),
                                         Color.White);
+                                    resizedImg.Unload();
                                 }
 
                                 if (_gameScreen.ShowGrid)
