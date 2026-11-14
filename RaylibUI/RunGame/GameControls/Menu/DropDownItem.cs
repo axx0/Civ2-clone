@@ -31,7 +31,28 @@ internal class DropDownItem : ControlGroup
         var textHeight = (int)TextManager.MeasureTextEx(look.MenuFont, texts[0], look.MenuFontSize, 0f).Y;
         Controls.Add(new LabelControl(dropdownMenu, texts[0].Replace("&", ""), true, font: look.MenuFont, fontSize: look.MenuFontSize, padding: new Padding(0, _paddingLeft, 0, 0)));
         Controls.Add(new LabelControl(dropdownMenu, texts.Length > 1 ? texts[1] : string.Empty, true, font: look.MenuFont, fontSize: look.MenuFontSize, horizontalAlignment: HorizontalAlignment.Right, padding: new Padding(0, 0, 0, _paddingRight)));
-        Click += (_, _) => Activate();
+    }
+
+    // No capture: the item under the mouse at release is the one that runs
+    // (e.g. press on a menu title, drag down, release on an item)
+    public override bool CapturesMouse => false;
+
+    /// <summary>
+    /// Hovering selects the item, so mouse and keyboard share one selection (Up/Down continue from here).
+    /// </summary>
+    public override void OnMouseEnter()
+    {
+        base.OnMouseEnter();
+        Controller.Focused = this;
+    }
+
+    /// <summary>
+    /// Items run on mouse up; disabled items do nothing and the menu stays open.
+    /// </summary>
+    public override void OnMouseUp(MouseEventArgs e)
+    {
+        base.OnMouseUp(e);
+        Activate();
     }
 
     public override bool OnKeyPressed(KeyboardKey key)
@@ -61,10 +82,7 @@ internal class DropDownItem : ControlGroup
     {
         //Graphics.DrawRectangleLinesEx(Bounds, 1f, Color.Red);
 
-        if (Controller.Hovered == this)
-        {
-            Graphics.DrawRectangle((int)Bounds.X + 1, (int)Bounds.Y + 1, Width - 2, Height - 2, new Color(145, 201, 247, 255));
-        }
+        // The selected item's highlight is drawn by the DropdownMenu
         if (_command.GameCommand != null && _command.GameCommand.Checked)
         {
             Graphics.DrawRectangle((int)Bounds.X + 1, (int)Bounds.Y + 1, 22, Height - 2, new Color(86, 176, 250, 255));

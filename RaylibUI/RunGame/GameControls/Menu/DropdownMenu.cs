@@ -14,8 +14,6 @@ public class DropdownMenu(GameScreen gameScreen) : BaseDialog(gameScreen.Main)
     private bool _shown;
     private int _current = -1;
     private readonly IUserInterface _active = gameScreen.MainWindow.ActiveInterface;
-    private bool _clickInMenu;
-    private bool _clickOutSide;
     private readonly List<int> _separatorOffsets = [];
     private int _width, _height;
 
@@ -72,67 +70,70 @@ public class DropdownMenu(GameScreen gameScreen) : BaseDialog(gameScreen.Main)
 
         _width = dropdownWidth;
         _height = (int)(currentY - location.Y + 10);
-        gameScreen.ShowDialog(this,true);
+        // Switching menus re-uses this dialog; it must only be on the dialog stack once
+        if (!_shown)
+        {
+            gameScreen.ShowDialog(this, true);
+        }
         _shown = true;
-        _clickInMenu = false;
-        _clickOutSide = false;
+        // A menu opens with nothing selected (the old selection belongs to the previous menu's items,
+        // and ShowDialog's starting focus doesn't apply to menus)
+        Focused = null;
     }
-    
-    
-    // What happens when mouse is outside the active dropdown menu
-    public override void MouseOutsideControls(Vector2 mousePos)
-    {
-        if (Input.IsMouseButtonDown(MouseButton.Left))
-        {
-            if (ShapeHelper.CheckCollisionPointRec(mousePos, MenuBar.Bounds))
-            {
-                _clickInMenu = true;
-                _clickOutSide = false;
-            }
-            else
-            {
-                _clickOutSide = true;
-                _clickInMenu = false;
-            }
-        }
-        else
-        {
-            // Hide the active menu if it's clicked
-            if (_clickInMenu)
-            {
-                foreach (var control in MenuBar.Controls!.OfType<MenuLabel>())
-                {
-                    if (ShapeHelper.CheckCollisionPointRec(mousePos, control.Bounds))
-                    {
-                        if (control.Index == _current)
-                        {
-                            Hide();
-                            //_gameScreen.Focused = control;
-                        }
-                        return;
-                    }
-                }
-            }
 
-            if (_clickOutSide)
-            {
-                Hide();
-                gameScreen.Hovered = null;
-            }
-            
-            // Activate another menu if the mouse hovers over it
-            foreach (var control in MenuBar.Controls!.OfType<MenuLabel>())
-            {
-                if (ShapeHelper.CheckCollisionPointRec(mousePos, control.Bounds))
-                {
-                    if (control.Index != _current)
-                    {
-                        control.Activate();
-                    }
-                    return;
-                }
-            }
+    // Mouse outside the dropdown's items (while open this dialog gets all mouse input)
+
+    /// <summary>
+    /// Mouse down on the open menu's title closes it, on another title opens that one.
+    /// Anywhere else (outside the dropdown) the menu closes and the click still acts on what's underneath.
+    /// </summary>
+    public override bool OnMouseDownOutside(MouseEventArgs e)
+    {
+        var title = MenuBar.TitleIndexAt(e.ScreenLocation);
+        if (title == _current)
+        {
+            Hide();
+            return false;
         }
+        if (title != -1)
+        {
+            MenuBar.Open(title);
+            return false;
+        }
+        if (ShapeHelper.CheckCollisionPointRec(e.ScreenLocation, Bounds))
+        {
+            return false;
+        }
+
+        Hide();
+        return true;
+    }
+
+    /// <summary>
+    /// Moving over another menu title switches to that menu.
+    /// </summary>
+    public override void OnMouseMoveOutside(MouseEventArgs e)
+    {
+        var title = MenuBar.TitleIndexAt(e.ScreenLocation);
+        if (title != -1 && title != _current)
+        {
+            MenuBar.Open(title);
+        }
+    }
+
+    /// <summary>
+    /// Releasing over a menu title keeps the menu open (normal click on a title);
+    /// releasing anywhere else outside the dropdown closes it.
+    /// </summary>
+    public override void OnMouseUpOutside(MouseEventArgs e)
+    {
+        if (MenuBar.TitleIndexAt(e.ScreenLocation) != -1 ||
+            ShapeHelper.CheckCollisionPointRec(e.ScreenLocation, Bounds))
+        {
+            return;
+        }
+
+        Hide();
     }
 
     public override int Height => _height;
@@ -152,81 +153,33 @@ public class DropdownMenu(GameScreen gameScreen) : BaseDialog(gameScreen.Main)
                 MenuBar.Activate(_current + 1);
                 return;
             case KeyboardKey.Down:
-                if (Focused == null)
-                {
-                    Focused = Controls[0];
-                }
-                else if (Focused == Controls[^1])
-                {
-                    Focused = null;
-                }
-                else
-                {
-                    var idx = Controls.IndexOf(Focused);
-                    Focused = Controls[idx + 1];
-                }
-
+            {
+                // Wraps around from the last item to the first
+                if (Controls.Count == 0) return;
+                var idx = Focused == null ? -1 : Controls.IndexOf(Focused);
+                Focused = Controls[(idx + 1) % Controls.Count];
                 return;
+            }
             case KeyboardKey.Up:
-                if (Focused == null)
-                {
-                    Focused = Controls[^1];
-                }
-                else if (Focused == Controls[0])
-                {
-                    Focused = null;
-                }
-                else
-                {
-                    var idx = Controls.IndexOf(Focused);
-                    Focused = Controls[idx - 1];
-                }
-
-                return;
-        }
-
-
-
-
-        if (Focused == null)
-        {
-            var hotControl = Controls.FirstOrDefault(c => c is DropDownItem dd && dd.HotKey == key.ToModelKey());
-            if (hotControl != null)
             {
-                Focused = hotControl;
-                return;
-            }
-        }
-        else
-        {
-            var idx = Controls.IndexOf(Focused);
-            for (int i = idx +1; i != idx; i++)
-            {
-                if (i >= Controls.Count)
-                {
-                    if (idx == -1) break;
-                    i = -1;
-                    continue;
-                }
-
-                if (Controls[i] is DropDownItem dd && dd.HotKey == key.ToModelKey())
-                {
-                    Focused = Controls[i];
-                    return;
-                }
-            }
-
-            if (idx != -1 && Controls[idx] is DropDownItem cdd && cdd.HotKey == key.ToModelKey())
-            {
-                //Do nothing as they pressed the hotkey for this element and there is no conflict
+                // Wraps around from the first item to the last
+                if (Controls.Count == 0) return;
+                var idx = Focused == null ? -1 : Controls.IndexOf(Focused);
+                Focused = idx <= 0 ? Controls[^1] : Controls[idx - 1];
                 return;
             }
         }
 
-        if (MenuBar.Activate(_current, key))
+        // Letters do nothing in an open menu, except Alt+letter, which opens the menu with that title letter
+        // (Alt has already opened the first menu by the time the letter arrives)
+        if (Input.IsKeyDown(KeyboardKey.LeftAlt) || Input.IsKeyDown(KeyboardKey.RightAlt))
         {
-            return;
-        }   
+            if (MenuBar.Activate(_current, key))
+            {
+                return;
+            }
+        }
+
         base.OnKeyPress(key);
     }
 
@@ -260,6 +213,8 @@ public class DropdownMenu(GameScreen gameScreen) : BaseDialog(gameScreen.Main)
     {
         _shown = false;
         gameScreen.CloseDialog(this);
-        gameScreen.Focused = null;
+        // Give the focus back to where it was before the menu opened (e.g. the map)
+        gameScreen.Focused = MenuBar.FocusBeforeMenu;
+        MenuBar.FocusBeforeMenu = null;
     }
 }

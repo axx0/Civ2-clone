@@ -56,7 +56,6 @@ public class WondersWindow : BaseDialog
         var listbox = new Listbox(this)
         {
             Width = _width - PaddingSide - 2 * 2,
-            Height = 370,
             Location = new(LayoutPadding.Left + 2, LayoutPadding.Top + 2),
             Rows = 9,
             Selectable = false,

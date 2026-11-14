@@ -18,7 +18,7 @@ public class ControlGroup : BaseControl
     public ControlGroup(IControlLayout controller, int spacing = 3, int flexElement = EvenFlex, bool eventTransparent = true) : base(controller, eventTransparent: eventTransparent)
     {
         _spacing = spacing;
-        _flexElement = flexElement;
+        _flexElement = flexElement; // id of element to be stretched (resized)
         //Controls = new List<IControl>();
     }
 
@@ -108,5 +108,67 @@ public class ControlGroup : BaseControl
     public void AddChild(IControl control)
     {
         Controls.Add(control);
+    }
+
+    /// <summary>
+    /// Desired size = children side by side (including margins and spacing), as tall as the tallest child.
+    /// </summary>
+    protected override Size MeasureCore(Size available)
+    {
+        if (Controls.Count == 0) return new Size(0, 0);
+
+        foreach (var child in Controls)
+        {
+            child.Measure(available);
+        }
+
+        var width = Controls.Sum(OuterWidth) + (Controls.Count - 1) * _spacing;
+        var height = Controls.Max(c => c.DesiredSize.Height + c.Margin.Top + c.Margin.Bottom);
+        return new Size(width, height);
+    }
+
+    /// <summary>
+    /// Place children in a row within the final width:
+    /// NoFlex - each child gets its desired width,
+    /// flex element - other children get their desired width, the flex child takes the rest,
+    /// EvenFlex - all children get equal width and together fill the row (e.g. dialog buttons).
+    /// </summary>
+    protected override void ArrangeCore(Rectangle finalRect)
+    {
+        if (Controls.Count == 0) return;
+
+        var available = Width - (Controls.Count - 1) * _spacing;
+        var widths = Controls.Select(OuterWidth).ToList();
+
+        if (_flexElement == EvenFlex)
+        {
+            var equalWidth = available / Controls.Count;
+            for (var i = 0; i < widths.Count; i++)
+            {
+                widths[i] = equalWidth;
+            }
+            // Give the rounding remainder to the last child so the row fills exactly
+            widths[^1] += available - equalWidth * Controls.Count;
+        }
+        else if (_flexElement != NoFlex && _flexElement < Controls.Count)
+        {
+            widths[_flexElement] = Math.Max(0, widths[_flexElement] + available - widths.Sum());
+        }
+
+        var x = 0;
+        for (var i = 0; i < Controls.Count; i++)
+        {
+            var child = Controls[i];
+            var margin = child.Margin;
+            child.Arrange(new Rectangle(x + margin.Left, margin.Top,
+                Math.Max(0, widths[i] - margin.Left - margin.Right),
+                Math.Max(0, Height - margin.Top - margin.Bottom)));
+            x += widths[i] + _spacing;
+        }
+    }
+
+    private static int OuterWidth(IControl control)
+    {
+        return control.DesiredSize.Width + control.Margin.Left + control.Margin.Right;
     }
 }

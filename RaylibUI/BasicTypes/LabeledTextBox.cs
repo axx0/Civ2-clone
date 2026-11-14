@@ -10,7 +10,7 @@ internal class LabeledTextBox : ControlGroup
     public string Name { get; set; }
     public string Text => _textBox.Text;
 
-    public LabeledTextBox(IControlLayout controller, TextBoxDefinition textBoxDef, string textBoxLabel, int labelSize) : base(controller, flexElement: NoFlex, eventTransparent: false)
+    public LabeledTextBox(IControlLayout controller, TextBoxDefinition textBoxDef, string textBoxLabel, int labelSize) : base(controller, spacing: 0, flexElement: NoFlex, eventTransparent: false)
     {
         Name = textBoxDef.Name;
         var label = new LabelControl(controller, textBoxLabel, eventTransparent: true, minWidth: labelSize);

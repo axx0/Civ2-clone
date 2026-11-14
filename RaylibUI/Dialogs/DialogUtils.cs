@@ -6,59 +6,31 @@ namespace RaylibUI;
 public static class DialogUtils
 {
     /// <summary>
-    /// Returns a list of strings for wrapped text
+    /// Splits text into lines narrower than maxWidth, breaking between words.
+    /// No word is ever dropped: a word wider than maxWidth on its own gets a line of its own
+    /// (and sticks out), and the last line is always kept.
     /// </summary>
     public static List<string> GetWrappedTexts(string text, int maxWidth, Font font, int fontSize)
     {
         string[] words = text.Split();
-        List<string> wrappedLines = new ();
+        List<string> wrappedLines = [];
 
-        string combinedWord = string.Empty;
-        int combinedTextSize, combinedTextSizeNext;
-
-        // Measure string Width by combining words
-        bool newLine = true;
-        for (int i = 0; i < words.Length; i++)
+        var line = words[0];
+        for (int i = 1; i < words.Length; i++)
         {
-            if (newLine)
+            var extended = line + " " + words[i];
+            if ((int)TextManager.MeasureTextEx(font, extended, fontSize, 0.0f).X < maxWidth)
             {
-                combinedWord = words[i];
-                newLine = false;
+                line = extended;
             }
             else
             {
-                combinedWord = combinedWord + " " + words[i];
-            }
-
-            combinedTextSize = (int)TextManager.MeasureTextEx(font, combinedWord, fontSize, 0.0f).X;
-            if (i != words.Length - 1)
-            {
-                combinedTextSizeNext = (int)TextManager.MeasureTextEx(font, combinedWord + " " + words[i + 1], fontSize, 0.0f).X;
-            }
-            else    // Last word
-            {
-                combinedTextSizeNext = combinedTextSize;
-            }
-
-
-            if (combinedTextSize < maxWidth && combinedTextSizeNext >= maxWidth)
-            {
-                wrappedLines.Add(combinedWord);
-                newLine = true;
-            }
-
-            // Last line
-            if (combinedTextSize < maxWidth && i == words.Length - 1)
-            {
-                wrappedLines.Add(combinedWord);
+                // The next word doesn't fit: close this line (it has at least one word) and start a new one
+                wrappedLines.Add(line);
+                line = words[i];
             }
         }
-
-        int[] wrappedLinesLength = new int[wrappedLines.Count];
-        for (int i = 0; i < wrappedLines.Count; i++)
-        {
-            wrappedLinesLength[i] = (int)TextManager.MeasureTextEx(font, wrappedLines[i], fontSize, 0.0f).X;
-        }
+        wrappedLines.Add(line);
 
         return wrappedLines;
     }

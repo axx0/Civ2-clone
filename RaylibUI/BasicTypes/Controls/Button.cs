@@ -3,6 +3,7 @@ using Model;
 using Model.Interface;
 using Raylib_CSharp.Fonts;
 using Raylib_CSharp.Colors;
+using Raylib_CSharp.Interact;
 using Raylib_CSharp.Rendering;
 using Raylib_CSharp.Textures;
 using Raylib_CSharp.Transformations;
@@ -21,8 +22,11 @@ public class Button : BaseControl
     private readonly IImageSource? _backgroundImage;
     private readonly Color _textColour;
     private readonly IUserInterface? _active;
-    private bool _hovered;
     public override bool CanFocus => true;
+
+    // Focus rectangle: a thin dark line just inside the button's bevel
+    private const int FocusInset = 4;
+    private static readonly Color FocusColour = new(80, 80, 80, 255);
 
     public Button(IControlLayout controller, string text, Font? font = null, int? fontSize = null, IImageSource? backgroundImage = null, float imageScale = 1.0f) : base(controller)
     {
@@ -43,38 +47,31 @@ public class Button : BaseControl
         {
             _text = value;
             _textSize = TextManager.MeasureTextEx(_font, _text, _fontSize, 0f);
+            _preferredSize = null;
         }
     }
 
-    private int _width;
+    // Size set by a parent/Arrange; null = follow the preferred size
+    private int? _width;
     public override int Width
     {
-        get
-        {
-            if (_width == 0)
-            {
-                _width = GetPreferredWidth();
-            }
-
-            return _width;
-        }
-        set { _width = value; }
+        get => _width ?? GetPreferredWidth();
+        set => _width = value;
     }
 
-    private int _height;
+    private int? _height;
     public override int Height
     {
-        get
-        {
-            if (_height == 0)
-            {
-                _height = GetPreferredHeight();
-            }
-
-            return _height;
-        }
-        set { _height = value; }
+        get => _height ?? GetPreferredHeight();
+        set => _height = value;
     }
+
+    // Cached because image buttons have to look up their image size
+    private Size? _preferredSize;
+    private Size PreferredSize => _preferredSize ??= _backgroundImage == null
+        ? new Size(Math.Max((int)_textSize.X + 10, 160), 36)
+        : new Size(Math.Max((int)_textSize.X, Images.GetImageWidth(_backgroundImage, _active, Scale)),
+            Images.GetImageHeight(_backgroundImage, _active, Scale));
 
     public override void Draw(bool pulse)
     {
@@ -91,9 +88,10 @@ public class Button : BaseControl
                 Graphics.DrawTexture(Texture, (int)Bounds.X, (int)Bounds.Y, Color.White);
             }
 
-            if (_hovered)
+            if (Controller.Focused == this && Width > 2 * FocusInset && Height > 2 * FocusInset)
             {
-                Graphics.DrawRectangleLinesEx(Bounds, 0.5f, Color.Magenta);
+                Graphics.DrawRectangleLinesEx(new Rectangle(Bounds.X + FocusInset, Bounds.Y + FocusInset,
+                    Width - 2 * FocusInset, Height - 2 * FocusInset), 1f, FocusColour);
             }
         }
         else
@@ -111,53 +109,65 @@ public class Button : BaseControl
     {
         get { return _fontSize; }
         set
-        { 
+        {
             _fontSize = value;
             _textSize = TextManager.MeasureTextEx(_font, _text, _fontSize, 0f);
+            _preferredSize = null;
         }
     }
 
     private Texture2D _texture;
+    /// <summary>
+    /// Button background, repainted whenever the button's size changes.
+    /// </summary>
     public Texture2D Texture
     {
         get
         {
-            if (_texture.Width == 0)
+            if ((_texture.Width != Width || _texture.Height != Height) && Width > 0 && Height > 0)
             {
+                if (_texture.Width != 0)
+                {
+                    _texture.Unload();
+                }
                 _texture = ImageUtils.PaintButtonBase(Width, Height);
             }
             return _texture;
         }
     }
 
-    public bool Enabled { get; set; } = true;
-
-    public float Scale { get; set; }
-
-    public override void OnMouseEnter()
+    private float _scale;
+    public float Scale
     {
-        if (!Visible) return;
-
-        _hovered = true;
-        base.OnMouseEnter();
+        get => _scale;
+        set
+        {
+            _scale = value;
+            _preferredSize = null;
+        }
     }
 
-    public override void OnMouseLeave()
+    /// <summary>
+    /// Enter or Space on the focused button presses it, the same as a mouse click
+    /// (so the dialog doesn't treat Enter as OK when e.g. Cancel is focused).
+    /// </summary>
+    public override bool OnKeyPressed(KeyboardKey key)
     {
-        if (!Visible) return;
+        if (key is KeyboardKey.Enter or KeyboardKey.KpEnter or KeyboardKey.Space)
+        {
+            if (Enabled)
+            {
+                OnClick(new MouseEventArgs());
+            }
+            return true;
+        }
 
-        _hovered = false;
-        base.OnMouseLeave();
+        return base.OnKeyPressed(key);
     }
 
-    public override int GetPreferredHeight()
-    {
-        return _backgroundImage == null ? 36 : Images.GetImageHeight(_backgroundImage, _active, Scale);
-    }
+    public override int GetPreferredHeight() => PreferredSize.Height;
 
-    public override int GetPreferredWidth()
-    {
-        return _backgroundImage == null ? Math.Max((int)_textSize.X + 10, 160) :
-            Math.Max((int)_textSize.X, Images.GetImageWidth(_backgroundImage, _active, Scale));
-    }
+    public override int GetPreferredWidth() => PreferredSize.Width;
+
+    protected override Size MeasureCore(Size available) => PreferredSize;
 }

@@ -57,12 +57,10 @@ public class FileDialog : DynamicSizingDialog
             Groups = MakeListboxEntries()
         };
         _listbox.ItemSelected += ItemSelected;
-        innerLayout.Add(_listbox, 1, 0, new Padding(2, 2, 2, 2));
+        innerLayout.Add(_listbox, 1, 0, new Padding(2, 2, 2, 2), stretch: true);
 
         _innerPanel = new TableLayoutPanel(this)
         {
-            Location = new Vector2(LayoutPadding.Left, LayoutPadding.Top),
-            Width = 600,
             TableLayout = innerLayout
         };
         Controls.Add(_innerPanel);

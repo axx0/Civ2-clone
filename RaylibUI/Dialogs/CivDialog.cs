@@ -41,7 +41,7 @@ public class CivDialog : DynamicSizingDialog
         if (dialog.Image != null && dialog.Image.Image.All(n => n != null))
         {
             _imageBox = new ImageBox(this, dialog.Image);
-            innerLayout.Add(_imageBox, 0, 0);
+            SetImage(_imageBox);
         }
 
         var maxTextWidth = 0;
@@ -97,7 +97,7 @@ public class CivDialog : DynamicSizingDialog
                         var wrappedLabel = new LabelControl(this,
                             string.IsNullOrEmpty(text) ? " " : text,    // Add space if ^ is the only character 
                             false,
-                            horizontalAlignment: styles[i] == TextStyles.Centered ? HorizontalAlignment.Center : HorizontalAlignment.Left,
+                            horizontalAlignment: styles[j] == TextStyles.Centered ? HorizontalAlignment.Center : HorizontalAlignment.Left,
                             font: _active.Look.LabelFont, fontSize: _active.Look.LabelFontSize,
                             colorFront: _active.Look.LabelColour, colorShadow: _active.Look.LabelShadowColour, shadowOffset: new Vector2(1, 1));
 
@@ -107,9 +107,9 @@ public class CivDialog : DynamicSizingDialog
                 }
                 else
                 {
+                    // Stretched so centered text is centered across the whole content width
                     var label = nonWrappedLabels[0];
-                    label.Width = maxTextWidth;
-                    innerLayout.Add(label, layoutRow++, 1);
+                    innerLayout.Add(label, layoutRow++, 1, stretch: true);
                     nonWrappedLabels.RemoveAt(0);
                 }
             }
@@ -128,7 +128,7 @@ public class CivDialog : DynamicSizingDialog
             _listbox.Looks = dialog.ListboxDef.Looks ?? _listbox.Looks;
             _listbox.Groups = dialog.ListboxDef.Groups ?? _listbox.Groups;
 
-            innerLayout.Add(_listbox, layoutRow++, 1, new Padding(2, 2, 2, 2));
+            innerLayout.Add(_listbox, layoutRow++, 1, new Padding(2, 2, 2, 2), stretch: true);
             _listbox.ItemSelected += ListboxOnItemSelected;
             _selectedIndex = 0;
         }
@@ -179,12 +179,11 @@ public class CivDialog : DynamicSizingDialog
             _optionsPanel.Icons = dialog.OptionsDef.Icons ?? _optionsPanel.Icons;
             _optionsPanel.Type = OptionsType.Default;
 
-            innerLayout.Add(_optionsPanel, layoutRow++, 1);
+            innerLayout.Add(_optionsPanel, layoutRow++, 1, stretch: true);
         }
 
         _innerPanel = new TableLayoutPanel(this)
         {
-            Location = new Vector2(LayoutPadding.Left, LayoutPadding.Top),
             TableLayout = innerLayout
         };
         Controls.Add(_innerPanel);

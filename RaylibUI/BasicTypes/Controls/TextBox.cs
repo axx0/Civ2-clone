@@ -1,6 +1,4 @@
 using System.Numerics;
-using System.Xml;
-using Raylib_CSharp;
 using Raylib_CSharp.Interact;
 using Raylib_CSharp.Transformations;
 using Raylib_CSharp.Colors;
@@ -12,25 +10,29 @@ using Raylib_CSharp.Fonts;
 
 namespace RaylibUI.Controls;
 
+/// <summary>
+/// One-line edit box. It asks for its min width and one line of text in height, and uses whatever
+/// size it's given. Text longer than the box scrolls sideways so the caret stays in view.
+/// </summary>
 public class TextBox : BaseControl
 {
-    public event EventHandler<EventArgs> TextChanged; 
+    public event EventHandler<EventArgs>? TextChanged;
     public override bool CanFocus => true;
-    
-    private int _editPosition = 0;
-
-    private string _text;
-    private readonly IControlLayout _controller;
-    private readonly IUserInterface? _active;
-    private readonly int _minWidth;
-    private readonly Action<string>? _acceptAction;
-    private bool _editMode = false;
-    private int _editWidth;
-
-    private readonly Vector2 _textOffsetV = new Vector2(5,5);
-    private string _focusText;
 
     private const int TextMargin = 5;
+    private const float Spacing = 1f;
+
+    private readonly IControlLayout _controller;
+    private readonly int _minWidth;
+    private readonly Action<string>? _acceptAction;
+    private readonly Font _font;
+    private readonly int _fontSize;
+    private readonly int _lineHeight;
+
+    private string _text = string.Empty;
+    private int _editPosition;
+    private int _scrollOffset;      // how far the text is scrolled left, in pixels
+    private bool _editMode;
 
     public string Text => _text;
 
@@ -39,72 +41,106 @@ public class TextBox : BaseControl
         _controller = controller;
         _minWidth = minWidth;
         _acceptAction = acceptAction;
-        _active = controller.MainWindow.ActiveInterface;
+        _font = controller.MainWindow.ActiveInterface?.Look.DefaultFont ?? Fonts.Tnr;
+        _fontSize = Styles.BaseFontSize;
+        // One line's height, the same for any text (an empty text measures 0 high)
+        _lineHeight = (int)TextManager.MeasureTextEx(_font, "Ag", _fontSize, Spacing).Y;
+
+        // A size until a parent lays it out
+        Width = GetPreferredWidth();
+        Height = GetPreferredHeight();
+
         SetText(initialValue);
-        Click += OnClick;
     }
 
-    public void SetText(string initialValue)
+    public void SetText(string text)
     {
-        if(_text == initialValue) return;
-        _text = initialValue;
-        _editPosition = _text.Length;
-        var size = TextManager.MeasureTextEx(_active?.Look.DefaultFont ?? Fonts.Tnr, _text, Styles.BaseFontSize, 1.0f);
-        _editWidth = (int)size.X;
-        Height = (int)(size.Y + TextMargin * 2);
+        if (_text == text) return;
+
+        _text = text;
+        SetEditPosition(_text.Length);
         TextChanged?.Invoke(this, EventArgs.Empty);
     }
 
+    public override int GetPreferredWidth() => _minWidth;
+
+    public override int GetPreferredHeight() => _lineHeight + 2 * TextMargin;
+
+    private int TextWidth(string text) => (int)TextManager.MeasureTextEx(_font, text, _fontSize, Spacing).X;
+
+    private int InnerWidth => Math.Max(1, Width - 2 * TextMargin);
+
     public override void Draw(bool pulse)
     {
+        if (!Visible) return;
+
         Graphics.DrawRectangleRec(Bounds, Color.White);
         Graphics.DrawRectangleLinesEx(Bounds, 1f, Color.Black);
-        Graphics.DrawTextEx(_active?.Look.DefaultFont ?? Fonts.Tnr, _text, new Vector2(Bounds.X, Bounds.Y) + _textOffsetV, Styles.BaseFontSize,1.0f, Color.Black);
-        
-        if (_editMode)
+
+        // Text and caret are cut off at the box's inner edge
+        var textX = Bounds.X + TextMargin - _scrollOffset;
+        var textY = Bounds.Y + (Height - _lineHeight) / 2;
+        Graphics.BeginScissorMode((int)Bounds.X + 1, (int)Bounds.Y + 1, Math.Max(0, Width - 2), Math.Max(0, Height - 2));
+        Graphics.DrawTextEx(_font, _text, new Vector2(textX, textY), _fontSize, Spacing, Color.Black);
+        if (_editMode && pulse)
         {
-            if (pulse)
-            {
-                Graphics.DrawRectangleRec(new Rectangle(Bounds.X + 5 + _editWidth + 1, Bounds.Y + 5, 1, 20), Color.Black);
-            }
+            var caretX = textX + TextWidth(_text[.._editPosition]) + 1;
+            Graphics.DrawRectangleRec(new Rectangle(caretX, textY, 1, _lineHeight), Color.Black);
         }
+        Graphics.EndScissorMode();
 
         base.Draw(pulse);
     }
 
-    public override int Width => GetPreferredWidth();
-
-    public void OnClick(object? sender, MouseEventArgs mouseEventArgs)
+    public override void OnResize()
     {
+        base.OnResize();
+        EnsureCaretVisible();
+    }
+
+    /// <summary>
+    /// A press focuses the box and puts the caret at the mouse (as in Windows).
+    /// </summary>
+    public override void OnMouseDown(MouseEventArgs e)
+    {
+        base.OnMouseDown(e);
+        if (e.Button != MouseButton.Left) return;
+
         if (_controller.Focused != this)
         {
             _controller.Focused = this;
         }
+        SetEditPosition(PositionAt(e.Location.X));
+    }
+
+    /// <summary>
+    /// The caret position nearest to this x (relative to the box).
+    /// </summary>
+    private int PositionAt(float x)
+    {
+        var target = x - TextMargin + _scrollOffset;
+        var best = 0;
+        var bestDistance = float.MaxValue;
+        for (var i = 0; i <= _text.Length; i++)
+        {
+            var distance = Math.Abs(TextWidth(_text[..i]) - target);
+            if (distance < bestDistance)
+            {
+                bestDistance = distance;
+                best = i;
+            }
+        }
+        return best;
     }
 
     public override void OnFocus()
     {
-        _focusText = _text;
         _editMode = true;
     }
 
     public override void OnBlur()
     {
         _editMode = false;
-        if (_text != _focusText)
-        {
-            TextChanged?.Invoke(this, EventArgs.Empty);
-        }
-    }
-
-    public override int GetPreferredHeight()
-    {
-        return Height > 0 ? Height : -1;
-    }
-
-    public override int GetPreferredWidth()
-    {
-        return _minWidth;
     }
 
     /**
@@ -120,6 +156,7 @@ public class TextBox : BaseControl
         }
         _text = _text.Insert(_editPosition, charPressed.ToString());
         SetEditPosition(_editPosition + 1);
+        TextChanged?.Invoke(this, EventArgs.Empty);
         return true;
     }
 
@@ -128,35 +165,38 @@ public class TextBox : BaseControl
         switch (key)
         {
             case KeyboardKey.Left:
-            {
                 if (_editPosition > 0)
                 {
                     SetEditPosition(_editPosition - 1);
                 }
-
                 return true;
-            }
             case KeyboardKey.Right:
                 if (_editPosition < _text.Length)
                 {
                     SetEditPosition(_editPosition + 1);
                 }
-
+                return true;
+            case KeyboardKey.Home:
+                SetEditPosition(0);
+                return true;
+            case KeyboardKey.End:
+                SetEditPosition(_text.Length);
                 return true;
             case KeyboardKey.Backspace:
                 if (_editPosition > 0)
                 {
+                    _text = _text.Remove(_editPosition - 1, 1);
                     SetEditPosition(_editPosition - 1);
-                    _text = _text.Remove(_editPosition, 1);
+                    TextChanged?.Invoke(this, EventArgs.Empty);
                 }
-
                 return true;
             case KeyboardKey.Delete:
                 if (_editPosition < _text.Length)
                 {
                     _text = _text.Remove(_editPosition, 1);
+                    SetEditPosition(_editPosition);
+                    TextChanged?.Invoke(this, EventArgs.Empty);
                 }
-
                 return true;
             case KeyboardKey.Tab:
                 return base.OnKeyPressed(key);
@@ -167,7 +207,6 @@ public class TextBox : BaseControl
                     _acceptAction(_text);
                     return true;
                 }
-
                 break;
         }
 
@@ -176,7 +215,26 @@ public class TextBox : BaseControl
 
     private void SetEditPosition(int newEditPosition)
     {
-        _editPosition = newEditPosition;
-        _editWidth = (int)TextManager.MeasureTextEx(_active?.Look.DefaultFont ?? Fonts.Tnr, _text.Substring(0,_editPosition), Styles.BaseFontSize, 1).X;
+        _editPosition = Math.Clamp(newEditPosition, 0, _text.Length);
+        EnsureCaretVisible();
+    }
+
+    /// <summary>
+    /// Scroll the text sideways so the caret is inside the box, and don't leave empty space
+    /// on the right while there's hidden text on the left.
+    /// </summary>
+    private void EnsureCaretVisible()
+    {
+        var caretX = TextWidth(_text[.._editPosition]);
+        if (caretX - _scrollOffset > InnerWidth)
+        {
+            _scrollOffset = caretX - InnerWidth;
+        }
+        else if (caretX < _scrollOffset)
+        {
+            _scrollOffset = caretX;
+        }
+
+        _scrollOffset = Math.Clamp(_scrollOffset, 0, Math.Max(0, TextWidth(_text) - InnerWidth));
     }
 }

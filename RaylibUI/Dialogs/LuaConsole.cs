@@ -42,11 +42,10 @@ public class LuaConsole : DynamicSizingDialog
             Groups = _script.Log.Split(Environment.NewLine).Select(t => new ListboxGroup(t)).ToList()
         };
         _listbox.ScrollToEnd();
-        innerLayout.Add(_listbox, 0, 0, new Padding(2, 2, 2, 2));
+        innerLayout.Add(_listbox, 0, 0, new Padding(2, 2, 2, 2), stretch: true);
 
         var _innerPanel = new TableLayoutPanel(this)
         {
-            Location = new Vector2(LayoutPadding.Left, LayoutPadding.Top),
             TableLayout = innerLayout
         };
         Controls.Add(_innerPanel);

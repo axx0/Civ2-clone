@@ -25,6 +25,13 @@ public abstract class BaseScreen : BaseLayoutController, IScreen
             _renderedWidth = width;
             _renderedHeight = height;
             Resize(width, height);
+
+            // Dialogs shown before the first frame only now have their layout (and visible controls)
+            foreach (var dialog in _dialogsWaitingForFocus.Where(d => _dialogs.Contains(d) && d.Focused == null))
+            {
+                dialog.SelectNextControl();
+            }
+            _dialogsWaitingForFocus.Clear();
         }
         else
         {
@@ -81,44 +88,16 @@ public abstract class BaseScreen : BaseLayoutController, IScreen
             }
         }
 
-        var mousePos = Input.GetMousePosition();
-        var control = layoutController.Hovered;
-        if (control != null)
+        if (_mouse.Process(layoutController))
         {
-            control.OnMouseMove(Input.GetMouseDelta());
-            if (control.Controls != null)
+            // The dialog passed a press on (e.g. a dropdown menu that closed on a click outside it):
+            // let the new topmost dialog/screen handle the same press in this frame
+            var next = _dialogs.LastOrDefault(this);
+            if (next != layoutController)
             {
-                var hoverChild = FindControl(control.Controls,
-                    child => ShapeHelper.CheckCollisionPointRec(mousePos, child.Bounds) && child.Visible);
-                if (hoverChild != null)
-                {
-                    control.OnMouseLeave();
-                    layoutController.Hovered = hoverChild;
-                    hoverChild.OnMouseEnter();
-                }
-            }
-            if (!ShapeHelper.CheckCollisionPointRec(mousePos, control.Bounds))
-            {
-                control.OnMouseLeave();
-                FindHovered(layoutController, mousePos);
+                _mouse.Process(next);
             }
         }
-        else
-        {
-            FindHovered(layoutController, mousePos);
-        }
-
-        if (layoutController.Hovered == null)
-        {
-            layoutController.MouseOutsideControls(mousePos);
-        }
-    }
-
-    private static void FindHovered(IControlLayout layoutController, Vector2 mousePos)
-    {
-        layoutController.Hovered = FindControl(layoutController.Controls,
-            control => ShapeHelper.CheckCollisionPointRec(mousePos, control.Bounds) && control.Visible);
-        layoutController.Hovered?.OnMouseEnter();
     }
 
     public void CloseDialog(IControlLayout? dialog)
@@ -130,6 +109,11 @@ public abstract class BaseScreen : BaseLayoutController, IScreen
     }
     
 
+    /// <summary>
+    /// Show a dialog (on top of the others if stack = true, otherwise replacing them).
+    /// Starting focus: a dialog that sets <see cref="IControlLayout.Focused"/> itself (e.g. in its constructor)
+    /// keeps that control; otherwise the first control in tab order gets the focus.
+    /// </summary>
     public void ShowDialog(IControlLayout dialog, bool stack = false)
     {
         if (!stack)
@@ -141,14 +125,28 @@ public abstract class BaseScreen : BaseLayoutController, IScreen
         if (_renderedWidth > 0 && _renderedHeight > 0)
         {
             dialog.Resize(_renderedWidth, _renderedHeight);
+
+            // Starting focus: the first control in tab order (e.g. the options panel, otherwise the first button),
+            // unless the dialog already chose one
+            if (dialog.Focused == null)
+            {
+                dialog.SelectNextControl();
+            }
+        }
+        else
+        {
+            // No layout yet, so no control is visible; focus it after the first resize
+            _dialogsWaitingForFocus.Add(dialog);
         }
     }
 
     private readonly List<IControlLayout> _dialogs = new();
+    private readonly List<IControlLayout> _dialogsWaitingForFocus = new();
     
     private int _renderedWidth;
     private int _renderedHeight;
     private readonly KeyboardKey[] _keys;
+    private readonly MouseDispatcher _mouse = new();
 
     protected BaseScreen(Main main) : base(main, Padding.None)
     {

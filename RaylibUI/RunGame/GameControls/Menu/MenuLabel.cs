@@ -22,10 +22,12 @@ public class MenuLabel : LabelControl
         _menuElements = contents;
         Index = index;
         _gameMenu = gameMenu;
-        Click += (_, _) => Activate();
     }
 
     public Key Hotkey { get; set; }
+
+    // The dropdown takes over the mouse once it opens, so the title doesn't capture it
+    public override bool CapturesMouse => false;
 
     public override void OnFocus()
     {
@@ -33,12 +35,15 @@ public class MenuLabel : LabelControl
         Activate();
     }
 
-    public override void OnMouseEnter()
+    /// <summary>
+    /// Menus open on mouse down (and close again on mouse down on the open title), as in Civ2.
+    /// </summary>
+    public override void OnMouseDown(MouseEventArgs e)
     {
-        base.OnMouseEnter();
-        if (Input.IsMouseButtonDown(MouseButton.Left))
+        base.OnMouseDown(e);
+        if (e.Button == MouseButton.Left)
         {
-            Activate();
+            _gameMenu.Toggle(Index);
         }
     }
 
@@ -46,22 +51,17 @@ public class MenuLabel : LabelControl
     {
         if (_gameMenu.Dropdown.Current == Index) return;
 
+        // Remember where the focus was before the menu bar took it, to restore it when the menu closes
+        if (_gameMenu.OpenIndex == -1 && Controller.Focused is not MenuLabel)
+        {
+            _gameMenu.FocusBeforeMenu = Controller.Focused;
+        }
         Controller.Focused = this;
-        Controller.Hovered = this;
         _gameMenu.Dropdown.Show(Location with { Y = Location.Y + Height }, Index,
             _menuElements.Commands, _menuElements.SeparatorRows);
     }
 
     public int Index { get; }
-
-    public override void OnMouseMove(Vector2 moveAmount)
-    {
-        base.OnMouseMove(moveAmount);
-        if (Input.IsMouseButtonDown(MouseButton.Left))
-        {
-            //Activate();
-        }
-    }
 
     public override bool OnKeyPressed(KeyboardKey key)
     {

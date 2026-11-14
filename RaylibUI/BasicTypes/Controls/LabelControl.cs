@@ -91,34 +91,19 @@ public class LabelControl : BaseControl
 
     public Padding Padding { get; set; }
 
-    private int _width;
+    // Size set by a parent/Arrange; null = follow the text's preferred size
+    private int? _width;
     public override int Width
     {
-        get 
-        { 
-            if (_width == 0)
-            {
-                _width = GetPreferredWidth();
-            }
-
-            return _width; 
-        }
-        set { _width = value; }
+        get => _width ?? GetPreferredWidth();
+        set => _width = value;
     }
 
-    private int _height;
+    private int? _height;
     public override int Height
     {
-        get
-        {
-            if (_height == 0)
-            {
-                _height = GetPreferredHeight();
-            }
-
-            return _height;
-        }
-        set { _height = value; }
+        get => _height ?? GetPreferredHeight();
+        set => _height = value;
     }
 
 
@@ -128,6 +113,11 @@ public class LabelControl : BaseControl
     }
 
     public override int GetPreferredHeight() => (int)_textSize.Y + Padding.Top + Padding.Bottom;
+
+    protected override Size MeasureCore(Size available)
+    {
+        return new Size(GetPreferredWidth(), GetPreferredHeight());
+    }
 
     public override void Draw(bool pulse)
     {

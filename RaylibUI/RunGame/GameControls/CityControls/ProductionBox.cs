@@ -67,10 +67,7 @@ public class ProductionBox : BaseControl
 
     public override void OnResize()
     {
-        Location = new(_cityWindow.LayoutPadding.Left + _properties.Box.X * _cityWindow.Scale,
-            _cityWindow.LayoutPadding.Top + _properties.Box.Y * _cityWindow.Scale);
-        Width = (int)(_properties.Box.Width * _cityWindow.Scale);
-        Height = (int)(_properties.Box.Height * _cityWindow.Scale);
+        _cityWindow.Place(this, _properties.Box);
         base.OnResize();
 
         _shieldWidth = _shieldIcon.Width * _cityWindow.Scale;

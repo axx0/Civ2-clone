@@ -32,13 +32,16 @@ public class CityWindow : BaseDialog
     private const float _scaleMax = 1.5f;
     private const float _scaleMin = 0.5f;
     private const float _scaleDelta = 0.5f;
-    private readonly UnitSupportBox _unitSupportBox;
-    private readonly CityLabel _supportLabel;
+    private Vector2? _startLocation;    // used once, on the first layout (switching cities keeps the window in place)
 
-    public CityWindow(GameScreen gameScreen, City city) : base(gameScreen.Main)
+    /// <param name="scale">Zoom level to open at (0.5, 1 or 1.5).</param>
+    /// <param name="location">Where to open the window; null = centred.</param>
+    public CityWindow(GameScreen gameScreen, City city, float scale = 1.0f, Vector2? location = null) : base(gameScreen.Main)
     {
         CurrentGameScreen = gameScreen;
         City = city;
+        _scale = Math.Clamp(scale, _scaleMin, _scaleMax);
+        _startLocation = location;
         _active = gameScreen.MainWindow.ActiveInterface;
         var game = CurrentGameScreen.Game;
 
@@ -98,10 +101,9 @@ public class CityWindow : BaseDialog
         Controls.Add(new CityLabel(this, _cityWindowProps.Labels["FoodStorage"]));
         Controls.Add(new FoodStorageBox(this));
         Controls.Add(new ProductionBox(this));
-        _supportLabel = new CityLabel(this, _cityWindowProps.Labels["UnitsSupported"]);
-        Controls.Add(_supportLabel);
-        _unitSupportBox = new UnitSupportBox(this);
-        Controls.Add(_unitSupportBox);
+        var supportLabel = new CityLabel(this, _cityWindowProps.Labels["UnitsSupported"]);
+        Controls.Add(supportLabel);
+        Controls.Add(new UnitSupportBox(this, supportLabel));
         Controls.Add(new CityLabel(this, _cityWindowProps.Labels["CityImprovements"]));
         Controls.Add(new ImprovementsBox(this));
         Controls.Add(new CityLabel(this, _cityWindowProps.Labels["Citizens"]));
@@ -126,6 +128,8 @@ public class CityWindow : BaseDialog
         Controls.Add(_shrinkIcon);
         Controls.Add(_expandIcon);
         Controls.Add(_exitIcon);
+
+        Focused = exitButton;
     }
 
     private void CloseButtonOnClick(object? sender, MouseEventArgs e)
@@ -138,6 +142,39 @@ public class CityWindow : BaseDialog
     public float Scale => _scale;
     public City City { get; }
 
+    /// <summary>
+    /// A box of the city picture at the current scale, relative to the picture.
+    /// The edges are rounded, not the size, so boxes that touch at scale 1 still touch when zoomed.
+    /// </summary>
+    public Rectangle ScaledBox(Rectangle box)
+    {
+        static int R(float v) => (int)Math.Round(v, MidpointRounding.AwayFromZero);
+        var x0 = R(box.X * _scale);
+        var y0 = R(box.Y * _scale);
+        var x1 = R((box.X + box.Width) * _scale);
+        var y1 = R((box.Y + box.Height) * _scale);
+        return new Rectangle(x0, y0, x1 - x0, y1 - y0);
+    }
+
+    /// <summary>
+    /// Font size of the city window's texts at the current scale.
+    /// </summary>
+    public int ScaledFontSize => _active.Look.CityWindowFontSize + (int)(12 * (_scale - 1));
+
+    /// <summary>
+    /// Put a control on a box of the city picture. A direct child of the window is offset by the
+    /// window's padding; a control inside another one (e.g. the info area) uses the box as it is,
+    /// relative to its parent.
+    /// </summary>
+    public void Place(BaseControl control, Rectangle box)
+    {
+        var scaled = ScaledBox(box);
+        var offset = control.Parent == this ? new Vector2(LayoutPadding.Left, LayoutPadding.Top) : Vector2.Zero;
+        control.Location = new Vector2(scaled.X, scaled.Y) + offset;
+        control.Width = (int)scaled.Width;
+        control.Height = (int)scaled.Height;
+    }
+
     public override void Resize(int width, int height)
     {
         _headerLabel.FontSize = Math.Max(_active.Look.CityHeaderLabelFontSizeSmall, (int)(_active.Look.CityHeaderLabelFontSizeNormal * _scale));
@@ -147,43 +184,71 @@ public class CityWindow : BaseDialog
         BackgroundImage = ImageUtils.PaintDialogBase(_active, Width, Height, LayoutPadding,
             Images.ExtractBitmap(_cityWindowProps.Image, _active));
 
-        _exitIcon.Location = new(11, 5);
-        _shrinkIcon.Location = new(11 + (_iconW + 2) * _scale, 5);
-        _expandIcon.Location = new(11 + (2 * _iconW + 2 * 2) * _scale, 5);
-        _exitIcon.Scale = _scale;
-        _shrinkIcon.Scale = _scale;
-        _expandIcon.Scale = _scale;
-        
         SetLocation(width, Width, height, Height);
-        var headerOffset = 11 + (3 * _iconW + 3 * 2) * _scale;
-        _headerLabel.Location = new(headerOffset, 0);
-        _headerLabel.Width = Width - 2 * (int)headerOffset;
-        _headerLabel.Height = LayoutPadding.Top;
-
+        if (_startLocation is { } start)
+        {
+            Location = new(Math.Clamp(start.X, 0, Math.Max(0, width - Width)),
+                Math.Clamp(start.Y, 0, Math.Max(0, height - Height)));
+            _startLocation = null;
+        }
+        LayoutTitleBar();
 
         foreach (var control in Controls)
         {
             control.OnResize();
         }
+    }
 
-        _supportLabel.Visible = _unitSupportBox.Groups.Count <= _unitSupportBox.Columns;
+    private void LayoutTitleBar()
+    {
+        const int left = 11, top = 5, gap = 2;
 
+        Button[] icons = [_exitIcon, _shrinkIcon, _expandIcon];
+        for (var i = 0; i < icons.Length; i++)
+        {
+            icons[i].Location = new(left + i * (_iconW + gap) * _scale, top);
+            icons[i].Scale = _scale;
+        }
+
+        var headerOffset = (int)(left + icons.Length * (_iconW + gap) * _scale);
+        _headerLabel.Location = new(headerOffset, 0);
+        _headerLabel.Width = Width - 2 * headerOffset;
+        _headerLabel.Height = LayoutPadding.Top;
     }
 
     public override void OnKeyPress(KeyboardKey key)
     {
-        if (key == KeyboardKey.Escape)
+        switch (key)
         {
-            CurrentGameScreen.CloseDialog(this);
+            case KeyboardKey.Escape:
+                CurrentGameScreen.CloseDialog(this);
+                return;
+            case KeyboardKey.Left:
+                SwitchCity(-1);
+                return;
+            case KeyboardKey.Right:
+                SwitchCity(1);
+                return;
         }
         base.OnKeyPress(key);
+    }
+
+    private void SwitchCity(int direction)
+    {
+        var cities = City.Owner.Cities;
+        var index = cities.IndexOf(City);
+        if (cities.Count < 2 || index < 0) return;
+
+        var next = cities[((index + direction) % cities.Count + cities.Count) % cities.Count];
+        CurrentGameScreen.CloseDialog(this);
+        CurrentGameScreen.ShowDialog(new CityWindow(CurrentGameScreen, next, _scale, Location), stack: true);
     }
 
     public void UpdateProduction()
     {
         City.CalculateOutput(City.Owner.Government, CurrentGameScreen.Game);
-        ResourceProductionChanged(this, EventArgs.Empty);
+        ResourceProductionChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    public event EventHandler ResourceProductionChanged;
+    public event EventHandler? ResourceProductionChanged;
 }

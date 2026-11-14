@@ -44,7 +44,7 @@ public class CityTileMap : BaseControl
 
     private void OnClick(object? sender, MouseEventArgs e)
     {
-        var originalClickPos = GetRelativeMousePosition();
+        var originalClickPos = e.Location;
         var removeOffset = originalClickPos - _offset;
         var restoreScale = removeOffset / _scaleFactor;
         
@@ -207,10 +207,7 @@ public class CityTileMap : BaseControl
 
     public override void OnResize()
     {
-        var pos = _cityWindow.CityWindowProps.TileMap.ScaleAll(_cityWindow.Scale);
-        Location = new(_cityWindow.LayoutPadding.Left + pos.X, _cityWindow.LayoutPadding.Top + pos.Y);
-        Width = (int)pos.Width;
-        Height = (int)pos.Height;
+        _cityWindow.Place(this, _cityWindow.CityWindowProps.TileMap);
         base.OnResize();
         _label.OnResize();
         Redraw();

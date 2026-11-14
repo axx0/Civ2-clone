@@ -30,7 +30,7 @@ public class ImprovementsBox : Listbox
         Looks = new ListboxLooks()
         {
             Font = active.Look.CityWindowFont,
-            FontSize = active.Look.CityWindowFontSize + (int)(12 * (_cityWindow.Scale - 1)),
+            FontSize = _cityWindow.ScaledFontSize,
             TextColorFront = properties.LabelColor,
             TextColorShadow = properties.LabelColorShadow,
             TextShadowOffset = properties.ShadowOffset
@@ -42,11 +42,8 @@ public class ImprovementsBox : Listbox
             _oldScale = _cityWindow.Scale;
         }
 
-        var pos = _cityWindow.CityWindowProps.Improvements.Box;
-        Location = new(_cityWindow.LayoutPadding.Left + pos.X * _cityWindow.Scale,
-            _cityWindow.LayoutPadding.Top + pos.Y * _cityWindow.Scale);
-        Width = (int)(pos.Width * _cityWindow.Scale + ScrollBar.ScrollbarDimDefault);
-        Height = (int)(pos.Height * _cityWindow.Scale);
+        _cityWindow.Place(this, properties.Box);
+        Width += ScrollBar.ScrollbarDimDefault;     // the box is the list area; the scrollbar comes on top of it
 
         base.OnResize();
     }

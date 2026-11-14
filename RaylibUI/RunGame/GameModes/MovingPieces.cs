@@ -23,7 +23,8 @@ public class MovingPieces : IGameMode
     private readonly GameScreen _gameScreen;
     private readonly LabelControl _title;
     private DateTime? _downTime;
-    private readonly TimeSpan _holdTime = TimeSpan.FromMilliseconds(15);
+    // Holding the left mouse button this long on the map turns the click into a go-to order
+    private readonly TimeSpan _holdTime = TimeSpan.FromSeconds(1);
 
     public MovingPieces(GameScreen gameScreen)
     {

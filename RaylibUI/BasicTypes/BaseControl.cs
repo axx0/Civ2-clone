@@ -1,4 +1,5 @@
 using Civ2engine;
+using Model;
 using Raylib_CSharp.Colors;
 using Raylib_CSharp.Interact;
 using Raylib_CSharp.Rendering;
@@ -14,18 +15,17 @@ namespace RaylibUI;
 public abstract class BaseControl : IControl
 {
     private Vector2 _location;
-    private bool _clickPossible;
-    private bool _clickStart;
-    private MouseButton _clickButton;
     private bool _visible;
+    private readonly ControlCollection _controls;
     protected IControlLayout Controller { get; }
-    
+
     public bool EventTransparent { get; }
 
     protected BaseControl(IControlLayout controller, bool eventTransparent = false)
     {
         Controller = controller;
         EventTransparent = eventTransparent;
+        _controls = new ControlCollection(this);
         Visible = true;
     }
 
@@ -42,17 +42,27 @@ public abstract class BaseControl : IControl
 
     public virtual int Height { get; set; }
 
+    /// <summary>
+    /// Empty space around the control. Containers include it when measuring and arranging their children.
+    /// </summary>
+    public Padding Margin { get; set; }
+
     public Rectangle Bounds => new(
-        Parent.Bounds.X + Location.X, 
-        Parent.Bounds.Y + Location.Y,
+        (Parent?.Bounds.X ?? 0) + Location.X,
+        (Parent?.Bounds.Y ?? 0) + Location.Y,
         Width,
         Height);
 
     public bool Visible
     {
-        get 
+        get
         {
-            if (Location.X + Width <= 0 ||
+            // A control that hasn't been added to a container isn't shown
+            if (Parent == null)
+            {
+                return false;
+            }
+            else if (Location.X + Width <= 0 ||
                 Location.X > Parent.Bounds.Width ||
                 Location.Y + Height <= 0 ||
                 Location.Y > Parent.Bounds.Height)
@@ -72,33 +82,55 @@ public abstract class BaseControl : IControl
         set => _visible = value;
     }
 
-    public virtual bool CanFocus => false;
-    public IList<IControl> Controls { get; protected set; } = [];
-
-    private IComponent _parent;
-    public IComponent? Parent => _parent ??= SearchForParent(Controller);
+    private bool _enabled = true;
 
     /// <summary>
-    /// Search for this control's parent control.
+    /// Whether the control reacts to the mouse and keyboard. A control is disabled when its 
+    /// parent is disabled. Disabled controls get no mouse events and can't have the focus.
     /// </summary>
-    private IComponent SearchForParent(IComponent parent)
+    public bool Enabled
     {
-        foreach (IControl c in parent.Controls)
+        get => _enabled && (Parent is not IControl parent || parent.Enabled);
+        set
         {
-            if (c == this)
+            _enabled = value;
+            // The focus moves on to the next control in tab order (or nowhere, if there's none)
+            if (!value && Controller.Focused != null && ContainsOrIs(Controller.Focused) &&
+                !Controller.SelectNextControl())
             {
-                return parent;
-            }
-            else
-            {
-                var candidate = SearchForParent(c);
-                if (candidate != null)
-                    return candidate;
+                Controller.Focused = null;
             }
         }
-
-        return null;
     }
+
+    /// <summary>
+    /// True if the given control is this control or one of its (nested) children.
+    /// </summary>
+    private bool ContainsOrIs(IControl control)
+    {
+        IComponent? current = control;
+        while (current is IControl c)
+        {
+            if (c == this) return true;
+            current = c.Parent;
+        }
+        return false;
+    }
+
+    public virtual bool CanFocus => false;
+    /// <summary>
+    /// Child controls. Adding a control here sets its <see cref="Parent"/>; assigning a new list replaces all children.
+    /// </summary>
+    public IList<IControl> Controls
+    {
+        get => _controls;
+        protected set => _controls.ReplaceWith(value);
+    }
+
+    /// <summary>
+    /// Container this control was added to (a control or a layout controller). Set by <see cref="ControlCollection"/>.
+    /// </summary>
+    public IComponent? Parent { get; internal set; }
 
 
     public virtual bool OnKeyPressed(KeyboardKey key)
@@ -111,53 +143,70 @@ public abstract class BaseControl : IControl
         return false;
     }
 
-    public virtual void OnMouseMove(Vector2 moveAmount)
-    {
-        if (!Visible) return;
+    // Mouse handling. The MouseDispatcher calls these; override them
+    // to react to the mouse, or subscribe to the matching events.
 
-        if (_clickStart)
+    /// <summary>
+    /// Whether pressing a mouse button on this control captures the mouse, so that the control keeps
+    /// getting mouse events until the button is released, even outside its bounds.
+    /// </summary>
+    public virtual bool CapturesMouse => true;
+
+    /// <summary>
+    /// True while this control has captured the mouse. Set to false to release the capture early.
+    /// </summary>
+    public bool Capture
+    {
+        get => Controller.Captured == this;
+        set
         {
-            if (!Input.IsMouseButtonDown(_clickButton))
+            if (value)
             {
-                _clickStart = false;
-                Click?.Invoke(this, new MouseEventArgs { Button = _clickButton});
-            }   
-        }
-        if (_clickPossible)
-        {
-            _clickStart = Input.IsMouseButtonDown(MouseButton.Left);
-            if (_clickStart)
-            {
-                _clickButton = MouseButton.Left;
-                MouseDown?.Invoke(this, new MouseEventArgs { Button = _clickButton});
+                Controller.Captured = this;
             }
-            else
+            else if (Controller.Captured == this)
             {
-                _clickStart = Input.IsMouseButtonDown(MouseButton.Right);
-                if (_clickStart)
-                {
-                    _clickButton = MouseButton.Right;
-                    MouseDown?.Invoke(this, new MouseEventArgs { Button = _clickButton});
-                }
+                Controller.Captured = null;
             }
         }
-    }
-
-    public virtual void OnMouseLeave()
-    {
-        if (!Visible) return;
-
-        _clickPossible = false;
-        _clickStart = false;
     }
 
     public virtual void OnMouseEnter()
     {
-        if (!Visible) return;
+        MouseEnter?.Invoke(this, EventArgs.Empty);
+    }
 
-        _clickPossible = !Input.IsMouseButtonDown(MouseButton.Left) && !Input.IsMouseButtonDown(MouseButton.Right);
+    public virtual void OnMouseLeave()
+    {
+        MouseLeave?.Invoke(this, EventArgs.Empty);
+    }
 
-        _clickStart = false;
+    public virtual void OnMouseMove(MouseEventArgs e)
+    {
+        MouseMove?.Invoke(this, e);
+    }
+
+    public virtual void OnMouseDown(MouseEventArgs e)
+    {
+        MouseDown?.Invoke(this, e);
+    }
+
+    public virtual void OnMouseUp(MouseEventArgs e)
+    {
+        MouseUp?.Invoke(this, e);
+    }
+
+    /// <summary>
+    /// Mouse button was pressed and released on this control.
+    /// </summary>
+    public virtual void OnClick(MouseEventArgs e)
+    {
+        Click?.Invoke(this, e);
+    }
+
+    public virtual void OnMouseWheel(MouseEventArgs e)
+    {
+        MouseWheel?.Invoke(this, e);
     }
 
     public virtual void OnFocus()
@@ -173,9 +222,19 @@ public abstract class BaseControl : IControl
     {
     }
 
-    public event EventHandler<MouseEventArgs> MouseDown;
+    public event EventHandler? MouseEnter;
 
-    public event EventHandler<MouseEventArgs> Click;
+    public event EventHandler? MouseLeave;
+
+    public event EventHandler<MouseEventArgs>? MouseMove;
+
+    public event EventHandler<MouseEventArgs>? MouseDown;
+
+    public event EventHandler<MouseEventArgs>? MouseUp;
+
+    public event EventHandler<MouseEventArgs>? Click;
+
+    public event EventHandler<MouseEventArgs>? MouseWheel;
 
     public virtual void Draw(bool pulse)
     {
@@ -200,13 +259,48 @@ public abstract class BaseControl : IControl
         return -1;
     }
 
-    protected Vector2 GetRelativeMousePosition()
-    {
-        return Input.GetMousePosition() - new Vector2(Bounds.X, Bounds.Y);
-    }
-}
+    /// <summary>
+    /// Size this control wants, as calculated by the last <see cref="Measure"/> call.
+    /// </summary>
+    public Size DesiredSize { get; private set; } = new(0, 0);
 
-public class MouseEventArgs
-{
-    public MouseButton Button { get; set; }
+    /// <summary>
+    /// First layout pass: work out how big this control wants to be within the available space.
+    /// </summary>
+    public Size Measure(Size available)
+    {
+        DesiredSize = MeasureCore(available);
+        return DesiredSize;
+    }
+
+    /// <summary>
+    /// Second layout pass: place this control at its final position and size (relative to its parent).
+    /// </summary>
+    public void Arrange(Rectangle finalRect)
+    {
+        Location = new Vector2(finalRect.X, finalRect.Y);
+        Width = (int)finalRect.Width;
+        Height = (int)finalRect.Height;
+        ArrangeCore(finalRect);
+    }
+
+    /// <summary>
+    /// Override to calculate the desired size. Containers should measure their children here.
+    /// Defaults to the preferred width/height so existing controls keep working;
+    /// controls without a preference (-1) keep their current size.
+    /// </summary>
+    protected virtual Size MeasureCore(Size available)
+    {
+        var width = GetPreferredWidth();
+        var height = GetPreferredHeight();
+        return new Size(width < 0 ? Width : width, height < 0 ? Height : height);
+    }
+
+    /// <summary>
+    /// Override to arrange children inside this control. Defaults to <see cref="OnResize"/>.
+    /// </summary>
+    protected virtual void ArrangeCore(Rectangle finalRect)
+    {
+        OnResize();
+    }
 }
