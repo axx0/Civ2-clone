@@ -141,7 +141,7 @@ namespace Model.Core.Mapping
         public string? SpecialsName => Special != -1 && Special < _terrain.Specials.Length ? _terrain.Specials[Special].Name : null;
 
         public int MoveCost => EffectiveTerrain.MoveCost;
-        public int Defense => (River ? EffectiveTerrain.Defense + 1 : EffectiveTerrain.Defense) / 2;
+        public double Defense => (River ? EffectiveTerrain.Defense + 1 : EffectiveTerrain.Defense) / 2.0;
 
         
         public bool Resource { get; set; }
