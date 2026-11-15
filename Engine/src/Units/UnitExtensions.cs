@@ -28,31 +28,31 @@ public static class UnitExtensions
     }
 
 
-    public static int DefenseFactor(this Unit defendingUnit, Unit attackingUnit, Tile tile, int groundDefMultiplier)
+    public static double DefenseFactor(this Unit defendingUnit, Unit attackingUnit, Tile tile, int groundDefMultiplier)
     {
         //Carried units cannot be the defender
         if (defendingUnit.InShip != null) return 0;
 
         // Base defense factor from RULES
-        decimal df = defendingUnit.DefenseBase;
+        double df = defendingUnit.DefenseBase;
 
         // Bonus for veteran units
-        if (defendingUnit.Veteran) df *= 1.5m;
+        if (defendingUnit.Veteran) df *= 1.5;
 
         // City walls bonus (applies only to land units)
         if (defendingUnit.Domain == UnitGas.Ground)
         {
-            var bestGroundFactor = 0m;
+            var bestGroundFactor = 0.0;
             // Fortress bonus (Applies only to land units. Unit doesn't have to be fortified. Doesn't count if air unit is attacking.)
             if (groundDefMultiplier != 0 && attackingUnit.Domain != UnitGas.Air)
             {
-                bestGroundFactor = df * groundDefMultiplier / 100;
+                bestGroundFactor = df * groundDefMultiplier / 100.0;
             }
 
             // Fortified bonus
             if (defendingUnit.Order == (int)OrderType.Fortified)
             {
-                var fortifiedFactor = df / 2m;
+                var fortifiedFactor = df / 2.0;
                 if (fortifiedFactor > bestGroundFactor)
                 {
                     bestGroundFactor = fortifiedFactor;
@@ -64,7 +64,7 @@ public static class UnitExtensions
                 defendingUnit.Domain == UnitGas.Ground && !attackingUnit.NegatesCityWalls)
             {
                 var totalWallDefence =
-                    tile.CityHere.Improvements.Sum(i => i.Effects.GetValueOrDefault(Effects.Walled, 0)) / 100m;
+                    tile.CityHere.Improvements.Sum(i => i.Effects.GetValueOrDefault(Effects.Walled, 0)) / 100.0;
                 if (totalWallDefence > bestGroundFactor)
                 {
                     bestGroundFactor = totalWallDefence;
@@ -117,14 +117,14 @@ public static class UnitExtensions
                     if (samBonus > 0)
                     {
                         //TODO: SAM message?
-                        df += df * samBonus / 100m;
+                        df += df * samBonus / 100.0;
                     }
 
                     if (sdiBonus > 0 &&
                         attackingUnit.TypeDefinition.Effects.TryGetValue(UnitEffect.SDIVulnerable,
                             out var sdimulti) && sdimulti > 0)
                     {
-                        df += df * sdiBonus * sdimulti / 100m;
+                        df += df * sdiBonus * sdimulti / 100.0;
                     }
                 }
             }
@@ -135,7 +135,7 @@ public static class UnitExtensions
                 if (seaDefence > 0)
                 {
                     //TODO: Coastal fortress message
-                    df += df * seaDefence / 100m;
+                    df += df * seaDefence / 100.0;
                 }
             }
         }
@@ -143,6 +143,6 @@ public static class UnitExtensions
         // Effect of terrain
         df *= tile.Defense;
 
-        return (int)df;
+        return df;
     }
 }
