@@ -44,7 +44,9 @@ public static class UnitExtensions
         {
             var bestGroundFactor = 0.0;
             // Fortress bonus (Applies only to land units. Unit doesn't have to be fortified. Doesn't count if air unit is attacking.)
-            if (groundDefMultiplier != 0 && attackingUnit.Domain != UnitGas.Air)
+            if (groundDefMultiplier != 0 &&
+                attackingUnit.Domain is UnitGas.Ground or UnitGas.Sea &&
+                !attackingUnit.NegatesCityWalls)
             {
                 bestGroundFactor = df * groundDefMultiplier / 100.0;
             }
