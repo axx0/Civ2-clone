@@ -61,7 +61,7 @@ public static class UnitExtensions
 
             //City walls (Note these are summed)
             if (tile.CityHere != null &&
-                defendingUnit.Domain == UnitGas.Ground && !attackingUnit.NegatesCityWalls)
+                attackingUnit.Domain == UnitGas.Ground && !attackingUnit.NegatesCityWalls)
             {
                 var totalWallDefence =
                     tile.CityHere.Improvements.Sum(i => i.Effects.GetValueOrDefault(Effects.Walled, 0)) / 100.0;
