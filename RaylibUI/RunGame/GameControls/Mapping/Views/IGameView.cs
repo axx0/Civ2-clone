@@ -28,7 +28,18 @@ public interface IGameView
     int CivilizationId { get; }
 
     IViewElement[] Elements { get; }
-    IEnumerable<IViewElement> CurrentAnimations { get; }
+
+    /// <summary>
+    /// Animation elements to draw at a time since the view started
+    /// </summary>
+    /// <param name="elapsedMs">Milliseconds since the view became current</param>
+    IEnumerable<IViewElement> GetAnimations(double elapsedMs);
+
+    /// <summary>
+    /// How long the view plays (ms) before the map moves on to the next one
+    /// </summary>
+    double Duration { get; }
+
     int ViewHeight { get; }
     int ViewWidth { get; set; }
     Vector2 Offsets { get; }
@@ -36,8 +47,4 @@ public interface IGameView
     bool IsDefault { get;  }
     int Interval { get; }
     IList<Tile> ActionTiles { get; }
-    bool Finished();
-
-    void Reset();
-    void Next();
 }

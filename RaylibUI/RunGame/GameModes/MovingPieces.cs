@@ -66,7 +66,7 @@ public class MovingPieces : IGameMode
             if (animation.ViewWidth == viewWidth && animation.ViewHeight == viewHeight && animation.Unit == gameScreen.Player.ActiveUnit)
 
             {
-                animation.Reset();
+                // Played again from the start (the map restarts its clock on every view switch)
                 return animation;
             }
         }

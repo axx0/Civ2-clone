@@ -27,7 +27,7 @@ public class ProcessingMode : IGameMode
             return new StaticView(gameScreen, currentView, viewHeight, viewWidth, forceRedraw);
         }
 
-        existing.Reset();
+        // Played again from the start (the map restarts its clock on every view switch)
         return existing;
     }
 

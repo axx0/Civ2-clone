@@ -119,7 +119,7 @@ public class ViewPiece : IGameMode
                 animation.Location == gameScreen.Game.ActivePlayer.ActiveTile)
 
             {
-                animation.Reset();
+                // Played again from the start (the map restarts its clock on every view switch)
                 return animation;
             }
         }

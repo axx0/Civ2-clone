@@ -25,7 +25,6 @@ public abstract class BaseGameView : IGameView
 {
     private readonly GameScreen _gameScreen;
     private readonly IList<Tile> _actionTiles;
-    private int _currentIndex;
 
     private IList<IList<IViewElement>> _animations = new List<IList<IViewElement>>();
     
@@ -399,23 +398,22 @@ public abstract class BaseGameView : IGameView
     public Tile Location { get; }
 
     public IViewElement[] Elements { get; }
-    public IEnumerable<IViewElement> CurrentAnimations => _animations[_currentIndex];
     public int ViewHeight { get; }
     public int ViewWidth { get; set; }
 
-    public bool Finished()
-    {
-        return _currentIndex == _animations.Count - 1;
-    }
+    /// <summary>
+    /// Frames set with <see cref="SetAnimation"/> are each shown for <see cref="Interval"/> ms
+    /// </summary>
+    public virtual double Duration => Interval * Math.Max(1, _animations.Count);
 
-    public void Reset()
+    /// <summary>
+    /// The frame for this time; frames are picked by time, so the speed doesn't depend on the frame rate
+    /// </summary>
+    public virtual IEnumerable<IViewElement> GetAnimations(double elapsedMs)
     {
-        _currentIndex = 0;
-    }
-
-    public void Next()
-    {
-        _currentIndex++;
+        if (_animations.Count == 0) return [];
+        var frame = Math.Clamp((int)(elapsedMs / Interval), 0, _animations.Count - 1);
+        return _animations[frame];
     }
 
     protected void SetAnimation(IList<IViewElement> frameSet)

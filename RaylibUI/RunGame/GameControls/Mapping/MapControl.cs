@@ -18,6 +18,7 @@ using Raylib_CSharp.Fonts;
 using Raylib_CSharp.Interact;
 using RaylibUI.Controls;
 using Raylib_CSharp.Collision;
+using Raylib_CSharp;
 
 namespace RaylibUI.RunGame.GameControls.Mapping;
 
@@ -323,21 +324,28 @@ public class MapControl : BaseControl
 
     private Rectangle _currentBounds;
 
-    private DateTime _animationStart;
+    /// <summary>
+    /// When the current view started playing (raylib clock, seconds)
+    /// </summary>
+    private double _viewStartTime = Time.GetTime();
+
     public override void Draw(bool pulse)
     {
-        if (_animationStart.AddMilliseconds(_currentView.Interval) < DateTime.Now)
+        var now = Time.GetTime();
+        var elapsedMs = (now - _viewStartTime) * 1000;
+        if (elapsedMs >= _currentView.Duration)
         {
-            if (_currentView.Finished())
+            var lateMs = elapsedMs - _currentView.Duration;
+            NextView();
+
+            // A slow frame shouldn't stretch a sequence of animations, so the next one starts where this one
+            // ended (at most skipping it); idle views (blinking) simply start now
+            if (!_currentView.IsDefault)
             {
-                NextView();
-            }
-            else
-            {
-                _currentView.Next();
+                _viewStartTime = now - Math.Min(lateMs, _currentView.Duration) / 1000;
             }
 
-            _animationStart = DateTime.Now;
+            elapsedMs = (now - _viewStartTime) * 1000;
         }
 
         var paddedLoc = new Vector2(Location.X + _padding.Left, Location.Y + _padding.Top);
@@ -379,7 +387,7 @@ public class MapControl : BaseControl
             Graphics.DrawTextEx(_active.Look.DefaultFont, name, textPosition, fontSize, 1, cityData.Color.TextColour);
         }
 
-        foreach (var animation in _currentView.CurrentAnimations)
+        foreach (var animation in _currentView.GetAnimations(elapsedMs))
         {
             animation.Draw(animation.Location + paddedLoc, scale: ImageUtils.ZoomScale(zoom));
         }
@@ -491,6 +499,7 @@ public class MapControl : BaseControl
         _currentView = _animationQueue.Count > 0
             ? _animationQueue.Dequeue()
             : _gameScreen.ActiveMode.GetDefaultView(_gameScreen, _currentView, _viewHeight, _viewWidth, ForceRedraw);
+        _viewStartTime = Time.GetTime();
     }
 
     private bool _forceRedraw;
