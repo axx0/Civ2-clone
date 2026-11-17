@@ -26,7 +26,7 @@ namespace Civ2engine
             _options = options;
             _maps = maps;
             _rules = configRules;
-            TurnNumber = 0;
+            TurnNumber = 1;
             Date = new Date(0, 0, difficulty);
             _barbarianActivity = (BarbarianActivityType)barbarianActivity;
             _difficultyLevel = difficulty;

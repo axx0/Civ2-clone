@@ -21,13 +21,12 @@ namespace RaylibUI
             
             _activeScreen = new GameScreen(this, game, Soundman, viewData);
 
-            if (game.TurnNumber == 0)
+            if (game.GetActiveCiv == null)
             {
-                game.StartNextTurn();
+                game.ChoseNextCiv();
             }
             else
             {
-                // If we're not on turn one start with active player
                 game.StartPlayerTurn(game.ActivePlayer);
             }
         }

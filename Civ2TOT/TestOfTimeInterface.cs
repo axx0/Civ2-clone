@@ -85,6 +85,7 @@ public class TestOfTimeInterface(IMain main) : Civ2Interface(main)
         StatusPanelLabelColorShadow = Color.Black,
         MovingUnitsViewingPiecesLabelColor = new Color(189, 189, 189, 255),
         MovingUnitsViewingPiecesLabelColorShadow = Color.Black,
+        EndOfTurnColors = [new Color(135, 135, 135, 255), Color.White],
     };
 
     public override bool IsButtonInOuterPanel => false;

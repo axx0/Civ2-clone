@@ -142,8 +142,7 @@ public class StatusPanel : BaseControl
 
         base.Draw(pulse);
 
-        // AI turn civ indicator
-        if (_game.GetPlayerCiv != _game.GetActiveCiv)
-            Graphics.DrawRectangleRec(new Rectangle(_unitPanelRect.X + _unitPanelRect.Width - 8, _unitPanelRect.Y + _unitPanelRect.Height - 6, 8, 6), _active.PlayerColours[_game.GetActiveCiv.Id].LightColour);
+        // Active civ indicator
+        Graphics.DrawRectangleRec(new Rectangle(_unitPanelRect.X + _unitPanelRect.Width - 8, _unitPanelRect.Y + _unitPanelRect.Height - 6, 8, 6), _active.PlayerColours[_game.GetActiveCiv.Id].LightColour);
     }
 }

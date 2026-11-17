@@ -34,6 +34,8 @@ public class ViewPiece : IGameMode
             {
                 Key.Enter, () =>
                 {
+                    if (_gameScreen.Player.IsWaitingAtEndOfTurn) return false;
+
                     var playerActiveTile = _gameScreen.Game.ActivePlayer.ActiveTile;
                     if (playerActiveTile.CityHere != null)
                     {
@@ -54,11 +56,20 @@ public class ViewPiece : IGameMode
                     return false;
                 }
             },
+            {
+                Key.Space, () =>
+                {
+                    var city = _gameScreen.Game.ActivePlayer.ActiveTile.CityHere;
+                    if (city == null) return false;
+                    _gameScreen.ShowCityWindow(city);
+                    return true;
+                }
+            },
 
             { Key.D7, () => SetActive(-1, -1) }, { Key.D8, () => SetActive(0, -2) },
             { Key.D9, () => SetActive(1, -1) },
-            { Key.D1, () => SetActive(1, 1) }, { Key.D2, () => SetActive(0, 2) },
-            { Key.D3, () => SetActive(-1, 1) },
+            { Key.D1, () => SetActive(-1, 1) }, { Key.D2, () => SetActive(0, 2) },
+            { Key.D3, () => SetActive(1, 1) },
             { Key.D4, () => SetActive(-2, 0) }, { Key.D6, () => SetActive(2, 0) },
 
             { Key.Up, () => SetActive(0, -2) }, { Key.Down, () => SetActive(0, 2) },
@@ -384,6 +395,24 @@ public class ViewPiece : IGameMode
                     break;
                 }
             }
+        }
+
+        // End of Turn message
+        var endOfTurnColors = _gameScreen.Main.ActiveInterface.Look.EndOfTurnColors;
+        if (_gameScreen.Player.IsWaitingAtEndOfTurn && endOfTurnColors is { Length: > 0 })
+        {
+            const double blinkInterval = 0.5;   // seconds
+            var endOfTurnLabel = new BlinkingStatusLabel(_gameScreen, Labels.For(LabelIndex.EndOfTurn), endOfTurnColors, blinkInterval, fontSize);
+            endOfTurnLabel.Location = new(bounds.X, bounds.Y + bounds.Height - 2 * labelHeight);
+            endOfTurnLabel.Width = (int)endOfTurnLabel.TextSize.X + 1;
+            endOfTurnLabel.Height = (int)labelHeight;
+            controls.Add(endOfTurnLabel);
+
+            var pressEnterLabel = new BlinkingStatusLabel(_gameScreen, $"({Labels.For(LabelIndex.PressEnter)})", endOfTurnColors, blinkInterval, fontSize);
+            pressEnterLabel.Location = new(bounds.X + 5, bounds.Y + bounds.Height - labelHeight);
+            pressEnterLabel.Width = (int)pressEnterLabel.TextSize.X + 1;
+            pressEnterLabel.Height = (int)labelHeight;
+            controls.Add(pressEnterLabel);
         }
 
         controls.ForEach(c => c.OnResize());

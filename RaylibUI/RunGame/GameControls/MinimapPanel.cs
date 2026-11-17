@@ -30,7 +30,7 @@ public class MinimapPanel : BaseControl
     private Rectangle _drawArea = new();
     private Map _map;
     private Button _nextMapButton, _prevMapButton, _closeMapButton;
-    private const int _globeRotation_dt = 1000; // globe roration animation step in miliseconds
+    private const int _globeRotation_dt = 1000; // globe rotation animation step in miliseconds
     private DateTime _rotationT;
     private int _rotationShift = 0;
 

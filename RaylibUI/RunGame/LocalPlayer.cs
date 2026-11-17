@@ -139,9 +139,16 @@ public class LocalPlayer : IPlayer
         _gameScreen.ForceRedraw();
     }
 
+    /// <summary>
+    /// True when all units have moved and the game waits for the player to end the turn
+    /// </summary>
+    public bool IsWaitingAtEndOfTurn { get; private set; }
+
     public void WaitingAtEndOfTurn()
     {
+        IsWaitingAtEndOfTurn = true;
         _gameScreen.ActiveMode = _gameScreen.ViewPiece;
+        _gameScreen.StatusPanel.Update();
     }
 
     public void NotifyAdvanceResearched(int advance)
@@ -167,11 +174,13 @@ public class LocalPlayer : IPlayer
 
     public void TurnStart(int turnNumber)
     {
+        IsWaitingAtEndOfTurn = false;
         _gameScreen.TurnStarting(turnNumber);
     }
 
     public void SetUnitActive(Unit? unit, bool move)
     {
+        IsWaitingAtEndOfTurn = false;
         ActiveUnit = unit;
         if (_gameScreen.Game.GetActiveCiv == this.Civilization)
         {

@@ -36,6 +36,9 @@ public interface IGame
     int DifficultyLevel { get; set; }
     IGameDate Date { get; }
     
+    /// <summary>
+    /// Starting a new game turn number is 1, but can still be set to 0.
+    /// </summary>
     int TurnNumber { get; set; }
     IEnumerable<City> AllCities { get; }
     IPlayer[] Players { get; }
