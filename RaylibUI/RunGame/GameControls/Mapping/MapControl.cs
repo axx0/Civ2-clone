@@ -37,6 +37,11 @@ public class MapControl : BaseControl
 
     private readonly Queue<IGameView> _animationQueue = new();
     private IGameView _currentView;
+
+    /// <summary>
+    /// A unit move or attack is playing or waiting to play
+    /// </summary>
+    public bool IsAnimating => !_currentView.IsDefault || _animationQueue.Count > 0;
     
     public MapControl(GameScreen gameScreen, IGame game, Rectangle initialBounds, LocalPlayer player) : base(gameScreen)
     {

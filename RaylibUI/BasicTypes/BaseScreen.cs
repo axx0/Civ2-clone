@@ -68,8 +68,43 @@ public abstract class BaseScreen : BaseLayoutController, IScreen
     {
     }
 
+    /// <summary>
+    /// While true, the screen's own controls get no keyboard or mouse input (dialogs on top still do)
+    /// </summary>
+    public virtual bool IsInputBlocked => false;
+
+    /// <summary>
+    /// A key pressed while <see cref="IsInputBlocked"/> (and no dialog is open)
+    /// </summary>
+    protected virtual void OnBlockedKeyPress(KeyboardKey key)
+    {
+    }
+
+    /// <summary>
+    /// A dialog is open (or a menu dropdown)
+    /// </summary>
+    protected bool HasDialogs => _dialogs.Count > 0;
+
     private void ControlEvents(IControlLayout layoutController)
     {
+        if (layoutController == this && IsInputBlocked)
+        {
+            // Throw away typed characters, so they don't arrive later
+            while (Input.GetCharPressed() != 0)
+            {
+            }
+
+            // Key presses go only to the screen itself (e.g. to queue unit moves), not to its controls
+            foreach (var key in _keys)
+            {
+                if (Input.IsKeyPressed(key))
+                {
+                    OnBlockedKeyPress(key);
+                }
+            }
+            return;
+        }
+
         // Handle up to 16 characters per frame
         for (int i = 0; i < 16; i++)
         {
@@ -100,7 +135,7 @@ public abstract class BaseScreen : BaseLayoutController, IScreen
         }
     }
 
-    public void CloseDialog(IControlLayout? dialog)
+    public virtual void CloseDialog(IControlLayout? dialog)
     {
         if (dialog != null)
         {
@@ -114,7 +149,7 @@ public abstract class BaseScreen : BaseLayoutController, IScreen
     /// Starting focus: a dialog that sets <see cref="IControlLayout.Focused"/> itself (e.g. in its constructor)
     /// keeps that control; otherwise the first control in tab order gets the focus.
     /// </summary>
-    public void ShowDialog(IControlLayout dialog, bool stack = false)
+    public virtual void ShowDialog(IControlLayout dialog, bool stack = false)
     {
         if (!stack)
         {

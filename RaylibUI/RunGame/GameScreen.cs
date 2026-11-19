@@ -8,6 +8,7 @@ using Model.Core;
 using Model.Controls;
 using Model.Core.Cities;
 using Model.Core.Mapping;
+using Model.Core.Units;
 using Raylib_CSharp.Windowing;
 using Raylib_CSharp.Transformations;
 using RaylibUI.RunGame.Commands.Orders;
@@ -71,8 +72,6 @@ public class GameScreen : BaseScreen
     private const int MiniMapGlobeHeight = 142;
     private IGameMode _activeMode;
     
-    private CivDialog _currentPopupDialog;
-    private Action<string,int,IList<bool>?,IDictionary<string,string>?>? _popupClicked;
 
     private int _zoom, _width, _height;
 
@@ -97,6 +96,7 @@ public class GameScreen : BaseScreen
 
         var civ = game.GetPlayerCiv;
         _player = new LocalPlayer(this, civ);
+        _player.OnUnitEvent += UnitEventForQueuedMoves;
         VisibleCivId = _player.Civilization.Id;
         game.ConnectPlayer(_player);
 
@@ -400,16 +400,141 @@ public class GameScreen : BaseScreen
             {
                 dialog.ListboxDef = listBox;
             }
-            _popupClicked = handleButtonClick;
-            _currentPopupDialog = new CivDialog(MainWindow, dialog, ClosePopup);
-            ShowDialog(_currentPopupDialog, stack: true);
+            // Each popup closes itself and calls its own handler, so popups waiting for an animation to end
+            // (or shown on top of each other) don't mix up their handlers
+            CivDialog? popup = null;
+            popup = new CivDialog(MainWindow, dialog, (button, index, checkboxes, textBoxes) =>
+            {
+                CloseDialog(popup);
+                handleButtonClick?.Invoke(button, index, checkboxes, textBoxes);
+            });
+            ShowDialog(popup, stack: true);
         }
     }
 
-    private void ClosePopup(string arg1, int arg2, IList<bool>? arg3, IDictionary<string, string>? arg4)
+    /// <summary>
+    /// A unit move or attack is playing on the map
+    /// </summary>
+    public bool IsAnimating => _mapControl?.IsAnimating ?? false;
+
+    /// <summary>
+    /// The map, menu bar and panels don't respond while a move or attack plays and during other players' turns
+    /// (dialogs still do)
+    /// </summary>
+    public override bool IsInputBlocked => IsAnimating || ActiveMode == Processing;
+
+    /// <summary>
+    /// Dialogs that came up during an animation; they are shown once it has finished
+    /// </summary>
+    private readonly List<(IControlLayout Dialog, bool Stack)> _waitingDialogs = new();
+
+    /// <summary>
+    /// Movement keys pressed while a unit was sliding; played one by one, each after the previous slide
+    /// </summary>
+    private readonly Queue<Shortcut> _queuedMoves = new();
+
+    /// <summary>
+    /// Unit the queued keys were pressed for; they never move another unit
+    /// </summary>
+    private Unit? _queuedMovesUnit;
+
+    private const int MaxQueuedMoves = 8;
+
+    private void ClearQueuedMoves()
     {
-        CloseDialog(_currentPopupDialog);
-        _popupClicked?.Invoke(arg1, arg2, arg3, arg4);
+        _queuedMoves.Clear();
+        _queuedMovesUnit = null;
+    }
+
+    protected override void OnBlockedKeyPress(KeyboardKey key)
+    {
+        if (!IsAnimating || ActiveMode != Moving || Moving is not MovingPieces moving) return;
+
+        var shortcut = new Shortcut(key.ToModelKey(),
+            Input.IsKeyDown(KeyboardKey.RightShift) || Input.IsKeyDown(KeyboardKey.LeftShift),
+            Input.IsKeyDown(KeyboardKey.LeftControl) || Input.IsKeyDown(KeyboardKey.RightControl));
+        if (!moving.IsMovementKey(shortcut) || _queuedMoves.Count >= MaxQueuedMoves) return;
+
+        if (_queuedMoves.Count == 0)
+        {
+            _queuedMovesUnit = _player.ActiveUnit;
+        }
+        _queuedMoves.Enqueue(shortcut);
+    }
+
+    /// <summary>
+    /// Play the next queued move once the map is idle and no dialog is open
+    /// </summary>
+    private void PlayQueuedMove()
+    {
+        if (_queuedMoves.Count == 0 || IsInputBlocked || HasDialogs) return;
+
+        // Only for the unit the keys were pressed for, and only while still moving pieces
+        if (ActiveMode != Moving || _player.ActiveUnit == null || _player.ActiveUnit != _queuedMovesUnit)
+        {
+            ClearQueuedMoves();
+            return;
+        }
+
+        var shortcut = _queuedMoves.Dequeue();
+        ActiveMode.HandleKeyPress(shortcut);
+    }
+
+    private void UnitEventForQueuedMoves(object? sender, UnitEventArgs e)
+    {
+        // A blocked move (zone of control, enemy in the way, ...) or a fight stops the remaining moves
+        if (e.EventType is UnitEventType.MovementBlocked or UnitEventType.Attack)
+        {
+            ClearQueuedMoves();
+        }
+    }
+
+    public override void ShowDialog(IControlLayout dialog, bool stack = false)
+    {
+        // Any dialog (goody hut, city event, message...) stops the remaining queued moves
+        if (dialog is not DropdownMenu)
+        {
+            ClearQueuedMoves();
+        }
+
+        // Popups (e.g. a goody hut) appear after the unit has finished moving, never during the animation.
+        // The menu's dropdown is excluded: it's part of the menu bar, which is blocked while animating anyway.
+        if (IsAnimating && dialog is not DropdownMenu)
+        {
+            _waitingDialogs.Add((dialog, stack));
+            return;
+        }
+
+        base.ShowDialog(dialog, stack);
+    }
+
+    public override void CloseDialog(IControlLayout? dialog)
+    {
+        _waitingDialogs.RemoveAll(w => w.Dialog == dialog);
+        base.CloseDialog(dialog);
+    }
+
+    public override void Draw(bool pulse)
+    {
+        if (IsInputBlocked)
+        {
+            // A menu left open would still take clicks
+            _menu.Close();
+        }
+
+        if (!IsAnimating && _waitingDialogs.Count > 0)
+        {
+            var waiting = _waitingDialogs.ToList();
+            _waitingDialogs.Clear();
+            foreach (var (dialog, stack) in waiting)
+            {
+                base.ShowDialog(dialog, stack);
+            }
+        }
+
+        PlayQueuedMove();
+
+        base.Draw(pulse);
     }
 
     public void ToggleMapLayout()

@@ -114,12 +114,29 @@ public class GameMenu : ControlGroup
         return false;
     }
 
+    /// <summary>
+    /// Menu titles while the menu bar is blocked (animations, other players' turns)
+    /// </summary>
+    private static readonly Color BlockedTextColour = new(128, 128, 128, 255);
+
     public override void Draw(bool pulse)
     {
         Graphics.DrawRectangleRec(Bounds, Color.White);
+
+        var blocked = _gameScreen.IsInputBlocked;
+        foreach (var label in _labels)
+        {
+            label.ColorFront = blocked ? BlockedTextColour : Color.Black;
+            label.ColorShadow = label.ColorFront;
+        }
+
         foreach (var control in Controls)
         {
-            if (control == Controller.Focused)
+            if (blocked)
+            {
+                // No focus/hover highlight on a blocked menu bar
+            }
+            else if (control == Controller.Focused)
             {
                 Graphics.DrawRectangleRec(control.Bounds, new Color(204, 232, 255, 255));
                 Graphics.DrawRectangleLinesEx(control.Bounds, 1.0f, new Color(153, 209, 255, 255));

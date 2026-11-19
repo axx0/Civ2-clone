@@ -58,6 +58,11 @@ public class MovingPieces : IGameMode
 
     private Dictionary<Shortcut, Action<IGame>> Actions { get; }
 
+    /// <summary>
+    /// Arrow/numpad key that moves the active unit
+    /// </summary>
+    public bool IsMovementKey(Shortcut key) => Actions.ContainsKey(key);
+
     public IGameView GetDefaultView(GameScreen gameScreen, IGameView? currentView, int viewHeight, int viewWidth,
         bool forceRedraw)
     {
