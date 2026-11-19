@@ -404,6 +404,7 @@ namespace Civ2engine.IO
                     Until = Rules.AdvanceMappings.TryGetValue(text[1], out value) ? value : -1,
                     Domain = (UnitGas) (int.TryParse(text[2], out value) ? value : 0),
                     Move = Rules.Cosmic.MovementMultiplier * move,
+                    MovementMultiplier = Rules.Cosmic.MovementMultiplier,
                     AttackPerTurn = move,
                     Range = int.TryParse(text[4], out value) ? value : 0,
                     Attack = int.TryParse(text[5].Replace("a", string.Empty), out value) ? value : 0,
@@ -552,6 +553,7 @@ namespace Civ2engine.IO
                 foreach (var unitType in Rules.UnitTypes)
                 {
                     unitType.Move = (unitType.Move / Rules.Cosmic.MovementMultiplier) * commonMultiplier;
+                    unitType.MovementMultiplier = commonMultiplier;
                 }
             }
 

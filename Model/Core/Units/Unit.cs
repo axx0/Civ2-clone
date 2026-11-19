@@ -29,7 +29,29 @@ namespace Model.Core.Units
 
         public int UntilTech => TypeDefinition.Until;
         public UnitGas Domain => TypeDefinition.Domain;
-        public int MaxMovePoints => TypeDefinition.Move;
+        public int MaxMovePoints => MovementAllowance(TypeDefinition.Move, HitpointsBase, RemainingHitpoints,
+            TypeDefinition.MovementMultiplier, Domain);
+
+        /// <summary>
+        /// Movement allowance for the given hit points. Land and sea units with fewer hit points than their base
+        /// move less, rounded up to a whole road move. Air units always keep their full allowance.
+        /// Follows the formula from the CivFanatics thread "Damage and movement" (Prof. Garfield, 2019).
+        /// </summary>
+        public static int MovementAllowance(int move, int hitpointsBase, int remainingHitpoints, int roadMultiplier, UnitGas domain)
+        {
+            if (domain == UnitGas.Air || move <= 0 || hitpointsBase <= 0 || roadMultiplier <= 0)
+            {
+                return move;
+            }
+
+            var hitpoints = Math.Clamp(remainingHitpoints, 0, hitpointsBase);
+            var scaled = hitpoints * move / hitpointsBase;                       // floor
+            var remainder = scaled % roadMultiplier;
+            var rounded = remainder > 0 ? scaled - remainder + roadMultiplier : scaled;
+
+            var minimum = domain == UnitGas.Sea ? 2 * roadMultiplier : roadMultiplier;
+            return Math.Min(move, Math.Max(minimum, rounded));
+        }
         public int FuelRange => TypeDefinition.Range;
         public int AttackBase => TypeDefinition.Attack;
         public int DefenseBase => TypeDefinition.Defense;
@@ -60,7 +82,7 @@ namespace Model.Core.Units
 
         public int Id { get; set; }
 
-        public int MovePoints => MaxMovePoints - MovePointsLost;
+        public int MovePoints => Math.Max(0, MaxMovePoints - MovePointsLost);
 
         public int MovePointsLost { get; set; }
         public int HitpointsBase => TypeDefinition.Hitp;

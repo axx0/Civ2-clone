@@ -10,6 +10,9 @@ namespace Model.Core.Units
         public int Until { get; set; }
         public UnitGas Domain { get; set; }
         public int Move { get; set; }
+
+        /// <summary>Road multiplier that Move is measured in (Cosmic.MovementMultiplier)</summary>
+        public int MovementMultiplier { get; set; } = 1;
         public int Range { get; set; }
         public int Attack { get; set; }
         public int Defense { get; set; }
